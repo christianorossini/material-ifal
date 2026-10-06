@@ -1,0 +1,729 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Laboratórios de SO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --bg:#F2F4EE; --surface:#FBFCF8; --surface-2:#E8EDE2; --ink:#17231A; --ink-2:#4A5A4C; --line:#D3DCCB;
+  --accent:#2E6B1E; --accent-ink:#FFFFFF; --accent-soft:#DDEBD3;
+  --run:#2E6B1E; --run-soft:#DDEBD3;
+  --ready:#9A6200; --ready-soft:#FBEBC8;
+  --wait:#2F5C99; --wait-soft:#DCE6F4;
+  --neutral:#646E61; --neutral-soft:#E4E7E1;
+  --ok:#1F7A3A; --ok-soft:#D9F0DF; --bad:#B3261E; --bad-soft:#F8DEDB;
+  --display:"Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body:"Literata", Georgia, "Times New Roman", serif;
+  --mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0F1510; --surface:#172019; --surface-2:#1F2A21; --ink:#E4EBE0; --ink-2:#A6B3A4; --line:#2F3D31;
+    --accent:#7CC25B; --accent-ink:#0F1510; --accent-soft:#233A1C;
+    --run:#7CC25B; --run-soft:#1F3519; --ready:#E9B04A; --ready-soft:#3A2E14;
+    --wait:#8DB3EA; --wait-soft:#1B2A40; --neutral:#9AA397; --neutral-soft:#262C25;
+    --ok:#6FD08C; --ok-soft:#173222; --bad:#FF8A80; --bad-soft:#3D1B18;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0F1510; --surface:#172019; --surface-2:#1F2A21; --ink:#E4EBE0; --ink-2:#A6B3A4; --line:#2F3D31;
+  --accent:#7CC25B; --accent-ink:#0F1510; --accent-soft:#233A1C;
+  --run:#7CC25B; --run-soft:#1F3519; --ready:#E9B04A; --ready-soft:#3A2E14;
+  --wait:#8DB3EA; --wait-soft:#1B2A40; --neutral:#9AA397; --neutral-soft:#262C25;
+  --ok:#6FD08C; --ok-soft:#173222; --bad:#FF8A80; --bad-soft:#3D1B18;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto} *{transition:none!important; animation:none!important}}
+body{background:var(--bg); color:var(--ink); font-family:var(--body); font-size:17px; line-height:1.65; padding-inline:20px; padding-block:0 64px}
+h1,h2,h3,h4{font-family:var(--display); line-height:1.15; text-wrap:balance; margin:0}
+p{margin:0}
+a{color:var(--accent)}
+code,.mono{font-family:var(--mono); font-size:.88em}
+button{font:inherit; cursor:pointer}
+:focus-visible{outline:3px solid var(--accent); outline-offset:2px; border-radius:4px}
+
+/* header */
+.top{max-width:1160px; margin:0 auto; padding-block:48px 36px; border-bottom:2px solid var(--ink); display:grid; gap:18px}
+.eyebrow{font-family:var(--display); font-size:13px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--accent)}
+.top h1{font-size:clamp(48px, 9vw, 104px); font-weight:800; letter-spacing:-.03em}
+.top h1 span{color:var(--accent)}
+.lede{font-size:20px; max-width:62ch; color:var(--ink-2)}
+.meta{display:flex; flex-wrap:wrap; gap:8px 24px; font-family:var(--display); font-size:14px; color:var(--ink-2)}
+.meta b{color:var(--ink)}
+
+/* layout */
+.layout{max-width:1160px; margin:0 auto; display:grid; grid-template-columns:230px minmax(0,1fr); gap:56px; padding-top:40px}
+nav.toc{position:sticky; top:calc(env(safe-area-inset-top, 0px) + 20px); align-self:start; font-family:var(--display); font-size:14px}
+nav.toc p{font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-2); margin-bottom:10px}
+nav.toc ol{list-style:none; margin:0; padding:0; display:grid; gap:2px; border-left:2px solid var(--line)}
+nav.toc a{display:grid; grid-template-columns:38px 1fr; padding:6px 10px; margin-left:-2px; border-left:2px solid transparent; color:var(--ink-2); text-decoration:none; line-height:1.3}
+nav.toc a span{font-variant-numeric:tabular-nums; color:var(--ink-2); font-weight:600}
+nav.toc a:hover{color:var(--ink)}
+nav.toc a.on{border-left-color:var(--accent); color:var(--ink); font-weight:600}
+nav.toc a.on span{color:var(--accent)}
+main{min-width:0; display:grid; gap:72px}
+@media (max-width:900px){
+  .layout{grid-template-columns:minmax(0,1fr); gap:28px; padding-top:24px}
+  nav.toc{position:static}
+  nav.toc ol{display:flex; overflow-x:auto; border-left:none; gap:6px; padding-bottom:6px}
+  nav.toc a{display:block; white-space:nowrap; border:1px solid var(--line); border-radius:999px; padding:6px 12px; margin:0; background:var(--surface)}
+  nav.toc a span{margin-right:6px}
+  nav.toc a.on{border-color:var(--accent)}
+}
+
+/* sections */
+.sec{display:grid; gap:20px; scroll-margin-top:24px}
+.sec > *{max-width:68ch}
+.sec > .wide{max-width:none}
+.sec-head{display:grid; gap:6px; padding-bottom:6px}
+.num{font-family:var(--display); font-weight:800; font-size:15px; color:var(--accent); letter-spacing:.06em}
+.sec h2{font-size:clamp(28px, 4vw, 38px); font-weight:700; letter-spacing:-.01em}
+.sec h3{font-size:21px; font-weight:700; margin-top:10px}
+.sec ul,.sec ol{margin:0; padding-left:1.3em; display:grid; gap:6px}
+dfn{font-style:normal; font-weight:600; background:linear-gradient(transparent 62%, var(--accent-soft) 62%)}
+.def{border:2px solid var(--ink); background:var(--surface); padding:18px 22px; display:grid; gap:6px}
+.def .lbl{font-family:var(--display); font-size:12px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--accent)}
+.def p{font-size:19px}
+.note{background:var(--surface-2); padding:14px 18px; border-radius:6px; font-size:16px; display:grid; gap:6px}
+.note .lbl{font-family:var(--display); font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-2)}
+pre.term{font-family:var(--mono); font-size:14px; line-height:1.55; background:#101A12; color:#D6E8CB; padding:14px 18px; border-radius:6px; overflow-x:auto; margin:0}
+pre.term .c{color:#8FA88A}
+
+/* lab widgets */
+.lab{border:1px solid var(--line); background:var(--surface); border-radius:10px; padding:20px; display:grid; gap:16px}
+.lab-head{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap}
+.tag{font-family:var(--display); font-size:11px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; background:var(--accent); color:var(--accent-ink); padding:3px 8px; border-radius:3px}
+.lab-head h4{font-size:18px; font-weight:700}
+.lab-hint{font-size:15px; color:var(--ink-2)}
+.btns{display:flex; flex-wrap:wrap; gap:8px}
+.btn{font-family:var(--display); font-size:14px; font-weight:600; border:1.5px solid var(--ink); background:var(--surface); color:var(--ink); padding:8px 14px; border-radius:6px; transition:background .15s, transform .1s}
+.btn:hover{background:var(--surface-2)}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--ink); color:var(--bg)}
+.btn.primary:hover{background:var(--accent); border-color:var(--accent); color:var(--accent-ink)}
+.btn.ghost{border-color:var(--line); color:var(--ink-2)}
+.btn[disabled]{opacity:.45; cursor:not-allowed}
+.msg{font-family:var(--display); font-size:15px; padding:10px 14px; border-radius:6px; background:var(--surface-2); color:var(--ink)}
+.msg.ok{background:var(--ok-soft); color:var(--ok)}
+.msg.bad{background:var(--bad-soft); color:var(--bad)}
+.chip{display:inline-block; font-family:var(--display); font-size:13px; font-weight:700; padding:2px 9px; border-radius:999px}
+.st-execucao{background:var(--run-soft); color:var(--run)}
+.st-pronto{background:var(--ready-soft); color:var(--ready)}
+.st-espera{background:var(--wait-soft); color:var(--wait)}
+.st-criacao,.st-terminado{background:var(--neutral-soft); color:var(--neutral)}
+.scroll{overflow-x:auto}
+</style>
+<style>
+/* 5.1 */
+.procs{display:grid; grid-template-columns:repeat(auto-fill, minmax(190px, 1fr)); gap:10px; min-height:84px}
+.proc{border:1px solid var(--line); border-left:5px solid var(--run); padding:10px 12px; background:var(--bg); display:grid; gap:2px; animation:pop .25s ease-out}
+.proc b{font-family:var(--display); font-size:15px}
+.proc span{font-family:var(--mono); font-size:12.5px; color:var(--ink-2)}
+.proc.pronto{border-left-color:var(--ready)} .proc.espera{border-left-color:var(--wait)}
+.empty{font-family:var(--display); font-size:14px; color:var(--ink-2); align-self:center}
+@keyframes pop{from{opacity:.2; transform:translateY(6px)} to{opacity:1; transform:none}}
+.prog{display:flex; align-items:center; gap:12px; flex-wrap:wrap}
+.file{font-family:var(--mono); font-size:14px; border:1.5px dashed var(--ink-2); padding:8px 12px; border-radius:6px}
+
+/* 5.2 diagram */
+.fig{margin:0; display:grid; gap:8px}
+.fig figcaption{font-family:var(--display); font-size:13px; color:var(--ink-2)}
+.fig svg{width:100%; height:auto; max-width:640px}
+.fig svg text{font-family:var(--display)} .fig svg text:not([fill]){fill:var(--ink)}
+.part{cursor:pointer}
+.part rect{transition:stroke-width .15s}
+.part:hover rect,.part:focus rect{stroke-width:4}
+
+/* 5.2.1 context switch */
+.cs{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px}
+@media (max-width:620px){.cs{grid-template-columns:minmax(0,1fr)}}
+.box{border:1.5px solid var(--line); border-radius:8px; padding:12px; background:var(--bg); display:grid; gap:8px; transition:border-color .2s, box-shadow .2s}
+.box h5{font-family:var(--display); font-size:14px; margin:0; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:8px}
+.box.cpu{border-color:var(--ink); background:var(--surface-2)}
+.box.flash{border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft)}
+.regs{display:grid; grid-template-columns:auto 1fr; gap:3px 12px; font-family:var(--mono); font-size:13.5px; font-variant-numeric:tabular-nums}
+.regs dt{color:var(--ink-2)} .regs dd{margin:0; text-align:right}
+.steps{display:flex; gap:6px; flex-wrap:wrap}
+.steps i{font-style:normal; font-family:var(--display); font-size:12px; font-weight:700; padding:3px 8px; border-radius:999px; background:var(--surface-2); color:var(--ink-2)}
+.steps i.on{background:var(--accent); color:var(--accent-ink)}
+
+/* 5.2.2 table */
+table.t{border-collapse:collapse; width:100%; font-size:15.5px}
+.t th{font-family:var(--display); text-align:left; font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-2); border-bottom:2px solid var(--ink); padding:8px 10px}
+.t td{border-bottom:1px solid var(--line); padding:10px; vertical-align:top}
+.t td:first-child{font-family:var(--display); font-weight:700; white-space:nowrap}
+
+/* 5.2.4 PCB */
+.pcbwrap{display:grid; grid-template-columns:minmax(0,300px) minmax(0,1fr); gap:20px; align-items:start}
+@media (max-width:620px){.pcbwrap{grid-template-columns:minmax(0,1fr)}}
+.pcb{list-style:none; margin:0; padding:0; border:2px solid var(--ink); border-radius:6px; overflow:hidden; font-family:var(--display); font-size:15px}
+.pcb li{padding:9px 14px; border-top:1px solid var(--line); transition:background .2s, color .2s}
+.pcb li.hd{background:var(--ink); color:var(--bg); font-family:var(--mono); font-size:14px; border-top:none}
+.pcb li.hit[data-part="hw"]{background:var(--wait-soft); color:var(--wait); font-weight:700}
+.pcb li.hit[data-part="sw"]{background:var(--run-soft); color:var(--run); font-weight:700}
+.pcb li.hit[data-part="ea"]{background:var(--ready-soft); color:var(--ready); font-weight:700}
+.pcb li.hit[data-part="ctl"]{background:var(--neutral-soft); color:var(--ink); font-weight:700}
+.btn.sel{background:var(--ink); color:var(--bg)}
+
+/* 5.3 cards */
+.states{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px}
+@media (max-width:700px){.states{grid-template-columns:minmax(0,1fr)}}
+.state{border-radius:8px; padding:16px; display:grid; gap:6px; align-content:start}
+.state h4{font-size:22px}
+.state small{font-family:var(--mono); font-size:12.5px; opacity:.85}
+.state p{font-size:15.5px}
+.state .an{font-size:14px; font-style:italic; border-top:1px solid currentColor; padding-top:8px; opacity:.9}
+.state.x{background:var(--run-soft); color:var(--run)} .state.x p{color:var(--ink)}
+.state.p{background:var(--ready-soft); color:var(--ready)} .state.p p{color:var(--ink)}
+.state.e{background:var(--wait-soft); color:var(--wait)} .state.e p{color:var(--ink)}
+
+/* 5.4 state machine */
+.smwrap{display:grid; grid-template-columns:minmax(0,1.6fr) minmax(0,1fr); gap:20px; align-items:start}
+@media (max-width:760px){.smwrap{grid-template-columns:minmax(0,1fr)}}
+.sm svg{width:100%; height:auto}
+.sm text{font-family:var(--display); fill:var(--ink); font-size:15px; font-weight:600}
+.sm .elbl{font-size:14px; font-weight:800; fill:var(--ink-2)}
+.node rect{fill:var(--surface); stroke:var(--line); stroke-width:2; transition:all .25s}
+.node.cur rect{stroke-width:3.5}
+.node.cur.n-criacao rect,.node.cur.n-terminado rect{fill:var(--neutral-soft); stroke:var(--neutral)}
+.node.cur.n-pronto rect{fill:var(--ready-soft); stroke:var(--ready)}
+.node.cur.n-execucao rect{fill:var(--run-soft); stroke:var(--run)}
+.node.cur.n-espera rect{fill:var(--wait-soft); stroke:var(--wait)}
+.edge{fill:none; stroke:var(--ink-2); stroke-width:2; opacity:.55; transition:all .25s}
+.edge.active{stroke:var(--accent); stroke-width:4; opacity:1}
+.mk{fill:var(--ink-2)} .mk-on{fill:var(--accent)}
+.pcbmini{font-family:var(--mono); font-size:13.5px; background:var(--bg); border:1.5px solid var(--line); border-radius:8px; padding:12px; display:grid; gap:4px}
+.log{list-style:none; margin:0; padding:0; font-family:var(--display); font-size:13.5px; display:grid; gap:4px; max-height:190px; overflow-y:auto}
+.log li{padding:5px 8px; background:var(--bg); border-radius:4px}
+.evbtns{display:grid; grid-template-columns:repeat(auto-fill, minmax(210px, 1fr)); gap:8px}
+.evbtns .btn{text-align:left}
+</style><style>
+/* 5.5 */
+.twocol{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:12px}
+@media (max-width:620px){.twocol{grid-template-columns:minmax(0,1fr)}}
+.card{border:1px solid var(--line); border-radius:8px; padding:16px; background:var(--surface); display:grid; gap:8px; align-content:start}
+.card h4{font-size:18px}
+.card p,.card li{font-size:15.5px}
+/* 5.6 bars */
+.bars{display:grid; gap:12px}
+.barrow{display:grid; grid-template-columns:110px minmax(0,1fr); gap:12px; align-items:center; font-family:var(--display); font-weight:700; font-size:14px}
+.bar{display:flex; height:30px; border-radius:5px; overflow:hidden}
+.bar i{display:block; height:100%}
+.bar .u{background:var(--run)} .bar .io{background:var(--wait); opacity:.45}
+.legend{display:flex; gap:18px; flex-wrap:wrap; font-family:var(--display); font-size:13px; color:var(--ink-2)}
+.legend span::before{content:""; display:inline-block; width:12px; height:12px; border-radius:3px; margin-right:6px; vertical-align:-1px; background:var(--run)}
+.legend span.io::before{background:var(--wait); opacity:.45}
+.cls{list-style:none; margin:0; padding:0; display:grid; gap:8px}
+.cls li{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:10px; align-items:center; padding:10px 12px; border:1px solid var(--line); border-radius:8px; background:var(--bg)}
+.cls li.ok{border-color:var(--ok); background:var(--ok-soft)}
+.cls li.bad{border-color:var(--bad); background:var(--bad-soft)}
+.cls .cfb{grid-column:1 / -1; font-size:14.5px}
+.cls .btn{padding:6px 10px; font-size:13px}
+/* 5.7 terminal */
+.termbox{background:#101A12; color:#D6E8CB; font-family:var(--mono); font-size:14px; border-radius:8px; padding:14px 16px; min-height:170px; display:grid; align-content:start; gap:2px; overflow-x:auto}
+.termbox .c{color:#8FA88A}
+.termbox .busy{color:#E9B04A}
+.cursor{display:inline-block; width:8px; height:15px; background:#D6E8CB; vertical-align:-2px; animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.flow{display:flex; align-items:center; gap:8px; flex-wrap:wrap; font-family:var(--display); font-size:14px}
+.flow b{border:1.5px solid var(--line); background:var(--surface); padding:6px 10px; border-radius:6px; font-weight:600}
+.flow b.p{background:var(--ink); color:var(--bg); border-color:var(--ink)}
+.flow em{font-style:normal; color:var(--ink-2)}
+/* 5.8 */
+.three{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px}
+@media (max-width:760px){.three{grid-template-columns:minmax(0,1fr)}}
+.card ol{padding-left:1.2em; display:grid; gap:4px}
+/* 5.9 tree */
+.tree ul{list-style:none; margin:0; padding-left:28px; position:relative; display:grid; gap:8px}
+.tree > ul{padding-left:0}
+.tree ul ul::before{content:""; position:absolute; left:10px; top:-8px; bottom:18px; border-left:2px solid var(--line)}
+.tree ul ul > li{position:relative}
+.tree ul ul > li::before{content:""; position:absolute; left:-18px; top:20px; width:16px; border-top:2px solid var(--line)}
+.tnode{display:inline-flex; align-items:center; gap:10px; border:1.5px solid var(--line); background:var(--bg); border-radius:8px; padding:6px 8px 6px 12px; font-family:var(--display); font-size:14px; transition:opacity .3s, transform .3s}
+.tnode b{font-size:15px}
+.tnode .rel{color:var(--ink-2); font-weight:500}
+.tnode button{border:1px solid var(--bad); color:var(--bad); background:transparent; border-radius:5px; font-family:var(--display); font-size:12px; font-weight:700; padding:3px 7px}
+.tnode.root{border-color:var(--run); background:var(--run-soft)}
+.tnode.ind{border-style:dashed}
+.gone{opacity:0; transform:scale(.9)}
+.treegrid{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,220px); gap:20px; align-items:start}
+@media (max-width:620px){.treegrid{grid-template-columns:minmax(0,1fr)}}
+/* threads figure */
+.thr{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:14px}
+@media (max-width:700px){.thr{grid-template-columns:minmax(0,1fr)}}
+.pbox{border:2px solid var(--line); border-radius:10px; padding:12px; display:grid; gap:6px; background:var(--surface)}
+.pbox.mt{border-color:var(--accent)}
+.pbox h5{font-family:var(--display); font-size:15px; margin:0}
+.seg{font-family:var(--display); font-size:13px; font-weight:600; padding:7px 9px; border-radius:6px; text-align:center}
+.seg.sw{background:var(--run-soft); color:var(--run)} .seg.hw{background:var(--wait-soft); color:var(--wait)} .seg.ea{background:var(--ready-soft); color:var(--ready)}
+.pair{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:8px}
+.trio{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:6px}
+.col{display:grid; gap:6px; align-content:start}
+.col small{font-family:var(--display); font-size:12px; font-weight:700; color:var(--ink-2); text-align:center}
+/* 5.10 */
+.svc{display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:8px; list-style:none; margin:0; padding:0}
+.svc li{border:1px solid var(--line); border-radius:8px; padding:10px 12px; background:var(--surface); font-family:var(--display); font-size:14.5px; font-weight:600; display:grid; gap:2px}
+.svc li span{font-family:var(--body); font-weight:400; font-size:13.5px; color:var(--ink-2)}
+/* 5.11 */
+.sig{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:16px; align-items:start}
+@media (max-width:700px){.sig{grid-template-columns:minmax(0,1fr)}}
+.opts{display:grid; gap:6px}
+.opt{display:flex; gap:10px; align-items:flex-start; padding:9px 11px; border:1.5px solid var(--line); border-radius:8px; background:var(--bg); cursor:pointer; font-size:15px}
+.opt:has(input:checked){border-color:var(--accent); background:var(--accent-soft)}
+.opt input{margin-top:5px; accent-color:var(--accent)}
+.opt code{font-weight:600}
+.switch{display:flex; gap:10px; align-items:center; font-family:var(--display); font-size:14.5px}
+.switch input{width:18px; height:18px; accent-color:var(--accent)}
+.path{display:flex; align-items:center; gap:6px; flex-wrap:wrap; font-family:var(--display); font-size:13.5px}
+.path b{padding:5px 9px; border-radius:6px; background:var(--surface-2); font-weight:600}
+.path b.hl{background:var(--accent); color:var(--accent-ink)}
+/* exercises */
+.ex-tabs{display:flex; gap:8px; flex-wrap:wrap}
+.oq{list-style:none; margin:0; padding:0; display:grid; gap:10px; counter-reset:q}
+.oq > li{counter-increment:q; border:1px solid var(--line); border-radius:8px; background:var(--surface); padding:14px 16px 14px 56px; position:relative; display:grid; gap:8px}
+.oq > li::before{content:counter(q); position:absolute; left:14px; top:12px; width:30px; height:30px; border-radius:50%; background:var(--ink); color:var(--bg); font-family:var(--display); font-weight:700; font-size:14px; display:grid; place-items:center}
+.oq p{font-size:16.5px}
+details summary{cursor:pointer; font-family:var(--display); font-size:13.5px; font-weight:600; color:var(--accent); width:fit-content}
+details[open] summary{margin-bottom:6px}
+details .ans{font-size:15px; color:var(--ink-2); display:grid; gap:4px}
+.score{position:sticky; top:calc(env(safe-area-inset-top, 0px) + 8px); z-index:2; display:flex; align-items:center; gap:14px; flex-wrap:wrap; background:var(--ink); color:var(--bg); padding:10px 16px; border-radius:8px; font-family:var(--display); font-size:14.5px}
+.score b{font-size:18px; font-variant-numeric:tabular-nums}
+.meter{flex:1; min-width:120px; height:8px; background:rgba(128,128,128,.35); border-radius:99px; overflow:hidden; display:flex}
+.meter i{display:block; height:100%; transition:width .3s}
+.meter .g{background:#6FD08C} .meter .r{background:#FF8A80}
+.score .btn{border-color:var(--bg); color:var(--bg); background:transparent; padding:5px 10px; font-size:13px}
+.qz{list-style:none; margin:0; padding:0; display:grid; gap:14px; counter-reset:c}
+.qz > li{counter-increment:c; border:1px solid var(--line); border-radius:10px; background:var(--surface); padding:16px; display:grid; gap:10px}
+.qz .qh{display:flex; gap:10px; align-items:baseline}
+.qz .qh::before{content:counter(c, decimal-leading-zero); font-family:var(--display); font-weight:800; color:var(--accent); font-size:14px; font-variant-numeric:tabular-nums}
+.qz .qh p{font-size:16.5px}
+.qz .alts{display:grid; gap:6px}
+.alt{display:grid; grid-template-columns:28px minmax(0,1fr); gap:8px; align-items:start; text-align:left; border:1.5px solid var(--line); background:var(--bg); color:var(--ink); border-radius:8px; padding:9px 12px; font-family:var(--body); font-size:15.5px; line-height:1.45}
+.alt:hover:not([disabled]){border-color:var(--ink)}
+.alt .k{font-family:var(--display); font-weight:700; font-size:13px; width:24px; height:24px; border-radius:50%; border:1.5px solid currentColor; display:grid; place-items:center; color:var(--ink-2)}
+.alt[disabled]{cursor:default}
+.alt.right{border-color:var(--ok); background:var(--ok-soft)} .alt.right .k{background:var(--ok); color:var(--surface); border-color:var(--ok)}
+.alt.wrong{border-color:var(--bad); background:var(--bad-soft)} .alt.wrong .k{background:var(--bad); color:var(--surface); border-color:var(--bad)}
+.fb{font-size:15px; padding:10px 12px; border-radius:6px}
+.fb.ok{background:var(--ok-soft)} .fb.bad{background:var(--bad-soft)}
+.fb b{font-family:var(--display)}
+.fb.ok b{color:var(--ok)} .fb.bad b{color:var(--bad)}
+.final{border:2px solid var(--ink); border-radius:10px; padding:18px; display:grid; gap:6px; background:var(--surface)}
+.final h4{font-size:22px}
+footer.end{max-width:1160px; margin:64px auto 0; padding-top:18px; border-top:1px solid var(--line); font-family:var(--display); font-size:13px; color:var(--ink-2)}
+</style><style>
+.steps-list{list-style:none; margin:0; padding:0; counter-reset:st; display:grid; gap:10px}
+.steps-list > li{counter-increment:st; position:relative; padding-left:44px; font-size:16.5px}
+.steps-list > li::before{content:counter(st); position:absolute; left:0; top:1px; width:28px; height:28px; border-radius:50%; background:var(--accent); color:var(--accent-ink); font-family:var(--display); font-weight:700; font-size:14px; display:grid; place-items:center}
+kbd{font-family:var(--mono); font-size:.85em; border:1px solid var(--line); border-bottom-width:2px; border-radius:4px; padding:1px 6px; background:var(--surface)}
+.ui{font-family:var(--display); font-weight:600; font-size:.95em}
+.cmd{position:relative}
+.cmd pre.term{padding-right:96px}
+.cmd .copy{position:absolute; top:8px; right:8px; font-family:var(--display); font-size:12px; font-weight:700; border:1px solid #5E7A55; background:#1B2A1D; color:#D6E8CB; border-radius:5px; padding:4px 9px}
+table.fill{border-collapse:collapse; width:100%; font-size:15px}
+.fill th{font-family:var(--display); font-size:12.5px; text-transform:uppercase; letter-spacing:.06em; text-align:left; color:var(--ink-2); border-bottom:2px solid var(--ink); padding:8px}
+.fill td{border:1px solid var(--line); padding:10px 8px; height:42px; background:var(--surface)}
+.fill td.pre{font-family:var(--display); font-weight:600; background:var(--surface-2)}
+.q{border-left:4px solid var(--accent); padding:4px 0 4px 14px; display:grid; gap:6px}
+.q p{font-size:16.5px}
+.q .lines{height:64px; background:repeating-linear-gradient(transparent 0 31px, var(--line) 31px 32px)}
+.warn{background:var(--bad-soft); color:var(--ink); border-radius:6px; padding:12px 16px; font-size:15.5px}
+.warn b{color:var(--bad)}
+@media print{ .cmd .copy{display:none} .cmd pre.term{padding-right:18px} .q .lines{height:80px} }
+</style><style>
+body{margin:0}
+[hidden]{display:none!important}
+@media print{
+  :root{--bg:#FFFFFF; --surface:#FFFFFF}
+  body{font-size:11pt; padding-inline:0}
+  nav.toc,.cmd .copy{display:none!important}
+  .layout{grid-template-columns:minmax(0,1fr); gap:0; padding-top:12px}
+  main{gap:22px}
+  .top{padding-block:0 14px}
+  .top h1{font-size:44pt}
+  .sec{break-before:auto}
+  table,.q,.cmd,.note,.warn,.map{break-inside:avoid}
+  .sec-head{break-after:avoid}
+  pre.term{white-space:pre-wrap; word-break:break-all}
+}
+</style>
+<style>
+.sec > *{min-width:0} pre.term{max-width:100%}
+a.back{display:inline-block; font-family:var(--display); font-size:14px; font-weight:600; color:var(--accent); text-decoration:none; margin-bottom:6px}
+a.back:hover{text-decoration:underline}
+.labs-index{max-width:1160px; margin:0 auto; padding-top:36px; display:grid; gap:16px}
+.labcard{display:grid; grid-template-columns:72px minmax(0,1fr); gap:20px; align-items:start; text-decoration:none; color:var(--ink); background:var(--surface); border:1.5px solid var(--line); border-radius:12px; padding:22px 24px; transition:border-color .15s, transform .15s}
+.labcard:hover{border-color:var(--accent); transform:translateY(-2px)}
+.labcard .lnum{font-family:var(--display); font-weight:800; font-size:54px; line-height:1; color:var(--accent)}
+.labcard .lbody{display:grid; gap:6px}
+.labcard h2{font-size:26px; font-weight:700}
+.labcard p{font-size:16.5px; color:var(--ink-2); max-width:70ch}
+.lcap{font-family:var(--display); font-size:12.5px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-2)}
+.ltags{display:flex; flex-wrap:wrap; gap:6px}
+.ltags i{font-style:normal; font-family:var(--display); font-size:12.5px; font-weight:600; background:var(--accent-soft); color:var(--accent); padding:2px 9px; border-radius:999px}
+@media (max-width:560px){.labcard{grid-template-columns:minmax(0,1fr)} .labcard .lnum{font-size:36px}}
+@media print{ a.back{display:none} }
+</style>
+</head>
+<body>
+<div class="labpage" id="inicio">
+
+<header class="top">
+  <p class="eyebrow">Sistemas Operacionais · Bacharelado em Sistemas de Informação · IFAL Campus Maceió</p>
+  <h1>Sincronização e comunicação<span>.</span></h1>
+  <p class="lede">Três práticas curtas sobre sincronização e comunicação entre processos. Todas rodam no Windows que já está no computador: não é preciso instalar nada nem saber programar. Cada uma começa e termina na mesma aula.</p>
+  <div class="meta"><span>Base: <b>Machado &amp; Maia, <i>Arquitetura de Sistemas Operacionais</i>, cap. 7</b></span><span>Prof. Christiano Rossini</span></div>
+</header>
+
+<main class="labs-index">
+  <a class="labcard" href="#lab1">
+    <span class="lnum">1</span>
+    <div class="lbody"><span class="lcap">Capítulo 7 · cerca de 50 min</span><h2>O saldo que sumiu</h2><p>Dois “caixas” atualizam o mesmo saldo: primeiro uma operação se perde, depois o arquivo é trancado e o problema desaparece.</p><span class="ltags"><i>condição de corrida</i><i>região crítica</i><i>exclusão mútua</i></span></div>
+  </a>
+  <a class="labcard" href="#lab2">
+    <span class="lnum">2</span>
+    <div class="lbody"><span class="lcap">Capítulo 7 · cerca de 50 min</span><h2>Semáforo e deadlock</h2><p>Um semáforo de verdade do Windows bloqueia um processo; depois, dois processos travam um ao outro e você desfaz o deadlock.</p><span class="ltags"><i>semáforo</i><i>DOWN e UP</i><i>deadlock</i></span></div>
+  </a>
+  <a class="labcard" href="#lab3">
+    <span class="lnum">3</span>
+    <div class="lbody"><span class="lcap">Capítulos 5 e 7 · cerca de 50 min</span><h2>Processos conversando</h2><p>Pipe no Prompt de Comando, pipe com nome entre duas janelas e uma caixa postal de mensagens.</p><span class="ltags"><i>pipe</i><i>síncrona</i><i>assíncrona</i><i>mailbox</i></span></div>
+  </a>
+  <div class="note"><span class="lbl">Como usar</span><p>Abra o laboratório indicado pelo professor, trabalhe em dupla e anote as respostas na folha ou no caderno. Os comandos aparecem em caixas pretas com um botão <b>Copiar</b>: copie, cole na janela indicada e tecle Enter.</p></div>
+</main>
+<footer class="end">Laboratórios de Sistemas Operacionais · IFAL Campus Maceió.</footer>
+</div>
+<div class="labpage" id="lab1" hidden>
+
+<header class="top">
+  <a class="back" href="#inicio">← Todos os laboratórios</a>
+  <p class="eyebrow">Sistemas Operacionais · Laboratório 1 de 3 · Capítulo 7</p>
+  <h1>Lab 1: o saldo que sumiu<span>.</span></h1>
+  <p class="lede">Dois “caixas eletrônicos” vão atualizar o mesmo saldo ao mesmo tempo. Primeiro você vai ver uma operação se perder (condição de corrida) e depois vai resolver o problema trancando o arquivo (exclusão mútua).</p>
+  <div class="meta"><span>Duração: <b>cerca de 50 min</b></span><span>Em duplas</span><span>Windows 10 ou 11</span><span>Não é preciso saber programar</span></div>
+</header>
+
+<div class="layout">
+<nav class="toc" aria-label="Sumário">
+  <p>Roteiro</p>
+  <ol>
+    <li><a href="#lab1-p0"><span>0</span>Como funciona</a></li>
+    <li><a href="#lab1-p1"><span>1</span>Preparar a conta</a></li>
+    <li><a href="#lab1-p2"><span>2</span>Sem proteção</a></li>
+    <li><a href="#lab1-p3"><span>3</span>Com trava</a></li>
+    <li><a href="#lab1-p4"><span>4</span>Conclusão</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<section class="sec" id="lab1-p0">
+  <div class="sec-head"><span class="num">Parte 0 · 5 min</span><h2>Como funciona</h2></div>
+  <p>A conta de um cliente tem saldo de <b>1000</b>, guardado num arquivo de texto. Ao mesmo tempo:</p>
+  <ul>
+    <li>o <b>Caixa 1</b> (você, no Bloco de Notas) faz um <b>saque de 200</b>;</li>
+    <li>o <b>Caixa 2</b> (o PowerShell) faz um <b>depósito de 300</b>. Ele lê o saldo, “processa” por 20 segundos e grava o resultado.</li>
+  </ul>
+  <p>O saldo certo no final é <b>1000 − 200 + 300 = 1100</b>.</p>
+  <div class="note"><span class="lbl">Não é programação</span><p>Você só vai <b>copiar e colar</b> comandos prontos no PowerShell. Use o botão <b>Copiar</b> de cada caixa preta, clique na janela do PowerShell e cole com o botão direito do mouse (ou <kbd>Ctrl</kbd>+<kbd>V</kbd>), depois tecle <kbd>Enter</kbd>.</p></div>
+</section>
+
+<section class="sec" id="lab1-p1">
+  <div class="sec-head"><span class="num">Parte 1 · 5 min</span><h2>Preparar a conta</h2></div>
+  <ol class="steps-list">
+    <li>Abra o <b>Windows PowerShell</b>: menu Iniciar, digite “PowerShell” e tecle <kbd>Enter</kbd>. Deixe esta janela aberta até o fim do laboratório.</li>
+    <li>Cole o comando abaixo. Ele cria o arquivo <code>saldo.txt</code> na Área de Trabalho com o valor 1000 e o abre no Bloco de Notas.</li>
+  </ol>
+  <div class="cmd"><pre class="term">$arq = Join-Path ([Environment]::GetFolderPath('Desktop')) 'saldo.txt'; Set-Content $arq 1000; notepad $arq</pre><button class="copy" type="button">Copiar</button></div>
+  <ol class="steps-list" start="3" style="counter-reset:st 2">
+    <li>Organize a tela com o <b>Bloco de Notas</b> de um lado e o <b>PowerShell</b> do outro. O Bloco de Notas deve mostrar <code>1000</code>.</li>
+  </ol>
+</section>
+
+<section class="sec" id="lab1-p2">
+  <div class="sec-head"><span class="num">Parte 2 · 15 min</span><h2>Sem proteção: a condição de corrida</h2></div>
+  <p>Leia todos os passos antes de começar: você terá <b>20 segundos</b> para agir.</p>
+  <ol class="steps-list">
+    <li>No PowerShell, cole o comando do <b>Caixa 2</b> (depósito de 300). Ele mostra o saldo que leu e começa a contar 20 segundos.</li>
+  </ol>
+  <div class="cmd"><pre class="term">$s = [int](Get-Content $arq); Write-Host "Caixa 2 leu o saldo: $s. Processando o deposito de 300..."; Start-Sleep 20; Set-Content $arq ($s + 300); Write-Host "Caixa 2 gravou: $($s + 300)"</pre><button class="copy" type="button">Copiar</button></div>
+  <ol class="steps-list" start="2" style="counter-reset:st 1">
+    <li><b>Imediatamente</b>, vá ao Bloco de Notas (o <b>Caixa 1</b>), troque <code>1000</code> por <code>800</code> e salve com <kbd>Ctrl</kbd>+<kbd>S</kbd>.</li>
+    <li>Espere o PowerShell mostrar “Caixa 2 gravou”.</li>
+    <li>Feche o Bloco de Notas e veja o saldo final colando:</li>
+  </ol>
+  <div class="cmd"><pre class="term">Write-Host "Saldo final no arquivo: $(Get-Content $arq)"</pre><button class="copy" type="button">Copiar</button></div>
+  <div class="scroll wide"><table class="fill">
+    <thead><tr><th>O Caixa 2 leu</th><th>O Caixa 1 gravou</th><th>O Caixa 2 gravou</th><th>Saldo final</th><th>Saldo certo</th></tr></thead>
+    <tbody><tr><td></td><td></td><td></td><td></td><td class="pre">1100</td></tr></tbody>
+  </table></div>
+  <div class="q"><p><b>1.</b> Qual operação se perdeu? Explique por que, usando a ordem em que cada caixa leu e gravou o saldo.</p><div class="lines"></div></div>
+</section>
+
+<section class="sec" id="lab1-p3">
+  <div class="sec-head"><span class="num">Parte 3 · 15 min</span><h2>Com trava: exclusão mútua</h2></div>
+  <p>Agora o Caixa 2 vai <b>trancar</b> o arquivo enquanto trabalha. Enquanto ele estiver trancado, nenhum outro programa consegue gravar.</p>
+  <ol class="steps-list">
+    <li>Volte o saldo para 1000 e abra o Bloco de Notas de novo:</li>
+  </ol>
+  <div class="cmd"><pre class="term">Set-Content $arq 1000; notepad $arq</pre><button class="copy" type="button">Copiar</button></div>
+  <ol class="steps-list" start="2" style="counter-reset:st 1">
+    <li>No PowerShell, cole o comando do <b>Caixa 2 com trava</b>:</li>
+  </ol>
+  <div class="cmd"><pre class="term">$f = [System.IO.File]::Open($arq, 'Open', 'ReadWrite', 'None'); $s = [int](New-Object System.IO.StreamReader($f)).ReadLine(); Write-Host "Caixa 2 leu $s e TRANCOU o arquivo. Processando..."; Start-Sleep 20; $f.SetLength(0); $w = New-Object System.IO.StreamWriter($f); $w.Write($s + 300); $w.Flush(); $f.Close(); Write-Host "Caixa 2 gravou $($s + 300) e LIBEROU o arquivo"</pre><button class="copy" type="button">Copiar</button></div>
+  <ol class="steps-list" start="3" style="counter-reset:st 2">
+    <li>Enquanto ele processa, troque o saldo para <code>800</code> no Bloco de Notas e tente salvar com <kbd>Ctrl</kbd>+<kbd>S</kbd>. Anote a mensagem que aparece.</li>
+    <li>Quando o PowerShell mostrar “LIBEROU”, <b>feche o Bloco de Notas sem salvar</b>.</li>
+    <li>Agora faça o saque do jeito certo: abra o arquivo de novo, leia o saldo atual, subtraia 200 e salve.</li>
+  </ol>
+  <div class="cmd"><pre class="term">notepad $arq</pre><button class="copy" type="button">Copiar</button></div>
+  <div class="scroll wide"><table class="fill">
+    <thead><tr><th>Mensagem ao tentar salvar</th><th>Saldo lido ao reabrir</th><th>Saldo final</th></tr></thead>
+    <tbody><tr><td></td><td></td><td></td></tr></tbody>
+  </table></div>
+  <div class="q"><p><b>2.</b> Por que o Bloco de Notas não conseguiu salvar enquanto o Caixa 2 trabalhava? Que conceito do capítulo isso representa?</p><div class="lines"></div></div>
+  <div class="q"><p><b>3.</b> Por que foi preciso <b>reabrir</b> o arquivo antes de sacar, em vez de salvar o 800 que já estava digitado?</p><div class="lines"></div></div>
+</section>
+
+<section class="sec" id="lab1-p4">
+  <div class="sec-head"><span class="num">Parte 4 · 10 min</span><h2>Conclusão</h2></div>
+  <div class="q"><p><b>4.</b> Neste laboratório, o que foi a <b>região crítica</b>, o <b>protocolo de entrada</b> e o <b>protocolo de saída</b>?</p><div class="lines"></div></div>
+  <div class="note"><span class="lbl">Ao terminar</span><p>Apague o arquivo <code>saldo.txt</code> da Área de Trabalho e feche as janelas.</p></div>
+</section>
+
+</main>
+</div>
+<footer class="end">Laboratório de Sistemas Operacionais · capítulo 7 (Sincronização e comunicação entre processos) de Machado &amp; Maia, <i>Arquitetura de Sistemas Operacionais</i>.</footer>
+</div>
+<div class="labpage" id="lab2" hidden>
+
+<header class="top">
+  <a class="back" href="#inicio">← Todos os laboratórios</a>
+  <p class="eyebrow">Sistemas Operacionais · Laboratório 2 de 3 · Capítulo 7</p>
+  <h1>Lab 2: semáforo e deadlock<span>.</span></h1>
+  <p class="lede">Usando semáforos e mutexes de verdade do Windows, você vai ver um processo ficar bloqueado esperando sua vez e depois provocar, observar e desfazer um deadlock.</p>
+  <div class="meta"><span>Duração: <b>cerca de 50 min</b></span><span>Em duplas</span><span>Windows 10 ou 11</span><span>Não é preciso saber programar</span></div>
+</header>
+
+<div class="layout">
+<nav class="toc" aria-label="Sumário">
+  <p>Roteiro</p>
+  <ol>
+    <li><a href="#lab2-p0"><span>0</span>Antes de começar</a></li>
+    <li><a href="#lab2-p1"><span>1</span>Semáforo</a></li>
+    <li><a href="#lab2-p2"><span>2</span>Deadlock</a></li>
+    <li><a href="#lab2-p3"><span>3</span>Conclusão</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<section class="sec" id="lab2-p0">
+  <div class="sec-head"><span class="num">Parte 0 · 5 min</span><h2>Antes de começar</h2></div>
+  <ul>
+    <li>Cada janela do <b>Windows PowerShell</b> será um <b>processo</b> diferente. Abra pelo menu Iniciar, digitando “PowerShell”.</li>
+    <li>Você só vai <b>copiar e colar</b> comandos prontos: botão <b>Copiar</b>, clique na janela, botão direito do mouse (ou <kbd>Ctrl</kbd>+<kbd>V</kbd>) e <kbd>Enter</kbd>.</li>
+    <li>Quando uma janela ficar <b>parada sem mostrar o cursor</b>, é de propósito: o processo está bloqueado. Não feche nada até o roteiro pedir.</li>
+  </ul>
+</section>
+
+<section class="sec" id="lab2-p1">
+  <div class="sec-head"><span class="num">Parte 1 · 20 min</span><h2>Um semáforo que deixa passar dois</h2>
+  </div>
+  <p>Vamos criar um semáforo com valor <b>2</b>: no máximo dois processos podem estar na “região crítica” ao mesmo tempo.</p>
+  <ol class="steps-list">
+    <li>Abra <b>três</b> janelas do PowerShell. Chame-as de P1, P2 e P3 e organize-as lado a lado.</li>
+    <li>Em <b>cada uma</b> das três janelas, cole o comando abaixo. Ele apenas conecta a janela ao semáforo chamado <code>LabSemaforo</code>.</li>
+  </ol>
+  <div class="cmd"><pre class="term">$s = New-Object System.Threading.Semaphore(2, 2, 'LabSemaforo')</pre><button class="copy" type="button">Copiar</button></div>
+  <ol class="steps-list" start="3" style="counter-reset:st 2">
+    <li>Agora faça o <b>DOWN</b> em P1, depois em P2, depois em P3, colando em cada janela:</li>
+  </ol>
+  <div class="cmd"><pre class="term">Write-Host "Tentando entrar..."; $s.WaitOne(); Write-Host "ENTREI na regiao critica"</pre><button class="copy" type="button">Copiar</button></div>
+  <ol class="steps-list" start="4" style="counter-reset:st 3">
+    <li>Observe P3. Abra o Gerenciador de Tarefas (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Esc</kbd>), aba <span class="ui">Detalhes</span>, e veja o uso de CPU dos processos <code>powershell.exe</code>.</li>
+    <li>Em <b>P1</b>, faça o <b>UP</b> colando o comando abaixo. Observe P3 imediatamente.</li>
+  </ol>
+  <div class="cmd"><pre class="term">$s.Release() | Out-Null; Write-Host "SAI da regiao critica"</pre><button class="copy" type="button">Copiar</button></div>
+  <div class="scroll wide"><table class="fill">
+    <thead><tr><th>Janela</th><th>Depois do DOWN: entrou ou ficou esperando?</th><th>CPU (%) enquanto esperava</th></tr></thead>
+    <tbody><tr><td class="pre">P1</td><td></td><td></td></tr><tr><td class="pre">P2</td><td></td><td></td></tr><tr><td class="pre">P3</td><td></td><td></td></tr></tbody>
+  </table></div>
+  <div class="q"><p><b>1.</b> Por que P3 ficou parado? O que aconteceu com ele quando P1 fez o UP?</p><div class="lines"></div></div>
+  <div class="q"><p><b>2.</b> P3 gastou CPU enquanto esperava? O que isso mostra sobre semáforos em relação à <b>espera ocupada</b>?</p><div class="lines"></div></div>
+  <div class="note"><span class="lbl">Antes de seguir</span><p>Feche as três janelas do PowerShell.</p></div>
+</section>
+
+<section class="sec" id="lab2-p2">
+  <div class="sec-head"><span class="num">Parte 2 · 20 min</span><h2>Provocar, observar e desfazer um deadlock</h2></div>
+  <p>Agora há <b>dois recursos</b>, R1 e R2, e cada um só pode ser usado por um processo de cada vez (um <i>mutex</i>, isto é, um semáforo binário).</p>
+  <ol class="steps-list">
+    <li>Abra <b>duas</b> janelas novas do PowerShell: <b>A</b> e <b>B</b>. Em cada uma, cole:</li>
+  </ol>
+  <div class="cmd"><pre class="term">$r1 = New-Object System.Threading.Mutex($false, 'LabR1'); $r2 = New-Object System.Threading.Mutex($false, 'LabR2'); Write-Host "Pronto: recursos R1 e R2 conhecidos"</pre><button class="copy" type="button">Copiar</button></div>
+  <ol class="steps-list" start="2" style="counter-reset:st 1">
+    <li>Siga <b>exatamente esta ordem</b>, um comando de cada vez:</li>
+  </ol>
+  <div class="scroll wide"><table class="fill">
+    <thead><tr><th>Passo</th><th>Janela</th><th>Comando</th><th>O que aconteceu?</th></tr></thead>
+    <tbody>
+      <tr><td class="pre">a</td><td class="pre">A</td><td><code>$r1.WaitOne()</code> · A pega R1</td><td></td></tr>
+      <tr><td class="pre">b</td><td class="pre">B</td><td><code>$r2.WaitOne()</code> · B pega R2</td><td></td></tr>
+      <tr><td class="pre">c</td><td class="pre">A</td><td><code>$r2.WaitOne()</code> · A pede R2</td><td></td></tr>
+      <tr><td class="pre">d</td><td class="pre">B</td><td><code>$r1.WaitOne()</code> · B pede R1</td><td></td></tr>
+    </tbody>
+  </table></div>
+  <ol class="steps-list" start="3" style="counter-reset:st 2">
+    <li>Espere um minuto. Alguma das janelas volta a responder? Tente <kbd>Ctrl</kbd>+<kbd>C</kbd> nelas.</li>
+    <li><b>Correção:</b> feche a janela <b>B</b> (eliminar o processo). Observe a janela A.</li>
+  </ol>
+  <div class="note"><span class="lbl">Mensagem esperada</span><p>A janela A volta a responder com um aviso de <b>mutex abandonado</b>: é o Windows informando que o recurso R2 foi liberado porque o processo dono dele terminou. A pegou R2 e seguiu.</p></div>
+  <div class="q"><p><b>3.</b> Desenhe o grafo de alocação de recursos no momento do passo d (processos em círculos, recursos em quadrados, setas de “tem” e de “espera”).</p><div class="lines" style="height:160px"></div></div>
+  <div class="q"><p><b>4.</b> Quais das quatro condições do deadlock aparecem neste experimento? Mostre onde cada uma está.</p><div class="lines"></div></div>
+  <div class="q"><p><b>5.</b> Se as duas janelas pedissem os recursos <b>na mesma ordem</b> (primeiro R1, depois R2), o deadlock aconteceria? Qual condição deixaria de existir?</p><div class="lines"></div></div>
+</section>
+
+<section class="sec" id="lab2-p3">
+  <div class="sec-head"><span class="num">Parte 3 · 5 min</span><h2>Conclusão</h2></div>
+  <div class="q"><p><b>6.</b> Em uma frase: qual a diferença entre um processo bloqueado no semáforo (Parte 1) e processos em deadlock (Parte 2)?</p><div class="lines"></div></div>
+  <div class="note"><span class="lbl">Ao terminar</span><p>Feche todas as janelas do PowerShell. Os semáforos e mutexes deixam de existir sozinhos quando nenhum processo os usa.</p></div>
+</section>
+
+</main>
+</div>
+<footer class="end">Laboratório de Sistemas Operacionais · capítulo 7 (Sincronização e comunicação entre processos) de Machado &amp; Maia, <i>Arquitetura de Sistemas Operacionais</i>.</footer>
+</div>
+<div class="labpage" id="lab3" hidden>
+
+<header class="top">
+  <a class="back" href="#inicio">← Todos os laboratórios</a>
+  <p class="eyebrow">Sistemas Operacionais · Laboratório 3 de 3 · Capítulos 5 e 7</p>
+  <h1>Lab 3: processos conversando<span>.</span></h1>
+  <p class="lede">Três formas reais de comunicação entre processos no Windows: o pipe, que liga a saída de um à entrada de outro; o pipe com nome, em que os dois se esperam (síncrono); e uma caixa postal, em que ninguém precisa esperar (assíncrono).</p>
+  <div class="meta"><span>Duração: <b>cerca de 50 min</b></span><span>Em duplas</span><span>Windows 10 ou 11</span><span>Não é preciso saber programar</span></div>
+</header>
+
+<div class="layout">
+<nav class="toc" aria-label="Sumário">
+  <p>Roteiro</p>
+  <ol>
+    <li><a href="#lab3-p1"><span>1</span>Pipe</a></li>
+    <li><a href="#lab3-p2"><span>2</span>Comunicação síncrona</a></li>
+    <li><a href="#lab3-p3"><span>3</span>Caixa postal</a></li>
+    <li><a href="#lab3-p4"><span>4</span>Conclusão</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<section class="sec" id="lab3-p1">
+  <div class="sec-head"><span class="num">Parte 1 · 10 min</span><h2>Pipe: a saída de um vira a entrada do outro</h2></div>
+  <ol class="steps-list">
+    <li>Abra o <b>Prompt de Comando</b>: menu Iniciar, digite “cmd” e tecle <kbd>Enter</kbd>.</li>
+    <li>Rode o comando abaixo. Ele lista todos os processos em execução (é uma lista longa).</li>
+  </ol>
+  <div class="cmd"><pre class="term">tasklist</pre><button class="copy" type="button">Copiar</button></div>
+  <ol class="steps-list" start="3" style="counter-reset:st 2">
+    <li>Agora rode a versão com <b>pipe</b> (<code>|</code>). O <code>find</code> só mostra as linhas que contêm “explorer”.</li>
+  </ol>
+  <div class="cmd"><pre class="term">tasklist | find /i "explorer"</pre><button class="copy" type="button">Copiar</button></div>
+  <ol class="steps-list" start="4" style="counter-reset:st 3">
+    <li>Mais um exemplo: mostrar só o endereço IPv4 do computador.</li>
+  </ol>
+  <div class="cmd"><pre class="term">ipconfig | find "IPv4"</pre><button class="copy" type="button">Copiar</button></div>
+  <div class="q"><p><b>1.</b> No comando <code>tasklist | find /i "explorer"</code>, quantos processos participaram? Para onde foi a saída do <code>tasklist</code>, se ela não apareceu inteira na tela?</p><div class="lines"></div></div>
+</section>
+
+<section class="sec" id="lab3-p2">
+  <div class="sec-head"><span class="num">Parte 2 · 15 min</span><h2>Pipe com nome: comunicação síncrona</h2></div>
+  <p>Agora dois processos independentes vão se comunicar por um canal com nome, <code>LabPipe</code>. Abra <b>duas</b> janelas do <b>Windows PowerShell</b>: o <b>Receptor</b> e o <b>Transmissor</b>. Cole os comandos com o botão direito do mouse.</p>
+  <h3>2a. O receptor chega primeiro</h3>
+  <ol class="steps-list">
+    <li>No <b>Receptor</b>, cole o comando abaixo. A janela vai ficar <b>esperando</b>.</li>
+  </ol>
+  <div class="cmd"><pre class="term">$p = New-Object System.IO.Pipes.NamedPipeServerStream('LabPipe'); Write-Host "Receptor esperando uma mensagem..."; $p.WaitForConnection(); Write-Host ("Recebi: " + (New-Object System.IO.StreamReader($p)).ReadLine()); $p.Close()</pre><button class="copy" type="button">Copiar</button></div>
+  <ol class="steps-list" start="2" style="counter-reset:st 1">
+    <li>No <b>Transmissor</b>, cole o comando abaixo. Troque o texto entre aspas, se quiser.</li>
+  </ol>
+  <div class="cmd"><pre class="term">$c = New-Object System.IO.Pipes.NamedPipeClientStream('.', 'LabPipe'); $c.Connect(); $w = New-Object System.IO.StreamWriter($c); $w.AutoFlush = $true; $w.WriteLine('Ola, receptor! Aqui e o transmissor.'); $c.Close(); Write-Host "Mensagem enviada"</pre><button class="copy" type="button">Copiar</button></div>
+  <h3>2b. Agora o transmissor chega primeiro</h3>
+  <ol class="steps-list">
+    <li>Cole primeiro o comando do <b>Transmissor</b> e observe a janela.</li>
+    <li>Só depois cole o comando do <b>Receptor</b> na outra janela.</li>
+  </ol>
+  <div class="scroll wide"><table class="fill">
+    <thead><tr><th>Situação</th><th>Quem ficou esperando?</th><th>Até quando?</th></tr></thead>
+    <tbody><tr><td class="pre">2a · receptor primeiro</td><td></td><td></td></tr><tr><td class="pre">2b · transmissor primeiro</td><td></td><td></td></tr></tbody>
+  </table></div>
+  <div class="q"><p><b>2.</b> Por que essa comunicação é chamada de <b>síncrona</b> (ou <i>rendezvous</i>)? Ela é direta ou indireta?</p><div class="lines"></div></div>
+</section>
+
+<section class="sec" id="lab3-p3">
+  <div class="sec-head"><span class="num">Parte 3 · 15 min</span><h2>Caixa postal: comunicação assíncrona</h2></div>
+  <p>Agora as mensagens vão para uma <b>pasta</b> na Área de Trabalho, chamada <code>CaixaPostal</code>, que funciona como a <i>mailbox</i> do livro. Use as mesmas duas janelas do PowerShell.</p>
+  <ol class="steps-list">
+    <li>No <b>Transmissor</b>, cole o comando abaixo <b>três vezes seguidas</b> (envia três mensagens).</li>
+  </ol>
+  <div class="cmd"><pre class="term">$cx = Join-Path ([Environment]::GetFolderPath('Desktop')) 'CaixaPostal'; New-Item -ItemType Directory -Force $cx | Out-Null; $hora = Get-Date -Format 'HH:mm:ss.fff'; Set-Content (Join-Path $cx ("msg-" + $hora.Replace(':', '').Replace('.', '') + ".txt")) "Mensagem enviada as $hora"; Write-Host "Mensagem enviada as $hora. Continuo trabalhando."</pre><button class="copy" type="button">Copiar</button></div>
+  <ol class="steps-list" start="2" style="counter-reset:st 1">
+    <li>Abra a pasta <code>CaixaPostal</code> na Área de Trabalho e veja as mensagens guardadas.</li>
+    <li>No <b>Receptor</b>, cole o comando abaixo <b>quatro vezes</b>, uma de cada vez. Ele lê e retira a mensagem mais antiga.</li>
+  </ol>
+  <div class="cmd"><pre class="term">$cx = Join-Path ([Environment]::GetFolderPath('Desktop')) 'CaixaPostal'; $m = Get-ChildItem $cx -Filter *.txt -ErrorAction SilentlyContinue | Sort-Object CreationTime | Select-Object -First 1; if ($m) { Write-Host ("Recebi: " + (Get-Content $m.FullName)); Remove-Item $m.FullName } else { Write-Host "Caixa postal vazia" }</pre><button class="copy" type="button">Copiar</button></div>
+  <div class="scroll wide"><table class="fill">
+    <thead><tr><th>Leitura</th><th>O que o receptor recebeu</th></tr></thead>
+    <tbody><tr><td class="pre">1ª</td><td></td></tr><tr><td class="pre">2ª</td><td></td></tr><tr><td class="pre">3ª</td><td></td></tr><tr><td class="pre">4ª</td><td></td></tr></tbody>
+  </table></div>
+  <div class="q"><p><b>3.</b> O transmissor precisou esperar o receptor em algum momento? Onde as mensagens ficaram até serem lidas?</p><div class="lines"></div></div>
+  <div class="q"><p><b>4.</b> As mensagens foram recebidas na mesma ordem em que foram enviadas? Que estrutura isso lembra?</p><div class="lines"></div></div>
+</section>
+
+<section class="sec" id="lab3-p4">
+  <div class="sec-head"><span class="num">Parte 4 · 10 min</span><h2>Conclusão</h2></div>
+  <div class="q"><p><b>5.</b> Compare a Parte 2 e a Parte 3: qual forma deixa os processos trabalharem com mais liberdade? Qual o preço disso?</p><div class="lines"></div></div>
+  <div class="note"><span class="lbl">Ao terminar</span><p>Apague a pasta <code>CaixaPostal</code> da Área de Trabalho e feche as janelas.</p></div>
+</section>
+
+</main>
+</div>
+<footer class="end">Laboratório de Sistemas Operacionais · capítulos 5 (pipe) e 7 (troca de mensagens) de Machado &amp; Maia, <i>Arquitetura de Sistemas Operacionais</i>.</footer>
+</div>
+<script>
+(function(){
+  const links = Array.from(document.querySelectorAll('nav.toc a'));
+  if('IntersectionObserver' in window){
+    const io = new IntersectionObserver(es => es.forEach(en => { if(en.isIntersecting) links.forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + en.target.id)); }), {rootMargin:'-20% 0px -70% 0px'});
+    document.querySelectorAll('main > section').forEach(s => io.observe(s));
+  }
+  document.querySelectorAll('.cmd').forEach(box => {
+    const btn = box.querySelector('.copy'), pre = box.querySelector('pre');
+    btn.addEventListener('click', () => {
+      const done = () => { btn.textContent = 'Copiado'; setTimeout(() => btn.textContent = 'Copiar', 1500); };
+      const fallback = () => { const r = document.createRange(); r.selectNodeContents(pre); const s = getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent = 'Use Ctrl+C'; setTimeout(() => btn.textContent = 'Copiar', 2000); };
+      try { navigator.clipboard.writeText(pre.innerText).then(done, fallback); } catch(e){ fallback(); }
+    });
+  });
+})();
+</script>
+<script>
+(function(){
+  const pages = Array.from(document.querySelectorAll('.labpage'));
+  function show(){
+    const h = decodeURIComponent(location.hash.slice(1));
+    const m = h.match(/^lab\d/);
+    const id = (m && document.getElementById(m[0])) ? m[0] : 'inicio';
+    pages.forEach(p => { p.hidden = p.id !== id; });
+    const t = h && h !== id ? document.getElementById(h) : null;
+    if(t) t.scrollIntoView(); else window.scrollTo(0, 0);
+  }
+  window.addEventListener('hashchange', show);
+  show();
+})();
+</script>
+</body>
+</html>
