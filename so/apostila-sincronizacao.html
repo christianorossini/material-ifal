@@ -1,0 +1,1019 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apostila de Sincronização</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --bg:#F2F4EE; --surface:#FBFCF8; --surface-2:#E8EDE2; --ink:#17231A; --ink-2:#4A5A4C; --line:#D3DCCB;
+  --accent:#2E6B1E; --accent-ink:#FFFFFF; --accent-soft:#DDEBD3;
+  --run:#2E6B1E; --run-soft:#DDEBD3;
+  --ready:#9A6200; --ready-soft:#FBEBC8;
+  --wait:#2F5C99; --wait-soft:#DCE6F4;
+  --neutral:#646E61; --neutral-soft:#E4E7E1;
+  --ok:#1F7A3A; --ok-soft:#D9F0DF; --bad:#B3261E; --bad-soft:#F8DEDB;
+  --display:"Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body:"Literata", Georgia, "Times New Roman", serif;
+  --mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0F1510; --surface:#172019; --surface-2:#1F2A21; --ink:#E4EBE0; --ink-2:#A6B3A4; --line:#2F3D31;
+    --accent:#7CC25B; --accent-ink:#0F1510; --accent-soft:#233A1C;
+    --run:#7CC25B; --run-soft:#1F3519; --ready:#E9B04A; --ready-soft:#3A2E14;
+    --wait:#8DB3EA; --wait-soft:#1B2A40; --neutral:#9AA397; --neutral-soft:#262C25;
+    --ok:#6FD08C; --ok-soft:#173222; --bad:#FF8A80; --bad-soft:#3D1B18;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0F1510; --surface:#172019; --surface-2:#1F2A21; --ink:#E4EBE0; --ink-2:#A6B3A4; --line:#2F3D31;
+  --accent:#7CC25B; --accent-ink:#0F1510; --accent-soft:#233A1C;
+  --run:#7CC25B; --run-soft:#1F3519; --ready:#E9B04A; --ready-soft:#3A2E14;
+  --wait:#8DB3EA; --wait-soft:#1B2A40; --neutral:#9AA397; --neutral-soft:#262C25;
+  --ok:#6FD08C; --ok-soft:#173222; --bad:#FF8A80; --bad-soft:#3D1B18;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto} *{transition:none!important; animation:none!important}}
+body{background:var(--bg); color:var(--ink); font-family:var(--body); font-size:17px; line-height:1.65; padding-inline:20px; padding-block:0 64px}
+h1,h2,h3,h4{font-family:var(--display); line-height:1.15; text-wrap:balance; margin:0}
+p{margin:0}
+a{color:var(--accent)}
+code,.mono{font-family:var(--mono); font-size:.88em}
+button{font:inherit; cursor:pointer}
+:focus-visible{outline:3px solid var(--accent); outline-offset:2px; border-radius:4px}
+
+/* header */
+.top{max-width:1160px; margin:0 auto; padding-block:48px 36px; border-bottom:2px solid var(--ink); display:grid; gap:18px}
+.eyebrow{font-family:var(--display); font-size:13px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--accent)}
+.top h1{font-size:clamp(48px, 9vw, 104px); font-weight:800; letter-spacing:-.03em}
+.top h1 span{color:var(--accent)}
+.lede{font-size:20px; max-width:62ch; color:var(--ink-2)}
+.meta{display:flex; flex-wrap:wrap; gap:8px 24px; font-family:var(--display); font-size:14px; color:var(--ink-2)}
+.meta b{color:var(--ink)}
+
+/* layout */
+.layout{max-width:1160px; margin:0 auto; display:grid; grid-template-columns:230px minmax(0,1fr); gap:56px; padding-top:40px}
+nav.toc{position:sticky; top:calc(env(safe-area-inset-top, 0px) + 20px); align-self:start; font-family:var(--display); font-size:14px}
+nav.toc p{font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-2); margin-bottom:10px}
+nav.toc ol{list-style:none; margin:0; padding:0; display:grid; gap:2px; border-left:2px solid var(--line)}
+nav.toc a{display:grid; grid-template-columns:38px 1fr; padding:6px 10px; margin-left:-2px; border-left:2px solid transparent; color:var(--ink-2); text-decoration:none; line-height:1.3}
+nav.toc a span{font-variant-numeric:tabular-nums; color:var(--ink-2); font-weight:600}
+nav.toc a:hover{color:var(--ink)}
+nav.toc a.on{border-left-color:var(--accent); color:var(--ink); font-weight:600}
+nav.toc a.on span{color:var(--accent)}
+main{min-width:0; display:grid; gap:72px}
+@media (max-width:900px){
+  .layout{grid-template-columns:minmax(0,1fr); gap:28px; padding-top:24px}
+  nav.toc{position:static}
+  nav.toc ol{display:flex; overflow-x:auto; border-left:none; gap:6px; padding-bottom:6px}
+  nav.toc a{display:block; white-space:nowrap; border:1px solid var(--line); border-radius:999px; padding:6px 12px; margin:0; background:var(--surface)}
+  nav.toc a span{margin-right:6px}
+  nav.toc a.on{border-color:var(--accent)}
+}
+
+/* sections */
+.sec{display:grid; gap:20px; scroll-margin-top:24px}
+.sec > *{max-width:68ch}
+.sec > .wide{max-width:none}
+.sec-head{display:grid; gap:6px; padding-bottom:6px}
+.num{font-family:var(--display); font-weight:800; font-size:15px; color:var(--accent); letter-spacing:.06em}
+.sec h2{font-size:clamp(28px, 4vw, 38px); font-weight:700; letter-spacing:-.01em}
+.sec h3{font-size:21px; font-weight:700; margin-top:10px}
+.sec ul,.sec ol{margin:0; padding-left:1.3em; display:grid; gap:6px}
+dfn{font-style:normal; font-weight:600; background:linear-gradient(transparent 62%, var(--accent-soft) 62%)}
+.def{border:2px solid var(--ink); background:var(--surface); padding:18px 22px; display:grid; gap:6px}
+.def .lbl{font-family:var(--display); font-size:12px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--accent)}
+.def p{font-size:19px}
+.note{background:var(--surface-2); padding:14px 18px; border-radius:6px; font-size:16px; display:grid; gap:6px}
+.note .lbl{font-family:var(--display); font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-2)}
+pre.term{font-family:var(--mono); font-size:14px; line-height:1.55; background:#101A12; color:#D6E8CB; padding:14px 18px; border-radius:6px; overflow-x:auto; margin:0}
+pre.term .c{color:#8FA88A}
+
+/* lab widgets */
+.lab{border:1px solid var(--line); background:var(--surface); border-radius:10px; padding:20px; display:grid; gap:16px}
+.lab-head{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap}
+.tag{font-family:var(--display); font-size:11px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; background:var(--accent); color:var(--accent-ink); padding:3px 8px; border-radius:3px}
+.lab-head h4{font-size:18px; font-weight:700}
+.lab-hint{font-size:15px; color:var(--ink-2)}
+.btns{display:flex; flex-wrap:wrap; gap:8px}
+.btn{font-family:var(--display); font-size:14px; font-weight:600; border:1.5px solid var(--ink); background:var(--surface); color:var(--ink); padding:8px 14px; border-radius:6px; transition:background .15s, transform .1s}
+.btn:hover{background:var(--surface-2)}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--ink); color:var(--bg)}
+.btn.primary:hover{background:var(--accent); border-color:var(--accent); color:var(--accent-ink)}
+.btn.ghost{border-color:var(--line); color:var(--ink-2)}
+.btn[disabled]{opacity:.45; cursor:not-allowed}
+.msg{font-family:var(--display); font-size:15px; padding:10px 14px; border-radius:6px; background:var(--surface-2); color:var(--ink)}
+.msg.ok{background:var(--ok-soft); color:var(--ok)}
+.msg.bad{background:var(--bad-soft); color:var(--bad)}
+.chip{display:inline-block; font-family:var(--display); font-size:13px; font-weight:700; padding:2px 9px; border-radius:999px}
+.st-execucao{background:var(--run-soft); color:var(--run)}
+.st-pronto{background:var(--ready-soft); color:var(--ready)}
+.st-espera{background:var(--wait-soft); color:var(--wait)}
+.st-criacao,.st-terminado{background:var(--neutral-soft); color:var(--neutral)}
+.scroll{overflow-x:auto}
+</style>
+<style>
+/* 5.1 */
+.procs{display:grid; grid-template-columns:repeat(auto-fill, minmax(190px, 1fr)); gap:10px; min-height:84px}
+.proc{border:1px solid var(--line); border-left:5px solid var(--run); padding:10px 12px; background:var(--bg); display:grid; gap:2px; animation:pop .25s ease-out}
+.proc b{font-family:var(--display); font-size:15px}
+.proc span{font-family:var(--mono); font-size:12.5px; color:var(--ink-2)}
+.proc.pronto{border-left-color:var(--ready)} .proc.espera{border-left-color:var(--wait)}
+.empty{font-family:var(--display); font-size:14px; color:var(--ink-2); align-self:center}
+@keyframes pop{from{opacity:.2; transform:translateY(6px)} to{opacity:1; transform:none}}
+.prog{display:flex; align-items:center; gap:12px; flex-wrap:wrap}
+.file{font-family:var(--mono); font-size:14px; border:1.5px dashed var(--ink-2); padding:8px 12px; border-radius:6px}
+
+/* 5.2 diagram */
+.fig{margin:0; display:grid; gap:8px}
+.fig figcaption{font-family:var(--display); font-size:13px; color:var(--ink-2)}
+.fig svg{width:100%; height:auto; max-width:640px}
+.fig svg text{font-family:var(--display)} .fig svg text:not([fill]){fill:var(--ink)}
+.part{cursor:pointer}
+.part rect{transition:stroke-width .15s}
+.part:hover rect,.part:focus rect{stroke-width:4}
+
+/* 5.2.1 context switch */
+.cs{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px}
+@media (max-width:620px){.cs{grid-template-columns:minmax(0,1fr)}}
+.box{border:1.5px solid var(--line); border-radius:8px; padding:12px; background:var(--bg); display:grid; gap:8px; transition:border-color .2s, box-shadow .2s}
+.box h5{font-family:var(--display); font-size:14px; margin:0; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:8px}
+.box.cpu{border-color:var(--ink); background:var(--surface-2)}
+.box.flash{border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft)}
+.regs{display:grid; grid-template-columns:auto 1fr; gap:3px 12px; font-family:var(--mono); font-size:13.5px; font-variant-numeric:tabular-nums}
+.regs dt{color:var(--ink-2)} .regs dd{margin:0; text-align:right}
+.steps{display:flex; gap:6px; flex-wrap:wrap}
+.steps i{font-style:normal; font-family:var(--display); font-size:12px; font-weight:700; padding:3px 8px; border-radius:999px; background:var(--surface-2); color:var(--ink-2)}
+.steps i.on{background:var(--accent); color:var(--accent-ink)}
+
+/* 5.2.2 table */
+table.t{border-collapse:collapse; width:100%; font-size:15.5px}
+.t th{font-family:var(--display); text-align:left; font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-2); border-bottom:2px solid var(--ink); padding:8px 10px}
+.t td{border-bottom:1px solid var(--line); padding:10px; vertical-align:top}
+.t td:first-child{font-family:var(--display); font-weight:700; white-space:nowrap}
+
+/* 5.2.4 PCB */
+.pcbwrap{display:grid; grid-template-columns:minmax(0,300px) minmax(0,1fr); gap:20px; align-items:start}
+@media (max-width:620px){.pcbwrap{grid-template-columns:minmax(0,1fr)}}
+.pcb{list-style:none; margin:0; padding:0; border:2px solid var(--ink); border-radius:6px; overflow:hidden; font-family:var(--display); font-size:15px}
+.pcb li{padding:9px 14px; border-top:1px solid var(--line); transition:background .2s, color .2s}
+.pcb li.hd{background:var(--ink); color:var(--bg); font-family:var(--mono); font-size:14px; border-top:none}
+.pcb li.hit[data-part="hw"]{background:var(--wait-soft); color:var(--wait); font-weight:700}
+.pcb li.hit[data-part="sw"]{background:var(--run-soft); color:var(--run); font-weight:700}
+.pcb li.hit[data-part="ea"]{background:var(--ready-soft); color:var(--ready); font-weight:700}
+.pcb li.hit[data-part="ctl"]{background:var(--neutral-soft); color:var(--ink); font-weight:700}
+.btn.sel{background:var(--ink); color:var(--bg)}
+
+/* 5.3 cards */
+.states{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px}
+@media (max-width:700px){.states{grid-template-columns:minmax(0,1fr)}}
+.state{border-radius:8px; padding:16px; display:grid; gap:6px; align-content:start}
+.state h4{font-size:22px}
+.state small{font-family:var(--mono); font-size:12.5px; opacity:.85}
+.state p{font-size:15.5px}
+.state .an{font-size:14px; font-style:italic; border-top:1px solid currentColor; padding-top:8px; opacity:.9}
+.state.x{background:var(--run-soft); color:var(--run)} .state.x p{color:var(--ink)}
+.state.p{background:var(--ready-soft); color:var(--ready)} .state.p p{color:var(--ink)}
+.state.e{background:var(--wait-soft); color:var(--wait)} .state.e p{color:var(--ink)}
+
+/* 5.4 state machine */
+.smwrap{display:grid; grid-template-columns:minmax(0,1.6fr) minmax(0,1fr); gap:20px; align-items:start}
+@media (max-width:760px){.smwrap{grid-template-columns:minmax(0,1fr)}}
+.sm svg{width:100%; height:auto}
+.sm text{font-family:var(--display); fill:var(--ink); font-size:15px; font-weight:600}
+.sm .elbl{font-size:14px; font-weight:800; fill:var(--ink-2)}
+.node rect{fill:var(--surface); stroke:var(--line); stroke-width:2; transition:all .25s}
+.node.cur rect{stroke-width:3.5}
+.node.cur.n-criacao rect,.node.cur.n-terminado rect{fill:var(--neutral-soft); stroke:var(--neutral)}
+.node.cur.n-pronto rect{fill:var(--ready-soft); stroke:var(--ready)}
+.node.cur.n-execucao rect{fill:var(--run-soft); stroke:var(--run)}
+.node.cur.n-espera rect{fill:var(--wait-soft); stroke:var(--wait)}
+.edge{fill:none; stroke:var(--ink-2); stroke-width:2; opacity:.55; transition:all .25s}
+.edge.active{stroke:var(--accent); stroke-width:4; opacity:1}
+.mk{fill:var(--ink-2)} .mk-on{fill:var(--accent)}
+.pcbmini{font-family:var(--mono); font-size:13.5px; background:var(--bg); border:1.5px solid var(--line); border-radius:8px; padding:12px; display:grid; gap:4px}
+.log{list-style:none; margin:0; padding:0; font-family:var(--display); font-size:13.5px; display:grid; gap:4px; max-height:190px; overflow-y:auto}
+.log li{padding:5px 8px; background:var(--bg); border-radius:4px}
+.evbtns{display:grid; grid-template-columns:repeat(auto-fill, minmax(210px, 1fr)); gap:8px}
+.evbtns .btn{text-align:left}
+</style><style>
+/* 5.5 */
+.twocol{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:12px}
+@media (max-width:620px){.twocol{grid-template-columns:minmax(0,1fr)}}
+.card{border:1px solid var(--line); border-radius:8px; padding:16px; background:var(--surface); display:grid; gap:8px; align-content:start}
+.card h4{font-size:18px}
+.card p,.card li{font-size:15.5px}
+/* 5.6 bars */
+.bars{display:grid; gap:12px}
+.barrow{display:grid; grid-template-columns:110px minmax(0,1fr); gap:12px; align-items:center; font-family:var(--display); font-weight:700; font-size:14px}
+.bar{display:flex; height:30px; border-radius:5px; overflow:hidden}
+.bar i{display:block; height:100%}
+.bar .u{background:var(--run)} .bar .io{background:var(--wait); opacity:.45}
+.legend{display:flex; gap:18px; flex-wrap:wrap; font-family:var(--display); font-size:13px; color:var(--ink-2)}
+.legend span::before{content:""; display:inline-block; width:12px; height:12px; border-radius:3px; margin-right:6px; vertical-align:-1px; background:var(--run)}
+.legend span.io::before{background:var(--wait); opacity:.45}
+.cls{list-style:none; margin:0; padding:0; display:grid; gap:8px}
+.cls li{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:10px; align-items:center; padding:10px 12px; border:1px solid var(--line); border-radius:8px; background:var(--bg)}
+.cls li.ok{border-color:var(--ok); background:var(--ok-soft)}
+.cls li.bad{border-color:var(--bad); background:var(--bad-soft)}
+.cls .cfb{grid-column:1 / -1; font-size:14.5px}
+.cls .btn{padding:6px 10px; font-size:13px}
+/* 5.7 terminal */
+.termbox{background:#101A12; color:#D6E8CB; font-family:var(--mono); font-size:14px; border-radius:8px; padding:14px 16px; min-height:170px; display:grid; align-content:start; gap:2px; overflow-x:auto}
+.termbox .c{color:#8FA88A}
+.termbox .busy{color:#E9B04A}
+.cursor{display:inline-block; width:8px; height:15px; background:#D6E8CB; vertical-align:-2px; animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.flow{display:flex; align-items:center; gap:8px; flex-wrap:wrap; font-family:var(--display); font-size:14px}
+.flow b{border:1.5px solid var(--line); background:var(--surface); padding:6px 10px; border-radius:6px; font-weight:600}
+.flow b.p{background:var(--ink); color:var(--bg); border-color:var(--ink)}
+.flow em{font-style:normal; color:var(--ink-2)}
+/* 5.8 */
+.three{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px}
+@media (max-width:760px){.three{grid-template-columns:minmax(0,1fr)}}
+.card ol{padding-left:1.2em; display:grid; gap:4px}
+/* 5.9 tree */
+.tree ul{list-style:none; margin:0; padding-left:28px; position:relative; display:grid; gap:8px}
+.tree > ul{padding-left:0}
+.tree ul ul::before{content:""; position:absolute; left:10px; top:-8px; bottom:18px; border-left:2px solid var(--line)}
+.tree ul ul > li{position:relative}
+.tree ul ul > li::before{content:""; position:absolute; left:-18px; top:20px; width:16px; border-top:2px solid var(--line)}
+.tnode{display:inline-flex; align-items:center; gap:10px; border:1.5px solid var(--line); background:var(--bg); border-radius:8px; padding:6px 8px 6px 12px; font-family:var(--display); font-size:14px; transition:opacity .3s, transform .3s}
+.tnode b{font-size:15px}
+.tnode .rel{color:var(--ink-2); font-weight:500}
+.tnode button{border:1px solid var(--bad); color:var(--bad); background:transparent; border-radius:5px; font-family:var(--display); font-size:12px; font-weight:700; padding:3px 7px}
+.tnode.root{border-color:var(--run); background:var(--run-soft)}
+.tnode.ind{border-style:dashed}
+.gone{opacity:0; transform:scale(.9)}
+.treegrid{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,220px); gap:20px; align-items:start}
+@media (max-width:620px){.treegrid{grid-template-columns:minmax(0,1fr)}}
+/* threads figure */
+.thr{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:14px}
+@media (max-width:700px){.thr{grid-template-columns:minmax(0,1fr)}}
+.pbox{border:2px solid var(--line); border-radius:10px; padding:12px; display:grid; gap:6px; background:var(--surface)}
+.pbox.mt{border-color:var(--accent)}
+.pbox h5{font-family:var(--display); font-size:15px; margin:0}
+.seg{font-family:var(--display); font-size:13px; font-weight:600; padding:7px 9px; border-radius:6px; text-align:center}
+.seg.sw{background:var(--run-soft); color:var(--run)} .seg.hw{background:var(--wait-soft); color:var(--wait)} .seg.ea{background:var(--ready-soft); color:var(--ready)}
+.pair{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:8px}
+.trio{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:6px}
+.col{display:grid; gap:6px; align-content:start}
+.col small{font-family:var(--display); font-size:12px; font-weight:700; color:var(--ink-2); text-align:center}
+/* 5.10 */
+.svc{display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:8px; list-style:none; margin:0; padding:0}
+.svc li{border:1px solid var(--line); border-radius:8px; padding:10px 12px; background:var(--surface); font-family:var(--display); font-size:14.5px; font-weight:600; display:grid; gap:2px}
+.svc li span{font-family:var(--body); font-weight:400; font-size:13.5px; color:var(--ink-2)}
+/* 5.11 */
+.sig{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:16px; align-items:start}
+@media (max-width:700px){.sig{grid-template-columns:minmax(0,1fr)}}
+.opts{display:grid; gap:6px}
+.opt{display:flex; gap:10px; align-items:flex-start; padding:9px 11px; border:1.5px solid var(--line); border-radius:8px; background:var(--bg); cursor:pointer; font-size:15px}
+.opt:has(input:checked){border-color:var(--accent); background:var(--accent-soft)}
+.opt input{margin-top:5px; accent-color:var(--accent)}
+.opt code{font-weight:600}
+.switch{display:flex; gap:10px; align-items:center; font-family:var(--display); font-size:14.5px}
+.switch input{width:18px; height:18px; accent-color:var(--accent)}
+.path{display:flex; align-items:center; gap:6px; flex-wrap:wrap; font-family:var(--display); font-size:13.5px}
+.path b{padding:5px 9px; border-radius:6px; background:var(--surface-2); font-weight:600}
+.path b.hl{background:var(--accent); color:var(--accent-ink)}
+/* exercises */
+.ex-tabs{display:flex; gap:8px; flex-wrap:wrap}
+.oq{list-style:none; margin:0; padding:0; display:grid; gap:10px; counter-reset:q}
+.oq > li{counter-increment:q; border:1px solid var(--line); border-radius:8px; background:var(--surface); padding:14px 16px 14px 56px; position:relative; display:grid; gap:8px}
+.oq > li::before{content:counter(q); position:absolute; left:14px; top:12px; width:30px; height:30px; border-radius:50%; background:var(--ink); color:var(--bg); font-family:var(--display); font-weight:700; font-size:14px; display:grid; place-items:center}
+.oq p{font-size:16.5px}
+details summary{cursor:pointer; font-family:var(--display); font-size:13.5px; font-weight:600; color:var(--accent); width:fit-content}
+details[open] summary{margin-bottom:6px}
+details .ans{font-size:15px; color:var(--ink-2); display:grid; gap:4px}
+.score{position:sticky; top:calc(env(safe-area-inset-top, 0px) + 8px); z-index:2; display:flex; align-items:center; gap:14px; flex-wrap:wrap; background:var(--ink); color:var(--bg); padding:10px 16px; border-radius:8px; font-family:var(--display); font-size:14.5px}
+.score b{font-size:18px; font-variant-numeric:tabular-nums}
+.meter{flex:1; min-width:120px; height:8px; background:rgba(128,128,128,.35); border-radius:99px; overflow:hidden; display:flex}
+.meter i{display:block; height:100%; transition:width .3s}
+.meter .g{background:#6FD08C} .meter .r{background:#FF8A80}
+.score .btn{border-color:var(--bg); color:var(--bg); background:transparent; padding:5px 10px; font-size:13px}
+.qz{list-style:none; margin:0; padding:0; display:grid; gap:14px; counter-reset:c}
+.qz > li{counter-increment:c; border:1px solid var(--line); border-radius:10px; background:var(--surface); padding:16px; display:grid; gap:10px}
+.qz .qh{display:flex; gap:10px; align-items:baseline}
+.qz .qh::before{content:counter(c, decimal-leading-zero); font-family:var(--display); font-weight:800; color:var(--accent); font-size:14px; font-variant-numeric:tabular-nums}
+.qz .qh p{font-size:16.5px}
+.qz .alts{display:grid; gap:6px}
+.alt{display:grid; grid-template-columns:28px minmax(0,1fr); gap:8px; align-items:start; text-align:left; border:1.5px solid var(--line); background:var(--bg); color:var(--ink); border-radius:8px; padding:9px 12px; font-family:var(--body); font-size:15.5px; line-height:1.45}
+.alt:hover:not([disabled]){border-color:var(--ink)}
+.alt .k{font-family:var(--display); font-weight:700; font-size:13px; width:24px; height:24px; border-radius:50%; border:1.5px solid currentColor; display:grid; place-items:center; color:var(--ink-2)}
+.alt[disabled]{cursor:default}
+.alt.right{border-color:var(--ok); background:var(--ok-soft)} .alt.right .k{background:var(--ok); color:var(--surface); border-color:var(--ok)}
+.alt.wrong{border-color:var(--bad); background:var(--bad-soft)} .alt.wrong .k{background:var(--bad); color:var(--surface); border-color:var(--bad)}
+.fb{font-size:15px; padding:10px 12px; border-radius:6px}
+.fb.ok{background:var(--ok-soft)} .fb.bad{background:var(--bad-soft)}
+.fb b{font-family:var(--display)}
+.fb.ok b{color:var(--ok)} .fb.bad b{color:var(--bad)}
+.final{border:2px solid var(--ink); border-radius:10px; padding:18px; display:grid; gap:6px; background:var(--surface)}
+.final h4{font-size:22px}
+footer.end{max-width:1160px; margin:64px auto 0; padding-top:18px; border-top:1px solid var(--line); font-family:var(--display); font-size:13px; color:var(--ink-2)}
+</style><style>
+body{margin:0}
+[hidden]{display:none!important}
+@media print{
+  :root{--bg:#FFFFFF; --surface:#FFFFFF}
+  body{font-size:11.5pt; padding-inline:0}
+  nav.toc,.btns,.evbtns,.score,#sm-log,#sm-msg,.lab-hint,.lab .msg,.final,.cursor{display:none!important}
+  .lab.hide-print{display:none!important}
+  .layout{grid-template-columns:minmax(0,1fr); gap:0; padding-top:16px}
+  main{gap:28px}
+  .top{padding-block:0 18px}
+  .sec{break-before:page}
+  #s1{break-before:auto}
+  .lab,.card,.def,.note,figure,table,.oq > li,.qz > li,.states,.thr{break-inside:avoid}
+  pre.term{white-space:pre-wrap}
+  details summary{display:none}
+  .alt{padding:4px 10px}
+  .gab li{break-inside:avoid}
+  footer.end{margin-top:24px}
+}
+.gab{display:none}
+@media print{.gab{display:grid; gap:10px; break-before:page}}
+</style>
+</head><body>
+<style>
+.rc-grid{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:10px}
+@media (max-width:640px){.rc-grid{grid-template-columns:minmax(0,1fr)}}
+.code{font-family:var(--mono); font-size:13.5px; line-height:1.7; background:#101A12; color:#D6E8CB; border-radius:8px; padding:10px 12px}
+.code div{padding:0 6px; border-radius:4px}
+.code div.done{color:#6E8A68; text-decoration:line-through}
+.code div.next{background:#2E4A26; color:#F4F7F1}
+.mem{border:2px solid var(--ready); background:var(--ready-soft); border-radius:8px; padding:10px 12px; display:grid; gap:4px; align-content:center; text-align:center}
+.mem b{font-family:var(--mono); font-size:30px}
+.mem span{font-family:var(--display); font-size:12.5px; font-weight:700; color:var(--ink-2)}
+.regline{font-family:var(--mono); font-size:13px; color:var(--ink-2)}
+/* semáforo */
+.semrow{display:flex; gap:12px; flex-wrap:wrap; align-items:stretch}
+.semval{min-width:120px; border:2px solid var(--wait); background:var(--wait-soft); border-radius:8px; padding:10px; text-align:center; display:grid; gap:2px}
+.semval b{font-family:var(--mono); font-size:32px}
+.semval span,.queue span.lbl{font-family:var(--display); font-size:12.5px; font-weight:700; color:var(--ink-2)}
+.queue{flex:1; min-width:200px; border:1.5px dashed var(--line); border-radius:8px; padding:10px; display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+.pcard{display:grid; gap:6px; border:2px solid var(--line); border-radius:8px; padding:10px; background:var(--bg); min-width:150px; flex:1}
+.pcard b{font-family:var(--display); font-size:15px}
+.pcard small{font-family:var(--display); font-size:12.5px; font-weight:700}
+.pcard.fora small{color:var(--ink-2)} .pcard.rc{border-color:var(--run); background:var(--run-soft)} .pcard.rc small{color:var(--run)}
+.pcard.esp{border-color:var(--wait); background:var(--wait-soft)} .pcard.esp small{color:var(--wait)}
+.pcard .btns .btn{padding:5px 10px; font-size:13px}
+/* buffer */
+.buf{display:flex; gap:8px; flex-wrap:wrap}
+.slot{width:56px; height:56px; border-radius:8px; border:2px solid var(--ready); background:var(--surface); display:grid; place-items:center; font-family:var(--mono); font-size:14px; transition:background .2s}
+.slot.full{background:var(--ready); color:var(--surface)}
+.actor{font-family:var(--display); font-size:14px; font-weight:700; padding:6px 10px; border-radius:6px; background:var(--run-soft); color:var(--run)}
+.actor.blocked{background:var(--bad-soft); color:var(--bad)}
+/* filósofos */
+.phil{display:grid; grid-template-columns:repeat(5, minmax(0,1fr)); gap:8px}
+@media (max-width:640px){.phil{grid-template-columns:repeat(2, minmax(0,1fr))}}
+.ph{border:2px solid var(--line); border-radius:10px; padding:10px; display:grid; gap:4px; text-align:center; background:var(--bg)}
+.ph b{font-family:var(--display); font-size:16px}
+.ph small{font-family:var(--display); font-size:12.5px; font-weight:700}
+.ph.pensa small{color:var(--ink-2)} .ph.fome{border-color:var(--ready); background:var(--ready-soft)} .ph.fome small{color:var(--ready)}
+.ph.come{border-color:var(--run); background:var(--run-soft)} .ph.come small{color:var(--run)}
+.ph.trav{border-color:var(--bad); background:var(--bad-soft)} .ph.trav small{color:var(--bad)}
+.ph .forks{font-family:var(--mono); font-size:12.5px; color:var(--ink-2)}
+select.sel{font:inherit; font-family:var(--display); font-size:14px; padding:7px 10px; border:1.5px solid var(--ink); border-radius:6px; background:var(--surface); color:var(--ink)}
+/* mensagens */
+.msgs{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr); gap:10px; align-items:start}
+@media (max-width:640px){.msgs{grid-template-columns:minmax(0,1fr)}}
+.mbox{border:1.5px solid var(--line); border-radius:8px; padding:10px; min-height:110px; display:grid; gap:6px; align-content:start; background:var(--bg)}
+.mbox h5{font-family:var(--display); font-size:13.5px; margin:0}
+.env{font-family:var(--mono); font-size:12.5px; background:var(--ready-soft); border:1px solid var(--ready); border-radius:5px; padding:3px 8px; width:fit-content}
+/* deadlock */
+.dl svg{width:100%; max-width:520px; height:auto}
+.dl text{font-family:var(--display); font-weight:700; fill:var(--ink)}
+.dlwrap{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:16px; align-items:start}
+@media (max-width:700px){.dlwrap{grid-template-columns:minmax(0,1fr)}}
+.dlbtns{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:6px}
+.dlbtns .btn{font-size:13px; padding:7px 8px}
+</style>
+
+<header class="top">
+  <p class="eyebrow">Sistemas Operacionais · IFAL Campus Maceió · Material de referência</p>
+  <h1>Sincronização<span>.</span></h1>
+  <p class="lede">Como processos e threads que compartilham recursos conseguem trabalhar juntos sem corromper dados, sem esperar para sempre e sem travar uns aos outros. Leia, experimente os simuladores e, no fim, teste o que aprendeu.</p>
+  <div class="meta"><span>Base: <b>Machado &amp; Maia, <i>Arquitetura de Sistemas Operacionais</i>, cap. 7</b></span><span>Prof. Christiano Rossini</span><span>12 seções · 6 simuladores · 33 exercícios</span></div>
+</header>
+
+<div class="layout">
+<nav class="toc" aria-label="Sumário">
+  <p>Sumário</p>
+  <ol>
+    <li><a href="#s1"><span>7.1</span>Introdução</a></li>
+    <li><a href="#s2"><span>7.2</span>Aplicações concorrentes</a></li>
+    <li><a href="#s3"><span>7.3</span>Especificação</a></li>
+    <li><a href="#s4"><span>7.4</span>Compartilhamento</a></li>
+    <li><a href="#s5"><span>7.5</span>Exclusão mútua</a></li>
+    <li><a href="#s6"><span>7.6</span>Soluções de hardware</a></li>
+    <li><a href="#s7"><span>7.7</span>Soluções de software</a></li>
+    <li><a href="#s8"><span>7.8</span>Sincronização condicional</a></li>
+    <li><a href="#s9"><span>7.9</span>Semáforos</a></li>
+    <li><a href="#s10"><span>7.10</span>Monitores</a></li>
+    <li><a href="#s11"><span>7.11</span>Troca de mensagens</a></li>
+    <li><a href="#s12"><span>7.12</span>Deadlock</a></li>
+    <li><a href="#ex"><span>Ex.</span>Exercícios</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<section class="sec" id="s1">
+  <div class="sec-head"><span class="num">7.1</span><h2>Introdução</h2></div>
+  <p>Nos capítulos 5 e 6 vimos que um sistema multiprogramável executa vários processos e threads concorrentemente. Muitas vezes eles não são independentes: <b>cooperam</b> para realizar uma tarefa e, para isso, <b>compartilham recursos</b> como memória, arquivos e dispositivos.</p>
+  <p>Um exemplo simples: um processo grava dados num buffer e outro processo lê esses dados. Para dar certo, o leitor não pode ler um buffer vazio, o gravador não pode gravar num buffer cheio, e os dois não podem mexer na mesma posição ao mesmo tempo.</p>
+  <div class="def"><span class="lbl">Ideia central</span><p>Os <dfn>mecanismos de sincronização</dfn> garantem que a comunicação e o compartilhamento de recursos entre processos concorrentes aconteçam de forma <b>ordenada e correta</b>.</p></div>
+</section>
+
+<section class="sec" id="s2">
+  <div class="sec-head"><span class="num">7.2</span><h2>Aplicações concorrentes</h2></div>
+  <p>Uma <dfn>aplicação concorrente</dfn> é formada por vários processos ou threads que executam ao mesmo tempo e cooperam para resolver um problema. Exemplos: um servidor que atende vários clientes, um editor que grava em segundo plano enquanto o usuário digita, um sistema bancário com vários caixas.</p>
+  <p>Os processos de uma aplicação concorrente se comunicam de duas formas:</p>
+  <div class="twocol wide">
+    <div class="card"><h4>Variáveis compartilhadas</h4><p>Os processos leem e escrevem numa mesma área de memória. É rápido, mas exige controle para que dois processos não alterem o mesmo dado ao mesmo tempo.</p></div>
+    <div class="card"><h4>Troca de mensagens</h4><p>Um processo envia uma mensagem e o outro a recebe, com o SO como intermediário. Funciona até entre processos em computadores diferentes (seção 7.11).</p></div>
+  </div>
+  <p>Nos dois casos, os processos precisam <b>sincronizar</b> suas ações: um só deve ler o dado depois que o outro o tiver gravado.</p>
+</section>
+
+<section class="sec" id="s3">
+  <div class="sec-head"><span class="num">7.3</span><h2>Especificação de concorrência em programas</h2></div>
+  <p>Para escrever uma aplicação concorrente, a linguagem precisa permitir indicar quais partes do programa podem executar ao mesmo tempo. Duas notações clássicas:</p>
+  <ul>
+    <li><b>FORK e JOIN</b>: <code>FORK</code> cria um novo processo que executa em paralelo com o que o criou; <code>JOIN</code> faz o processo esperar até que o outro termine.</li>
+    <li><b>PARBEGIN e PAREND</b> (ou COBEGIN e COEND): os comandos entre as duas palavras executam concorrentemente, e o programa só continua depois que todos terminam.</li>
+  </ul>
+  <pre class="term">PROGRAM Expressao;
+VAR X, Temp1, Temp2, Temp3 : REAL;
+BEGIN
+  PARBEGIN
+    Temp1 := SQRT (1024);     <span class="c">{ os três cálculos executam }</span>
+    Temp2 := 35.4 * 0.23;     <span class="c">{ ao mesmo tempo           }</span>
+    Temp3 := 302 / 7;
+  PAREND;                      <span class="c">{ espera os três terminarem }</span>
+  X := Temp1 + Temp2 - Temp3;
+  WRITELN ('x = ', X);
+END.</pre>
+  <div class="note"><span class="lbl">Hoje</span><p>A mesma ideia aparece ao criar threads e esperar por elas, como <code>pthread_create</code> e <code>pthread_join</code>, vistos no capítulo 6.</p></div>
+</section>
+
+<section class="sec" id="s4">
+  <div class="sec-head"><span class="num">7.4</span><h2>Problemas de compartilhamento de recursos</h2></div>
+  <p>O livro mostra o problema com uma conta bancária. Dois caixas executam o mesmo programa ao mesmo tempo: cada um lê o saldo do cliente, calcula o novo valor e grava. Se o caixa 1 (saque de 200) e o caixa 2 (depósito de 300) leem o saldo de 1000 antes que qualquer um grave, o último a gravar apaga a operação do outro: o saldo final fica 800 ou 1300, quando deveria ser 1100.</p>
+  <p>O mesmo acontece com um comando tão simples quanto <code>X := X + 1</code>. Em linguagem de máquina, ele vira três instruções: carregar X num registrador, somar 1 e gravar de volta. Se o processo perde a UCP no meio delas, outro processo pode ler o valor antigo de X.</p>
+  <div class="def"><span class="lbl">Condição de corrida</span><p>Quando o resultado depende da <b>ordem</b> em que os processos executam, dizemos que há uma <dfn>condição de corrida</dfn> (race condition). O erro aparece só às vezes, o que o torna difícil de encontrar.</p></div>
+  <div class="lab">
+    <div class="lab-head"><span class="tag">Simulador</span><h4>Você é o escalonador</h4></div>
+    <p class="lab-hint">X começa em 2. O processo A faz X := X + 1 e o processo B faz X := X − 1, então o resultado certo é 2. Escolha quem executa a próxima instrução. Consegue fazer X terminar errado?</p>
+    <div class="rc-grid">
+      <div style="display:grid; gap:6px"><b style="font-family:var(--display); color:var(--run)">Processo A</b><div class="code" id="rc-a"></div><span class="regline" id="rc-ra">Ra = —</span></div>
+      <div class="mem"><span>VARIÁVEL NA MEMÓRIA</span><b id="rc-x">X = 2</b></div>
+      <div style="display:grid; gap:6px"><b style="font-family:var(--display); color:var(--wait)">Processo B</b><div class="code" id="rc-b"></div><span class="regline" id="rc-rb">Rb = —</span></div>
+    </div>
+    <div class="btns"><button class="btn primary" id="rc-sa">A executa</button><button class="btn primary" id="rc-sb">B executa</button><button class="btn ghost" id="rc-r">Recomeçar</button></div>
+    <p class="msg" id="rc-m" aria-live="polite">Escolha qual processo executa a primeira instrução.</p>
+  </div>
+</section>
+
+<section class="sec" id="s5">
+  <div class="sec-head"><span class="num">7.5</span><h2>Exclusão mútua</h2></div>
+  <p>A forma de evitar esses problemas é impedir que dois processos acessem o recurso compartilhado ao mesmo tempo. Enquanto um processo usa o recurso, os outros que querem usá-lo esperam. Essa ideia se chama <dfn>exclusão mútua</dfn>.</p>
+  <p>A parte do código em que o processo acessa o recurso compartilhado é a <dfn>região crítica</dfn>. Garantir exclusão mútua é garantir que dois processos nunca estejam ao mesmo tempo nas suas regiões críticas. Para isso, cada processo executa um <b>protocolo de entrada</b> antes da região crítica e um <b>protocolo de saída</b> depois:</p>
+  <pre class="term">BEGIN
+  ...
+  Entra_Regiao_Critica;    <span class="c">{ protocolo de entrada }</span>
+  Regiao_Critica;          <span class="c">{ acesso ao recurso compartilhado }</span>
+  Sai_Regiao_Critica;      <span class="c">{ protocolo de saída }</span>
+  ...
+END.</pre>
+  <p>Uma boa solução de exclusão mútua também precisa evitar:</p>
+  <ul>
+    <li><b>Starvation</b> (inanição): um processo esperar indefinidamente para entrar na região crítica, porque outros sempre passam na frente.</li>
+    <li>Um processo que está <b>fora</b> da sua região crítica impedir que os outros entrem.</li>
+    <li>Depender da velocidade relativa dos processos ou do número de processadores.</li>
+  </ul>
+</section>
+
+<section class="sec" id="s6">
+  <div class="sec-head"><span class="num">7.6</span><h2>Soluções de hardware para a exclusão mútua</h2></div>
+  <h3>Desabilitação de interrupções</h3>
+  <p>A solução mais simples: o processo desabilita as interrupções ao entrar na região crítica e as reabilita ao sair. Sem interrupções, o SO não consegue tirar a UCP do processo, então nenhum outro executa enquanto ele está na região crítica.</p>
+  <p><b>Problemas:</b> se um processo de usuário esquecer de reabilitar as interrupções, o sistema inteiro para; e, com <b>vários processadores</b>, desabilitar as interrupções de um deles não impede que os outros continuem executando. Por isso, só o núcleo do SO usa esse recurso, e por pouco tempo.</p>
+  <h3>Instrução test-and-set</h3>
+  <p>Muitos processadores têm uma instrução especial que <b>lê</b> o valor de uma variável e a <b>altera</b> numa única operação indivisível (atômica). Com ela, uma variável de bloqueio indica se a região crítica está ocupada:</p>
+  <pre class="term">repete
+   Test_And_Set (Bloqueio)   <span class="c">{ lê e marca como ocupado, atomicamente }</span>
+até encontrar livre;
+Regiao_Critica;
+Bloqueio := falso;           <span class="c">{ libera }</span></pre>
+  <p><b>Problemas:</b> enquanto espera, o processo fica testando a variável sem parar, gastando UCP (<b>espera ocupada</b>), e a escolha de quem entra é arbitrária, o que permite starvation.</p>
+</section>
+
+<section class="sec" id="s7">
+  <div class="sec-head"><span class="num">7.7</span><h2>Soluções de software para a exclusão mútua</h2></div>
+  <p>O livro apresenta uma sequência de algoritmos que tentam garantir exclusão mútua usando apenas variáveis do programa. Os quatro primeiros falham: um obriga os processos a alternar a vez, outro deixa dois entrarem juntos, outro leva a deadlock, outro a starvation. A primeira solução correta para dois processos foi o <b>algoritmo de Dekker</b>. Em 1981, <b>Peterson</b> apresentou uma solução bem mais simples:</p>
+  <pre class="term"><span class="c">{ processo i; o outro processo é j }</span>
+quer[i] := verdadeiro;            <span class="c">{ eu quero entrar }</span>
+vez := j;                         <span class="c">{ mas dou a vez ao outro }</span>
+enquanto quer[j] e vez = j:       <span class="c">{ espero só se ele também quer }</span>
+    espera;                       <span class="c">{ e a vez é dele }</span>
+Regiao_Critica;
+quer[i] := falso;</pre>
+  <p>Para N processos, existe o <b>algoritmo da padaria</b>, de Lamport. Todas essas soluções, porém, mantêm a <b>espera ocupada</b>: o processo que espera continua usando a UCP para testar a condição. É isso que os semáforos (7.9) resolvem.</p>
+</section>
+
+<section class="sec" id="s8">
+  <div class="sec-head"><span class="num">7.8</span><h2>Sincronização condicional</h2></div>
+  <p>Às vezes não basta impedir o acesso simultâneo: um processo precisa <b>esperar até que uma condição seja verdadeira</b> para continuar. Isso é a <dfn>sincronização condicional</dfn>.</p>
+  <p>O exemplo clássico é o <b>produtor/consumidor</b> com buffer limitado: o produtor grava dados num buffer de N posições e o consumidor os lê. O produtor precisa esperar quando o buffer está <b>cheio</b>, e o consumidor precisa esperar quando ele está <b>vazio</b>. Além disso, o acesso ao buffer em si exige exclusão mútua.</p>
+  <p>Resolver isso com espera ocupada desperdiça UCP. As próximas seções mostram como fazer o processo realmente <b>dormir</b> até a condição mudar.</p>
+</section>
+
+<section class="sec" id="s9">
+  <div class="sec-head"><span class="num">7.9</span><h2>Semáforos</h2></div>
+  <p>Proposto por E. W. Dijkstra em 1965, o <dfn>semáforo</dfn> é uma variável inteira, não negativa, que só pode ser manipulada por duas operações, executadas de forma <b>indivisível</b>:</p>
+  <div class="twocol wide">
+    <div class="card"><h4>DOWN (S) · também chamada P</h4><p>Se S &gt; 0, decrementa S e o processo continua. Se S = 0, o processo vai para o estado de <b>espera</b>, numa fila associada ao semáforo.</p></div>
+    <div class="card"><h4>UP (S) · também chamada V</h4><p>Se há processos esperando no semáforo, <b>acorda</b> um deles. Se não há, incrementa S.</p></div>
+  </div>
+  <p>Como o processo bloqueado fica em espera, e não testando uma variável, <b>não há espera ocupada</b>. Semáforos que só assumem 0 e 1 são <b>binários</b> (mutexes) e servem para exclusão mútua; os que vão de 0 a N são <b>contadores</b> e servem para controlar recursos com várias unidades e para sincronização condicional.</p>
+
+  <h3>Exclusão mútua com semáforo</h3>
+  <pre class="term">Mutex := 1;
+REPEAT
+  DOWN (Mutex);      <span class="c">{ entra: Mutex 1 → 0 ou espera }</span>
+  Regiao_Critica;
+  UP (Mutex);        <span class="c">{ sai: acorda alguém ou Mutex 0 → 1 }</span>
+UNTIL False;</pre>
+  <div class="lab">
+    <div class="lab-head"><span class="tag">Simulador</span><h4>Semáforo na prática</h4></div>
+    <p class="lab-hint">Três processos disputam a região crítica. Use DOWN para tentar entrar e UP para sair. Troque o valor inicial para 2 e veja o semáforo contador deixar dois processos entrarem.</p>
+    <div class="btns" id="sm-init"><button class="btn sel" data-v="1">Valor inicial 1 (binário)</button><button class="btn" data-v="2">Valor inicial 2 (contador)</button></div>
+    <div class="semrow"><div class="semval"><span>SEMÁFORO S</span><b id="sm-v">1</b></div><div class="queue" id="sm-q"><span class="lbl">Fila de espera:</span></div></div>
+    <div class="semrow" id="sm-ps"></div>
+    <p class="msg" id="sm-m" aria-live="polite">Todos os processos estão fora da região crítica.</p>
+  </div>
+
+  <h3>Sincronização condicional com semáforos</h3>
+  <p>O produtor/consumidor usa três semáforos: <code>Vazio</code> conta as posições livres (começa em N), <code>Cheio</code> conta as ocupadas (começa em 0) e <code>Mutex</code> protege o acesso ao buffer.</p>
+  <pre class="term">Produtor:                    Consumidor:
+REPEAT                       REPEAT
+  Produz_Dado;                 DOWN (Cheio);   <span class="c">{ espera ter dado }</span>
+  DOWN (Vazio);  <span class="c">{ espera vaga }</span>  DOWN (Mutex);
+  DOWN (Mutex);                Le_Buffer;
+  Grava_Buffer;                UP (Mutex);
+  UP (Mutex);                  UP (Vazio);     <span class="c">{ avisa: uma vaga a mais }</span>
+  UP (Cheio);    <span class="c">{ avisa }</span>      Consome_Dado;
+UNTIL False;                 UNTIL False;</pre>
+  <div class="lab">
+    <div class="lab-head"><span class="tag">Simulador</span><h4>Produtor e consumidor</h4></div>
+    <p class="lab-hint">O buffer tem 5 posições. Produza até encher e tente produzir mais; depois consuma tudo e tente consumir de novo. Observe os semáforos e quem fica bloqueado.</p>
+    <div class="semrow"><div class="semval"><span>VAZIO</span><b id="pc-v">5</b></div><div class="semval"><span>CHEIO</span><b id="pc-c">0</b></div><div class="queue" style="justify-content:center"><div class="buf" id="pc-buf"></div></div></div>
+    <div class="btns"><span class="actor" id="pc-pa">Produtor: livre</span><span class="actor" id="pc-ca">Consumidor: livre</span></div>
+    <div class="btns"><button class="btn primary" id="pc-p">Produzir</button><button class="btn primary" id="pc-c2">Consumir</button><button class="btn ghost" id="pc-r">Recomeçar</button></div>
+    <p class="msg" id="pc-m" aria-live="polite">Buffer vazio. O consumidor teria de esperar; o produtor pode gravar.</p>
+  </div>
+
+  <h3>Problemas clássicos</h3>
+  <p><b>Leitores e escritores.</b> Vários processos leem um dado e alguns o alteram. Vários leitores podem ler ao mesmo tempo, mas um escritor precisa de acesso exclusivo: enquanto ele escreve, ninguém lê nem escreve.</p>
+  <p><b>Jantar dos filósofos.</b> Cinco filósofos sentam a uma mesa redonda, com um garfo entre cada dois. Para comer, cada um precisa dos dois garfos ao seu lado. Se todos pegarem o garfo da esquerda ao mesmo tempo, ninguém consegue o da direita: <b>deadlock</b>. Soluções: permitir no máximo quatro filósofos à mesa; pegar os dois garfos só se ambos estiverem livres (de forma atômica); ou fazer os filósofos ímpares pegarem primeiro o garfo da esquerda e os pares, o da direita.</p>
+  <div class="lab">
+    <div class="lab-head"><span class="tag">Simulador</span><h4>O jantar dos filósofos</h4></div>
+    <p class="lab-hint">Escolha a estratégia, deixe todos com fome e avance rodada a rodada.</p>
+    <div class="btns"><label for="ph-s" class="lab-hint" style="align-self:center">Estratégia:</label><select class="sel" id="ph-s"><option value="naive">Pegar o garfo da esquerda, depois o da direita</option><option value="both">Pegar os dois garfos só se ambos estiverem livres</option><option value="asym">Ímpares começam pela esquerda; pares, pela direita</option></select></div>
+    <div class="phil" id="ph"></div>
+    <div class="btns"><button class="btn primary" id="ph-step">Próxima rodada</button><button class="btn ghost" id="ph-r">Todos com fome de novo</button></div>
+    <p class="msg" id="ph-m" aria-live="polite">Todos os filósofos estão com fome.</p>
+  </div>
+</section>
+
+<section class="sec" id="s10">
+  <div class="sec-head"><span class="num">7.10</span><h2>Monitores</h2></div>
+  <p>Semáforos resolvem o problema, mas são fáceis de usar errado: um DOWN esquecido, ou dois DOWN na ordem trocada, causam inconsistência ou deadlock. Os <dfn>monitores</dfn>, propostos por Brinch Hansen e Hoare no início dos anos 1970, são um mecanismo de <b>alto nível</b> que tira essa responsabilidade do programador.</p>
+  <p>Um monitor agrupa <b>variáveis</b>, <b>procedimentos</b> e um <b>código de inicialização</b>. As variáveis só podem ser acessadas pelos procedimentos do próprio monitor, e o compilador garante que <b>apenas um processo por vez</b> execute um procedimento do monitor. Os demais esperam numa fila de entrada. A exclusão mútua é <b>automática</b>.</p>
+  <p>Para a sincronização condicional, o monitor usa <b>variáveis de condição</b> com duas operações:</p>
+  <ul>
+    <li><code>WAIT (C)</code>: o processo espera na fila da condição C e libera o monitor para outro processo;</li>
+    <li><code>SIGNAL (C)</code>: acorda um processo que espera na condição C.</li>
+  </ul>
+  <pre class="term">MONITOR Buffer;
+  VAR Cheio, Vazio : CONDITION;
+  PROCEDURE Produz;
+    IF Cont = TamBuf THEN WAIT (Cheio);
+    grava no buffer; Cont := Cont + 1;
+    IF Cont = 1 THEN SIGNAL (Vazio);
+  PROCEDURE Consome;
+    IF Cont = 0 THEN WAIT (Vazio);
+    lê do buffer; Cont := Cont - 1;
+    IF Cont = TamBuf - 1 THEN SIGNAL (Cheio);
+END.</pre>
+  <div class="note"><span class="lbl">Hoje</span><p>Os métodos <code>synchronized</code> de Java, com <code>wait()</code> e <code>notify()</code>, funcionam como um monitor.</p></div>
+</section>
+
+<section class="sec" id="s11">
+  <div class="sec-head"><span class="num">7.11</span><h2>Troca de mensagens</h2></div>
+  <p>A <dfn>troca de mensagens</dfn> permite comunicação e sincronização sem memória compartilhada, usando duas rotinas: <code>SEND (Receptor, Mensagem)</code> e <code>RECEIVE (Transmissor, Mensagem)</code>. O SO cuida do canal, que pode ligar até processos em computadores diferentes.</p>
+  <div class="twocol wide">
+    <div class="card"><h4>Comunicação direta</h4><p>Cada processo nomeia explicitamente o outro. Simples, mas, se o nome de um processo mudar, o código do outro também muda.</p></div>
+    <div class="card"><h4>Comunicação indireta</h4><p>As mensagens vão para uma área intermediária, a <b>mailbox</b> (caixa postal) ou porta, que pode ser usada por vários processos.</p></div>
+  </div>
+  <p>Quanto à sincronização, a troca pode ser:</p>
+  <ul>
+    <li><b>Síncrona</b> (rendezvous): quem envia fica esperando até a mensagem ser recebida, e quem recebe espera até a mensagem chegar. Não precisa de buffer, mas limita a concorrência.</li>
+    <li><b>Assíncrona</b>: quem envia não espera; a mensagem fica num buffer até ser lida. Aumenta a eficiência das aplicações, mas exige buffers e mecanismos para saber se a mensagem foi recebida.</li>
+  </ul>
+  <p>Também é preciso tratar a <b>perda de mensagens</b>: o receptor envia uma confirmação (ACK), e o transmissor reenvia a mensagem se a confirmação não chegar.</p>
+  <div class="lab">
+    <div class="lab-head"><span class="tag">Simulador</span><h4>Síncrona ou assíncrona?</h4></div>
+    <div class="btns" id="ms-mode"><button class="btn sel" data-m="s">Síncrona</button><button class="btn" data-m="a">Assíncrona</button></div>
+    <div class="msgs">
+      <div class="mbox"><h5>Transmissor</h5><span class="actor" id="ms-ts">executando</span><button class="btn primary" id="ms-send" style="width:fit-content">SEND</button></div>
+      <div class="mbox"><h5>Canal / buffer</h5><div id="ms-buf" style="display:grid; gap:4px"></div></div>
+      <div class="mbox"><h5>Receptor</h5><span class="actor" id="ms-rs">executando</span><button class="btn primary" id="ms-recv" style="width:fit-content">RECEIVE</button><div id="ms-got" style="display:grid; gap:4px"></div></div>
+    </div>
+    <p class="msg" id="ms-m" aria-live="polite">Modo síncrono: envie uma mensagem.</p>
+  </div>
+</section>
+
+<section class="sec" id="s12">
+  <div class="sec-head"><span class="num">7.12</span><h2>Deadlock</h2></div>
+  <p><dfn>Deadlock</dfn> é a situação em que um processo espera por um recurso que nunca estará disponível ou por um evento que nunca vai ocorrer. O caso típico: o processo P1 tem o recurso R1 e quer R2; o processo P2 tem R2 e quer R1. Nenhum libera o que tem enquanto espera, e os dois ficam parados para sempre.</p>
+  <p>Para haver deadlock, <b>quatro condições</b> precisam ocorrer ao mesmo tempo:</p>
+  <ol>
+    <li><b>Exclusão mútua</b>: cada recurso só pode estar alocado a um processo por vez.</li>
+    <li><b>Espera por recurso</b>: um processo retém recursos enquanto espera por outros.</li>
+    <li><b>Não preempção</b>: um recurso não pode ser retirado de um processo só porque outro o deseja.</li>
+    <li><b>Espera circular</b>: existe uma cadeia em que cada processo espera um recurso que está com o próximo.</li>
+  </ol>
+  <div class="lab">
+    <div class="lab-head"><span class="tag">Simulador</span><h4>Provoque e corrija um deadlock</h4></div>
+    <p class="lab-hint">Faça cada processo pedir um recurso e depois o outro. Setas cheias: recurso alocado. Tracejadas: processo esperando.</p>
+    <div class="dlwrap">
+      <div class="dl"><svg viewBox="0 0 520 360" role="img" aria-label="Grafo de alocação de recursos com P1, P2, R1 e R2" id="dl-svg"></svg></div>
+      <div style="display:grid; gap:10px">
+        <div class="dlbtns"><button class="btn" data-a="P1:R1">P1 pede R1</button><button class="btn" data-a="P1:R2">P1 pede R2</button><button class="btn" data-a="P2:R2">P2 pede R2</button><button class="btn" data-a="P2:R1">P2 pede R1</button><button class="btn" data-a="free:P1">P1 libera tudo</button><button class="btn" data-a="free:P2">P2 libera tudo</button></div>
+        <div class="btns"><button class="btn" id="dl-kill">Correção: eliminar P2</button><button class="btn ghost" id="dl-r">Recomeçar</button></div>
+      </div>
+    </div>
+    <p class="msg" id="dl-m" aria-live="polite">Nenhum recurso alocado.</p>
+  </div>
+  <h3 id="s12-1">7.12.1 Prevenção</h3>
+  <p>Garantir que uma das quatro condições nunca ocorra. Exemplos: exigir que o processo peça todos os recursos de uma vez (sem espera por recurso); permitir retirar recursos de um processo (preempção); numerar os recursos e obrigar a pedi-los sempre em ordem crescente (sem espera circular). Cada forma tem custo, como desperdício de recursos ou starvation. Outra abordagem é o <b>algoritmo do banqueiro</b>, de Dijkstra: o SO só concede um recurso se o sistema continuar num estado seguro, o que exige saber de antemão o máximo que cada processo vai pedir.</p>
+  <h3 id="s12-2">7.12.2 Detecção</h3>
+  <p>Deixar o deadlock acontecer e procurá-lo: o SO mantém estruturas com os recursos alocados e os pedidos pendentes de cada processo e, periodicamente, procura <b>espera circular</b>. Quanto mais frequente a verificação, mais UCP ela consome.</p>
+  <h3 id="s12-3">7.12.3 Correção</h3>
+  <p>Depois de detectado, o deadlock é desfeito <b>eliminando</b> um ou mais processos do ciclo, liberando seus recursos (escolhidos, por exemplo, por prioridade ou tempo de execução), ou fazendo <b>rollback</b>: voltar um processo a um ponto anterior, liberando os recursos obtidos depois dele.</p>
+</section>
+
+<section class="sec" id="ex">
+  <div class="sec-head"><span class="num">Exercícios</span><h2>Exercícios de fixação</h2></div>
+  <p>Duas partes: as <b>questões abertas</b> do final do capítulo 7 do livro, para responder por escrito, e <b>questões fechadas</b> com correção imediata.</p>
+  <h3 id="ex-a">Parte A · Questões abertas (do livro)</h3>
+  <p class="lab-hint">Responda no caderno antes de abrir o roteiro. O roteiro indica os pontos que a resposta deve cobrir e a seção onde revisar.</p>
+  <ol class="oq wide">
+    <li><p>Defina o que é uma aplicação concorrente e dê um exemplo de sua utilização.</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Processos ou threads que executam ao mesmo tempo e cooperam, compartilhando recursos. Exemplo: servidor com vários clientes, sistema bancário. <a href="#s2">Seção 7.2</a>.</p></div></details></li>
+    <li><p>Considere uma aplicação que utilize uma matriz na memória principal para a comunicação entre vários processos concorrentes. Que tipo de problema pode ocorrer quando dois ou mais processos acessam uma mesma posição da matriz?</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Condição de corrida: atualizações perdidas e dados inconsistentes, como no exemplo da conta bancária e de X := X + 1. <a href="#s4">Seção 7.4</a>.</p></div></details></li>
+    <li><p>O que é exclusão mútua e como é implementada?</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Impedir que dois processos estejam ao mesmo tempo na região crítica; protocolos de entrada e saída, com soluções de hardware, software, semáforos ou monitores. <a href="#s5">Seções 7.5 a 7.10</a>.</p></div></details></li>
+    <li><p>Como seria possível resolver os problemas decorrentes do compartilhamento da matriz, apresentado anteriormente, utilizando o conceito de exclusão mútua?</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Tratar o acesso à matriz (ou a cada posição) como região crítica, protegida por um mecanismo de exclusão mútua, por exemplo DOWN e UP num semáforo. <a href="#s9">Seção 7.9</a>.</p></div></details></li>
+    <li><p>O que é starvation e como podemos solucionar esse problema?</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Espera indefinida para entrar na região crítica ou obter um recurso. Solução: critério justo de escolha, como uma fila FIFO de processos em espera. <a href="#s5">Seção 7.5</a>.</p></div></details></li>
+    <li><p>Qual o problema com a solução que desabilita as interrupções para implementar a exclusão mútua?</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Processo de usuário pode não reabilitar as interrupções; não funciona com vários processadores. <a href="#s6">Seção 7.6</a>.</p></div></details></li>
+    <li><p>O que é espera ocupada e qual o seu problema?</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>O processo fica testando uma condição em laço enquanto espera; desperdiça tempo de UCP. <a href="#s6">Seções 7.6</a> e <a href="#s7">7.7</a>.</p></div></details></li>
+    <li><p>Explique o que é sincronização condicional e dê um exemplo de sua utilização.</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Esperar até que uma condição seja verdadeira; exemplo: produtor/consumidor com buffer limitado. <a href="#s8">Seção 7.8</a>.</p></div></details></li>
+    <li><p>Explique o que são semáforos e dê dois exemplos de sua utilização: um para a solução da exclusão mútua e outro para a sincronização condicional.</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Variável inteira com DOWN e UP indivisíveis; Mutex para a região crítica; Vazio e Cheio no produtor/consumidor. <a href="#s9">Seção 7.9</a>.</p></div></details></li>
+    <li><p>Apresente uma solução para o problema dos filósofos que permita que os cinco pensadores sentem à mesa, porém evite a ocorrência de starvation e deadlock.</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Como os cinco precisam sentar, a saída de limitar a quatro não vale. Use pegar os dois garfos atomicamente ou a ordem assimétrica (ímpares e pares), e discuta a justiça para evitar starvation. Teste no simulador. <a href="#s9">Seção 7.9</a>.</p></div></details></li>
+    <li><p>Explique o que são monitores e dê dois exemplos de sua utilização: um para a solução da exclusão mútua e outro para a sincronização condicional.</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Mecanismo de alto nível com exclusão mútua automática; procedimento de acesso a uma variável compartilhada; produtor/consumidor com WAIT e SIGNAL. <a href="#s10">Seção 7.10</a>.</p></div></details></li>
+    <li><p>Qual a vantagem da forma assíncrona de comunicação entre processos e como esta pode ser implementada?</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>O transmissor não fica bloqueado, aumentando a concorrência; implementação com buffers para as mensagens e confirmação de recebimento. <a href="#s11">Seção 7.11</a>.</p></div></details></li>
+    <li><p>O que é deadlock, quais as condições para obtê-lo e quais as soluções possíveis?</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Definição; as quatro condições; prevenção, detecção e correção. <a href="#s12">Seção 7.12</a>.</p></div></details></li>
+  </ol>
+
+  <h3 id="ex-b">Parte B · Questões fechadas</h3>
+  <p class="lab-hint">Escolha uma alternativa: a correção e a explicação aparecem na hora. Cada questão aceita uma única tentativa. As alternativas mudam de ordem a cada vez que você refaz.</p>
+  <div class="score wide" id="qz-score"><span>Acertos <b id="qz-ok">0</b></span><span>Erros <b id="qz-bad">0</b></span><span>Respondidas <b id="qz-n">0</b>/<b id="qz-t">20</b></span><div class="meter"><i class="g" id="qz-mg" style="width:0%"></i><i class="r" id="qz-mr" style="width:0%"></i></div><button class="btn" id="qz-reset">Refazer</button></div>
+  <ol class="qz wide" id="qz"></ol>
+  <div class="final wide" id="qz-final" hidden><h4 id="qz-ft"></h4><p id="qz-fp"></p></div>
+</section>
+
+</main>
+</div>
+<footer class="end">Material de apoio da disciplina de Sistemas Operacionais. Conteúdo e sequência baseados em Machado, F. B.; Maia, L. P. <i>Arquitetura de Sistemas Operacionais</i>, capítulo 7 (Sincronização e comunicação entre processos). As questões abertas reproduzem os exercícios do capítulo.</footer>
+
+<script>
+(function(){
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+const el = (tag, attrs={}, html='') => { const e=document.createElement(tag); for(const k in attrs){ if(k==='class') e.className=attrs[k]; else e.setAttribute(k, attrs[k]); } if(html) e.innerHTML=html; return e; };
+function setMsg(node, text, kind){ node.textContent = text; node.className = 'msg' + (kind ? ' ' + kind : ''); }
+
+/* sumário */
+const links = $$('nav.toc a');
+if('IntersectionObserver' in window){
+  const io = new IntersectionObserver(es => es.forEach(en => { if(en.isIntersecting) links.forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + en.target.id)); }), {rootMargin:'-20% 0px -70% 0px'});
+  $$('main > section').forEach(s => io.observe(s));
+}
+
+/* 7.4 condição de corrida */
+(function(){
+  const A = ['LOAD x, Ra','ADD 1, Ra','STORE Ra, x'], B = ['LOAD x, Rb','SUB 1, Rb','STORE Rb, x'];
+  let x, ra, rb, ia, ib;
+  function draw(){
+    $('#rc-a').innerHTML = A.map((t, i) => `<div class="${i < ia ? 'done' : (i === ia ? 'next' : '')}">${t}</div>`).join('');
+    $('#rc-b').innerHTML = B.map((t, i) => `<div class="${i < ib ? 'done' : (i === ib ? 'next' : '')}">${t}</div>`).join('');
+    $('#rc-x').textContent = 'X = ' + x;
+    $('#rc-ra').textContent = 'Ra = ' + (ra === null ? '—' : ra);
+    $('#rc-rb').textContent = 'Rb = ' + (rb === null ? '—' : rb);
+    $('#rc-sa').disabled = ia >= 3; $('#rc-sb').disabled = ib >= 3;
+  }
+  function reset(){ x = 2; ra = null; rb = null; ia = 0; ib = 0; draw(); setMsg($('#rc-m'), 'Escolha qual processo executa a primeira instrução.'); }
+  function end(){
+    if(ia < 3 || ib < 3) return false;
+    if(x === 2) setMsg($('#rc-m'), 'X = 2, correto. Nesta ordem, um processo só leu X depois que o outro já tinha gravado. Recomece e tente intercalar as instruções.', 'ok');
+    else setMsg($('#rc-m'), `X terminou em ${x}, mas o certo é 2. Um processo leu X antes de o outro gravar, e a atualização de um deles se perdeu: é a condição de corrida.`, 'bad');
+    return true;
+  }
+  $('#rc-sa').addEventListener('click', () => {
+    const t = ['A carregou X no seu registrador: Ra = ' + x + '.', '', ''];
+    if(ia === 0) ra = x; else if(ia === 1){ ra += 1; t[1] = 'A somou 1 no registrador: Ra = ' + ra + '. X na memória ainda vale ' + x + '.'; } else { x = ra; t[2] = 'A gravou Ra na memória: X = ' + x + '.'; }
+    const msg = t[ia]; ia++; draw(); if(!end()) setMsg($('#rc-m'), msg);
+  });
+  $('#rc-sb').addEventListener('click', () => {
+    const t = ['B carregou X no seu registrador: Rb = ' + x + '.', '', ''];
+    if(ib === 0) rb = x; else if(ib === 1){ rb -= 1; t[1] = 'B subtraiu 1 no registrador: Rb = ' + rb + '. X na memória ainda vale ' + x + '.'; } else { x = rb; t[2] = 'B gravou Rb na memória: X = ' + x + '.'; }
+    const msg = t[ib]; ib++; draw(); if(!end()) setMsg($('#rc-m'), msg);
+  });
+  $('#rc-r').addEventListener('click', reset); reset();
+})();
+
+/* 7.9 semáforo */
+(function(){
+  let init = 1, S, st, q;
+  const names = ['P1','P2','P3'];
+  const lab = {fora:'fora da região crítica', rc:'NA REGIÃO CRÍTICA', esp:'em espera (bloqueado)'};
+  function draw(){
+    $('#sm-v').textContent = S;
+    $('#sm-q').innerHTML = '<span class="lbl">Fila de espera:</span>' + (q.length ? q.map(i => `<span class="chip st-espera">${names[i]}</span>`).join(' ') : ' <span class="lab-hint">vazia</span>');
+    const box = $('#sm-ps'); box.innerHTML = '';
+    names.forEach((n, i) => {
+      const c = el('div', {class:'pcard ' + st[i]}, `<b>${n}</b><small>${lab[st[i]]}</small>`);
+      const bs = el('div', {class:'btns'});
+      const d = el('button', {class:'btn', type:'button'}, 'DOWN (S)'); d.disabled = st[i] !== 'fora'; d.addEventListener('click', () => down(i));
+      const u = el('button', {class:'btn', type:'button'}, 'UP (S)'); u.disabled = st[i] !== 'rc'; u.addEventListener('click', () => up(i));
+      bs.append(d, u); c.appendChild(bs); box.appendChild(c);
+    });
+  }
+  function reset(){ S = init; st = ['fora','fora','fora']; q = []; draw(); setMsg($('#sm-m'), `Semáforo iniciado com ${init}. Todos os processos estão fora da região crítica.`); }
+  function down(i){
+    if(S > 0){ S--; st[i] = 'rc'; setMsg($('#sm-m'), `${names[i]} fez DOWN: S era ${S + 1}, passou a ${S}. ${names[i]} entrou na região crítica.`, 'ok'); }
+    else { st[i] = 'esp'; q.push(i); setMsg($('#sm-m'), `${names[i]} fez DOWN com S = 0: foi para a fila de espera, sem gastar UCP.`, 'bad'); }
+    draw();
+  }
+  function up(i){
+    st[i] = 'fora';
+    if(q.length){ const k = q.shift(); st[k] = 'rc'; setMsg($('#sm-m'), `${names[i]} fez UP e saiu. Como ${names[k]} estava esperando, foi acordado e entrou. S continua ${S}.`, 'ok'); }
+    else { S++; setMsg($('#sm-m'), `${names[i]} fez UP e saiu. Ninguém esperava, então S passou a ${S}.`); }
+    draw();
+  }
+  $$('#sm-init .btn').forEach(b => b.addEventListener('click', () => { init = +b.dataset.v; $$('#sm-init .btn').forEach(x => x.classList.toggle('sel', x === b)); reset(); }));
+  reset();
+})();
+
+/* 7.9 produtor/consumidor */
+(function(){
+  const N = 5; let c, pb, cb, seq;
+  function draw(){
+    $('#pc-v').textContent = N - c; $('#pc-c').textContent = c;
+    $('#pc-buf').innerHTML = Array.from({length:N}, (_, i) => `<div class="slot ${i < c ? 'full' : ''}">${i < c ? 'd' : ''}</div>`).join('');
+    const pa = $('#pc-pa'), ca = $('#pc-ca');
+    pa.textContent = 'Produtor: ' + (pb ? 'BLOQUEADO em DOWN(Vazio)' : 'livre'); pa.className = 'actor' + (pb ? ' blocked' : '');
+    ca.textContent = 'Consumidor: ' + (cb ? 'BLOQUEADO em DOWN(Cheio)' : 'livre'); ca.className = 'actor' + (cb ? ' blocked' : '');
+  }
+  function reset(){ c = 0; pb = false; cb = false; seq = 0; draw(); setMsg($('#pc-m'), 'Buffer vazio. O consumidor teria de esperar; o produtor pode gravar.'); }
+  $('#pc-p').addEventListener('click', () => {
+    if(pb){ setMsg($('#pc-m'), 'O produtor já está bloqueado esperando uma posição livre. Consuma um dado para liberá-lo.', 'bad'); return; }
+    if(c === N){ pb = true; draw(); setMsg($('#pc-m'), 'DOWN(Vazio) com Vazio = 0: o buffer está cheio e o produtor foi bloqueado até o consumidor liberar uma posição.', 'bad'); return; }
+    c++;
+    if(cb){ cb = false; c--; draw(); setMsg($('#pc-m'), 'O produtor gravou e fez UP(Cheio). O consumidor, que estava bloqueado, foi acordado e consumiu o dado na hora.', 'ok'); return; }
+    draw(); setMsg($('#pc-m'), `Produtor: DOWN(Vazio), grava, UP(Cheio). Agora Vazio = ${N - c} e Cheio = ${c}.`);
+  });
+  $('#pc-c2').addEventListener('click', () => {
+    if(cb){ setMsg($('#pc-m'), 'O consumidor já está bloqueado esperando um dado. Produza algo para liberá-lo.', 'bad'); return; }
+    if(c === 0){ cb = true; draw(); setMsg($('#pc-m'), 'DOWN(Cheio) com Cheio = 0: o buffer está vazio e o consumidor foi bloqueado até o produtor gravar.', 'bad'); return; }
+    c--;
+    if(pb){ pb = false; c++; draw(); setMsg($('#pc-m'), 'O consumidor leu e fez UP(Vazio). O produtor, que estava bloqueado, foi acordado e gravou na posição liberada.', 'ok'); return; }
+    draw(); setMsg($('#pc-m'), `Consumidor: DOWN(Cheio), lê, UP(Vazio). Agora Vazio = ${N - c} e Cheio = ${c}.`);
+  });
+  $('#pc-r').addEventListener('click', reset); reset();
+})();
+
+/* 7.9 filósofos */
+(function(){
+  let st, hold, fork, ate, round, strat;
+  const L = i => i, R = i => (i + 1) % 5;
+  const order = i => strat === 'asym' && i % 2 === 1 ? [R(i), L(i)] : [L(i), R(i)];
+  function draw(){
+    const box = $('#ph'); box.innerHTML = '';
+    const lab = {fome:'com fome', come:'COMENDO', pensa:'satisfeito, pensando', trav:'TRAVADO'};
+    for(let i = 0; i < 5; i++){
+      const g = hold[i].map(f => 'g' + (f + 1)).join(' ') || '—';
+      box.appendChild(el('div', {class:'ph ' + st[i]}, `<b>F${i + 1}</b><small>${lab[st[i]]}</small><span class="forks">garfos: ${g}</span>`));
+    }
+  }
+  function reset(){ strat = $('#ph-s').value; st = Array(5).fill('fome'); hold = [[],[],[],[],[]]; fork = Array(5).fill(null); ate = Array(5).fill(false); round = 0; $('#ph-step').disabled = false; draw(); setMsg($('#ph-m'), 'Todos os filósofos estão com fome. Avance a primeira rodada.'); }
+  function step(){
+    round++; let changed = false; const notes = [];
+    for(let i = 0; i < 5; i++) if(st[i] === 'come'){ hold[i].forEach(f => fork[f] = null); hold[i] = []; st[i] = 'pensa'; ate[i] = true; changed = true; }
+    const idx = [0,1,2,3,4].map(k => (k + round) % 5);
+    for(const i of idx){
+      if(st[i] !== 'fome') continue;
+      if(strat === 'both'){
+        if(fork[L(i)] === null && fork[R(i)] === null){ fork[L(i)] = i; fork[R(i)] = i; hold[i] = [L(i), R(i)]; st[i] = 'come'; changed = true; notes.push('F' + (i + 1) + ' pegou os dois garfos'); }
+      } else {
+        const [a, b] = order(i);
+        if(hold[i].length === 0){ if(fork[a] === null){ fork[a] = i; hold[i] = [a]; changed = true; } }
+        else if(hold[i].length === 1){ if(fork[b] === null){ fork[b] = i; hold[i].push(b); st[i] = 'come'; changed = true; notes.push('F' + (i + 1) + ' conseguiu o segundo garfo'); } }
+      }
+    }
+    const hungry = st.filter(s => s === 'fome').length;
+    if(!changed && hungry){
+      for(let i = 0; i < 5; i++) if(st[i] === 'fome') st[i] = 'trav';
+      draw(); $('#ph-step').disabled = true;
+      setMsg($('#ph-m'), 'DEADLOCK: cada filósofo segura o garfo da esquerda e espera o da direita, que está com o vizinho. Ninguém solta, ninguém come. Troque a estratégia e tente de novo.', 'bad'); return;
+    }
+    draw();
+    if(ate.every(Boolean)){ $('#ph-step').disabled = true; setMsg($('#ph-m'), `Todos os filósofos comeram em ${round} rodadas, sem deadlock.`, 'ok'); return; }
+    const eating = st.map((s, i) => s === 'come' ? 'F' + (i + 1) : null).filter(Boolean);
+    setMsg($('#ph-m'), `Rodada ${round}: ` + (eating.length ? 'comendo agora: ' + eating.join(', ') + '.' : 'os filósofos estão pegando garfos.'));
+  }
+  $('#ph-step').addEventListener('click', step);
+  $('#ph-r').addEventListener('click', reset);
+  $('#ph-s').addEventListener('change', reset);
+  reset();
+})();
+
+/* 7.11 mensagens */
+(function(){
+  let mode = 's', buf, got, n, tBlocked, rWaiting;
+  function act(id, txt, bad){ const a = $(id); a.textContent = txt; a.className = 'actor' + (bad ? ' blocked' : ''); }
+  function draw(){
+    $('#ms-buf').innerHTML = buf.length ? buf.map(m => `<span class="env">${m}</span>`).join('') : '<span class="lab-hint">vazio</span>';
+    $('#ms-got').innerHTML = got.map(m => `<span class="env">${m} ✓</span>`).join('');
+    act('#ms-ts', tBlocked ? 'bloqueado: esperando o RECEIVE' : 'executando', tBlocked);
+    act('#ms-rs', rWaiting ? 'bloqueado: esperando mensagem' : 'executando', rWaiting);
+    $('#ms-send').disabled = tBlocked;
+  }
+  function reset(){ buf = []; got = []; n = 0; tBlocked = false; rWaiting = false; draw(); setMsg($('#ms-m'), mode === 's' ? 'Modo síncrono: envie uma mensagem.' : 'Modo assíncrono: envie várias mensagens seguidas.'); }
+  $('#ms-send').addEventListener('click', () => {
+    n++; const m = 'msg ' + n;
+    if(rWaiting){ rWaiting = false; got.push(m); draw(); setMsg($('#ms-m'), `${m} entregue direto ao receptor, que estava esperando. Os dois seguem executando.`, 'ok'); return; }
+    buf.push(m);
+    if(mode === 's'){ tBlocked = true; setMsg($('#ms-m'), `Síncrona: o transmissor enviou ${m} e ficou bloqueado até o receptor executar RECEIVE.`, 'bad'); }
+    else setMsg($('#ms-m'), `Assíncrona: ${m} ficou no buffer e o transmissor continua executando. Mensagens no buffer: ${buf.length}.`, 'ok');
+    draw();
+  });
+  $('#ms-recv').addEventListener('click', () => {
+    if(rWaiting){ setMsg($('#ms-m'), 'O receptor já está esperando uma mensagem.'); return; }
+    if(!buf.length){ rWaiting = true; draw(); setMsg($('#ms-m'), 'Nenhuma mensagem disponível: o receptor fica bloqueado até chegar uma.', 'bad'); return; }
+    const m = buf.shift(); got.push(m);
+    const freed = mode === 's' && tBlocked; tBlocked = false;
+    draw(); setMsg($('#ms-m'), `Receptor leu ${m}.` + (freed ? ' Na comunicação síncrona, isso libera o transmissor (rendezvous).' : ''), 'ok');
+  });
+  $$('#ms-mode .btn').forEach(b => b.addEventListener('click', () => { mode = b.dataset.m; $$('#ms-mode .btn').forEach(x => x.classList.toggle('sel', x === b)); reset(); }));
+  reset();
+})();
+
+/* 7.12 deadlock */
+(function(){
+  const pos = {P1:[90,80], R1:[430,80], P2:[430,280], R2:[90,280]};
+  let owner, wait, dead, killed;
+  const svg = $('#dl-svg');
+  function line(a, b, kind){
+    const [x1, y1] = pos[a], [x2, y2] = pos[b];
+    const dx = x2 - x1, dy = y2 - y1, len = Math.hypot(dx, dy), ux = dx / len, uy = dy / len;
+    const s = 58, e = 62;
+    const dash = kind === 'wait' ? ' stroke-dasharray="10 8"' : '';
+    const col = kind === 'wait' ? 'var(--bad)' : 'var(--ink)';
+    return `<line x1="${x1 + ux * s}" y1="${y1 + uy * s}" x2="${x2 - ux * e}" y2="${y2 - uy * e}" style="stroke:${col}; stroke-width:4"${dash} marker-end="url(#${kind === 'wait' ? 'mw' : 'ma'})"/>`;
+  }
+  function draw(){
+    let h = `<defs><marker id="ma" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L10 5 L0 10 z" style="fill:var(--ink)"/></marker><marker id="mw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L10 5 L0 10 z" style="fill:var(--bad)"/></marker></defs>`;
+    ['R1','R2'].forEach(r => { if(owner[r]) h += line(r, owner[r], 'own'); });
+    ['P1','P2'].forEach(p => { if(wait[p]) h += line(p, wait[p], 'wait'); });
+    ['P1','P2'].forEach(p => {
+      const [x, y] = pos[p]; const isDead = dead || (p === 'P2' && killed);
+      const fill = p === 'P1' ? 'var(--run-soft)' : 'var(--wait-soft)', stroke = dead ? 'var(--bad)' : (p === 'P1' ? 'var(--run)' : 'var(--wait)');
+      h += `<circle cx="${x}" cy="${y}" r="48" style="fill:${fill}; stroke:${stroke}; stroke-width:4${p === 'P2' && killed ? '; opacity:.35' : ''}"/><text x="${x}" y="${y + 8}" text-anchor="middle" font-size="24">${p}</text>`;
+    });
+    ['R1','R2'].forEach(r => { const [x, y] = pos[r]; h += `<rect x="${x - 52}" y="${y - 38}" width="104" height="76" rx="8" style="fill:var(--ready-soft); stroke:var(--ready); stroke-width:4"/><text x="${x}" y="${y + 8}" text-anchor="middle" font-size="24">${r}</text>`; });
+    svg.innerHTML = h;
+  }
+  function reset(){ owner = {R1:null, R2:null}; wait = {P1:null, P2:null}; dead = false; killed = false; draw(); setMsg($('#dl-m'), 'Nenhum recurso alocado.'); }
+  function check(){
+    if(wait.P1 && owner[wait.P1] === 'P2' && wait.P2 && owner[wait.P2] === 'P1'){ dead = true; return true; }
+    return false;
+  }
+  function grantTo(r){ for(const p of ['P1','P2']) if(wait[p] === r && !(p === 'P2' && killed)){ owner[r] = p; wait[p] = null; return p; } return null; }
+  $$('.dlbtns .btn').forEach(b => b.addEventListener('click', () => {
+    const [p, r] = b.dataset.a.split(':');
+    if(p === 'free'){
+      const q = r;
+      if(q === 'P2' && killed){ setMsg($('#dl-m'), 'P2 foi eliminado.'); return; }
+      if(wait[q]){ setMsg($('#dl-m'), `${q} está bloqueado esperando ${wait[q]}: um processo em espera não executa, então não consegue liberar nada.`, 'bad'); return; }
+      const mine = ['R1','R2'].filter(x => owner[x] === q);
+      if(!mine.length){ setMsg($('#dl-m'), `${q} não tem recursos.`); return; }
+      const got = []; mine.forEach(x => { owner[x] = null; const g = grantTo(x); if(g) got.push(`${x} foi entregue a ${g}`); });
+      draw(); setMsg($('#dl-m'), `${q} liberou ${mine.join(' e ')}.` + (got.length ? ' ' + got.join('; ') + '.' : ''), 'ok'); return;
+    }
+    if(p === 'P2' && killed){ setMsg($('#dl-m'), 'P2 foi eliminado. Recomece para usá-lo de novo.'); return; }
+    if(dead){ setMsg($('#dl-m'), 'Os processos estão em deadlock: nenhum deles consegue executar. Use a correção.', 'bad'); return; }
+    if(wait[p]){ setMsg($('#dl-m'), `${p} está bloqueado esperando ${wait[p]} e não pode fazer outro pedido.`, 'bad'); return; }
+    if(owner[r] === p){ setMsg($('#dl-m'), `${p} já tem ${r}.`); return; }
+    if(owner[r] === null){ owner[r] = p; draw(); setMsg($('#dl-m'), `${r} estava livre e foi alocado a ${p}.`, 'ok'); return; }
+    wait[p] = r;
+    if(check()){ draw(); setMsg($('#dl-m'), `DEADLOCK: ${p} espera ${r}, que está com ${owner[r]}, que por sua vez espera um recurso de ${p}. Há espera circular, e nenhum dos dois vai liberar nada.`, 'bad'); return; }
+    draw(); setMsg($('#dl-m'), `${r} está com ${owner[r]}: ${p} fica esperando.`);
+  }));
+  $('#dl-kill').addEventListener('click', () => {
+    if(killed){ setMsg($('#dl-m'), 'P2 já foi eliminado.'); return; }
+    killed = true; dead = false; wait.P2 = null;
+    const freed = ['R1','R2'].filter(x => owner[x] === 'P2'); const got = [];
+    freed.forEach(x => { owner[x] = null; const g = grantTo(x); if(g) got.push(`${x} foi entregue a ${g}`); });
+    draw(); setMsg($('#dl-m'), 'Correção: P2 foi eliminado' + (freed.length ? ` e liberou ${freed.join(' e ')}` : '') + '.' + (got.length ? ' ' + got.join('; ') + ', que continua executando.' : ''), 'ok');
+  });
+  $('#dl-r').addEventListener('click', reset); reset();
+})();
+
+/* questões fechadas */
+(function(){
+  const Q = [
+    {q:'O que é uma aplicação concorrente?', a:['Processos ou threads que executam ao mesmo tempo e cooperam, compartilhando recursos.','Um programa que só pode ser executado em multiprocessadores.','Um programa sequencial dividido em sub-rotinas.','Uma aplicação usada por vários usuários em horários alternados.','Um processo que executa em background.'], c:0, e:'Os processos cooperam para resolver um problema e, por isso, precisam se sincronizar.'},
+    {q:'Na construção PARBEGIN/PAREND:', a:['os comandos entre as duas palavras executam concorrentemente, e o programa só continua quando todos terminam.','os comandos executam em sequência, um após o outro.','apenas o primeiro comando é executado.','cada comando cria um processo independente que nunca termina.','o programa termina logo após o PARBEGIN.'], c:0, e:'É a forma do livro de indicar concorrência, como no cálculo de X com Temp1, Temp2 e Temp3.'},
+    {q:'Dois caixas leem o mesmo saldo de 1000 antes que qualquer um grave. Um saca 200 e o outro deposita 300. O que pode acontecer?', a:['Uma das operações é perdida, e o saldo fica 800 ou 1300.','O saldo fica sempre correto, 1100.','Ocorre obrigatoriamente um deadlock.','O sistema operacional desfaz as duas operações.','O saldo fica 1500.'], c:0, e:'O último a gravar sobrescreve o valor gravado pelo outro.'},
+    {q:'Condição de corrida é a situação em que:', a:['o resultado depende da ordem em que os processos executam.','dois processos têm a mesma prioridade.','um processo usa a UCP por muito tempo.','o processo termina antes do previsto.','dois processadores executam o mesmo processo.'], c:0, e:'Por isso o erro aparece só em algumas execuções.'},
+    {q:'O que é a região crítica?', a:['O trecho do código em que o processo acessa o recurso compartilhado.','A área de memória reservada ao núcleo.','O processo de maior prioridade do sistema.','O momento em que o sistema está sobrecarregado.','A parte do disco onde ficam os arquivos do SO.'], c:0, e:'É nela que a exclusão mútua precisa ser garantida.'},
+    {q:'A exclusão mútua garante que:', a:['dois processos nunca estejam ao mesmo tempo nas suas regiões críticas.','todos os processos executem na mesma velocidade.','nenhum processo use recursos compartilhados.','os processos terminem na ordem em que foram criados.','um processo nunca perca a UCP.'], c:0, e:'Enquanto um processo usa o recurso, os outros esperam.'},
+    {q:'Starvation é:', a:['um processo esperar indefinidamente sem nunca conseguir o recurso.','dois processos esperarem um pelo outro para sempre.','o fim da memória disponível.','um processo usar 100% da UCP.','a perda de uma mensagem.'], c:0, e:'Não confunda com deadlock: na starvation, outros processos continuam avançando.'},
+    {q:'Qual o problema de desabilitar interrupções para garantir exclusão mútua?', a:['Um processo de usuário pode não reabilitá-las, e a técnica não funciona com vários processadores.','Ela gera espera ocupada em todos os processadores.','Ela só funciona com troca de mensagens.','Ela impede o uso de semáforos.','Ela obriga os processos a alternarem a vez.'], c:0, e:'Por isso, só o núcleo usa esse recurso, por pouco tempo.'},
+    {q:'A instrução test-and-set:', a:['lê e altera uma variável numa única operação indivisível.','desabilita as interrupções do processador.','envia uma mensagem a outro processo.','cria um novo processo concorrente.','testa se o disco está livre.'], c:0, e:'Por ser atômica, dois processos não conseguem ver a variável livre ao mesmo tempo.'},
+    {q:'Espera ocupada é:', a:['o processo testar uma condição em laço, gastando UCP enquanto espera.','o processo dormir numa fila até ser acordado.','o tempo em que o disco fica ocupado.','a espera por uma mensagem assíncrona.','a fila de processos prontos.'], c:0, e:'Os semáforos eliminam a espera ocupada colocando o processo em espera.'},
+    {q:'O algoritmo de Peterson é:', a:['uma solução de software correta para a exclusão mútua entre dois processos, que ainda usa espera ocupada.','uma instrução de hardware.','um algoritmo de detecção de deadlock.','uma forma de troca de mensagens.','um tipo de monitor.'], c:0, e:'É mais simples que o algoritmo de Dekker, o primeiro correto.'},
+    {q:'Sincronização condicional significa:', a:['um processo esperar até que uma condição seja verdadeira, como o buffer deixar de estar vazio.','dois processos executarem sempre na mesma ordem.','o SO escolher o processo de maior prioridade.','um processo esperar o fim de outro para ser criado.','desabilitar as interrupções condicionalmente.'], c:0, e:'O exemplo clássico é o produtor/consumidor.'},
+    {q:'Um processo executa DOWN(S) quando S = 0. O que acontece?', a:['O processo vai para o estado de espera, na fila do semáforo.','S passa a valer −1 e o processo continua.','O processo é eliminado.','S volta a 1 automaticamente.','O processo entra mesmo assim na região crítica.'], c:0, e:'O semáforo nunca fica negativo; quem não pode passar espera sem gastar UCP.'},
+    {q:'Um processo executa UP(S) e há processos esperando no semáforo. O que acontece?', a:['Um dos processos em espera é acordado.','S é incrementado e ninguém é acordado.','Todos os processos em espera são eliminados.','O processo que fez UP fica em espera.','O semáforo é destruído.'], c:0, e:'Se não houvesse ninguém esperando, S seria incrementado.'},
+    {q:'No produtor/consumidor com semáforos, o semáforo Vazio começa com:', a:['o tamanho do buffer.','zero.','um.','menos um.','o número de consumidores.'], c:0, e:'Vazio conta as posições livres; no início, todas estão livres.'},
+    {q:'Qual a principal vantagem dos monitores sobre os semáforos?', a:['A exclusão mútua é garantida automaticamente pelo compilador.','Monitores eliminam a necessidade de memória.','Monitores funcionam só com troca de mensagens.','Monitores dispensam qualquer tipo de espera.','Monitores tornam os processos independentes.'], c:0, e:'Com semáforos, um DOWN ou UP fora do lugar causa erros difíceis de achar.'},
+    {q:'Em um monitor, a operação WAIT(C):', a:['coloca o processo na fila da condição C e libera o monitor para outro processo.','elimina o processo.','acorda todos os processos do monitor.','incrementa a variável C.','encerra o monitor.'], c:0, e:'SIGNAL(C) acorda um processo que espera em C.'},
+    {q:'Na comunicação indireta por troca de mensagens:', a:['as mensagens passam por uma mailbox (caixa postal) ou porta.','cada processo precisa nomear o outro explicitamente.','não há envio de mensagens.','os processos compartilham variáveis.','o transmissor e o receptor são o mesmo processo.'], c:0, e:'Vários processos podem usar a mesma mailbox.'},
+    {q:'Na comunicação assíncrona:', a:['o transmissor não fica bloqueado; a mensagem fica num buffer até ser lida.','o transmissor espera o receptor receber a mensagem.','não é possível perder mensagens.','as mensagens não precisam de buffer.','só um processo pode enviar mensagens.'], c:0, e:'Isso aumenta a concorrência, mas exige buffers e confirmações.'},
+    {q:'Quais são as quatro condições para a ocorrência de deadlock?', a:['Exclusão mútua, espera por recurso, não preempção e espera circular.','Starvation, espera ocupada, preempção e prioridade.','Semáforo, monitor, mensagem e buffer.','Criação, pronto, execução e terminado.','Interrupção, exceção, sinal e chamada de sistema.'], c:0, e:'As quatro precisam ocorrer ao mesmo tempo; impedir uma basta para prevenir o deadlock.'}
+  ];
+  const ol = $('#qz'); const L = 'ABCDE'; let ok = 0, bad = 0;
+  $('#qz-t').textContent = Q.length;
+  function update(){
+    const n = ok + bad;
+    $('#qz-ok').textContent = ok; $('#qz-bad').textContent = bad; $('#qz-n').textContent = n;
+    $('#qz-mg').style.width = (ok / Q.length * 100) + '%'; $('#qz-mr').style.width = (bad / Q.length * 100) + '%';
+    const fin = $('#qz-final');
+    if(n === Q.length){
+      const pct = Math.round(ok / Q.length * 100);
+      $('#qz-ft').textContent = `Você acertou ${ok} de ${Q.length} (${pct}%).`;
+      $('#qz-fp').textContent = pct >= 80 ? 'Ótimo domínio do capítulo. Tente agora responder as questões abertas sem consultar o texto.' : pct >= 60 ? 'Bom resultado. Releia as explicações das questões que errou e as seções indicadas.' : 'Vale revisar o capítulo: releia as seções das questões erradas, use os simuladores e clique em Refazer.';
+      fin.hidden = false;
+    } else fin.hidden = true;
+  }
+  function build(){
+    ol.innerHTML = ''; ok = 0; bad = 0;
+    const shuf = n => { const r = [...Array(n).keys()]; for(let i = n - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [r[i], r[j]] = [r[j], r[i]]; } return r; };
+    const cur = Q.map(it => { const idx = shuf(it.a.length); return {...it, a: idx.map(i => it.a[i]), c: idx.indexOf(it.c)}; });
+    window.__Q = cur;
+    cur.forEach((it) => {
+      const li = el('li');
+      li.appendChild(el('div', {class:'qh'}, `<p>${it.q}</p>`));
+      const alts = el('div', {class:'alts'});
+      it.a.forEach((txt, j) => {
+        const b = el('button', {type:'button', class:'alt'}, `<span class="k">${L[j]}</span><span>${txt}</span>`);
+        b.addEventListener('click', () => {
+          const right = j === it.c;
+          $$('.alt', alts).forEach((x, k) => { x.disabled = true; if(k === it.c) x.classList.add('right'); });
+          if(!right) b.classList.add('wrong');
+          right ? ok++ : bad++;
+          li.appendChild(el('p', {class:'fb ' + (right ? 'ok' : 'bad'), role:'status'}, `<b>${right ? 'Correto!' : 'Incorreto.'}</b> ${right ? '' : 'A resposta certa é ' + L[it.c] + '. '}${it.e}`));
+          update();
+        });
+        alts.appendChild(b);
+      });
+      li.appendChild(alts); ol.appendChild(li);
+    });
+    update();
+  }
+  $('#qz-reset').addEventListener('click', () => { build(); $('#ex-b').scrollIntoView({behavior:'smooth'}); });
+  build();
+})();
+})();
+</script>
+</body></html>
