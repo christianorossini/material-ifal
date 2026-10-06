@@ -1,0 +1,1057 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apostila de Processos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --bg:#F2F4EE; --surface:#FBFCF8; --surface-2:#E8EDE2; --ink:#17231A; --ink-2:#4A5A4C; --line:#D3DCCB;
+  --accent:#2E6B1E; --accent-ink:#FFFFFF; --accent-soft:#DDEBD3;
+  --run:#2E6B1E; --run-soft:#DDEBD3;
+  --ready:#9A6200; --ready-soft:#FBEBC8;
+  --wait:#2F5C99; --wait-soft:#DCE6F4;
+  --neutral:#646E61; --neutral-soft:#E4E7E1;
+  --ok:#1F7A3A; --ok-soft:#D9F0DF; --bad:#B3261E; --bad-soft:#F8DEDB;
+  --display:"Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body:"Literata", Georgia, "Times New Roman", serif;
+  --mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0F1510; --surface:#172019; --surface-2:#1F2A21; --ink:#E4EBE0; --ink-2:#A6B3A4; --line:#2F3D31;
+    --accent:#7CC25B; --accent-ink:#0F1510; --accent-soft:#233A1C;
+    --run:#7CC25B; --run-soft:#1F3519; --ready:#E9B04A; --ready-soft:#3A2E14;
+    --wait:#8DB3EA; --wait-soft:#1B2A40; --neutral:#9AA397; --neutral-soft:#262C25;
+    --ok:#6FD08C; --ok-soft:#173222; --bad:#FF8A80; --bad-soft:#3D1B18;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0F1510; --surface:#172019; --surface-2:#1F2A21; --ink:#E4EBE0; --ink-2:#A6B3A4; --line:#2F3D31;
+  --accent:#7CC25B; --accent-ink:#0F1510; --accent-soft:#233A1C;
+  --run:#7CC25B; --run-soft:#1F3519; --ready:#E9B04A; --ready-soft:#3A2E14;
+  --wait:#8DB3EA; --wait-soft:#1B2A40; --neutral:#9AA397; --neutral-soft:#262C25;
+  --ok:#6FD08C; --ok-soft:#173222; --bad:#FF8A80; --bad-soft:#3D1B18;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto} *{transition:none!important; animation:none!important}}
+body{background:var(--bg); color:var(--ink); font-family:var(--body); font-size:17px; line-height:1.65; padding-inline:20px; padding-block:0 64px}
+h1,h2,h3,h4{font-family:var(--display); line-height:1.15; text-wrap:balance; margin:0}
+p{margin:0}
+a{color:var(--accent)}
+code,.mono{font-family:var(--mono); font-size:.88em}
+button{font:inherit; cursor:pointer}
+:focus-visible{outline:3px solid var(--accent); outline-offset:2px; border-radius:4px}
+
+/* header */
+.top{max-width:1160px; margin:0 auto; padding-block:48px 36px; border-bottom:2px solid var(--ink); display:grid; gap:18px}
+.eyebrow{font-family:var(--display); font-size:13px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--accent)}
+.top h1{font-size:clamp(48px, 9vw, 104px); font-weight:800; letter-spacing:-.03em}
+.top h1 span{color:var(--accent)}
+.lede{font-size:20px; max-width:62ch; color:var(--ink-2)}
+.meta{display:flex; flex-wrap:wrap; gap:8px 24px; font-family:var(--display); font-size:14px; color:var(--ink-2)}
+.meta b{color:var(--ink)}
+
+/* layout */
+.layout{max-width:1160px; margin:0 auto; display:grid; grid-template-columns:230px minmax(0,1fr); gap:56px; padding-top:40px}
+nav.toc{position:sticky; top:calc(env(safe-area-inset-top, 0px) + 20px); align-self:start; font-family:var(--display); font-size:14px}
+nav.toc p{font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-2); margin-bottom:10px}
+nav.toc ol{list-style:none; margin:0; padding:0; display:grid; gap:2px; border-left:2px solid var(--line)}
+nav.toc a{display:grid; grid-template-columns:38px 1fr; padding:6px 10px; margin-left:-2px; border-left:2px solid transparent; color:var(--ink-2); text-decoration:none; line-height:1.3}
+nav.toc a span{font-variant-numeric:tabular-nums; color:var(--ink-2); font-weight:600}
+nav.toc a:hover{color:var(--ink)}
+nav.toc a.on{border-left-color:var(--accent); color:var(--ink); font-weight:600}
+nav.toc a.on span{color:var(--accent)}
+main{min-width:0; display:grid; gap:72px}
+@media (max-width:900px){
+  .layout{grid-template-columns:minmax(0,1fr); gap:28px; padding-top:24px}
+  nav.toc{position:static}
+  nav.toc ol{display:flex; overflow-x:auto; border-left:none; gap:6px; padding-bottom:6px}
+  nav.toc a{display:block; white-space:nowrap; border:1px solid var(--line); border-radius:999px; padding:6px 12px; margin:0; background:var(--surface)}
+  nav.toc a span{margin-right:6px}
+  nav.toc a.on{border-color:var(--accent)}
+}
+
+/* sections */
+.sec{display:grid; gap:20px; scroll-margin-top:24px}
+.sec > *{max-width:68ch}
+.sec > .wide{max-width:none}
+.sec-head{display:grid; gap:6px; padding-bottom:6px}
+.num{font-family:var(--display); font-weight:800; font-size:15px; color:var(--accent); letter-spacing:.06em}
+.sec h2{font-size:clamp(28px, 4vw, 38px); font-weight:700; letter-spacing:-.01em}
+.sec h3{font-size:21px; font-weight:700; margin-top:10px}
+.sec ul,.sec ol{margin:0; padding-left:1.3em; display:grid; gap:6px}
+dfn{font-style:normal; font-weight:600; background:linear-gradient(transparent 62%, var(--accent-soft) 62%)}
+.def{border:2px solid var(--ink); background:var(--surface); padding:18px 22px; display:grid; gap:6px}
+.def .lbl{font-family:var(--display); font-size:12px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--accent)}
+.def p{font-size:19px}
+.note{background:var(--surface-2); padding:14px 18px; border-radius:6px; font-size:16px; display:grid; gap:6px}
+.note .lbl{font-family:var(--display); font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-2)}
+pre.term{font-family:var(--mono); font-size:14px; line-height:1.55; background:#101A12; color:#D6E8CB; padding:14px 18px; border-radius:6px; overflow-x:auto; margin:0}
+pre.term .c{color:#8FA88A}
+
+/* lab widgets */
+.lab{border:1px solid var(--line); background:var(--surface); border-radius:10px; padding:20px; display:grid; gap:16px}
+.lab-head{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap}
+.tag{font-family:var(--display); font-size:11px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; background:var(--accent); color:var(--accent-ink); padding:3px 8px; border-radius:3px}
+.lab-head h4{font-size:18px; font-weight:700}
+.lab-hint{font-size:15px; color:var(--ink-2)}
+.btns{display:flex; flex-wrap:wrap; gap:8px}
+.btn{font-family:var(--display); font-size:14px; font-weight:600; border:1.5px solid var(--ink); background:var(--surface); color:var(--ink); padding:8px 14px; border-radius:6px; transition:background .15s, transform .1s}
+.btn:hover{background:var(--surface-2)}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--ink); color:var(--bg)}
+.btn.primary:hover{background:var(--accent); border-color:var(--accent); color:var(--accent-ink)}
+.btn.ghost{border-color:var(--line); color:var(--ink-2)}
+.btn[disabled]{opacity:.45; cursor:not-allowed}
+.msg{font-family:var(--display); font-size:15px; padding:10px 14px; border-radius:6px; background:var(--surface-2); color:var(--ink)}
+.msg.ok{background:var(--ok-soft); color:var(--ok)}
+.msg.bad{background:var(--bad-soft); color:var(--bad)}
+.chip{display:inline-block; font-family:var(--display); font-size:13px; font-weight:700; padding:2px 9px; border-radius:999px}
+.st-execucao{background:var(--run-soft); color:var(--run)}
+.st-pronto{background:var(--ready-soft); color:var(--ready)}
+.st-espera{background:var(--wait-soft); color:var(--wait)}
+.st-criacao,.st-terminado{background:var(--neutral-soft); color:var(--neutral)}
+.scroll{overflow-x:auto}
+</style>
+<style>
+body{margin:0}
+[hidden]{display:none!important}
+@media print{
+  :root{--bg:#FFFFFF; --surface:#FFFFFF}
+  body{font-size:11.5pt; padding-inline:0}
+  nav.toc,.btns,.evbtns,.score,#sm-log,#sm-msg,.lab-hint,.lab .msg,.final,.cursor{display:none!important}
+  .lab.hide-print{display:none!important}
+  .layout{grid-template-columns:minmax(0,1fr); gap:0; padding-top:16px}
+  main{gap:28px}
+  .top{padding-block:0 18px}
+  .sec{break-before:page}
+  #s1{break-before:auto}
+  .lab,.card,.def,.note,figure,table,.oq > li,.qz > li,.states,.thr{break-inside:avoid}
+  pre.term{white-space:pre-wrap}
+  details summary{display:none}
+  .alt{padding:4px 10px}
+  .gab li{break-inside:avoid}
+  footer.end{margin-top:24px}
+}
+.gab{display:none}
+@media print{.gab{display:grid; gap:10px; break-before:page}}
+</style>
+</head><body>
+<style>
+/* 5.1 */
+.procs{display:grid; grid-template-columns:repeat(auto-fill, minmax(190px, 1fr)); gap:10px; min-height:84px}
+.proc{border:1px solid var(--line); border-left:5px solid var(--run); padding:10px 12px; background:var(--bg); display:grid; gap:2px; animation:pop .25s ease-out}
+.proc b{font-family:var(--display); font-size:15px}
+.proc span{font-family:var(--mono); font-size:12.5px; color:var(--ink-2)}
+.proc.pronto{border-left-color:var(--ready)} .proc.espera{border-left-color:var(--wait)}
+.empty{font-family:var(--display); font-size:14px; color:var(--ink-2); align-self:center}
+@keyframes pop{from{opacity:.2; transform:translateY(6px)} to{opacity:1; transform:none}}
+.prog{display:flex; align-items:center; gap:12px; flex-wrap:wrap}
+.file{font-family:var(--mono); font-size:14px; border:1.5px dashed var(--ink-2); padding:8px 12px; border-radius:6px}
+
+/* 5.2 diagram */
+.fig{margin:0; display:grid; gap:8px}
+.fig figcaption{font-family:var(--display); font-size:13px; color:var(--ink-2)}
+.fig svg{width:100%; height:auto; max-width:640px}
+.fig svg text{font-family:var(--display)} .fig svg text:not([fill]){fill:var(--ink)}
+.part{cursor:pointer}
+.part rect{transition:stroke-width .15s}
+.part:hover rect,.part:focus rect{stroke-width:4}
+
+/* 5.2.1 context switch */
+.cs{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px}
+@media (max-width:620px){.cs{grid-template-columns:minmax(0,1fr)}}
+.box{border:1.5px solid var(--line); border-radius:8px; padding:12px; background:var(--bg); display:grid; gap:8px; transition:border-color .2s, box-shadow .2s}
+.box h5{font-family:var(--display); font-size:14px; margin:0; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:8px}
+.box.cpu{border-color:var(--ink); background:var(--surface-2)}
+.box.flash{border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft)}
+.regs{display:grid; grid-template-columns:auto 1fr; gap:3px 12px; font-family:var(--mono); font-size:13.5px; font-variant-numeric:tabular-nums}
+.regs dt{color:var(--ink-2)} .regs dd{margin:0; text-align:right}
+.steps{display:flex; gap:6px; flex-wrap:wrap}
+.steps i{font-style:normal; font-family:var(--display); font-size:12px; font-weight:700; padding:3px 8px; border-radius:999px; background:var(--surface-2); color:var(--ink-2)}
+.steps i.on{background:var(--accent); color:var(--accent-ink)}
+
+/* 5.2.2 table */
+table.t{border-collapse:collapse; width:100%; font-size:15.5px}
+.t th{font-family:var(--display); text-align:left; font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-2); border-bottom:2px solid var(--ink); padding:8px 10px}
+.t td{border-bottom:1px solid var(--line); padding:10px; vertical-align:top}
+.t td:first-child{font-family:var(--display); font-weight:700; white-space:nowrap}
+
+/* 5.2.4 PCB */
+.pcbwrap{display:grid; grid-template-columns:minmax(0,300px) minmax(0,1fr); gap:20px; align-items:start}
+@media (max-width:620px){.pcbwrap{grid-template-columns:minmax(0,1fr)}}
+.pcb{list-style:none; margin:0; padding:0; border:2px solid var(--ink); border-radius:6px; overflow:hidden; font-family:var(--display); font-size:15px}
+.pcb li{padding:9px 14px; border-top:1px solid var(--line); transition:background .2s, color .2s}
+.pcb li.hd{background:var(--ink); color:var(--bg); font-family:var(--mono); font-size:14px; border-top:none}
+.pcb li.hit[data-part="hw"]{background:var(--wait-soft); color:var(--wait); font-weight:700}
+.pcb li.hit[data-part="sw"]{background:var(--run-soft); color:var(--run); font-weight:700}
+.pcb li.hit[data-part="ea"]{background:var(--ready-soft); color:var(--ready); font-weight:700}
+.pcb li.hit[data-part="ctl"]{background:var(--neutral-soft); color:var(--ink); font-weight:700}
+.btn.sel{background:var(--ink); color:var(--bg)}
+
+/* 5.3 cards */
+.states{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px}
+@media (max-width:700px){.states{grid-template-columns:minmax(0,1fr)}}
+.state{border-radius:8px; padding:16px; display:grid; gap:6px; align-content:start}
+.state h4{font-size:22px}
+.state small{font-family:var(--mono); font-size:12.5px; opacity:.85}
+.state p{font-size:15.5px}
+.state .an{font-size:14px; font-style:italic; border-top:1px solid currentColor; padding-top:8px; opacity:.9}
+.state.x{background:var(--run-soft); color:var(--run)} .state.x p{color:var(--ink)}
+.state.p{background:var(--ready-soft); color:var(--ready)} .state.p p{color:var(--ink)}
+.state.e{background:var(--wait-soft); color:var(--wait)} .state.e p{color:var(--ink)}
+
+/* 5.4 state machine */
+.smwrap{display:grid; grid-template-columns:minmax(0,1.6fr) minmax(0,1fr); gap:20px; align-items:start}
+@media (max-width:760px){.smwrap{grid-template-columns:minmax(0,1fr)}}
+.sm svg{width:100%; height:auto}
+.sm text{font-family:var(--display); fill:var(--ink); font-size:15px; font-weight:600}
+.sm .elbl{font-size:14px; font-weight:800; fill:var(--ink-2)}
+.node rect{fill:var(--surface); stroke:var(--line); stroke-width:2; transition:all .25s}
+.node.cur rect{stroke-width:3.5}
+.node.cur.n-criacao rect,.node.cur.n-terminado rect{fill:var(--neutral-soft); stroke:var(--neutral)}
+.node.cur.n-pronto rect{fill:var(--ready-soft); stroke:var(--ready)}
+.node.cur.n-execucao rect{fill:var(--run-soft); stroke:var(--run)}
+.node.cur.n-espera rect{fill:var(--wait-soft); stroke:var(--wait)}
+.edge{fill:none; stroke:var(--ink-2); stroke-width:2; opacity:.55; transition:all .25s}
+.edge.active{stroke:var(--accent); stroke-width:4; opacity:1}
+.mk{fill:var(--ink-2)} .mk-on{fill:var(--accent)}
+.pcbmini{font-family:var(--mono); font-size:13.5px; background:var(--bg); border:1.5px solid var(--line); border-radius:8px; padding:12px; display:grid; gap:4px}
+.log{list-style:none; margin:0; padding:0; font-family:var(--display); font-size:13.5px; display:grid; gap:4px; max-height:190px; overflow-y:auto}
+.log li{padding:5px 8px; background:var(--bg); border-radius:4px}
+.evbtns{display:grid; grid-template-columns:repeat(auto-fill, minmax(210px, 1fr)); gap:8px}
+.evbtns .btn{text-align:left}
+</style>
+
+<header class="top">
+  <p class="eyebrow">Sistemas Operacionais · IFAL Campus Maceió · Material de referência</p>
+  <h1>Processos<span>.</span></h1>
+  <p class="lede">O que é um processo, do que ele é feito, por quais estados passa e como o sistema operacional o cria, controla e avisa. Leia, experimente os simuladores e, no fim, teste o que aprendeu.</p>
+  <div class="meta"><span>Base: <b>Machado &amp; Maia, <i>Arquitetura de Sistemas Operacionais</i>, cap. 5</b></span><span>Prof. Christiano Rossini</span><span>11 seções · 8 simuladores · 36 exercícios</span></div>
+</header>
+
+<div class="layout">
+<nav class="toc" aria-label="Sumário">
+  <p>Sumário</p>
+  <ol>
+    <li><a href="#s1"><span>5.1</span>Introdução</a></li>
+    <li><a href="#s2"><span>5.2</span>Estrutura do processo</a></li>
+    <li><a href="#s3"><span>5.3</span>Estados do processo</a></li>
+    <li><a href="#s4"><span>5.4</span>Mudanças de estado</a></li>
+    <li><a href="#s5"><span>5.5</span>Criação e eliminação</a></li>
+    <li><a href="#s6"><span>5.6</span>CPU-bound e I/O-bound</a></li>
+    <li><a href="#s7"><span>5.7</span>Foreground e background</a></li>
+    <li><a href="#s8"><span>5.8</span>Formas de criação</a></li>
+    <li><a href="#s9"><span>5.9</span>Subprocessos e threads</a></li>
+    <li><a href="#s10"><span>5.10</span>Processos do SO</a></li>
+    <li><a href="#s11"><span>5.11</span>Sinais</a></li>
+    <li><a href="#ex"><span>Ex.</span>Exercícios</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- 5.1 -->
+<section class="sec" id="s1">
+  <div class="sec-head"><span class="num">5.1</span><h2>Introdução</h2></div>
+  <p>Um sistema multiprogramável executa vários programas de forma concorrente, e todos disputam a mesma UCP, a mesma memória e os mesmos dispositivos. Para que isso funcione, o sistema operacional precisa conseguir <b>interromper</b> um programa a qualquer momento e, mais tarde, <b>retomá-lo</b> exatamente do ponto em que parou, como se nada tivesse acontecido.</p>
+  <p>Para interromper e retomar sem perder nada, o SO precisa guardar tudo o que caracteriza aquela execução: os valores dos registradores, a área de memória usada, os arquivos abertos, o dono, os limites. Esse conjunto recebe o nome de processo.</p>
+  <div class="def"><span class="lbl">Definição</span><p>Um <dfn>processo</dfn> pode ser entendido como um <b>programa em execução</b>. De forma mais completa, é o <b>conjunto de informações necessárias para que o sistema operacional implemente a concorrência de programas</b>.</p></div>
+  <p>Programa e processo não são a mesma coisa. O programa é <b>passivo</b>: um arquivo executável guardado em disco. O processo é <b>ativo</b>: é esse programa rodando, com seu próprio contexto. Por isso um mesmo programa pode dar origem a vários processos ao mesmo tempo, cada um em um ponto diferente da execução.</p>
+  <p>Em sistemas multiusuário, cada usuário está associado a um processo: quando ele executa um programa, o programa roda no contexto de um processo. Todos os recursos do sistema (UCP, memória, arquivos, dispositivos) são alocados aos processos, e é por meio deles que o SO faz a gerência.</p>
+
+  <div class="lab">
+    <div class="lab-head"><span class="tag">Experimente</span><h4>Um programa, vários processos</h4></div>
+    <p class="lab-hint">Clique em executar algumas vezes. O arquivo em disco é sempre o mesmo, mas cada execução vira um processo diferente, com PID, contador de programa e estado próprios.</p>
+    <div class="prog"><span class="file">/usr/bin/editor</span><button class="btn primary" id="p-run">Executar o programa</button><button class="btn ghost" id="p-clear">Limpar</button></div>
+    <div class="procs" id="p-list"><span class="empty">Nenhum processo ainda. O programa está parado no disco.</span></div>
+  </div>
+</section>
+
+<!-- 5.2 -->
+<section class="sec" id="s2">
+  <div class="sec-head"><span class="num">5.2</span><h2>Estrutura do processo</h2></div>
+  <p>O processo é formado por três partes, que juntas guardam tudo o que é necessário para executar um programa: o <b>contexto de hardware</b>, o <b>contexto de software</b> e o <b>espaço de endereçamento</b>. Clique em cada parte da figura para ir à explicação.</p>
+  <figure class="fig wide">
+    <svg viewBox="0 0 640 330" role="img" aria-label="Processo formado por contexto de software, contexto de hardware e espaço de endereçamento, em torno do programa">
+      <rect x="40" y="6" width="560" height="316" rx="18" fill="var(--surface)" stroke="var(--accent)" stroke-width="3"/>
+      <text x="64" y="40" font-size="14" font-weight="800" letter-spacing="3" fill="var(--accent)">PROCESSO</text>
+      <line x1="320" y1="150" x2="320" y2="112" stroke="var(--ink-2)" stroke-width="3"/>
+      <line x1="280" y1="190" x2="190" y2="226" stroke="var(--ink-2)" stroke-width="3"/>
+      <line x1="360" y1="190" x2="450" y2="226" stroke="var(--ink-2)" stroke-width="3"/>
+      <a href="#s2-2" class="part"><rect x="190" y="56" width="260" height="56" rx="10" fill="var(--run-soft)" stroke="var(--run)" stroke-width="2"/><text x="320" y="82" text-anchor="middle" font-size="16" font-weight="700">Contexto de software</text><text x="320" y="101" text-anchor="middle" font-size="12.5" fill="var(--ink-2)">identificação · quotas · privilégios</text></a>
+      <rect x="250" y="150" width="140" height="40" rx="8" fill="var(--ink)"/><text x="320" y="176" text-anchor="middle" font-size="16" font-weight="700" fill="var(--bg)">Programa</text>
+      <a href="#s2-1" class="part"><rect x="70" y="226" width="240" height="70" rx="10" fill="var(--wait-soft)" stroke="var(--wait)" stroke-width="2"/><text x="190" y="256" text-anchor="middle" font-size="16" font-weight="700">Contexto de hardware</text><text x="190" y="277" text-anchor="middle" font-size="12.5" fill="var(--ink-2)">registradores: PC, SP, status</text></a>
+      <a href="#s2-3" class="part"><rect x="330" y="226" width="240" height="70" rx="10" fill="var(--ready-soft)" stroke="var(--ready)" stroke-width="2"/><text x="450" y="256" text-anchor="middle" font-size="16" font-weight="700">Espaço de endereçamento</text><text x="450" y="277" text-anchor="middle" font-size="12.5" fill="var(--ink-2)">memória do código e dos dados</text></a>
+    </svg>
+    <figcaption>Figura 1. As três partes do processo. O SO reúne as informações delas no PCB (seção 5.2.4).</figcaption>
+  </figure>
+
+  <h3 id="s2-1">5.2.1 Contexto de hardware</h3>
+  <p>O contexto de hardware guarda o <b>conteúdo dos registradores</b> da UCP: os registradores de uso geral e os de uso específico, como o contador de programa (PC), o apontador de pilha (SP) e o registrador de status (PSW). Enquanto o processo executa, esse contexto está nos próprios registradores da UCP. Quando ele perde a UCP, o SO salva esses valores; quando ele volta a executar, o SO os restaura.</p>
+  <p>Essa operação é a <dfn>mudança de contexto</dfn> (troca de contexto): salvar os registradores do processo que sai e carregar os do processo que entra. É ela que permite ao SO alternar processos sem que nenhum perceba a interrupção. Durante a troca, nenhum processo de usuário avança, então ela é um custo (<i>overhead</i>) do sistema.</p>
+
+  <div class="lab">
+    <div class="lab-head"><span class="tag">Experimente</span><h4>Mudança de contexto, passo a passo</h4></div>
+    <p class="lab-hint">O processo A está na UCP. Execute algumas instruções e depois faça a troca para B, um passo de cada vez. Observe para onde vão os valores.</p>
+    <div class="cs">
+      <div class="box" id="cs-pcbA"><h5>PCB do processo A <span class="chip st-execucao" id="cs-stA">execução</span></h5><dl class="regs" id="cs-rA"></dl></div>
+      <div class="box cpu" id="cs-cpu"><h5>UCP · registradores <span class="chip st-criacao" id="cs-owner">A</span></h5><dl class="regs" id="cs-rC"></dl></div>
+      <div class="box" id="cs-pcbB"><h5>PCB do processo B <span class="chip st-pronto" id="cs-stB">pronto</span></h5><dl class="regs" id="cs-rB"></dl></div>
+    </div>
+    <div class="steps" id="cs-steps"><i>1. executar</i><i>2. salvar contexto</i><i>3. carregar contexto</i><i>4. outro processo executa</i></div>
+    <div class="btns"><button class="btn" id="cs-exec">Executar instruções</button><button class="btn primary" id="cs-next">Trocar contexto: próximo passo</button><button class="btn ghost" id="cs-reset">Recomeçar</button></div>
+    <p class="msg" id="cs-msg" aria-live="polite">O processo A está executando. Os registradores da UCP contêm os valores de A.</p>
+  </div>
+
+  <h3 id="s2-2">5.2.2 Contexto de software</h3>
+  <p>O contexto de software especifica as características e os <b>limites dos recursos</b> que o processo pode usar. A maior parte dessas informações vem do cadastro do usuário no sistema (no Linux, <code>/etc/passwd</code> e os limites configurados; no Windows, a base de contas). O contexto de software é formado por três grupos:</p>
+  <div class="scroll wide"><table class="t">
+    <thead><tr><th>Grupo</th><th>O que guarda</th><th>Exemplos</th></tr></thead>
+    <tbody>
+      <tr><td>Identificação</td><td>Quem é o processo e quem é o dono dele.</td><td>PID (número único do processo), UID (identificação do usuário dono), nome do processo. O PID permite que o SO e outros processos façam referência a ele.</td></tr>
+      <tr><td>Quotas</td><td>Os limites de cada recurso que o processo pode alocar.</td><td>Número máximo de arquivos abertos; tamanho máximo de memória; número máximo de operações de E/S pendentes; tamanho máximo do buffer de E/S; número máximo de subprocessos e threads.</td></tr>
+      <tr><td>Privilégios</td><td>O que o processo pode fazer em relação a si mesmo, a outros processos e ao sistema.</td><td>Alterar a própria prioridade; eliminar outros processos; desligar o sistema, criar usuários. Privilégios totais pertencem ao administrador (root).</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note"><span class="lbl">Consequência</span><p>Como quotas e privilégios pertencem ao processo, o <b>mesmo programa</b> pode rodar normalmente no processo de um usuário e falhar no de outro: basta que este não tenha a quota ou o privilégio necessários (por exemplo, permissão para abrir certo arquivo).</p></div>
+  <pre class="term"><span class="c"># identificação: PID, UID e nome de cada processo</span>
+$ ps -eo pid,uid,comm
+<span class="c"># quotas do processo atual (limites de recursos)</span>
+$ ulimit -a</pre>
+
+  <h3 id="s2-3">5.2.3 Espaço de endereçamento</h3>
+  <p>O espaço de endereçamento é a <b>área de memória pertencente ao processo</b>, onde ficam as instruções e os dados do programa para execução. Cada processo tem o seu, e ele deve ser <b>protegido</b> do acesso dos demais: um processo não pode ler nem alterar a memória de outro. Os mecanismos que garantem isso são estudados em gerência de memória e memória virtual (capítulos 9 e 10).</p>
+
+  <h3 id="s2-4">5.2.4 Bloco de controle do processo (PCB)</h3>
+  <p>O SO implementa o processo por meio de uma estrutura de dados chamada <dfn>bloco de controle do processo</dfn> (<i>Process Control Block</i>, PCB). O PCB reúne as informações do contexto de hardware, do contexto de software e do espaço de endereçamento. Os PCBs de todos os processos ficam em uma área de memória exclusiva do sistema operacional, cujo tamanho costuma ser limitado por um parâmetro do sistema; por isso existe um número máximo de processos.</p>
+  <p>Criar um processo é, na prática, alocar e preencher um PCB; eliminar um processo é liberar o PCB. Toda a gerência de processos é feita por chamadas de sistema que consultam e alteram esses blocos. No Linux, o PCB corresponde à estrutura <code>task_struct</code>.</p>
+  <div class="lab">
+    <div class="lab-head"><span class="tag">Experimente</span><h4>De onde vem cada campo do PCB?</h4></div>
+    <p class="lab-hint">Escolha uma parte do processo e veja quais campos do PCB a representam.</p>
+    <div class="btns" id="pcb-f"><button class="btn" data-f="hw">Contexto de hardware</button><button class="btn" data-f="sw">Contexto de software</button><button class="btn" data-f="ea">Espaço de endereçamento</button><button class="btn" data-f="ctl">Controle do SO</button></div>
+    <div class="pcbwrap">
+      <ul class="pcb" id="pcb-l">
+        <li class="hd">PCB · PID 2314</li>
+        <li data-part="ctl">Ponteiros</li>
+        <li data-part="ctl">Estado do processo</li>
+        <li data-part="sw">Nome do processo (PID)</li>
+        <li data-part="sw">Prioridade do processo</li>
+        <li data-part="hw">Registradores</li>
+        <li data-part="ea">Limites de memória</li>
+        <li data-part="sw">Lista de arquivos abertos</li>
+        <li data-part="sw">Quotas e privilégios</li>
+      </ul>
+      <p class="msg" id="pcb-m" aria-live="polite">Nenhuma parte selecionada.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 5.3 -->
+<section class="sec" id="s3">
+  <div class="sec-head"><span class="num">5.3</span><h2>Estados do processo</h2></div>
+  <p>Ao longo da sua existência, um processo passa por diferentes estados, conforme os eventos gerados pelo sistema operacional ou por ele mesmo. O livro define três estados principais:</p>
+  <div class="states wide">
+    <div class="state x"><small>running</small><h4>Execução</h4><p>O processo está sendo processado pela UCP neste momento. Com um único processador, apenas um processo por vez fica neste estado.</p><p class="an">No banco: sendo atendido no caixa.</p></div>
+    <div class="state p"><small>ready</small><h4>Pronto</h4><p>O processo aguarda apenas a oportunidade de usar a UCP. A ordem em que os prontos são escolhidos é definida pela política de escalonamento.</p><p class="an">No banco: na fila, esperando o próximo caixa livre.</p></div>
+    <div class="state e"><small>wait</small><h4>Espera</h4><p>O processo aguarda um evento externo ou um recurso para prosseguir: o fim de uma operação de E/S, a liberação de um recurso, um sinal.</p><p class="an">No banco: saiu da fila para buscar um documento.</p></div>
+  </div>
+  <p>O SO organiza os processos em <b>listas encadeadas de PCBs</b>: uma lista de processos prontos e uma ou mais listas de processos em espera, geralmente separadas pelo tipo de evento ou dispositivo aguardado (espera pelo disco, pelo teclado etc.). O processo em execução não está em lista nenhuma: está na UCP.</p>
+  <div class="note"><span class="lbl">Nomenclatura</span><p>Alguns sistemas e autores chamam o estado de espera de <b>bloqueado</b> (<i>blocked</i>). Há sistemas que distinguem os dois: <i>espera</i> quando o processo aguarda um evento, e <i>bloqueado</i> quando aguarda um recurso do sistema.</p></div>
+</section>
+
+<!-- 5.4 -->
+<section class="sec" id="s4">
+  <div class="sec-head"><span class="num">5.4</span><h2>Mudanças de estado do processo</h2></div>
+  <p>Um processo muda de estado em resposta a eventos. Eventos <b>voluntários</b> são provocados pelo próprio processo (por exemplo, pedir uma leitura de disco); eventos <b>involuntários</b> são provocados pelo sistema (por exemplo, o fim da fatia de tempo). Existem quatro mudanças de estado:</p>
+  <div class="scroll wide"><table class="t">
+    <thead><tr><th>Mudança</th><th>Quando acontece</th></tr></thead>
+    <tbody>
+      <tr><td>(a) Pronto → Execução</td><td>O SO seleciona, segundo a política de escalonamento, um processo da lista de prontos para usar a UCP.</td></tr>
+      <tr><td>(b) Execução → Espera</td><td>O processo aguarda um evento: pediu uma operação de E/S, precisa de um recurso ou espera um sinal. Em geral, é provocada pelo próprio processo.</td></tr>
+      <tr><td>(c) Espera → Pronto</td><td>O evento esperado acontece: a operação de E/S termina ou o recurso fica disponível. O processo volta para a lista de prontos.</td></tr>
+      <tr><td>(d) Execução → Pronto</td><td>O processo perde a UCP por um evento do sistema, como o fim da sua fatia de tempo (<i>time-slice</i>) ou a chegada de um processo mais prioritário (preempção).</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note"><span class="lbl">Atenção</span><p>Não existe a mudança <b>Espera → Execução</b>. Quando o evento ocorre, o processo vai primeiro para a lista de prontos e aguarda ser escolhido pelo escalonador, como qualquer outro.</p></div>
+  <p>Um processo em pronto ou em espera pode, ainda, não estar na memória principal. Quando falta memória, o SO pode transferir processos para a memória secundária (<dfn>swapping</dfn>): o processo continua no mesmo estado, mas precisa voltar à memória principal (<i>swap in</i>) antes de executar. Assim, pronto e espera passam a existir em duas versões, na memória principal e na secundária.</p>
+
+  <div class="lab wide">
+    <div class="lab-head"><span class="tag">Simulador</span><h4>A vida de um processo</h4></div>
+    <p class="lab-hint">Provoque eventos e acompanhe o processo no diagrama. Tente também eventos que não fazem sentido no estado atual para ver o que o SO responde. O simulador já inclui os estados de criação e terminado, explicados na seção 5.5.</p>
+    <div class="smwrap">
+      <div class="sm">
+        <svg viewBox="0 0 640 330" role="img" aria-label="Diagrama de estados: criação, pronto, execução, espera e terminado, com as transições a, b, c e d">
+          <defs>
+            <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" class="mk"/></marker>
+            <marker id="ar-on" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" class="mk-on"/></marker>
+          </defs>
+          <path class="edge" id="e-adm" d="M120 275 L158 275" marker-end="url(#ar)"/>
+          <path class="edge" id="e-a" d="M195 250 L195 55 L258 55" marker-end="url(#ar)"/>
+          <path class="edge" id="e-d" d="M260 80 L240 80 L240 248" marker-end="url(#ar)"/>
+          <path class="edge" id="e-b" d="M355 90 L355 165 L430 165 L430 248" marker-end="url(#ar)"/>
+          <path class="edge" id="e-c" d="M370 275 L282 275" marker-end="url(#ar)"/>
+          <path class="edge" id="e-t" d="M390 65 L508 65" marker-end="url(#ar)"/>
+          <text class="elbl" x="172" y="160">a</text>
+          <text class="elbl" x="250" y="160">d</text>
+          <text class="elbl" x="392" y="157">b</text>
+          <text class="elbl" x="320" y="298">c</text>
+          <g class="node n-criacao" id="n-criacao"><rect x="8" y="250" width="112" height="50" rx="10"/><text x="64" y="280" text-anchor="middle">Criação</text></g>
+          <g class="node n-pronto" id="n-pronto"><rect x="160" y="250" width="120" height="50" rx="10"/><text x="220" y="280" text-anchor="middle">Pronto</text></g>
+          <g class="node n-execucao" id="n-execucao"><rect x="260" y="40" width="130" height="50" rx="10"/><text x="325" y="70" text-anchor="middle">Execução</text></g>
+          <g class="node n-espera" id="n-espera"><rect x="372" y="250" width="120" height="50" rx="10"/><text x="432" y="280" text-anchor="middle">Espera</text></g>
+          <g class="node n-terminado" id="n-terminado"><rect x="510" y="40" width="122" height="50" rx="10"/><text x="571" y="70" text-anchor="middle">Terminado</text></g>
+        </svg>
+      </div>
+      <div style="display:grid; gap:12px">
+        <div class="pcbmini"><span>PCB · PID 2314</span><span>estado: <b id="sm-st">criação</b></span><span>onde está: <b id="sm-where">PCB criado, fora das listas</b></span></div>
+        <p class="lab-hint" style="margin-bottom:-6px">Histórico</p>
+        <ol class="log" id="sm-log"></ol>
+      </div>
+    </div>
+    <div class="evbtns" id="sm-ev">
+      <button class="btn" data-ev="adm">Admitir na lista de prontos</button>
+      <button class="btn" data-ev="a">(a) Escalonador seleciona</button>
+      <button class="btn" data-ev="b">(b) Pede leitura de disco</button>
+      <button class="btn" data-ev="c">(c) Leitura de disco concluída</button>
+      <button class="btn" data-ev="d">(d) Fim da fatia de tempo</button>
+      <button class="btn" data-ev="t">Programa termina</button>
+    </div>
+    <div class="btns"><button class="btn ghost" id="sm-reset">Novo processo</button></div>
+    <p class="msg" id="sm-msg" aria-live="polite">Processo criado. O SO já montou o PCB, mas ainda não o admitiu na lista de prontos.</p>
+  </div>
+</section>
+<style>
+/* 5.5 */
+.twocol{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:12px}
+@media (max-width:620px){.twocol{grid-template-columns:minmax(0,1fr)}}
+.card{border:1px solid var(--line); border-radius:8px; padding:16px; background:var(--surface); display:grid; gap:8px; align-content:start}
+.card h4{font-size:18px}
+.card p,.card li{font-size:15.5px}
+/* 5.6 bars */
+.bars{display:grid; gap:12px}
+.barrow{display:grid; grid-template-columns:110px minmax(0,1fr); gap:12px; align-items:center; font-family:var(--display); font-weight:700; font-size:14px}
+.bar{display:flex; height:30px; border-radius:5px; overflow:hidden}
+.bar i{display:block; height:100%}
+.bar .u{background:var(--run)} .bar .io{background:var(--wait); opacity:.45}
+.legend{display:flex; gap:18px; flex-wrap:wrap; font-family:var(--display); font-size:13px; color:var(--ink-2)}
+.legend span::before{content:""; display:inline-block; width:12px; height:12px; border-radius:3px; margin-right:6px; vertical-align:-1px; background:var(--run)}
+.legend span.io::before{background:var(--wait); opacity:.45}
+.cls{list-style:none; margin:0; padding:0; display:grid; gap:8px}
+.cls li{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:10px; align-items:center; padding:10px 12px; border:1px solid var(--line); border-radius:8px; background:var(--bg)}
+.cls li.ok{border-color:var(--ok); background:var(--ok-soft)}
+.cls li.bad{border-color:var(--bad); background:var(--bad-soft)}
+.cls .cfb{grid-column:1 / -1; font-size:14.5px}
+.cls .btn{padding:6px 10px; font-size:13px}
+/* 5.7 terminal */
+.termbox{background:#101A12; color:#D6E8CB; font-family:var(--mono); font-size:14px; border-radius:8px; padding:14px 16px; min-height:170px; display:grid; align-content:start; gap:2px; overflow-x:auto}
+.termbox .c{color:#8FA88A}
+.termbox .busy{color:#E9B04A}
+.cursor{display:inline-block; width:8px; height:15px; background:#D6E8CB; vertical-align:-2px; animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.flow{display:flex; align-items:center; gap:8px; flex-wrap:wrap; font-family:var(--display); font-size:14px}
+.flow b{border:1.5px solid var(--line); background:var(--surface); padding:6px 10px; border-radius:6px; font-weight:600}
+.flow b.p{background:var(--ink); color:var(--bg); border-color:var(--ink)}
+.flow em{font-style:normal; color:var(--ink-2)}
+/* 5.8 */
+.three{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px}
+@media (max-width:760px){.three{grid-template-columns:minmax(0,1fr)}}
+.card ol{padding-left:1.2em; display:grid; gap:4px}
+/* 5.9 tree */
+.tree ul{list-style:none; margin:0; padding-left:28px; position:relative; display:grid; gap:8px}
+.tree > ul{padding-left:0}
+.tree ul ul::before{content:""; position:absolute; left:10px; top:-8px; bottom:18px; border-left:2px solid var(--line)}
+.tree ul ul > li{position:relative}
+.tree ul ul > li::before{content:""; position:absolute; left:-18px; top:20px; width:16px; border-top:2px solid var(--line)}
+.tnode{display:inline-flex; align-items:center; gap:10px; border:1.5px solid var(--line); background:var(--bg); border-radius:8px; padding:6px 8px 6px 12px; font-family:var(--display); font-size:14px; transition:opacity .3s, transform .3s}
+.tnode b{font-size:15px}
+.tnode .rel{color:var(--ink-2); font-weight:500}
+.tnode button{border:1px solid var(--bad); color:var(--bad); background:transparent; border-radius:5px; font-family:var(--display); font-size:12px; font-weight:700; padding:3px 7px}
+.tnode.root{border-color:var(--run); background:var(--run-soft)}
+.tnode.ind{border-style:dashed}
+.gone{opacity:0; transform:scale(.9)}
+.treegrid{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,220px); gap:20px; align-items:start}
+@media (max-width:620px){.treegrid{grid-template-columns:minmax(0,1fr)}}
+/* threads figure */
+.thr{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:14px}
+@media (max-width:700px){.thr{grid-template-columns:minmax(0,1fr)}}
+.pbox{border:2px solid var(--line); border-radius:10px; padding:12px; display:grid; gap:6px; background:var(--surface)}
+.pbox.mt{border-color:var(--accent)}
+.pbox h5{font-family:var(--display); font-size:15px; margin:0}
+.seg{font-family:var(--display); font-size:13px; font-weight:600; padding:7px 9px; border-radius:6px; text-align:center}
+.seg.sw{background:var(--run-soft); color:var(--run)} .seg.hw{background:var(--wait-soft); color:var(--wait)} .seg.ea{background:var(--ready-soft); color:var(--ready)}
+.pair{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:8px}
+.trio{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:6px}
+.col{display:grid; gap:6px; align-content:start}
+.col small{font-family:var(--display); font-size:12px; font-weight:700; color:var(--ink-2); text-align:center}
+/* 5.10 */
+.svc{display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:8px; list-style:none; margin:0; padding:0}
+.svc li{border:1px solid var(--line); border-radius:8px; padding:10px 12px; background:var(--surface); font-family:var(--display); font-size:14.5px; font-weight:600; display:grid; gap:2px}
+.svc li span{font-family:var(--body); font-weight:400; font-size:13.5px; color:var(--ink-2)}
+/* 5.11 */
+.sig{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:16px; align-items:start}
+@media (max-width:700px){.sig{grid-template-columns:minmax(0,1fr)}}
+.opts{display:grid; gap:6px}
+.opt{display:flex; gap:10px; align-items:flex-start; padding:9px 11px; border:1.5px solid var(--line); border-radius:8px; background:var(--bg); cursor:pointer; font-size:15px}
+.opt:has(input:checked){border-color:var(--accent); background:var(--accent-soft)}
+.opt input{margin-top:5px; accent-color:var(--accent)}
+.opt code{font-weight:600}
+.switch{display:flex; gap:10px; align-items:center; font-family:var(--display); font-size:14.5px}
+.switch input{width:18px; height:18px; accent-color:var(--accent)}
+.path{display:flex; align-items:center; gap:6px; flex-wrap:wrap; font-family:var(--display); font-size:13.5px}
+.path b{padding:5px 9px; border-radius:6px; background:var(--surface-2); font-weight:600}
+.path b.hl{background:var(--accent); color:var(--accent-ink)}
+/* exercises */
+.ex-tabs{display:flex; gap:8px; flex-wrap:wrap}
+.oq{list-style:none; margin:0; padding:0; display:grid; gap:10px; counter-reset:q}
+.oq > li{counter-increment:q; border:1px solid var(--line); border-radius:8px; background:var(--surface); padding:14px 16px 14px 56px; position:relative; display:grid; gap:8px}
+.oq > li::before{content:counter(q); position:absolute; left:14px; top:12px; width:30px; height:30px; border-radius:50%; background:var(--ink); color:var(--bg); font-family:var(--display); font-weight:700; font-size:14px; display:grid; place-items:center}
+.oq p{font-size:16.5px}
+details summary{cursor:pointer; font-family:var(--display); font-size:13.5px; font-weight:600; color:var(--accent); width:fit-content}
+details[open] summary{margin-bottom:6px}
+details .ans{font-size:15px; color:var(--ink-2); display:grid; gap:4px}
+.score{position:sticky; top:calc(env(safe-area-inset-top, 0px) + 8px); z-index:2; display:flex; align-items:center; gap:14px; flex-wrap:wrap; background:var(--ink); color:var(--bg); padding:10px 16px; border-radius:8px; font-family:var(--display); font-size:14.5px}
+.score b{font-size:18px; font-variant-numeric:tabular-nums}
+.meter{flex:1; min-width:120px; height:8px; background:rgba(128,128,128,.35); border-radius:99px; overflow:hidden; display:flex}
+.meter i{display:block; height:100%; transition:width .3s}
+.meter .g{background:#6FD08C} .meter .r{background:#FF8A80}
+.score .btn{border-color:var(--bg); color:var(--bg); background:transparent; padding:5px 10px; font-size:13px}
+.qz{list-style:none; margin:0; padding:0; display:grid; gap:14px; counter-reset:c}
+.qz > li{counter-increment:c; border:1px solid var(--line); border-radius:10px; background:var(--surface); padding:16px; display:grid; gap:10px}
+.qz .qh{display:flex; gap:10px; align-items:baseline}
+.qz .qh::before{content:counter(c, decimal-leading-zero); font-family:var(--display); font-weight:800; color:var(--accent); font-size:14px; font-variant-numeric:tabular-nums}
+.qz .qh p{font-size:16.5px}
+.qz .alts{display:grid; gap:6px}
+.alt{display:grid; grid-template-columns:28px minmax(0,1fr); gap:8px; align-items:start; text-align:left; border:1.5px solid var(--line); background:var(--bg); color:var(--ink); border-radius:8px; padding:9px 12px; font-family:var(--body); font-size:15.5px; line-height:1.45}
+.alt:hover:not([disabled]){border-color:var(--ink)}
+.alt .k{font-family:var(--display); font-weight:700; font-size:13px; width:24px; height:24px; border-radius:50%; border:1.5px solid currentColor; display:grid; place-items:center; color:var(--ink-2)}
+.alt[disabled]{cursor:default}
+.alt.right{border-color:var(--ok); background:var(--ok-soft)} .alt.right .k{background:var(--ok); color:var(--surface); border-color:var(--ok)}
+.alt.wrong{border-color:var(--bad); background:var(--bad-soft)} .alt.wrong .k{background:var(--bad); color:var(--surface); border-color:var(--bad)}
+.fb{font-size:15px; padding:10px 12px; border-radius:6px}
+.fb.ok{background:var(--ok-soft)} .fb.bad{background:var(--bad-soft)}
+.fb b{font-family:var(--display)}
+.fb.ok b{color:var(--ok)} .fb.bad b{color:var(--bad)}
+.final{border:2px solid var(--ink); border-radius:10px; padding:18px; display:grid; gap:6px; background:var(--surface)}
+.final h4{font-size:22px}
+footer.end{max-width:1160px; margin:64px auto 0; padding-top:18px; border-top:1px solid var(--line); font-family:var(--display); font-size:13px; color:var(--ink-2)}
+</style>
+
+<!-- 5.5 -->
+<section class="sec" id="s5">
+  <div class="sec-head"><span class="num">5.5</span><h2>Criação e eliminação de processos</h2></div>
+  <p>Além dos três estados principais, o processo tem mais dois estados ligados ao começo e ao fim da sua vida: <b>criação</b> e <b>terminado</b>. Você pode percorrê-los no simulador da seção anterior.</p>
+  <div class="twocol wide">
+    <div class="card"><span class="chip st-criacao" style="width:fit-content">criação</span><h4>Estado de criação</h4><p>O SO já associou um PCB ao novo processo, mas ainda não o colocou na lista de prontos. Isso acontece, por exemplo, quando o sistema limita o número de processos ativos ou quando falta memória: o processo aguarda até ser admitido.</p></div>
+    <div class="card"><span class="chip st-terminado" style="width:fit-content">terminado</span><h4>Estado de terminado</h4><p>O processo não executa mais, mas o SO ainda mantém suas informações de controle (o PCB) em memória, por exemplo para contabilizar os recursos usados. Depois disso, o PCB é liberado e o processo deixa de existir.</p></div>
+  </div>
+  <p>Um processo é eliminado, isto é, chega ao estado de terminado, por um destes motivos:</p>
+  <ul>
+    <li><b>término normal</b> da execução do programa;</li>
+    <li><b>eliminação por outro processo</b> que tenha o privilégio de fazê-lo (por exemplo, com o comando <code>kill</code>);</li>
+    <li><b>eliminação forçada</b> pelo SO, por falta de recursos disponíveis ou por um erro que ele não tolera.</li>
+  </ul>
+  <div class="note"><span class="lbl">No Linux</span><p>Um processo que terminou, mas cujo registro ainda existe à espera do processo pai, aparece com o estado <code>Z</code> (<i>zombie</i>) no comando <code>ps</code>: é o estado de terminado do livro, visto na prática.</p></div>
+</section>
+
+<!-- 5.6 -->
+<section class="sec" id="s6">
+  <div class="sec-head"><span class="num">5.6</span><h2>Processos CPU-bound e I/O-bound</h2></div>
+  <p>Os processos podem ser classificados conforme o tipo de processamento que predomina durante a execução:</p>
+  <ul>
+    <li><dfn>CPU-bound</dfn> (ligado à UCP): passa a maior parte do tempo no estado de <b>execução</b>, usando o processador, e faz poucas operações de leitura e gravação. Comum em aplicações científicas com muitos cálculos.</li>
+    <li><dfn>I/O-bound</dfn> (ligado à E/S): passa a maior parte do tempo no estado de <b>espera</b>, porque faz muitas operações de E/S. Comum em aplicações comerciais, que leem e gravam dados o tempo todo, e em processos interativos, que esperam pelo usuário.</li>
+  </ul>
+  <div class="lab">
+    <div class="legend"><span>usando a UCP</span><span class="io">fazendo E/S (espera)</span></div>
+    <div class="bars">
+      <div class="barrow">CPU-bound<div class="bar"><i class="u" style="width:32%"></i><i class="io" style="width:4%"></i><i class="u" style="width:29%"></i><i class="io" style="width:4%"></i><i class="u" style="width:31%"></i></div></div>
+      <div class="barrow">I/O-bound<div class="bar"><i class="u" style="width:6%"></i><i class="io" style="width:20%"></i><i class="u" style="width:5%"></i><i class="io" style="width:22%"></i><i class="u" style="width:6%"></i><i class="io" style="width:20%"></i><i class="u" style="width:4%"></i><i class="io" style="width:17%"></i></div></div>
+    </div>
+  </div>
+  <p>A classificação importa para o escalonamento (capítulo 8): misturar processos dos dois tipos permite que a UCP e os dispositivos de E/S fiquem ocupados ao mesmo tempo.</p>
+  <div class="lab">
+    <div class="lab-head"><span class="tag">Experimente</span><h4>Classifique as aplicações</h4></div>
+    <ul class="cls" id="cls"></ul>
+    <p class="msg" id="cls-m" aria-live="polite">Acertos: 0 de 6.</p>
+  </div>
+</section>
+
+<!-- 5.7 -->
+<section class="sec" id="s7">
+  <div class="sec-head"><span class="num">5.7</span><h2>Processos foreground e background</h2></div>
+  <p>Todo processo tem, associados a ele, um canal de entrada e um canal de saída de dados.</p>
+  <div class="twocol wide">
+    <div class="card"><h4>Foreground</h4><p>Permite a <b>comunicação direta do usuário</b> com o processo durante o processamento. Os canais de entrada e saída estão associados a um terminal: o teclado envia os dados e o monitor mostra os resultados.</p><div class="flow"><b>Teclado</b><em>→</em><b class="p">Processo</b><em>→</em><b>Monitor</b></div></div>
+    <div class="card"><h4>Background</h4><p><b>Não há comunicação</b> com o usuário durante o processamento. Os canais de E/S não estão ligados a um dispositivo interativo, mas, em geral, a arquivos. Útil para tarefas longas, como backups.</p><div class="flow"><b>Arquivo</b><em>→</em><b class="p">Processo</b><em>→</em><b>Arquivo</b></div></div>
+  </div>
+  <p>É possível também ligar o canal de saída de um processo ao canal de entrada de outro. Dizemos então que existe um <dfn>pipe</dfn> entre os dois processos: a saída do primeiro passa a ser a entrada do segundo.</p>
+  <div class="flow"><b class="p">ls -l</b><em>→ pipe →</em><b class="p">grep .txt</b><em>→</em><b>Monitor</b></div>
+  <div class="lab">
+    <div class="lab-head"><span class="tag">Experimente</span><h4>Terminal: primeiro plano ou segundo plano?</h4></div>
+    <p class="lab-hint">Execute o mesmo backup das duas formas e compare o que acontece com o terminal.</p>
+    <div class="termbox" id="term" aria-live="polite"></div>
+    <div class="btns"><button class="btn" id="t-fg">$ ./backup.sh</button><button class="btn" id="t-bg">$ ./backup.sh &amp;</button><button class="btn" id="t-pipe">$ ls -l | grep .txt</button><button class="btn ghost" id="t-clr">Limpar</button></div>
+  </div>
+</section>
+
+<!-- 5.8 -->
+<section class="sec" id="s8">
+  <div class="sec-head"><span class="num">5.8</span><h2>Formas de criação de processos</h2></div>
+  <p>Um processo pode ser criado de três formas:</p>
+  <div class="three wide">
+    <div class="card"><h4>Logon interativo</h4><ol><li>O usuário informa sua identificação (login e senha).</li><li>O SO verifica os dados e cria um processo para o usuário, com o contexto de software vindo do seu cadastro.</li><li>No logoff, o processo é eliminado.</li></ol></div>
+    <div class="card"><h4>Via linguagem de comandos</h4><ol><li>O usuário digita um comando no interpretador (shell).</li><li>O shell pede ao SO a criação de um novo processo para executar o programa.</li><li>Ele pode rodar em foreground ou em background.</li></ol><pre class="term">$ ./soma
+$ ./soma &amp;</pre></div>
+    <div class="card"><h4>Via rotina do SO</h4><ol><li>Um programa em execução chama uma rotina do sistema (chamada de sistema).</li><li>O SO cria o novo processo, que pode ser independente ou um subprocesso.</li></ol><pre class="term">fork()          <span class="c">// Unix/Linux</span>
+CreateProcess() <span class="c">// Windows</span></pre></div>
+  </div>
+</section>
+
+<!-- 5.9 -->
+<section class="sec" id="s9">
+  <div class="sec-head"><span class="num">5.9</span><h2>Processos independentes, subprocessos e threads</h2></div>
+  <p>São três maneiras de organizar a execução de uma aplicação, que diferem no quanto os fluxos compartilham recursos entre si.</p>
+  <h3>Processos independentes</h3>
+  <p>Não têm vínculo com o processo que os criou. Cada um exige seu próprio PCB, com contexto de hardware, contexto de software e espaço de endereçamento próprios.</p>
+  <h3>Subprocessos</h3>
+  <p>São criados dentro de uma <b>estrutura hierárquica</b>: o processo criador é o <b>pai</b>, e os processos criados são os <b>filhos</b>, que podem criar seus próprios filhos. Há uma dependência existencial: <b>se o processo pai for eliminado, os subprocessos também são</b>. Além disso, subprocessos podem compartilhar as quotas do pai: o que um filho usa conta no limite do pai.</p>
+  <div class="lab">
+    <div class="lab-head"><span class="tag">Experimente</span><h4>Elimine um processo e veja quem vai junto</h4></div>
+    <div class="treegrid">
+      <div class="tree" id="tree"></div>
+      <p class="msg" id="tree-m" aria-live="polite">Clique em “eliminar” em qualquer processo.</p>
+    </div>
+    <div class="btns"><button class="btn ghost" id="tree-r">Restaurar todos</button></div>
+  </div>
+  <p>O problema dos subprocessos é o custo: cada um tem contexto completo, então criar, eliminar e alternar entre eles consome tempo de UCP e memória. É daí que vem a ideia de thread.</p>
+  <h3>Threads</h3>
+  <p>Em um ambiente <dfn>multithread</dfn>, um único processo tem vários fluxos de execução, as <b>threads</b>. Cada thread tem seu <b>próprio contexto de hardware</b>, mas todas <b>compartilham o contexto de software e o espaço de endereçamento</b> do processo. Por isso criar, alternar e comunicar threads é mais barato do que fazer o mesmo com subprocessos. O capítulo 6 aprofunda o tema.</p>
+  <figure class="fig wide">
+    <div class="thr">
+      <div class="pbox"><h5>Dois subprocessos</h5><div class="pair"><div class="col"><small>Filho 1</small><span class="seg sw">Contexto de software</span><span class="seg hw">Contexto de hardware</span><span class="seg ea">Espaço de endereçamento</span></div><div class="col"><small>Filho 2</small><span class="seg sw">Contexto de software</span><span class="seg hw">Contexto de hardware</span><span class="seg ea">Espaço de endereçamento</span></div></div></div>
+      <div class="pbox mt"><h5>Um processo com três threads</h5><span class="seg sw">Contexto de software · compartilhado</span><div class="trio"><div class="col"><small>Thread 1</small><span class="seg hw">Contexto de hardware</span></div><div class="col"><small>Thread 2</small><span class="seg hw">Contexto de hardware</span></div><div class="col"><small>Thread 3</small><span class="seg hw">Contexto de hardware</span></div></div><span class="seg ea">Espaço de endereçamento · compartilhado</span></div>
+    </div>
+    <figcaption>Figura 2. Subprocessos duplicam tudo; threads duplicam só o contexto de hardware.</figcaption>
+  </figure>
+</section>
+
+<!-- 5.10 -->
+<section class="sec" id="s10">
+  <div class="sec-head"><span class="num">5.10</span><h2>Processos do sistema operacional</h2></div>
+  <p>O conceito de processo não serve só às aplicações dos usuários: o próprio sistema operacional o utiliza. Muitas funções do SO podem ser implementadas como processos, em vez de ficarem dentro do núcleo. Isso deixa o núcleo menor e mais simples; em troca, esses processos também consomem recursos do sistema. No Linux, eles são chamados de <i>daemons</i>; no Windows, de <i>serviços</i>. Exemplos:</p>
+  <ul class="svc wide">
+    <li>Auditoria e segurança<span>registra acessos e eventos</span></li>
+    <li>Serviços de rede<span>servidor web, acesso remoto</span></li>
+    <li>Contabilização do uso de recursos<span>quanto de UCP e memória cada um usou</span></li>
+    <li>Contabilização de erros<span>falhas de hardware e software</span></li>
+    <li>Gerência de impressão<span>fila de impressão (spooling)</span></li>
+    <li>Gerência de jobs batch<span>execução de lotes sem interação</span></li>
+    <li>Temporização<span>tarefas agendadas</span></li>
+    <li>Comunicação de eventos<span>avisa processos de ocorrências</span></li>
+    <li>Interface de comandos (shell)<span>bash, PowerShell</span></li>
+  </ul>
+  <div class="note"><span class="lbl">Ligação com a arquitetura do SO</span><p>Essa ideia é levada ao extremo na <b>arquitetura microkernel</b> (capítulo 4): o núcleo oferece só o essencial, e a maior parte dos serviços do sistema roda como processos separados, que se comunicam por troca de mensagens.</p></div>
+</section>
+
+<!-- 5.11 -->
+<section class="sec" id="s11">
+  <div class="sec-head"><span class="num">5.11</span><h2>Sinais</h2></div>
+  <p><dfn>Sinais</dfn> são um mecanismo que permite <b>notificar processos de eventos</b> gerados pelo sistema operacional ou por outros processos. Também servem para comunicação e sincronização entre processos.</p>
+  <p>Exemplos de eventos que geram sinais: teclar <kbd>Ctrl</kbd>+<kbd>C</kbd> para interromper um programa; o fim de um temporizador; uma exceção, como divisão por zero ou <i>overflow</i>; e o pedido explícito de outro processo, como o comando <code>kill</code>. A eliminação de um processo, aliás, é feita dessa forma: o processo que quer eliminar outro envia a ele um sinal de término.</p>
+  <p>Quando o sinal chega, o SO o registra no PCB do processo de destino, e ele é tratado quando esse processo volta a executar. O processo pode tratar o sinal com uma <b>rotina de tratamento</b> própria (<i>signal handler</i>) ou deixar que ocorra a <b>ação padrão</b>, que em geral é terminar. Alguns sinais, como o <code>SIGKILL</code>, não podem ser tratados nem ignorados.</p>
+  <div class="def"><span class="lbl">Analogia</span><p>O sinal está para o processo assim como as interrupções e exceções estão para o sistema operacional: um aviso assíncrono de que algo aconteceu e precisa ser tratado.</p></div>
+  <div class="lab">
+    <div class="lab-head"><span class="tag">Experimente</span><h4>Enviando sinais a um processo</h4></div>
+    <div class="sig">
+      <div class="opts" role="radiogroup" aria-label="Sinal">
+        <label class="opt"><input type="radio" name="sg" value="INT" checked> <span><code>SIGINT</code> · usuário teclou Ctrl+C</span></label>
+        <label class="opt"><input type="radio" name="sg" value="ALRM"> <span><code>SIGALRM</code> · temporizador expirou</span></label>
+        <label class="opt"><input type="radio" name="sg" value="FPE"> <span><code>SIGFPE</code> · divisão por zero</span></label>
+        <label class="opt"><input type="radio" name="sg" value="TERM"> <span><code>SIGTERM</code> · <code>kill PID</code></span></label>
+        <label class="opt"><input type="radio" name="sg" value="KILL"> <span><code>SIGKILL</code> · <code>kill -9 PID</code></span></label>
+      </div>
+      <div style="display:grid; gap:12px">
+        <label class="switch"><input type="checkbox" id="sg-h"> O programa tem rotina de tratamento para este sinal</label>
+        <button class="btn primary" id="sg-go" style="width:fit-content">Enviar sinal</button>
+        <div class="path" id="sg-path"><b>evento</b>→<b>SO registra no PCB</b>→<b>processo</b>→<b>?</b></div>
+        <p class="msg" id="sg-m" aria-live="polite">Escolha um sinal e envie.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Exercícios -->
+<section class="sec" id="ex">
+  <div class="sec-head"><span class="num">Exercícios</span><h2>Exercícios de fixação</h2></div>
+  <p>Duas partes: as <b>questões abertas</b> do final do capítulo 5 do livro, para responder por escrito, e <b>questões fechadas</b> com correção imediata.</p>
+
+  <h3 id="ex-a">Parte A · Questões abertas (do livro)</h3>
+  <p class="lab-hint">Responda no caderno antes de abrir o roteiro. O roteiro não é a resposta pronta: ele indica os pontos que a sua resposta deve cobrir e a seção onde revisar.</p>
+  <ol class="oq wide">
+    <li><p>Defina o conceito de processo.</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Programa em execução; mais precisamente, o conjunto de informações necessárias para que o SO implemente a concorrência de programas. Revise a <a href="#s1">seção 5.1</a>.</p></div></details></li>
+    <li><p>Por que o conceito de processo é tão importante no projeto de sistemas multiprogramáveis?</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Porque permite interromper e retomar programas sem perda de informação, compartilhando UCP, memória e dispositivos. Os recursos são alocados aos processos, e é por eles que o SO faz a gerência. <a href="#s1">Seção 5.1</a>.</p></div></details></li>
+    <li><p>É possível que um programa execute no contexto de um processo e não execute no contexto de um outro? Por quê?</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Sim. O contexto de software (quotas e privilégios) é do processo, não do programa: um processo pode não ter a quota ou a permissão que o programa exige. <a href="#s2-2">Seção 5.2.2</a>.</p></div></details></li>
+    <li><p>Quais partes compõem um processo?</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Contexto de hardware, contexto de software e espaço de endereçamento. <a href="#s2">Seção 5.2</a>.</p></div></details></li>
+    <li><p>O que é o contexto de hardware de um processo e como é a implementação da troca de contexto?</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Conteúdo dos registradores (PC, SP, status, uso geral). Na troca, o SO salva os registradores do processo que sai no PCB dele e carrega os do processo que entra a partir do PCB deste. <a href="#s2-1">Seção 5.2.1</a>.</p></div></details></li>
+    <li><p>Qual a função do contexto de software? Exemplifique cada grupo de informação.</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Especificar características e limites dos recursos do processo. Identificação (PID, UID), quotas (máximo de arquivos abertos, de memória, de E/S pendentes) e privilégios (sobre si, sobre outros processos, sobre o sistema). <a href="#s2-2">Seção 5.2.2</a>.</p></div></details></li>
+    <li><p>O que é o espaço de endereçamento de um processo?</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>A área de memória do processo onde ficam instruções e dados, protegida do acesso dos demais processos. <a href="#s2-3">Seção 5.2.3</a>.</p></div></details></li>
+    <li><p>Como o sistema operacional implementa o conceito de processo? Qual a estrutura de dados indicada para organizar os diversos processos na memória principal?</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Pelo bloco de controle do processo (PCB), mantido em área de memória do SO. Os PCBs são organizados em listas encadeadas, uma por estado ou evento aguardado. <a href="#s2-4">Seção 5.2.4</a> e <a href="#s3">5.3</a>.</p></div></details></li>
+    <li><p>Defina os cinco estados possíveis de um processo.</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Criação, pronto, execução, espera e terminado, com o que caracteriza cada um. <a href="#s3">Seções 5.3</a> e <a href="#s5">5.5</a>.</p></div></details></li>
+    <li><p>Dê um exemplo que apresente todas as mudanças de estado de um processo, juntamente com o evento associado a cada mudança.</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Monte uma história (por exemplo, um programa que lê um arquivo e faz cálculos) passando por (a), (b), (c) e (d) e dizendo qual evento causa cada uma. Use o <a href="#s4">simulador da seção 5.4</a> para conferir.</p></div></details></li>
+    <li><p>Diferencie processos multithreads, subprocessos e processos independentes.</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Compare o que é próprio e o que é compartilhado: independentes não têm vínculo; subprocessos têm hierarquia, dependência existencial e quotas compartilhadas; threads compartilham contexto de software e espaço de endereçamento, com contexto de hardware próprio. <a href="#s9">Seção 5.9</a>.</p></div></details></li>
+    <li><p>Explique a diferença entre processos foreground e background.</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Comunicação com o usuário durante a execução e para onde apontam os canais de entrada e saída (terminal ou arquivos). <a href="#s7">Seção 5.7</a>.</p></div></details></li>
+    <li><p>Qual a relação entre processo e a arquitetura microkernel?</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>No microkernel, os serviços do SO rodam como processos fora do núcleo, comunicando-se por mensagens. <a href="#s10">Seção 5.10</a>.</p></div></details></li>
+    <li><p>Dê exemplos de aplicações CPU-bound e I/O-bound.</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Justifique cada exemplo pelo estado em que o processo passa mais tempo (execução ou espera). <a href="#s6">Seção 5.6</a>.</p></div></details></li>
+    <li><p>Justifique com um exemplo a frase “o sinal está para o processo assim como as interrupções e exceções estão para o sistema operacional”.</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Os dois são avisos assíncronos de eventos que desviam o fluxo para uma rotina de tratamento. Exemplo: Ctrl+C gera um sinal tratado pelo processo, como uma interrupção de teclado é tratada pelo SO. <a href="#s11">Seção 5.11</a>.</p></div></details></li>
+    <li><p>Explique como a eliminação de um processo utiliza o mecanismo de sinais.</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Quem quer eliminar envia um sinal de término (ex.: <code>kill</code>); o SO registra no PCB do destino e, quando ele é tratado, a ação padrão encerra o processo. <a href="#s11">Seção 5.11</a>.</p></div></details></li>
+  </ol>
+
+  <h3 id="ex-b">Parte B · Questões fechadas</h3>
+  <p class="lab-hint">Escolha uma alternativa: a correção e a explicação aparecem na hora. Cada questão aceita uma única tentativa.</p>
+  <div class="score wide" id="qz-score"><span>Acertos <b id="qz-ok">0</b></span><span>Erros <b id="qz-bad">0</b></span><span>Respondidas <b id="qz-n">0</b>/<b id="qz-t">20</b></span><div class="meter"><i class="g" id="qz-mg" style="width:0%"></i><i class="r" id="qz-mr" style="width:0%"></i></div><button class="btn" id="qz-reset">Refazer</button></div>
+  <ol class="qz wide" id="qz"></ol>
+  <div class="final wide" id="qz-final" hidden><h4 id="qz-ft"></h4><p id="qz-fp"></p></div>
+</section>
+
+</main>
+</div>
+<footer class="end">Material de apoio da disciplina de Sistemas Operacionais. Conteúdo e sequência baseados em Machado, F. B.; Maia, L. P. <i>Arquitetura de Sistemas Operacionais</i>, capítulo 5 (Processo). As questões abertas reproduzem os exercícios do capítulo.</footer>
+
+<script>
+(function(){
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+const el = (tag, attrs={}, html='') => { const e=document.createElement(tag); for(const k in attrs){ if(k==='class') e.className=attrs[k]; else e.setAttribute(k, attrs[k]); } if(html) e.innerHTML=html; return e; };
+const hex = n => '0x' + n.toString(16).toUpperCase().padStart(4,'0');
+function setMsg(node, text, kind){ node.textContent = text; node.className = 'msg' + (kind ? ' ' + kind : ''); }
+
+/* ---------- sumário: seção atual ---------- */
+const links = $$('nav.toc a');
+if('IntersectionObserver' in window){
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(en => { if(en.isIntersecting){ links.forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + en.target.id)); } });
+  }, {rootMargin:'-20% 0px -70% 0px'});
+  $$('main > section').forEach(s => io.observe(s));
+}
+
+/* ---------- 5.1 programa x processos ---------- */
+(function(){
+  const list = $('#p-list'); let count = 0;
+  const states = [['execução','execucao'],['pronto','pronto'],['espera','espera']];
+  function empty(){ list.innerHTML = '<span class="empty">Nenhum processo ainda. O programa está parado no disco.</span>'; }
+  $('#p-run').addEventListener('click', () => {
+    if(count === 0) list.innerHTML = '';
+    if(count >= 6){ return; }
+    count++;
+    const pid = 2300 + Math.floor(Math.random()*700);
+    const pc = 0x4000 + Math.floor(Math.random()*0x1800);
+    const st = count === 1 ? states[0] : states[1 + Math.floor(Math.random()*2)];
+    const card = el('div', {class:'proc ' + st[1]}, `<b>Processo · PID ${pid}</b><span>PC=${hex(pc)}</span><span>estado: ${st[0]}</span>`);
+    list.appendChild(card);
+    if(count >= 6) $('#p-run').disabled = true;
+  });
+  $('#p-clear').addEventListener('click', () => { count = 0; $('#p-run').disabled = false; empty(); });
+})();
+
+/* ---------- 5.2.1 mudança de contexto ---------- */
+(function(){
+  const init = () => ({ A:{PC:0x4A10, SP:0x7FF0, R1:12}, B:{PC:0x51C8, SP:0x6FA0, R1:7} });
+  let pcb, cpu, run, phase;
+  const other = p => p === 'A' ? 'B' : 'A';
+  function regsHTML(r, inCpu){
+    if(!r) return '<dt>PC</dt><dd>na UCP</dd><dt>SP</dt><dd>na UCP</dd><dt>R1</dt><dd>na UCP</dd>';
+    return `<dt>PC</dt><dd>${hex(r.PC)}</dd><dt>SP</dt><dd>${hex(r.SP)}</dd><dt>R1</dt><dd>${r.R1}</dd>`;
+  }
+  function flash(id){ const b = $(id); b.classList.remove('flash'); void b.offsetWidth; b.classList.add('flash'); setTimeout(()=>b.classList.remove('flash'), 900); }
+  function chip(id, st){ const c = $(id); c.textContent = st; c.className = 'chip st-' + (st === 'execução' ? 'execucao' : st); }
+  function render(){
+    const inUcp = (p) => run === p && (phase === 0 || phase === 3);
+    $('#cs-rA').innerHTML = regsHTML(inUcp('A') ? null : pcb.A);
+    $('#cs-rB').innerHTML = regsHTML(inUcp('B') ? null : pcb.B);
+    $('#cs-rC').innerHTML = cpu ? regsHTML(cpu) : '<dt>PC</dt><dd>—</dd><dt>SP</dt><dd>—</dd><dt>R1</dt><dd>—</dd>';
+    $$('#cs-steps i').forEach((s,i) => s.classList.toggle('on', i === (phase === 3 ? 3 : phase)));
+    $('#cs-exec').disabled = !(phase === 0 || phase === 3);
+  }
+  function reset(){
+    pcb = init(); run = 'A'; phase = 0; cpu = {...pcb.A};
+    $('#cs-owner').textContent = 'A'; chip('#cs-stA','execução'); chip('#cs-stB','pronto');
+    setMsg($('#cs-msg'), 'O processo A está executando. Os registradores da UCP contêm os valores de A.');
+    render();
+  }
+  $('#cs-exec').addEventListener('click', () => {
+    cpu.PC += 12; cpu.SP -= 16; cpu.R1 += 3; phase = run ? phase : 0;
+    setMsg($('#cs-msg'), `${run} executou algumas instruções: o PC avançou para ${hex(cpu.PC)}. Estes valores ainda não estão no PCB, só na UCP.`);
+    render(); flash('#cs-cpu');
+  });
+  $('#cs-next').addEventListener('click', () => {
+    const out = run, inn = other(run);
+    if(phase === 0 || phase === 3){
+      phase = 1; pcb[out] = {...cpu}; chip(out === 'A' ? '#cs-stA' : '#cs-stB', 'pronto');
+      setMsg($('#cs-msg'), `Passo 2: o SO salva os registradores de ${out} no PCB de ${out} (PC=${hex(pcb[out].PC)}). ${out} vai para a lista de prontos.`);
+      render(); flash(out === 'A' ? '#cs-pcbA' : '#cs-pcbB');
+    } else if(phase === 1){
+      phase = 2; cpu = {...pcb[inn]}; $('#cs-owner').textContent = inn;
+      setMsg($('#cs-msg'), `Passo 3: o SO carrega na UCP os valores guardados no PCB de ${inn} (PC=${hex(cpu.PC)}).`);
+      render(); flash('#cs-cpu');
+    } else {
+      phase = 3; run = inn; chip(inn === 'A' ? '#cs-stA' : '#cs-stB', 'execução');
+      setMsg($('#cs-msg'), `Passo 4: ${inn} executa a partir de ${hex(cpu.PC)}, exatamente onde tinha parado. Para ele, é como se nunca tivesse sido interrompido.`, 'ok');
+      render();
+    }
+  });
+  $('#cs-reset').addEventListener('click', reset);
+  reset();
+})();
+
+/* ---------- 5.2.4 PCB ---------- */
+(function(){
+  const txt = {
+    hw:'Contexto de hardware: os registradores (PC, SP, status e uso geral) salvos na última mudança de contexto.',
+    sw:'Contexto de software: identificação (nome/PID), prioridade, arquivos abertos, quotas e privilégios.',
+    ea:'Espaço de endereçamento: os limites da área de memória que pertence ao processo.',
+    ctl:'Controle do SO: o estado atual e os ponteiros que encadeiam este PCB nas listas de prontos ou de espera.'
+  };
+  $$('#pcb-f .btn').forEach(b => b.addEventListener('click', () => {
+    const f = b.dataset.f;
+    $$('#pcb-f .btn').forEach(x => x.classList.toggle('sel', x === b));
+    $$('#pcb-l li[data-part]').forEach(li => li.classList.toggle('hit', li.dataset.part === f));
+    setMsg($('#pcb-m'), txt[f]);
+  }));
+})();
+
+/* ---------- 5.4 máquina de estados ---------- */
+(function(){
+  const T = {
+    adm:{from:'criacao', to:'pronto', ok:'Admitido: o PCB entrou na lista de prontos.'},
+    a:{from:'pronto', to:'execucao', ok:'(a) O escalonador escolheu este processo na lista de prontos: agora ele usa a UCP.'},
+    b:{from:'execucao', to:'espera', ok:'(b) O processo pediu uma leitura de disco e vai esperar o fim da E/S. A UCP fica livre para outro processo.'},
+    c:{from:'espera', to:'pronto', ok:'(c) A leitura terminou. O processo volta para a lista de prontos, e não direto para a UCP.'},
+    d:{from:'execucao', to:'pronto', ok:'(d) A fatia de tempo acabou: o SO tira o processo da UCP e o devolve à lista de prontos.'},
+    t:{from:'execucao', to:'terminado', ok:'O programa terminou. O processo não executa mais, mas o PCB ainda existe até ser liberado.'}
+  };
+  const errs = {
+    adm:'O processo já foi admitido. Este evento só vale no estado de criação.',
+    a:{espera:'Não existe Espera → Execução. O processo ainda aguarda a leitura; quando ela terminar, vai para Pronto (c).', execucao:'O processo já está em execução.', _:'Só processos na lista de prontos podem ser escolhidos pelo escalonador.'},
+    b:'Só quem está em execução pode pedir uma E/S: é preciso estar usando a UCP para executar a instrução que faz o pedido.',
+    c:'Não há leitura pendente. Só um processo em espera aguarda o fim de uma E/S.',
+    d:'O fim da fatia de tempo só afeta o processo que está usando a UCP.',
+    t:'Para terminar normalmente, o processo precisa estar em execução, rodando a sua última instrução.'
+  };
+  const name = {criacao:'criação', pronto:'pronto', execucao:'execução', espera:'espera', terminado:'terminado'};
+  const where = {criacao:'PCB criado, fora das listas', pronto:'lista de prontos', execucao:'na UCP', espera:'lista de espera do disco', terminado:'PCB aguardando liberação'};
+  let st, n;
+  const log = $('#sm-log');
+  function draw(edge){
+    $$('.sm .node').forEach(g => g.classList.toggle('cur', g.id === 'n-' + st));
+    $$('.sm .edge').forEach(p => { const on = edge && p.id === 'e-' + edge; p.classList.toggle('active', on); p.setAttribute('marker-end', on ? 'url(#ar-on)' : 'url(#ar)'); });
+    $('#sm-st').textContent = name[st]; $('#sm-where').textContent = where[st];
+  }
+  function add(text){ n++; const li = el('li', {}, `<b>t${n}</b> · ${text}`); log.prepend(li); }
+  function reset(){ st = 'criacao'; n = 0; log.innerHTML = ''; add('processo criado (PCB montado)'); draw(null); setMsg($('#sm-msg'), 'Processo criado. O SO já montou o PCB, mas ainda não o admitiu na lista de prontos.'); }
+  $$('#sm-ev .btn').forEach(b => b.addEventListener('click', () => {
+    const ev = b.dataset.ev, t = T[ev];
+    if(st === 'terminado'){ setMsg($('#sm-msg'), 'Este processo já terminou. Clique em “Novo processo” para recomeçar.', 'bad'); return; }
+    if(st === 'criacao' && ev !== 'adm'){ setMsg($('#sm-msg'), 'O processo ainda está em criação: antes de qualquer coisa, precisa ser admitido na lista de prontos.', 'bad'); return; }
+    if(t.from !== st){
+      const e = errs[ev]; const text = typeof e === 'string' ? e : (e[st] || e._);
+      setMsg($('#sm-msg'), text, 'bad'); return;
+    }
+    add(`${name[st]} → ${name[t.to]}`);
+    st = t.to; draw(ev); setMsg($('#sm-msg'), t.ok, 'ok');
+  }));
+  $('#sm-reset').addEventListener('click', reset);
+  reset();
+})();
+
+/* ---------- 5.6 classificador ---------- */
+(function(){
+  const items = [
+    {t:'Simulação de previsão do tempo com milhões de cálculos', a:'cpu', w:'Quase só cálculo: o processo passa o tempo em execução, usando a UCP.'},
+    {t:'Sistema de caixa de supermercado gravando cada venda no banco de dados', a:'io', w:'Lê e grava dados o tempo todo: passa a maior parte do tempo em espera por E/S.'},
+    {t:'Renderização de um vídeo em 4K', a:'cpu', w:'Cada quadro exige muito processamento; a E/S é pequena perto do cálculo.'},
+    {t:'Editor de texto', a:'io', w:'Passa quase todo o tempo esperando o usuário digitar, que é uma E/S.'},
+    {t:'Cópia de milhares de fotos para um pendrive', a:'io', w:'O gargalo é o dispositivo: o processo espera cada gravação terminar.'},
+    {t:'Teste de senhas por força bruta', a:'cpu', w:'Testa combinações sem parar, usando só a UCP.'}
+  ];
+  const ul = $('#cls'); let ok = 0, done = 0;
+  items.forEach(it => {
+    const li = el('li', {}, `<span>${it.t}</span><span class="btns"><button class="btn" data-v="cpu">CPU-bound</button><button class="btn" data-v="io">I/O-bound</button></span>`);
+    $$('button', li).forEach(b => b.addEventListener('click', () => {
+      const right = b.dataset.v === it.a; done++; if(right) ok++;
+      li.classList.add(right ? 'ok' : 'bad');
+      $$('button', li).forEach(x => x.disabled = true);
+      li.appendChild(el('p', {class:'cfb'}, `<b>${right ? 'Correto.' : 'Não.'}</b> É ${it.a === 'cpu' ? 'CPU-bound' : 'I/O-bound'}. ${it.w}`));
+      setMsg($('#cls-m'), `Acertos: ${ok} de ${items.length}.` + (done === items.length ? (ok === items.length ? ' Todas certas.' : ' Revise as que ficaram em vermelho.') : ''), done === items.length ? (ok === items.length ? 'ok' : '') : '');
+    }));
+    ul.appendChild(li);
+  });
+})();
+
+/* ---------- 5.7 terminal ---------- */
+(function(){
+  const term = $('#term'); const btns = ['#t-fg','#t-bg','#t-pipe','#t-clr'].map(s => $(s));
+  let timers = [];
+  const line = (html, cls) => { const d = el('div', cls ? {class:cls} : {}, html); term.appendChild(d); return d; };
+  function prompt(){ $$('.pr', term).forEach(p => p.remove()); line('aluno@ifal:~$ <span class="cursor"></span>', 'pr'); }
+  function lock(v){ btns.slice(0,3).forEach(b => b.disabled = v); }
+  function clear(){ timers.forEach(clearTimeout); timers = []; term.innerHTML = ''; lock(false); prompt(); }
+  const later = (ms, fn) => timers.push(setTimeout(fn, ms));
+  $('#t-fg').addEventListener('click', () => {
+    $$('.pr', term).forEach(p => p.remove());
+    line('aluno@ifal:~$ ./backup.sh'); lock(true);
+    const b = line('copiando arquivos... 0%', 'busy');
+    line('<span class="c"># foreground: o shell espera o processo terminar; o terminal fica ocupado</span>');
+    [25,50,75,100].forEach((p,i) => later(700*(i+1), () => { b.textContent = 'copiando arquivos... ' + p + '%'; }));
+    later(3100, () => { line('backup concluído.'); lock(false); prompt(); });
+  });
+  $('#t-bg').addEventListener('click', () => {
+    $$('.pr', term).forEach(p => p.remove());
+    line('aluno@ifal:~$ ./backup.sh &amp;'); line('[1] 4120');
+    line('<span class="c"># background: o shell devolve o prompt na hora; o backup segue em segundo plano</span>');
+    prompt();
+    later(3200, () => { const pr = $('.pr', term); const d = el('div', {}, '[1]+  Concluído              ./backup.sh'); term.insertBefore(d, pr); });
+  });
+  $('#t-pipe').addEventListener('click', () => {
+    $$('.pr', term).forEach(p => p.remove());
+    line('aluno@ifal:~$ ls -l | grep .txt');
+    line('-rw-r--r-- 1 aluno aluno   812 set 28 notas.txt');
+    line('-rw-r--r-- 1 aluno aluno  2048 set 28 trabalho.txt');
+    line('<span class="c"># ls escreveu a lista inteira; grep a recebeu pelo pipe e mostrou só os .txt</span>');
+    prompt();
+  });
+  $('#t-clr').addEventListener('click', clear);
+  clear();
+})();
+
+/* ---------- 5.9 árvore ---------- */
+(function(){
+  const base = () => ([
+    {id:'A', rel:'pai', root:true, kids:[
+      {id:'B', rel:'filho de A', kids:[{id:'D', rel:'filho de B', kids:[]},{id:'E', rel:'filho de B', kids:[]}]},
+      {id:'C', rel:'filho de A', kids:[]}
+    ]},
+    {id:'X', rel:'independente', ind:true, kids:[]}
+  ]);
+  let data = base(); const host = $('#tree');
+  const ids = n => [n.id].concat(...n.kids.map(ids));
+  function build(nodes){
+    const ul = el('ul');
+    nodes.forEach(n => {
+      const li = el('li');
+      const box = el('span', {class:'tnode' + (n.root ? ' root' : '') + (n.ind ? ' ind' : ''), 'data-id':n.id}, `<b>${n.id}</b><span class="rel">${n.rel}</span>`);
+      const btn = el('button', {type:'button', 'aria-label':'Eliminar processo ' + n.id}, 'eliminar');
+      btn.addEventListener('click', () => kill(n));
+      box.appendChild(btn); li.appendChild(box);
+      if(n.kids.length) li.appendChild(build(n.kids));
+      ul.appendChild(li);
+    });
+    return ul;
+  }
+  function render(){ host.innerHTML = ''; host.appendChild(data.length ? build(data) : el('p', {class:'empty'}, 'Nenhum processo restante.')); }
+  function remove(list, id){ return list.filter(n => n.id !== id).map(n => ({...n, kids: remove(n.kids, id)})); }
+  function kill(n){
+    const all = ids(n);
+    all.forEach(id => { const b = $(`.tnode[data-id="${id}"]`, host); if(b) b.classList.add('gone'); });
+    let text;
+    if(n.ind) text = `X era independente: nenhum outro processo foi afetado.`;
+    else if(all.length === 1) text = `Eliminado: ${n.id}. Ele não tinha filhos; os demais continuam executando.`;
+    else text = `Eliminado: ${all.join(', ')}. ${all.slice(1).join(', ')} ${all.length > 2 ? 'eram subprocessos' : 'era subprocesso'} (direto ou indireto) de ${n.id} e ${all.length > 2 ? 'foram eliminados' : 'foi eliminado'} junto.` + (n.root ? ' O processo X, independente, não foi afetado.' : '');
+    setMsg($('#tree-m'), text, n.ind || all.length === 1 ? '' : 'bad');
+    setTimeout(() => { data = remove(data, n.id); render(); }, 320);
+  }
+  $('#tree-r').addEventListener('click', () => { data = base(); render(); setMsg($('#tree-m'), 'Clique em “eliminar” em qualquer processo.'); });
+  render();
+})();
+
+/* ---------- 5.11 sinais ---------- */
+(function(){
+  const ev = {INT:'Ctrl+C', ALRM:'temporizador', FPE:'divisão por zero', TERM:'outro processo: kill', KILL:'outro processo: kill -9'};
+  $('#sg-go').addEventListener('click', () => {
+    const s = ($('input[name="sg"]:checked') || {}).value || 'INT';
+    const h = $('#sg-h').checked;
+    let end, text, kind;
+    if(s === 'KILL'){ end = 'processo terminado'; kind = 'bad'; text = h ? 'SIGKILL não pode ser tratado nem ignorado: mesmo com rotina de tratamento, o processo é terminado.' : 'Ação padrão do SIGKILL: o processo é terminado imediatamente. Este sinal nunca pode ser tratado.'; }
+    else if(h){ end = 'rotina de tratamento'; kind = 'ok'; text = `SIG${s} chegou e a rotina de tratamento do programa executou (por exemplo, salvou o trabalho ou ignorou o aviso). O processo continua executando.`; }
+    else { end = 'ação padrão: terminar'; kind = 'bad'; text = `Sem rotina de tratamento para SIG${s}, vale a ação padrão: o processo é terminado.`; }
+    $('#sg-path').innerHTML = `<b>${ev[s]}</b>→<b>SO registra no PCB</b>→<b>processo</b>→<b class="hl">${end}</b>`;
+    setMsg($('#sg-m'), text, kind);
+  });
+})();
+
+/* ---------- questões fechadas ---------- */
+(function(){
+  const Q = [
+    {q:'Segundo o capítulo, qual é a definição mais completa de processo?', a:['O arquivo executável armazenado em disco.','O conjunto de informações necessárias para que o sistema operacional implemente a concorrência de programas.','A sequência de instruções de máquina de um programa.','A área de memória reservada ao núcleo do sistema.','O programa compilado e carregado na área de memória do núcleo.'], c:1, e:'Programa em execução é a ideia inicial; a definição completa destaca as informações que o SO precisa para executar vários programas de forma concorrente.'},
+    {q:'Qual informação faz parte do contexto de hardware de um processo?', a:['O PID.','A quota de arquivos abertos.','O contador de programa (PC).','O privilégio de desligar o sistema.','A lista de arquivos abertos.'], c:2, e:'O contexto de hardware é o conteúdo dos registradores, como PC, SP e registrador de status. PID, quotas e privilégios são contexto de software.'},
+    {q:'O que o sistema operacional faz em uma mudança de contexto?', a:['Copia o espaço de endereçamento do processo para o disco.','Salva os registradores do processo que deixa a UCP e carrega os registradores do processo que vai executar.','Altera o usuário dono do processo.','Recompila o programa para outro processador.','Move o processo que sai diretamente para o estado de terminado.'], c:1, e:'Os valores vão para o PCB do processo que sai, e os do processo que entra são lidos do PCB dele.'},
+    {q:'O UID (identificação do usuário dono do processo) pertence a qual grupo do contexto de software?', a:['Identificação.','Quotas.','Privilégios.','Espaço de endereçamento.','Contexto de hardware.'], c:0, e:'PID, UID e nome do processo formam o grupo de identificação.'},
+    {q:'“Número máximo de arquivos que o processo pode manter abertos” é um exemplo de:', a:['privilégio.','quota.','contexto de hardware.','identificação.','espaço de endereçamento.'], c:1, e:'Quotas são os limites de cada recurso que o processo pode alocar.'},
+    {q:'Um mesmo programa funciona para um usuário e falha para outro ao tentar abrir um arquivo. A explicação mais provável é:', a:['o contexto de hardware dos dois processos é diferente.','o programa foi carregado em endereços diferentes.','os processos têm contextos de software diferentes, com privilégios ou quotas distintos.','o escalonador deu prioridade ao primeiro usuário.','o processo do segundo usuário está no estado de pronto.'], c:2, e:'Quotas e privilégios pertencem ao processo, não ao programa.'},
+    {q:'O que é o espaço de endereçamento de um processo?', a:['A lista de processos prontos.','A área de memória pertencente ao processo, onde ficam suas instruções e dados.','O conjunto de registradores da UCP.','O endereço do PCB na memória do SO.','O conjunto de arquivos abertos pelo processo.'], c:1, e:'Cada processo tem o seu espaço, protegido do acesso dos demais.'},
+    {q:'Por meio de qual estrutura o sistema operacional implementa o processo?', a:['Tabela de páginas.','Bloco de controle do processo (PCB).','Vetor de interrupções.','Fila de impressão.','Registrador de status (PSW).'], c:1, e:'O PCB reúne contexto de hardware, contexto de software e espaço de endereçamento, e fica em uma área de memória do SO.'},
+    {q:'Um processo que tem tudo para executar e aguarda apenas a sua vez de usar a UCP está no estado:', a:['execução.','espera.','pronto.','criação.','terminado.'], c:2, e:'Em pronto, falta apenas a UCP. Em espera, o processo aguarda um evento ou recurso.'},
+    {q:'Qual destas mudanças de estado NÃO existe?', a:['Pronto → Execução.','Execução → Espera.','Espera → Execução.','Execução → Pronto.','Criação → Pronto.'], c:2, e:'Quando o evento ocorre, o processo em espera vai para pronto e aguarda ser escolhido pelo escalonador.'},
+    {q:'Quando termina a fatia de tempo de um processo em execução, ele passa para:', a:['espera.','pronto.','terminado.','criação.','execução, pois continua com a UCP.'], c:1, e:'É a transição (d), provocada por um evento do sistema (preempção).'},
+    {q:'Um processo em execução solicita a leitura de um arquivo em disco. A mudança de estado é:', a:['Execução → Espera.','Execução → Pronto.','Pronto → Espera.','Espera → Pronto.','Pronto → Execução.'], c:0, e:'É a transição (b): o processo precisa esperar o fim da E/S e libera a UCP.'},
+    {q:'Com o swapping, um processo em espera transferido para a memória secundária:', a:['passa automaticamente para o estado de terminado.','continua em espera, mas precisará voltar à memória principal antes de executar.','vai direto para o estado de execução quando o evento ocorre.','perde o seu PCB.','passa para o estado de criação.'], c:1, e:'Pronto e espera podem existir tanto na memória principal quanto na secundária.'},
+    {q:'No estado de terminado:', a:['o processo ainda pode executar instruções.','o processo não executa mais, mas o PCB ainda existe, por exemplo para contabilização.','o PCB nunca chegou a ser criado.','o processo aguarda a admissão na lista de prontos.','o processo foi admitido na lista de prontos, mas ainda não executou.'], c:1, e:'Depois de usado, o PCB é liberado. Aguardar admissão é o estado de criação.'},
+    {q:'Um programa científico que faz cálculos intensos e quase nenhuma leitura ou gravação é classificado como:', a:['I/O-bound.','CPU-bound.','background.','subprocesso.','foreground.'], c:1, e:'Ele passa a maior parte do tempo em execução, usando a UCP.'},
+    {q:'Um processo que não se comunica com o usuário durante a execução e tem seus canais de E/S ligados a arquivos é um processo:', a:['foreground.','background.','CPU-bound.','independente.','I/O-bound.'], c:1, e:'Em foreground, os canais de E/S estão ligados a um terminal e há interação com o usuário.'},
+    {q:'O comando <code>ls | sort</code> faz a saída de um processo virar a entrada de outro. Esse mecanismo se chama:', a:['sinal.','pipe.','swapping.','mudança de contexto.','thread.'], c:1, e:'O pipe liga o canal de saída de um processo ao canal de entrada de outro.'},
+    {q:'Sobre subprocessos, é correto afirmar:', a:['não têm nenhum vínculo com o processo que os criou.','se o processo pai for eliminado, os subprocessos também são.','compartilham o contexto de hardware com o pai.','não consomem recursos do sistema.','são criados apenas por logon interativo.'], c:1, e:'Há uma dependência existencial entre pai e filhos, e os subprocessos podem compartilhar as quotas do pai.'},
+    {q:'As threads de um mesmo processo compartilham:', a:['apenas o contexto de hardware.','o contexto de software e o espaço de endereçamento; cada thread tem seu próprio contexto de hardware.','nada: cada thread tem um PCB completo.','apenas o PID.','o PCB completo, incluindo os registradores.'], c:1, e:'Por isso criar, alternar e comunicar threads é mais barato do que com subprocessos.'},
+    {q:'Sinais são:', a:['um mecanismo que permite notificar processos de eventos gerados pelo SO ou por outros processos.','as interrupções geradas pelos dispositivos de hardware.','a lista de processos em espera.','os registradores salvos no PCB.','os processos que o SO cria durante a inicialização do sistema.'], c:0, e:'O sinal está para o processo como a interrupção e a exceção estão para o SO. O comando kill, por exemplo, envia um sinal de término.'}
+  ];
+  const ol = $('#qz'); const L = 'ABCDE'; let ok = 0, bad = 0;
+  window.__Q = Q;
+  $('#qz-t').textContent = Q.length;
+  function update(){
+    const n = ok + bad;
+    $('#qz-ok').textContent = ok; $('#qz-bad').textContent = bad; $('#qz-n').textContent = n;
+    $('#qz-mg').style.width = (ok / Q.length * 100) + '%'; $('#qz-mr').style.width = (bad / Q.length * 100) + '%';
+    const fin = $('#qz-final');
+    if(n === Q.length){
+      const pct = Math.round(ok / Q.length * 100);
+      $('#qz-ft').textContent = `Você acertou ${ok} de ${Q.length} (${pct}%).`;
+      $('#qz-fp').textContent = pct >= 80 ? 'Ótimo domínio do capítulo. Tente agora responder as questões abertas sem consultar o texto.' : pct >= 60 ? 'Bom resultado. Releia as explicações das questões que errou e as seções indicadas.' : 'Vale revisar o capítulo: releia as seções das questões erradas, use os simuladores e clique em Refazer.';
+      fin.hidden = false;
+    } else fin.hidden = true;
+  }
+  function build(){
+    ol.innerHTML = ''; ok = 0; bad = 0;
+    const shuf = n => { const r = [...Array(n).keys()]; for(let i = n - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [r[i], r[j]] = [r[j], r[i]]; } return r; };
+    const cur = Q.map(it => { const idx = shuf(it.a.length); return {...it, a: idx.map(i => it.a[i]), c: idx.indexOf(it.c)}; });
+    window.__Q = cur;
+    cur.forEach((it) => {
+      const li = el('li');
+      li.appendChild(el('div', {class:'qh'}, `<p>${it.q}</p>`));
+      const alts = el('div', {class:'alts'});
+      it.a.forEach((txt, j) => {
+        const b = el('button', {type:'button', class:'alt'}, `<span class="k">${L[j]}</span><span>${txt}</span>`);
+        b.addEventListener('click', () => {
+          const right = j === it.c;
+          $$('.alt', alts).forEach((x, k) => { x.disabled = true; if(k === it.c) x.classList.add('right'); });
+          if(!right) b.classList.add('wrong');
+          right ? ok++ : bad++;
+          const fb = el('p', {class:'fb ' + (right ? 'ok' : 'bad'), role:'status'}, `<b>${right ? 'Correto!' : 'Incorreto.'}</b> ${right ? '' : 'A resposta certa é ' + L[it.c] + '. '}${it.e}`);
+          li.appendChild(fb); update();
+        });
+        alts.appendChild(b);
+      });
+      li.appendChild(alts); ol.appendChild(li);
+    });
+    update();
+  }
+  $('#qz-reset').addEventListener('click', () => { build(); $('#ex-b').scrollIntoView({behavior:'smooth'}); });
+  build();
+})();
+})();
+</script>
+</body></html>

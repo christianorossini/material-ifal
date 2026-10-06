@@ -1,0 +1,838 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apostila de Threads</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --bg:#F2F4EE; --surface:#FBFCF8; --surface-2:#E8EDE2; --ink:#17231A; --ink-2:#4A5A4C; --line:#D3DCCB;
+  --accent:#2E6B1E; --accent-ink:#FFFFFF; --accent-soft:#DDEBD3;
+  --run:#2E6B1E; --run-soft:#DDEBD3;
+  --ready:#9A6200; --ready-soft:#FBEBC8;
+  --wait:#2F5C99; --wait-soft:#DCE6F4;
+  --neutral:#646E61; --neutral-soft:#E4E7E1;
+  --ok:#1F7A3A; --ok-soft:#D9F0DF; --bad:#B3261E; --bad-soft:#F8DEDB;
+  --display:"Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body:"Literata", Georgia, "Times New Roman", serif;
+  --mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0F1510; --surface:#172019; --surface-2:#1F2A21; --ink:#E4EBE0; --ink-2:#A6B3A4; --line:#2F3D31;
+    --accent:#7CC25B; --accent-ink:#0F1510; --accent-soft:#233A1C;
+    --run:#7CC25B; --run-soft:#1F3519; --ready:#E9B04A; --ready-soft:#3A2E14;
+    --wait:#8DB3EA; --wait-soft:#1B2A40; --neutral:#9AA397; --neutral-soft:#262C25;
+    --ok:#6FD08C; --ok-soft:#173222; --bad:#FF8A80; --bad-soft:#3D1B18;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0F1510; --surface:#172019; --surface-2:#1F2A21; --ink:#E4EBE0; --ink-2:#A6B3A4; --line:#2F3D31;
+  --accent:#7CC25B; --accent-ink:#0F1510; --accent-soft:#233A1C;
+  --run:#7CC25B; --run-soft:#1F3519; --ready:#E9B04A; --ready-soft:#3A2E14;
+  --wait:#8DB3EA; --wait-soft:#1B2A40; --neutral:#9AA397; --neutral-soft:#262C25;
+  --ok:#6FD08C; --ok-soft:#173222; --bad:#FF8A80; --bad-soft:#3D1B18;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto} *{transition:none!important; animation:none!important}}
+body{background:var(--bg); color:var(--ink); font-family:var(--body); font-size:17px; line-height:1.65; padding-inline:20px; padding-block:0 64px}
+h1,h2,h3,h4{font-family:var(--display); line-height:1.15; text-wrap:balance; margin:0}
+p{margin:0}
+a{color:var(--accent)}
+code,.mono{font-family:var(--mono); font-size:.88em}
+button{font:inherit; cursor:pointer}
+:focus-visible{outline:3px solid var(--accent); outline-offset:2px; border-radius:4px}
+
+/* header */
+.top{max-width:1160px; margin:0 auto; padding-block:48px 36px; border-bottom:2px solid var(--ink); display:grid; gap:18px}
+.eyebrow{font-family:var(--display); font-size:13px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--accent)}
+.top h1{font-size:clamp(48px, 9vw, 104px); font-weight:800; letter-spacing:-.03em}
+.top h1 span{color:var(--accent)}
+.lede{font-size:20px; max-width:62ch; color:var(--ink-2)}
+.meta{display:flex; flex-wrap:wrap; gap:8px 24px; font-family:var(--display); font-size:14px; color:var(--ink-2)}
+.meta b{color:var(--ink)}
+
+/* layout */
+.layout{max-width:1160px; margin:0 auto; display:grid; grid-template-columns:230px minmax(0,1fr); gap:56px; padding-top:40px}
+nav.toc{position:sticky; top:calc(env(safe-area-inset-top, 0px) + 20px); align-self:start; font-family:var(--display); font-size:14px}
+nav.toc p{font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-2); margin-bottom:10px}
+nav.toc ol{list-style:none; margin:0; padding:0; display:grid; gap:2px; border-left:2px solid var(--line)}
+nav.toc a{display:grid; grid-template-columns:38px 1fr; padding:6px 10px; margin-left:-2px; border-left:2px solid transparent; color:var(--ink-2); text-decoration:none; line-height:1.3}
+nav.toc a span{font-variant-numeric:tabular-nums; color:var(--ink-2); font-weight:600}
+nav.toc a:hover{color:var(--ink)}
+nav.toc a.on{border-left-color:var(--accent); color:var(--ink); font-weight:600}
+nav.toc a.on span{color:var(--accent)}
+main{min-width:0; display:grid; gap:72px}
+@media (max-width:900px){
+  .layout{grid-template-columns:minmax(0,1fr); gap:28px; padding-top:24px}
+  nav.toc{position:static}
+  nav.toc ol{display:flex; overflow-x:auto; border-left:none; gap:6px; padding-bottom:6px}
+  nav.toc a{display:block; white-space:nowrap; border:1px solid var(--line); border-radius:999px; padding:6px 12px; margin:0; background:var(--surface)}
+  nav.toc a span{margin-right:6px}
+  nav.toc a.on{border-color:var(--accent)}
+}
+
+/* sections */
+.sec{display:grid; gap:20px; scroll-margin-top:24px}
+.sec > *{max-width:68ch}
+.sec > .wide{max-width:none}
+.sec-head{display:grid; gap:6px; padding-bottom:6px}
+.num{font-family:var(--display); font-weight:800; font-size:15px; color:var(--accent); letter-spacing:.06em}
+.sec h2{font-size:clamp(28px, 4vw, 38px); font-weight:700; letter-spacing:-.01em}
+.sec h3{font-size:21px; font-weight:700; margin-top:10px}
+.sec ul,.sec ol{margin:0; padding-left:1.3em; display:grid; gap:6px}
+dfn{font-style:normal; font-weight:600; background:linear-gradient(transparent 62%, var(--accent-soft) 62%)}
+.def{border:2px solid var(--ink); background:var(--surface); padding:18px 22px; display:grid; gap:6px}
+.def .lbl{font-family:var(--display); font-size:12px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--accent)}
+.def p{font-size:19px}
+.note{background:var(--surface-2); padding:14px 18px; border-radius:6px; font-size:16px; display:grid; gap:6px}
+.note .lbl{font-family:var(--display); font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-2)}
+pre.term{font-family:var(--mono); font-size:14px; line-height:1.55; background:#101A12; color:#D6E8CB; padding:14px 18px; border-radius:6px; overflow-x:auto; margin:0}
+pre.term .c{color:#8FA88A}
+
+/* lab widgets */
+.lab{border:1px solid var(--line); background:var(--surface); border-radius:10px; padding:20px; display:grid; gap:16px}
+.lab-head{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap}
+.tag{font-family:var(--display); font-size:11px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; background:var(--accent); color:var(--accent-ink); padding:3px 8px; border-radius:3px}
+.lab-head h4{font-size:18px; font-weight:700}
+.lab-hint{font-size:15px; color:var(--ink-2)}
+.btns{display:flex; flex-wrap:wrap; gap:8px}
+.btn{font-family:var(--display); font-size:14px; font-weight:600; border:1.5px solid var(--ink); background:var(--surface); color:var(--ink); padding:8px 14px; border-radius:6px; transition:background .15s, transform .1s}
+.btn:hover{background:var(--surface-2)}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--ink); color:var(--bg)}
+.btn.primary:hover{background:var(--accent); border-color:var(--accent); color:var(--accent-ink)}
+.btn.ghost{border-color:var(--line); color:var(--ink-2)}
+.btn[disabled]{opacity:.45; cursor:not-allowed}
+.msg{font-family:var(--display); font-size:15px; padding:10px 14px; border-radius:6px; background:var(--surface-2); color:var(--ink)}
+.msg.ok{background:var(--ok-soft); color:var(--ok)}
+.msg.bad{background:var(--bad-soft); color:var(--bad)}
+.chip{display:inline-block; font-family:var(--display); font-size:13px; font-weight:700; padding:2px 9px; border-radius:999px}
+.st-execucao{background:var(--run-soft); color:var(--run)}
+.st-pronto{background:var(--ready-soft); color:var(--ready)}
+.st-espera{background:var(--wait-soft); color:var(--wait)}
+.st-criacao,.st-terminado{background:var(--neutral-soft); color:var(--neutral)}
+.scroll{overflow-x:auto}
+</style>
+<style>
+/* 5.1 */
+.procs{display:grid; grid-template-columns:repeat(auto-fill, minmax(190px, 1fr)); gap:10px; min-height:84px}
+.proc{border:1px solid var(--line); border-left:5px solid var(--run); padding:10px 12px; background:var(--bg); display:grid; gap:2px; animation:pop .25s ease-out}
+.proc b{font-family:var(--display); font-size:15px}
+.proc span{font-family:var(--mono); font-size:12.5px; color:var(--ink-2)}
+.proc.pronto{border-left-color:var(--ready)} .proc.espera{border-left-color:var(--wait)}
+.empty{font-family:var(--display); font-size:14px; color:var(--ink-2); align-self:center}
+@keyframes pop{from{opacity:.2; transform:translateY(6px)} to{opacity:1; transform:none}}
+.prog{display:flex; align-items:center; gap:12px; flex-wrap:wrap}
+.file{font-family:var(--mono); font-size:14px; border:1.5px dashed var(--ink-2); padding:8px 12px; border-radius:6px}
+
+/* 5.2 diagram */
+.fig{margin:0; display:grid; gap:8px}
+.fig figcaption{font-family:var(--display); font-size:13px; color:var(--ink-2)}
+.fig svg{width:100%; height:auto; max-width:640px}
+.fig svg text{font-family:var(--display)} .fig svg text:not([fill]){fill:var(--ink)}
+.part{cursor:pointer}
+.part rect{transition:stroke-width .15s}
+.part:hover rect,.part:focus rect{stroke-width:4}
+
+/* 5.2.1 context switch */
+.cs{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px}
+@media (max-width:620px){.cs{grid-template-columns:minmax(0,1fr)}}
+.box{border:1.5px solid var(--line); border-radius:8px; padding:12px; background:var(--bg); display:grid; gap:8px; transition:border-color .2s, box-shadow .2s}
+.box h5{font-family:var(--display); font-size:14px; margin:0; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:8px}
+.box.cpu{border-color:var(--ink); background:var(--surface-2)}
+.box.flash{border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft)}
+.regs{display:grid; grid-template-columns:auto 1fr; gap:3px 12px; font-family:var(--mono); font-size:13.5px; font-variant-numeric:tabular-nums}
+.regs dt{color:var(--ink-2)} .regs dd{margin:0; text-align:right}
+.steps{display:flex; gap:6px; flex-wrap:wrap}
+.steps i{font-style:normal; font-family:var(--display); font-size:12px; font-weight:700; padding:3px 8px; border-radius:999px; background:var(--surface-2); color:var(--ink-2)}
+.steps i.on{background:var(--accent); color:var(--accent-ink)}
+
+/* 5.2.2 table */
+table.t{border-collapse:collapse; width:100%; font-size:15.5px}
+.t th{font-family:var(--display); text-align:left; font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-2); border-bottom:2px solid var(--ink); padding:8px 10px}
+.t td{border-bottom:1px solid var(--line); padding:10px; vertical-align:top}
+.t td:first-child{font-family:var(--display); font-weight:700; white-space:nowrap}
+
+/* 5.2.4 PCB */
+.pcbwrap{display:grid; grid-template-columns:minmax(0,300px) minmax(0,1fr); gap:20px; align-items:start}
+@media (max-width:620px){.pcbwrap{grid-template-columns:minmax(0,1fr)}}
+.pcb{list-style:none; margin:0; padding:0; border:2px solid var(--ink); border-radius:6px; overflow:hidden; font-family:var(--display); font-size:15px}
+.pcb li{padding:9px 14px; border-top:1px solid var(--line); transition:background .2s, color .2s}
+.pcb li.hd{background:var(--ink); color:var(--bg); font-family:var(--mono); font-size:14px; border-top:none}
+.pcb li.hit[data-part="hw"]{background:var(--wait-soft); color:var(--wait); font-weight:700}
+.pcb li.hit[data-part="sw"]{background:var(--run-soft); color:var(--run); font-weight:700}
+.pcb li.hit[data-part="ea"]{background:var(--ready-soft); color:var(--ready); font-weight:700}
+.pcb li.hit[data-part="ctl"]{background:var(--neutral-soft); color:var(--ink); font-weight:700}
+.btn.sel{background:var(--ink); color:var(--bg)}
+
+/* 5.3 cards */
+.states{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px}
+@media (max-width:700px){.states{grid-template-columns:minmax(0,1fr)}}
+.state{border-radius:8px; padding:16px; display:grid; gap:6px; align-content:start}
+.state h4{font-size:22px}
+.state small{font-family:var(--mono); font-size:12.5px; opacity:.85}
+.state p{font-size:15.5px}
+.state .an{font-size:14px; font-style:italic; border-top:1px solid currentColor; padding-top:8px; opacity:.9}
+.state.x{background:var(--run-soft); color:var(--run)} .state.x p{color:var(--ink)}
+.state.p{background:var(--ready-soft); color:var(--ready)} .state.p p{color:var(--ink)}
+.state.e{background:var(--wait-soft); color:var(--wait)} .state.e p{color:var(--ink)}
+
+/* 5.4 state machine */
+.smwrap{display:grid; grid-template-columns:minmax(0,1.6fr) minmax(0,1fr); gap:20px; align-items:start}
+@media (max-width:760px){.smwrap{grid-template-columns:minmax(0,1fr)}}
+.sm svg{width:100%; height:auto}
+.sm text{font-family:var(--display); fill:var(--ink); font-size:15px; font-weight:600}
+.sm .elbl{font-size:14px; font-weight:800; fill:var(--ink-2)}
+.node rect{fill:var(--surface); stroke:var(--line); stroke-width:2; transition:all .25s}
+.node.cur rect{stroke-width:3.5}
+.node.cur.n-criacao rect,.node.cur.n-terminado rect{fill:var(--neutral-soft); stroke:var(--neutral)}
+.node.cur.n-pronto rect{fill:var(--ready-soft); stroke:var(--ready)}
+.node.cur.n-execucao rect{fill:var(--run-soft); stroke:var(--run)}
+.node.cur.n-espera rect{fill:var(--wait-soft); stroke:var(--wait)}
+.edge{fill:none; stroke:var(--ink-2); stroke-width:2; opacity:.55; transition:all .25s}
+.edge.active{stroke:var(--accent); stroke-width:4; opacity:1}
+.mk{fill:var(--ink-2)} .mk-on{fill:var(--accent)}
+.pcbmini{font-family:var(--mono); font-size:13.5px; background:var(--bg); border:1.5px solid var(--line); border-radius:8px; padding:12px; display:grid; gap:4px}
+.log{list-style:none; margin:0; padding:0; font-family:var(--display); font-size:13.5px; display:grid; gap:4px; max-height:190px; overflow-y:auto}
+.log li{padding:5px 8px; background:var(--bg); border-radius:4px}
+.evbtns{display:grid; grid-template-columns:repeat(auto-fill, minmax(210px, 1fr)); gap:8px}
+.evbtns .btn{text-align:left}
+</style><style>
+/* 5.5 */
+.twocol{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:12px}
+@media (max-width:620px){.twocol{grid-template-columns:minmax(0,1fr)}}
+.card{border:1px solid var(--line); border-radius:8px; padding:16px; background:var(--surface); display:grid; gap:8px; align-content:start}
+.card h4{font-size:18px}
+.card p,.card li{font-size:15.5px}
+/* 5.6 bars */
+.bars{display:grid; gap:12px}
+.barrow{display:grid; grid-template-columns:110px minmax(0,1fr); gap:12px; align-items:center; font-family:var(--display); font-weight:700; font-size:14px}
+.bar{display:flex; height:30px; border-radius:5px; overflow:hidden}
+.bar i{display:block; height:100%}
+.bar .u{background:var(--run)} .bar .io{background:var(--wait); opacity:.45}
+.legend{display:flex; gap:18px; flex-wrap:wrap; font-family:var(--display); font-size:13px; color:var(--ink-2)}
+.legend span::before{content:""; display:inline-block; width:12px; height:12px; border-radius:3px; margin-right:6px; vertical-align:-1px; background:var(--run)}
+.legend span.io::before{background:var(--wait); opacity:.45}
+.cls{list-style:none; margin:0; padding:0; display:grid; gap:8px}
+.cls li{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:10px; align-items:center; padding:10px 12px; border:1px solid var(--line); border-radius:8px; background:var(--bg)}
+.cls li.ok{border-color:var(--ok); background:var(--ok-soft)}
+.cls li.bad{border-color:var(--bad); background:var(--bad-soft)}
+.cls .cfb{grid-column:1 / -1; font-size:14.5px}
+.cls .btn{padding:6px 10px; font-size:13px}
+/* 5.7 terminal */
+.termbox{background:#101A12; color:#D6E8CB; font-family:var(--mono); font-size:14px; border-radius:8px; padding:14px 16px; min-height:170px; display:grid; align-content:start; gap:2px; overflow-x:auto}
+.termbox .c{color:#8FA88A}
+.termbox .busy{color:#E9B04A}
+.cursor{display:inline-block; width:8px; height:15px; background:#D6E8CB; vertical-align:-2px; animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.flow{display:flex; align-items:center; gap:8px; flex-wrap:wrap; font-family:var(--display); font-size:14px}
+.flow b{border:1.5px solid var(--line); background:var(--surface); padding:6px 10px; border-radius:6px; font-weight:600}
+.flow b.p{background:var(--ink); color:var(--bg); border-color:var(--ink)}
+.flow em{font-style:normal; color:var(--ink-2)}
+/* 5.8 */
+.three{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px}
+@media (max-width:760px){.three{grid-template-columns:minmax(0,1fr)}}
+.card ol{padding-left:1.2em; display:grid; gap:4px}
+/* 5.9 tree */
+.tree ul{list-style:none; margin:0; padding-left:28px; position:relative; display:grid; gap:8px}
+.tree > ul{padding-left:0}
+.tree ul ul::before{content:""; position:absolute; left:10px; top:-8px; bottom:18px; border-left:2px solid var(--line)}
+.tree ul ul > li{position:relative}
+.tree ul ul > li::before{content:""; position:absolute; left:-18px; top:20px; width:16px; border-top:2px solid var(--line)}
+.tnode{display:inline-flex; align-items:center; gap:10px; border:1.5px solid var(--line); background:var(--bg); border-radius:8px; padding:6px 8px 6px 12px; font-family:var(--display); font-size:14px; transition:opacity .3s, transform .3s}
+.tnode b{font-size:15px}
+.tnode .rel{color:var(--ink-2); font-weight:500}
+.tnode button{border:1px solid var(--bad); color:var(--bad); background:transparent; border-radius:5px; font-family:var(--display); font-size:12px; font-weight:700; padding:3px 7px}
+.tnode.root{border-color:var(--run); background:var(--run-soft)}
+.tnode.ind{border-style:dashed}
+.gone{opacity:0; transform:scale(.9)}
+.treegrid{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,220px); gap:20px; align-items:start}
+@media (max-width:620px){.treegrid{grid-template-columns:minmax(0,1fr)}}
+/* threads figure */
+.thr{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:14px}
+@media (max-width:700px){.thr{grid-template-columns:minmax(0,1fr)}}
+.pbox{border:2px solid var(--line); border-radius:10px; padding:12px; display:grid; gap:6px; background:var(--surface)}
+.pbox.mt{border-color:var(--accent)}
+.pbox h5{font-family:var(--display); font-size:15px; margin:0}
+.seg{font-family:var(--display); font-size:13px; font-weight:600; padding:7px 9px; border-radius:6px; text-align:center}
+.seg.sw{background:var(--run-soft); color:var(--run)} .seg.hw{background:var(--wait-soft); color:var(--wait)} .seg.ea{background:var(--ready-soft); color:var(--ready)}
+.pair{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:8px}
+.trio{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:6px}
+.col{display:grid; gap:6px; align-content:start}
+.col small{font-family:var(--display); font-size:12px; font-weight:700; color:var(--ink-2); text-align:center}
+/* 5.10 */
+.svc{display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:8px; list-style:none; margin:0; padding:0}
+.svc li{border:1px solid var(--line); border-radius:8px; padding:10px 12px; background:var(--surface); font-family:var(--display); font-size:14.5px; font-weight:600; display:grid; gap:2px}
+.svc li span{font-family:var(--body); font-weight:400; font-size:13.5px; color:var(--ink-2)}
+/* 5.11 */
+.sig{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:16px; align-items:start}
+@media (max-width:700px){.sig{grid-template-columns:minmax(0,1fr)}}
+.opts{display:grid; gap:6px}
+.opt{display:flex; gap:10px; align-items:flex-start; padding:9px 11px; border:1.5px solid var(--line); border-radius:8px; background:var(--bg); cursor:pointer; font-size:15px}
+.opt:has(input:checked){border-color:var(--accent); background:var(--accent-soft)}
+.opt input{margin-top:5px; accent-color:var(--accent)}
+.opt code{font-weight:600}
+.switch{display:flex; gap:10px; align-items:center; font-family:var(--display); font-size:14.5px}
+.switch input{width:18px; height:18px; accent-color:var(--accent)}
+.path{display:flex; align-items:center; gap:6px; flex-wrap:wrap; font-family:var(--display); font-size:13.5px}
+.path b{padding:5px 9px; border-radius:6px; background:var(--surface-2); font-weight:600}
+.path b.hl{background:var(--accent); color:var(--accent-ink)}
+/* exercises */
+.ex-tabs{display:flex; gap:8px; flex-wrap:wrap}
+.oq{list-style:none; margin:0; padding:0; display:grid; gap:10px; counter-reset:q}
+.oq > li{counter-increment:q; border:1px solid var(--line); border-radius:8px; background:var(--surface); padding:14px 16px 14px 56px; position:relative; display:grid; gap:8px}
+.oq > li::before{content:counter(q); position:absolute; left:14px; top:12px; width:30px; height:30px; border-radius:50%; background:var(--ink); color:var(--bg); font-family:var(--display); font-weight:700; font-size:14px; display:grid; place-items:center}
+.oq p{font-size:16.5px}
+details summary{cursor:pointer; font-family:var(--display); font-size:13.5px; font-weight:600; color:var(--accent); width:fit-content}
+details[open] summary{margin-bottom:6px}
+details .ans{font-size:15px; color:var(--ink-2); display:grid; gap:4px}
+.score{position:sticky; top:calc(env(safe-area-inset-top, 0px) + 8px); z-index:2; display:flex; align-items:center; gap:14px; flex-wrap:wrap; background:var(--ink); color:var(--bg); padding:10px 16px; border-radius:8px; font-family:var(--display); font-size:14.5px}
+.score b{font-size:18px; font-variant-numeric:tabular-nums}
+.meter{flex:1; min-width:120px; height:8px; background:rgba(128,128,128,.35); border-radius:99px; overflow:hidden; display:flex}
+.meter i{display:block; height:100%; transition:width .3s}
+.meter .g{background:#6FD08C} .meter .r{background:#FF8A80}
+.score .btn{border-color:var(--bg); color:var(--bg); background:transparent; padding:5px 10px; font-size:13px}
+.qz{list-style:none; margin:0; padding:0; display:grid; gap:14px; counter-reset:c}
+.qz > li{counter-increment:c; border:1px solid var(--line); border-radius:10px; background:var(--surface); padding:16px; display:grid; gap:10px}
+.qz .qh{display:flex; gap:10px; align-items:baseline}
+.qz .qh::before{content:counter(c, decimal-leading-zero); font-family:var(--display); font-weight:800; color:var(--accent); font-size:14px; font-variant-numeric:tabular-nums}
+.qz .qh p{font-size:16.5px}
+.qz .alts{display:grid; gap:6px}
+.alt{display:grid; grid-template-columns:28px minmax(0,1fr); gap:8px; align-items:start; text-align:left; border:1.5px solid var(--line); background:var(--bg); color:var(--ink); border-radius:8px; padding:9px 12px; font-family:var(--body); font-size:15.5px; line-height:1.45}
+.alt:hover:not([disabled]){border-color:var(--ink)}
+.alt .k{font-family:var(--display); font-weight:700; font-size:13px; width:24px; height:24px; border-radius:50%; border:1.5px solid currentColor; display:grid; place-items:center; color:var(--ink-2)}
+.alt[disabled]{cursor:default}
+.alt.right{border-color:var(--ok); background:var(--ok-soft)} .alt.right .k{background:var(--ok); color:var(--surface); border-color:var(--ok)}
+.alt.wrong{border-color:var(--bad); background:var(--bad-soft)} .alt.wrong .k{background:var(--bad); color:var(--surface); border-color:var(--bad)}
+.fb{font-size:15px; padding:10px 12px; border-radius:6px}
+.fb.ok{background:var(--ok-soft)} .fb.bad{background:var(--bad-soft)}
+.fb b{font-family:var(--display)}
+.fb.ok b{color:var(--ok)} .fb.bad b{color:var(--bad)}
+.final{border:2px solid var(--ink); border-radius:10px; padding:18px; display:grid; gap:6px; background:var(--surface)}
+.final h4{font-size:22px}
+footer.end{max-width:1160px; margin:64px auto 0; padding-top:18px; border-top:1px solid var(--line); font-family:var(--display); font-size:13px; color:var(--ink-2)}
+</style><style>
+body{margin:0}
+[hidden]{display:none!important}
+@media print{
+  :root{--bg:#FFFFFF; --surface:#FFFFFF}
+  body{font-size:11.5pt; padding-inline:0}
+  nav.toc,.btns,.evbtns,.score,#sm-log,#sm-msg,.lab-hint,.lab .msg,.final,.cursor{display:none!important}
+  .lab.hide-print{display:none!important}
+  .layout{grid-template-columns:minmax(0,1fr); gap:0; padding-top:16px}
+  main{gap:28px}
+  .top{padding-block:0 18px}
+  .sec{break-before:page}
+  #s1{break-before:auto}
+  .lab,.card,.def,.note,figure,table,.oq > li,.qz > li,.states,.thr{break-inside:avoid}
+  pre.term{white-space:pre-wrap}
+  details summary{display:none}
+  .alt{padding:4px 10px}
+  .gab li{break-inside:avoid}
+  footer.end{margin-top:24px}
+}
+.gab{display:none}
+@media print{.gab{display:grid; gap:10px; break-before:page}}
+</style>
+</head><body>
+<style>
+/* ch6 widgets */
+.seg-row{display:flex; gap:10px; flex-wrap:wrap; align-items:center; font-family:var(--display); font-size:14px}
+.range{display:flex; gap:12px; align-items:center; font-family:var(--display); font-size:14.5px; flex-wrap:wrap}
+.range input{accent-color:var(--accent); width:200px; max-width:100%}
+.range output{font-weight:800; font-variant-numeric:tabular-nums; min-width:1.5em}
+.fl-vis{display:flex; flex-wrap:wrap; gap:10px; min-height:150px; align-items:flex-start}
+.mproc{border:2px solid var(--line); border-radius:8px; padding:8px; display:grid; gap:4px; width:118px; background:var(--bg); animation:pop .2s ease-out}
+.mproc small{font-family:var(--display); font-size:11.5px; font-weight:700; color:var(--ink-2)}
+.mproc .seg{font-size:11.5px; padding:4px}
+.bigproc{border:2px solid var(--accent); border-radius:10px; padding:10px; display:grid; gap:8px; width:100%; background:var(--bg)}
+.hwrow{display:flex; gap:6px; flex-wrap:wrap}
+.hwrow .seg{flex:1 1 90px}
+.counters{display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:8px}
+.counter{border:1px solid var(--line); border-radius:8px; padding:10px 12px; background:var(--bg); display:grid; gap:2px}
+.counter b{font-family:var(--display); font-size:26px; font-variant-numeric:tabular-nums}
+.counter span{font-family:var(--display); font-size:12.5px; color:var(--ink-2)}
+/* editor */
+.ed{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:10px}
+@media (max-width:700px){.ed{grid-template-columns:minmax(0,1fr)}}
+.lamp{display:inline-block; width:10px; height:10px; border-radius:50%; background:var(--line); margin-right:6px; transition:background .15s, box-shadow .15s}
+.lamp.on{background:var(--accent); box-shadow:0 0 0 4px var(--accent-soft)}
+.pane{border:1.5px solid var(--line); border-radius:8px; padding:10px 12px; background:var(--bg); display:grid; gap:6px; align-content:start; min-height:120px}
+.pane h5{font-family:var(--display); font-size:13.5px; margin:0}
+.pane .out{font-family:var(--mono); font-size:13px; white-space:pre-wrap; word-break:break-word; color:var(--ink)}
+.pane .out.dim{color:var(--ink-2)}
+textarea.edin{width:100%; min-height:80px; font:inherit; font-size:16px; padding:10px 12px; border:1.5px solid var(--ink); border-radius:8px; background:var(--surface); color:var(--ink); resize:vertical}
+textarea.edin:disabled{opacity:.5; border-style:dashed}
+/* race */
+table.race{border-collapse:collapse; width:100%; font-size:15px}
+.race th{font-family:var(--display); font-size:12.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-2); text-align:left; border-bottom:2px solid var(--ink); padding:6px 8px}
+.race td{padding:7px 8px; border-bottom:1px solid var(--line); font-variant-numeric:tabular-nums}
+.race td.t1{color:var(--run); font-weight:700; font-family:var(--display)} .race td.t2{color:var(--wait); font-weight:700; font-family:var(--display)}
+.race tr{animation:pop .2s ease-out}
+/* blocking */
+.models{display:flex; gap:8px; flex-wrap:wrap}
+.bl{display:grid; gap:12px}
+.bl-row{display:grid; grid-template-columns:120px minmax(0,1fr); gap:12px; align-items:center}
+.bl-row > span{font-family:var(--display); font-size:12.5px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-2)}
+.chips{display:flex; gap:8px; flex-wrap:wrap}
+.th{display:grid; gap:4px; border:2px solid var(--line); border-radius:8px; padding:8px 10px; min-width:120px; background:var(--bg); transition:all .2s}
+.th b{font-family:var(--display); font-size:15px}
+.th small{font-family:var(--display); font-size:12.5px; font-weight:600}
+.th button{font-family:var(--display); font-size:12px; font-weight:700; border:1px solid var(--ink-2); border-radius:5px; background:transparent; color:var(--ink); padding:3px 6px}
+.th.exec{border-color:var(--run); background:var(--run-soft)} .th.exec small{color:var(--run)}
+.th.pronto{border-color:var(--ready); background:var(--ready-soft)} .th.pronto small{color:var(--ready)}
+.th.bloq{border-color:var(--wait); background:var(--wait-soft)} .th.bloq small{color:var(--wait)}
+.th.parado{border-color:var(--bad); background:var(--bad-soft); border-style:dashed} .th.parado small{color:var(--bad)}
+.kent{font-family:var(--display); font-size:13.5px; font-weight:700; padding:6px 10px; border-radius:6px; background:var(--wait); color:var(--surface)}
+</style>
+
+<header class="top">
+  <p class="eyebrow">Sistemas Operacionais · IFAL Campus Maceió · Material de referência</p>
+  <h1>Threads<span>.</span></h1>
+  <p class="lede">Por que um processo pode ter vários fluxos de execução, o que eles compartilham e como o sistema operacional os implementa. Leia, experimente os simuladores e, no fim, teste o que aprendeu.</p>
+  <div class="meta"><span>Base: <b>Machado &amp; Maia, <i>Arquitetura de Sistemas Operacionais</i>, cap. 6</b></span><span>Prof. Christiano Rossini</span><span>5 seções · 5 simuladores · 31 exercícios</span></div>
+</header>
+
+<div class="layout">
+<nav class="toc" aria-label="Sumário">
+  <p>Sumário</p>
+  <ol>
+    <li><a href="#s1"><span>6.1</span>Introdução</a></li>
+    <li><a href="#s2"><span>6.2</span>Ambiente monothread</a></li>
+    <li><a href="#s3"><span>6.3</span>Ambiente multithread</a></li>
+    <li><a href="#s4"><span>6.4</span>Arquitetura e implementação</a></li>
+    <li><a href="#s5"><span>6.5</span>Modelos de programação</a></li>
+    <li><a href="#ex"><span>Ex.</span>Exercícios</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- 6.1 -->
+<section class="sec" id="s1">
+  <div class="sec-head"><span class="num">6.1</span><h2>Introdução</h2></div>
+  <p>No capítulo 5 vimos que o processo reúne tudo o que o sistema operacional precisa para executar um programa: contexto de hardware, contexto de software e espaço de endereçamento. Até o fim dos anos 1970, sistemas como Tops-10, MVS e Unix suportavam apenas processos com <b>um único thread</b>: um processo, um programa, um fluxo de execução.</p>
+  <p>O problema aparece quando uma mesma aplicação precisa fazer várias coisas ao mesmo tempo. Com um fluxo por processo, a única saída é criar vários processos, o que custa caro. A partir do fim dos anos 1970 surgiu a ideia de <b>processos leves</b> (o sistema Toth, de 1979, é o marco citado), consolidada depois em sistemas como o Mach, que separa claramente os conceitos de processo e de thread. Hoje, praticamente todos os sistemas operacionais são multithread.</p>
+  <div class="def"><span class="lbl">Ideia central</span><p>Com <dfn>múltiplos threads</dfn>, partes diferentes do código de um mesmo processo executam concorrentemente, com <b>menor overhead</b> do que usando vários processos, e compartilhando a mesma memória.</p></div>
+</section>
+
+<!-- 6.2 -->
+<section class="sec" id="s2">
+  <div class="sec-head"><span class="num">6.2</span><h2>Ambiente monothread</h2></div>
+  <p>Em um ambiente <dfn>monothread</dfn>, cada processo suporta apenas um programa no seu espaço de endereçamento, com um único fluxo de execução. Para implementar uma aplicação concorrente, é preciso dividi-la em <b>vários processos independentes</b> ou em <b>subprocessos</b>, cada um com seu contexto de hardware, contexto de software e espaço de endereçamento próprios. O MS-DOS e as primeiras versões do Unix são exemplos desse ambiente.</p>
+  <p>Essa solução tem dois problemas principais:</p>
+  <ul>
+    <li><b>Consumo de recursos.</b> A cada criação e eliminação de processo, o SO precisa alocar e liberar PCB, memória e demais recursos; as mudanças de contexto entre processos também são completas e custam tempo de UCP.</li>
+    <li><b>Comunicação difícil e lenta.</b> Como cada processo tem seu próprio espaço de endereçamento, um não enxerga as variáveis do outro. Toda troca de dados precisa de mecanismos do SO, como pipes, sinais, semáforos, memória compartilhada ou troca de mensagens, o que deixa a aplicação mais lenta e mais complexa.</li>
+  </ul>
+  <div class="lab">
+    <div class="lab-head"><span class="tag">Experimente</span><h4>Quanto custa ter N fluxos?</h4></div>
+    <p class="lab-hint">Escolha quantos fluxos a aplicação precisa e compare fazer isso com processos (monothread) ou com threads (multithread).</p>
+    <div class="range"><label for="fl-n">Fluxos de execução:</label><input type="range" id="fl-n" min="1" max="8" value="4"><output id="fl-o">4</output></div>
+    <div class="btns" id="fl-mode"><button class="btn sel" data-m="p">Com processos</button><button class="btn" data-m="t">Com threads</button></div>
+    <div class="fl-vis" id="fl-vis"></div>
+    <div class="counters">
+      <div class="counter"><b id="fl-c1">4</b><span>espaços de endereçamento</span></div>
+      <div class="counter"><b id="fl-c2">4</b><span>contextos de software</span></div>
+      <div class="counter"><b id="fl-c3">4</b><span>contextos de hardware</span></div>
+      <div class="counter"><b id="fl-c4">via SO</b><span>comunicação entre fluxos</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 6.3 -->
+<section class="sec" id="s3">
+  <div class="sec-head"><span class="num">6.3</span><h2>Ambiente multithread</h2></div>
+  <p>Em um ambiente <dfn>multithread</dfn>, um processo pode ter vários fluxos de execução. Cada <b>thread</b> pode ser visto como uma sub-rotina do programa que é executada de forma <b>assíncrona</b>: o programa principal cria o thread e continua executando, sem esperar a sub-rotina terminar. A partir daí, as partes executam concorrentemente.</p>
+  <pre class="term">programa principal
+    Create_Thread(Sub_1)   <span class="c">// Sub_1 começa a executar em paralelo</span>
+    Create_Thread(Sub_2)   <span class="c">// Sub_2 também</span>
+    ...                    <span class="c">// o principal segue sem esperar</span>
+fim</pre>
+  <h3>O que cada thread tem e o que é compartilhado</h3>
+  <p>Cada thread tem seu <b>próprio contexto de hardware</b> (PC, SP, registradores) e seu próprio estado. Por isso pode ser interrompido e retomado de forma independente, passando pelos mesmos estados de um processo: <span class="chip st-execucao">execução</span> <span class="chip st-pronto">pronto</span> <span class="chip st-espera">espera</span>. Já o <b>contexto de software</b> e o <b>espaço de endereçamento</b> pertencem ao processo e são <b>compartilhados</b> por todos os seus threads.</p>
+  <figure class="fig wide">
+    <div class="thr">
+      <div class="pbox"><h5>Ambiente monothread · 2 processos</h5><div class="pair"><div class="col"><small>Processo 1</small><span class="seg sw">Contexto de software</span><span class="seg hw">Contexto de hardware</span><span class="seg ea">Espaço de endereçamento</span></div><div class="col"><small>Processo 2</small><span class="seg sw">Contexto de software</span><span class="seg hw">Contexto de hardware</span><span class="seg ea">Espaço de endereçamento</span></div></div></div>
+      <div class="pbox mt"><h5>Ambiente multithread · 1 processo, 3 threads</h5><span class="seg sw">Contexto de software · compartilhado</span><div class="trio"><div class="col"><small>Thread 1</small><span class="seg hw">Contexto de hardware</span></div><div class="col"><small>Thread 2</small><span class="seg hw">Contexto de hardware</span></div><div class="col"><small>Thread 3</small><span class="seg hw">Contexto de hardware</span></div></div><span class="seg ea">Espaço de endereçamento · compartilhado</span></div>
+    </div>
+    <figcaption>Figura 1. No multithread, só o contexto de hardware é duplicado.</figcaption>
+  </figure>
+  <div class="def"><span class="lbl">Dois papéis separados</span><p>O <b>processo</b> passa a ser a <dfn>unidade de alocação de recursos</dfn> (recebe memória, arquivos, quotas e privilégios). O <b>thread</b> passa a ser a <dfn>unidade de escalonamento</dfn> (é quem o escalonador escolhe para usar a UCP).</p></div>
+
+  <h3>Vantagens e riscos do compartilhamento</h3>
+  <div class="twocol wide">
+    <div class="card"><h4>Vantagens</h4><ul><li>criar, eliminar e trocar threads é muito mais rápido do que fazer o mesmo com processos;</li><li>a comunicação é feita por variáveis na memória compartilhada, sem passar pelo SO;</li><li>menos recursos do sistema são consumidos.</li></ul></div>
+    <div class="card"><h4>Desvantagens</h4><ul><li>não há proteção entre threads do mesmo processo: um pode alterar ou corromper os dados do outro;</li><li>o acesso aos dados compartilhados precisa ser <b>sincronizado</b> (capítulo 7);</li><li>um erro grave em um thread pode derrubar o processo inteiro.</li></ul></div>
+  </div>
+  <div class="lab">
+    <div class="lab-head"><span class="tag">Experimente</span><h4>Dois threads, uma variável</h4></div>
+    <p class="lab-hint">O saldo começa em 1000. O thread T1 deposita 100 e o thread T2 saca 50. O resultado esperado é 1050. Execute passo a passo nas duas situações.</p>
+    <div class="btns" id="rc-mode"><button class="btn sel" data-m="u">Sem sincronização</button><button class="btn" data-m="s">Com sincronização</button></div>
+    <div class="scroll"><table class="race"><thead><tr><th>Passo</th><th>Thread</th><th>Ação</th><th>Saldo na memória</th></tr></thead><tbody id="rc-b"></tbody></table></div>
+    <div class="btns"><button class="btn primary" id="rc-next">Próximo passo</button><button class="btn ghost" id="rc-reset">Recomeçar</button></div>
+    <p class="msg" id="rc-m" aria-live="polite">Saldo inicial: 1000.</p>
+  </div>
+
+  <h3>Onde threads fazem diferença</h3>
+  <p><b>Aplicativos interativos.</b> Em um editor de texto, um thread lê o teclado e coloca os caracteres em um buffer, outro exibe o conteúdo na tela e outro grava periodicamente em disco. Em uma planilha, um thread recalcula as fórmulas enquanto outro continua atendendo o usuário. Nenhuma tarefa precisa esperar a outra.</p>
+  <div class="lab">
+    <div class="lab-head"><span class="tag">Simulador</span><h4>Editor de texto com três threads</h4></div>
+    <p class="lab-hint">Digite no campo. A cada 4 segundos o thread de gravação salva o texto. Depois marque “editor monothread” e digite de novo: agora a gravação trava o teclado.</p>
+    <label class="switch"><input type="checkbox" id="ed-mono"> Editor monothread (um único fluxo faz tudo)</label>
+    <textarea class="edin" id="ed-in" placeholder="Digite aqui..." aria-label="Área de digitação do editor"></textarea>
+    <div class="ed">
+      <div class="pane"><h5><span class="lamp" id="lp-in"></span>Thread de entrada → buffer</h5><div class="out" id="ed-buf"></div></div>
+      <div class="pane"><h5><span class="lamp" id="lp-ex"></span>Thread de exibição → tela</h5><div class="out" id="ed-scr"></div></div>
+      <div class="pane"><h5><span class="lamp" id="lp-gr"></span>Thread de gravação → disco</h5><div class="out dim" id="ed-dsk">nada gravado ainda</div></div>
+    </div>
+    <p class="msg" id="ed-m" aria-live="polite">Modo multithread: digitação, exibição e gravação acontecem ao mesmo tempo.</p>
+  </div>
+  <p><b>Ambientes cliente-servidor.</b> Um servidor de arquivos monothread atenderia um pedido por vez: se um pedido espera o disco, todos os outros esperam. Com threads, cada solicitação é atendida por um thread; enquanto um espera a E/S, os outros continuam atendendo, e criar um thread por pedido é barato.</p>
+  <p><b>Múltiplos processadores.</b> Se o sistema escalona threads, cada um pode executar em um processador diferente. Assim, partes do mesmo programa rodam em <b>paralelo</b>, compartilhando a mesma memória, e a aplicação termina antes.</p>
+  <p><b>Arquitetura microkernel.</b> Nessa arquitetura, os serviços do sistema rodam como processos servidores fora do núcleo. Com threads, cada servidor atende vários pedidos concorrentemente, o que compensa parte do custo da troca de mensagens.</p>
+</section>
+
+<!-- 6.4 -->
+<section class="sec" id="s4">
+  <div class="sec-head"><span class="num">6.4</span><h2>Arquitetura e implementação</h2></div>
+  <p>O conjunto de rotinas que permite a uma aplicação criar, eliminar, escalonar e sincronizar threads é chamado de <dfn>pacote de threads</dfn>. A forma como ele é implementado muda bastante o desempenho, a concorrência e a modularidade das aplicações. Há quatro abordagens, que se diferenciam por <b>quem conhece e gerencia os threads</b>.</p>
+  <div class="scroll wide"><table class="t">
+    <thead><tr><th>Abordagem</th><th>Quem gerencia</th><th>Mapeamento</th></tr></thead>
+    <tbody>
+      <tr><td>Modo usuário (TMU)</td><td>Uma biblioteca da aplicação; o SO não sabe que os threads existem.</td><td>N threads : 1 entidade do núcleo</td></tr>
+      <tr><td>Modo kernel (TMK)</td><td>O próprio núcleo, por chamadas de sistema.</td><td>1 : 1</td></tr>
+      <tr><td>Modo híbrido</td><td>Biblioteca e núcleo: vários TMU sobre cada TMK.</td><td>M : N</td></tr>
+      <tr><td>Scheduler activations</td><td>Biblioteca e núcleo, cooperando e trocando avisos.</td><td>M : N com cooperação</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 id="s4-1">6.4.1 Threads em modo usuário</h3>
+  <p>Os <dfn>threads em modo usuário</dfn> (TMU) são implementados pela própria aplicação, com uma <b>biblioteca de rotinas</b> executada em modo usuário. O sistema operacional não sabe da existência de múltiplos threads: ele enxerga e escalona apenas o processo.</p>
+  <div class="twocol wide">
+    <div class="card"><h4>Vantagens</h4><ul><li>podem ser usados mesmo em SOs que não suportam threads;</li><li>criar, trocar e sincronizar threads não exige chamada ao SO nem mudança de modo: é muito rápido;</li><li>cada aplicação pode ter sua própria política de escalonamento.</li></ul></div>
+    <div class="card"><h4>Desvantagens</h4><ul><li>se um thread faz uma <b>chamada de sistema bloqueante</b> (uma E/S, por exemplo), o SO coloca o <b>processo inteiro</b> em espera, e todos os threads param;</li><li>o SO dá UCP ao processo, não aos threads: <b>não há paralelismo</b> em vários processadores;</li><li>tratar sinais e fazer preempção entre threads fica a cargo da biblioteca, o que é complexo.</li></ul></div>
+  </div>
+
+  <h3 id="s4-2">6.4.2 Threads em modo kernel</h3>
+  <p>Os <dfn>threads em modo kernel</dfn> (TMK) são implementados pelo próprio núcleo, por meio de chamadas de sistema. O SO conhece cada thread e pode escalonar cada um individualmente.</p>
+  <div class="twocol wide">
+    <div class="card"><h4>Vantagens</h4><ul><li>quando um thread fica em espera, os outros threads do processo continuam executando;</li><li>com vários processadores, threads do mesmo processo executam em <b>paralelo</b>.</li></ul></div>
+    <div class="card"><h4>Desvantagens</h4><ul><li><b>desempenho</b>: toda operação com threads (criar, trocar, sincronizar) passa pelo núcleo e exige mudança de modo usuário → kernel → usuário.</li></ul></div>
+  </div>
+  <div class="note"><span class="lbl">Na prática</span><p>Linux e Windows usam essencialmente este modelo: cada thread criado pela aplicação corresponde a um thread do núcleo.</p></div>
+
+  <h3 id="s4-3">6.4.3 Threads em modo híbrido</h3>
+  <p>A arquitetura <dfn>híbrida</dfn> combina as duas anteriores: um processo pode ter vários threads em modo kernel, e cada TMK pode executar vários threads em modo usuário. O programador ganha flexibilidade: pode usar TMK onde precisa de paralelismo e TMU onde precisa de trocas rápidas.</p>
+  <p>O ponto fraco é que o modelo herda problemas das duas abordagens. Por exemplo, quando um TMU faz uma chamada de sistema bloqueante, o TMK que o está executando é bloqueado e, com ele, <b>todos os TMU associados</b> àquele TMK.</p>
+
+  <h3 id="s4-4">6.4.4 Scheduler activations</h3>
+  <p>Proposto no início dos anos 1990 na Universidade de Washington, o <dfn>scheduler activations</dfn> busca reunir o melhor dos modelos anteriores fazendo o <b>núcleo e a biblioteca de threads cooperarem</b>. O núcleo avisa a biblioteca, por uma <i>upcall</i>, sempre que um thread bloqueia ou volta a ficar pronto; a biblioteca, por sua vez, informa ao núcleo quantos processadores precisa. Com essa troca de informações, a biblioteca escalona os threads sem mudanças de modo desnecessárias e, quando um thread bloqueia, simplesmente coloca outro para executar. É essa a vantagem em relação ao modelo híbrido: o bloqueio de um thread não prende os demais.</p>
+
+  <div class="lab wide">
+    <div class="lab-head"><span class="tag">Simulador</span><h4>O que acontece quando um thread pede E/S?</h4></div>
+    <p class="lab-hint">Um processo tem quatro threads e o computador tem dois processadores. Escolha o modelo e clique em “pedir E/S” em um dos threads.</p>
+    <div class="models btns" id="bl-mod"><button class="btn sel" data-m="tmu">Modo usuário</button><button class="btn" data-m="tmk">Modo kernel</button><button class="btn" data-m="hib">Híbrido</button><button class="btn" data-m="sa">Scheduler activations</button></div>
+    <div class="bl">
+      <div class="bl-row"><span>Threads</span><div class="chips" id="bl-th"></div></div>
+      <div class="bl-row"><span>O núcleo vê</span><div class="chips" id="bl-k"></div></div>
+      <div class="bl-row"><span>Paralelismo</span><div id="bl-par" style="font-family:var(--display); font-size:14.5px"></div></div>
+    </div>
+    <div class="btns"><button class="btn ghost" id="bl-reset">Concluir a E/S</button></div>
+    <p class="msg" id="bl-m" aria-live="polite">Escolha um thread e peça uma E/S.</p>
+  </div>
+</section>
+
+<!-- 6.5 -->
+<section class="sec" id="s5">
+  <div class="sec-head"><span class="num">6.5</span><h2>Modelos de programação</h2></div>
+  <p>Desenvolver aplicações multithread não é simples. O livro destaca alguns cuidados:</p>
+  <ul>
+    <li><b>Sincronização.</b> A comunicação e o compartilhamento de recursos entre threads precisam ser sincronizados para evitar inconsistências e <i>deadlocks</i> (capítulo 7).</li>
+    <li><b>Onde e quantos threads.</b> O ganho só aparece se partes do código puderem executar concorrentemente. Uma aplicação puramente sequencial não fica mais rápida com threads, e o número de threads precisa ser bem escolhido.</li>
+    <li><b>Depuração.</b> A ordem de execução dos threads muda a cada execução (não determinismo), então um erro pode aparecer só de vez em quando e ser difícil de reproduzir.</li>
+    <li><b>Padrões.</b> Para portabilidade, usam-se interfaces padronizadas, como o <b>POSIX Threads</b> (Pthreads, IEEE 1003.1c), e bibliotecas preparadas para uso por vários threads (<i>thread-safe</i>).</li>
+  </ul>
+  <pre class="term">#include &lt;pthread.h&gt;
+#include &lt;stdio.h&gt;
+
+void *tarefa(void *arg) {
+    printf("thread %ld executando\n", (long) arg);
+    return NULL;
+}
+
+int main(void) {
+    pthread_t t[3];
+    for (long i = 0; i &lt; 3; i++)
+        pthread_create(&amp;t[i], NULL, tarefa, (void *) i);  <span class="c">// cria os threads</span>
+    for (int i = 0; i &lt; 3; i++)
+        pthread_join(t[i], NULL);                          <span class="c">// espera cada um terminar</span>
+    printf("main terminou\n");
+    return 0;
+}
+<span class="c">// compilar: gcc prog.c -o prog -pthread</span></pre>
+  <div class="lab">
+    <div class="lab-head"><span class="tag">Experimente</span><h4>Execute o programa várias vezes</h4></div>
+    <p class="lab-hint">Cada execução simula uma ordem possível de escalonamento. Observe que a ordem das linhas muda, mas “main terminou” vem sempre por último, por causa do <code>pthread_join</code>.</p>
+    <div class="termbox" id="pt-out" aria-live="polite"></div>
+    <div class="btns"><button class="btn primary" id="pt-run">$ ./prog</button><button class="btn ghost" id="pt-clr">Limpar</button></div>
+  </div>
+  <pre class="term"><span class="c"># no Linux, observando threads</span>
+$ ps -eLf            <span class="c"># coluna LWP: um identificador por thread</span>
+$ top -H             <span class="c"># mostra threads em vez de processos</span>
+$ ls /proc/PID/task  <span class="c"># uma pasta por thread do processo</span></pre>
+</section>
+
+<!-- Exercícios -->
+<section class="sec" id="ex">
+  <div class="sec-head"><span class="num">Exercícios</span><h2>Exercícios de fixação</h2></div>
+  <p>Duas partes: as <b>questões abertas</b> do final do capítulo 6 do livro, para responder por escrito, e <b>questões fechadas</b> com correção imediata.</p>
+
+  <h3 id="ex-a">Parte A · Questões abertas (do livro)</h3>
+  <p class="lab-hint">Responda no caderno antes de abrir o roteiro. O roteiro indica os pontos que a resposta deve cobrir e a seção onde revisar.</p>
+  <ol class="oq wide">
+    <li><p>Como uma aplicação pode implementar concorrência em um ambiente monothread?</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Com vários processos independentes ou subprocessos, cada um com contexto e espaço próprios. <a href="#s2">Seção 6.2</a>.</p></div></details></li>
+    <li><p>Quais os problemas de aplicações concorrentes desenvolvidas em ambientes monothread?</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Consumo de recursos na criação, eliminação e troca de processos; comunicação difícil e lenta, porque os espaços de endereçamento são separados e dependem de mecanismos do SO. <a href="#s2">Seção 6.2</a>.</p></div></details></li>
+    <li><p>O que é um ambiente multithread e quais as vantagens de sua utilização?</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Processo com vários fluxos (threads), cada um com contexto de hardware próprio e compartilhando contexto de software e memória. Vantagens: menor custo de criação e troca, comunicação por memória compartilhada, paralelismo. <a href="#s3">Seção 6.3</a>.</p></div></details></li>
+    <li><p>Explique a diferença entre unidade de alocação de recursos e unidade de escalonamento.</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Processo recebe os recursos; thread é o que o escalonador escolhe para usar a UCP. No monothread os dois papéis eram do processo. <a href="#s3">Seção 6.3</a>.</p></div></details></li>
+    <li><p>Quais as vantagens e desvantagens do compartilhamento do espaço de endereçamento entre threads de um mesmo processo?</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Vantagens: rapidez e comunicação simples. Desvantagens: falta de proteção entre threads e necessidade de sincronização. <a href="#s3">Seção 6.3</a> e o simulador do saldo.</p></div></details></li>
+    <li><p>Compare os pacotes de threads em modo usuário e modo kernel.</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Compare quem gerencia, custo da troca, efeito de uma chamada bloqueante e paralelismo em multiprocessadores. <a href="#s4-1">Seções 6.4.1</a> e <a href="#s4-2">6.4.2</a>.</p></div></details></li>
+    <li><p>Qual a vantagem do scheduler activations comparado ao pacote híbrido?</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>A cooperação entre núcleo e biblioteca: o núcleo avisa quando um thread bloqueia, e a biblioteca escalona outro, sem bloquear os demais e sem mudanças de modo desnecessárias. <a href="#s4-4">Seção 6.4.4</a>.</p></div></details></li>
+    <li><p>Dê exemplos do uso de threads no desenvolvimento de aplicativos, como editores de textos e planilhas eletrônicas.</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Threads de entrada, exibição e gravação no editor; recálculo em segundo plano na planilha; verificação ortográfica, impressão. Use o simulador do editor. <a href="#s3">Seção 6.3</a>.</p></div></details></li>
+    <li><p>Como o uso de threads pode melhorar o desempenho de aplicações paralelas em ambientes com múltiplos processadores?</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Threads conhecidos pelo núcleo podem ser escalonados em processadores diferentes ao mesmo tempo, compartilhando a memória. <a href="#s3">Seções 6.3</a> e <a href="#s4-2">6.4.2</a>.</p></div></details></li>
+    <li><p>Quais os benefícios do uso de threads em ambientes cliente-servidor?</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Um thread por solicitação: vários clientes atendidos concorrentemente; um pedido em espera não trava os outros; criação barata. <a href="#s3">Seção 6.3</a>.</p></div></details></li>
+    <li><p>Como o uso de threads pode ser útil em arquiteturas microkernel?</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Os serviços do SO são processos servidores; com threads, cada servidor atende vários pedidos ao mesmo tempo, com menor custo. <a href="#s3">Seção 6.3</a>.</p></div></details></li>
+  </ol>
+
+  <h3 id="ex-b">Parte B · Questões fechadas</h3>
+  <p class="lab-hint">Escolha uma alternativa: a correção e a explicação aparecem na hora. Cada questão aceita uma única tentativa. As alternativas mudam de ordem a cada vez que você refaz.</p>
+  <div class="score wide" id="qz-score"><span>Acertos <b id="qz-ok">0</b></span><span>Erros <b id="qz-bad">0</b></span><span>Respondidas <b id="qz-n">0</b>/<b id="qz-t">20</b></span><div class="meter"><i class="g" id="qz-mg" style="width:0%"></i><i class="r" id="qz-mr" style="width:0%"></i></div><button class="btn" id="qz-reset">Refazer</button></div>
+  <ol class="qz wide" id="qz"></ol>
+  <div class="final wide" id="qz-final" hidden><h4 id="qz-ft"></h4><p id="qz-fp"></p></div>
+</section>
+
+</main>
+</div>
+<footer class="end">Material de apoio da disciplina de Sistemas Operacionais. Conteúdo e sequência baseados em Machado, F. B.; Maia, L. P. <i>Arquitetura de Sistemas Operacionais</i>, capítulo 6 (Thread). As questões abertas reproduzem os exercícios do capítulo.</footer>
+
+<script>
+(function(){
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+const el = (tag, attrs={}, html='') => { const e=document.createElement(tag); for(const k in attrs){ if(k==='class') e.className=attrs[k]; else e.setAttribute(k, attrs[k]); } if(html) e.innerHTML=html; return e; };
+function setMsg(node, text, kind){ node.textContent = text; node.className = 'msg' + (kind ? ' ' + kind : ''); }
+function flash(id){ const l = $(id); l.classList.add('on'); clearTimeout(l._t); l._t = setTimeout(() => l.classList.remove('on'), 350); }
+
+/* sumário */
+const links = $$('nav.toc a');
+if('IntersectionObserver' in window){
+  const io = new IntersectionObserver(entries => { entries.forEach(en => { if(en.isIntersecting){ links.forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + en.target.id)); } }); }, {rootMargin:'-20% 0px -70% 0px'});
+  $$('main > section').forEach(s => io.observe(s));
+}
+
+/* 6.2 custo de N fluxos */
+(function(){
+  let mode = 'p';
+  const n = $('#fl-n'), out = $('#fl-o'), vis = $('#fl-vis');
+  function render(){
+    const k = +n.value; out.textContent = k; vis.innerHTML = '';
+    if(mode === 'p'){
+      for(let i = 1; i <= k; i++) vis.appendChild(el('div', {class:'mproc'}, `<small>Processo ${i}</small><span class="seg sw">SW</span><span class="seg hw">HW</span><span class="seg ea">Memória</span>`));
+      $('#fl-c1').textContent = k; $('#fl-c2').textContent = k; $('#fl-c3').textContent = k; $('#fl-c4').textContent = k > 1 ? 'via SO' : '—';
+    } else {
+      const hw = Array.from({length:k}, (_, i) => `<span class="seg hw">T${i+1} · HW</span>`).join('');
+      vis.appendChild(el('div', {class:'bigproc'}, `<span class="seg sw">Contexto de software · compartilhado</span><div class="hwrow">${hw}</div><span class="seg ea">Espaço de endereçamento · compartilhado</span>`));
+      $('#fl-c1').textContent = 1; $('#fl-c2').textContent = 1; $('#fl-c3').textContent = k; $('#fl-c4').textContent = k > 1 ? 'memória' : '—';
+    }
+  }
+  n.addEventListener('input', render);
+  $$('#fl-mode .btn').forEach(b => b.addEventListener('click', () => { mode = b.dataset.m; $$('#fl-mode .btn').forEach(x => x.classList.toggle('sel', x === b)); render(); }));
+  render();
+})();
+
+/* 6.3 condição de corrida */
+(function(){
+  const U = [
+    ['T1','lê o saldo',1000,'1000 (T1 guardou 1000)'],
+    ['T2','lê o saldo',1000,'1000 (T2 guardou 1000)'],
+    ['T1','calcula 1000 + 100 = 1100',1000,'1000'],
+    ['T2','calcula 1000 − 50 = 950',1000,'1000'],
+    ['T1','grava 1100',1100,'1100'],
+    ['T2','grava 950',950,'950']
+  ];
+  const S = [
+    ['T1','bloqueia o acesso ao saldo',1000,'1000'],
+    ['T1','lê 1000, calcula 1100 e grava',1100,'1100'],
+    ['T1','libera o acesso',1100,'1100'],
+    ['T2','bloqueia o acesso ao saldo',1100,'1100'],
+    ['T2','lê 1100, calcula 1050 e grava',1050,'1050'],
+    ['T2','libera o acesso',1050,'1050']
+  ];
+  let mode = 'u', i = 0; const tb = $('#rc-b');
+  function reset(){ i = 0; tb.innerHTML = ''; $('#rc-next').disabled = false; setMsg($('#rc-m'), 'Saldo inicial: 1000.'); }
+  $('#rc-next').addEventListener('click', () => {
+    const L = mode === 'u' ? U : S; const s = L[i++];
+    tb.appendChild(el('tr', {}, `<td>${i}</td><td class="${s[0] === 'T1' ? 't1' : 't2'}">${s[0]}</td><td>${s[1]}</td><td>${s[3]}</td>`));
+    if(i === L.length){
+      $('#rc-next').disabled = true;
+      if(mode === 'u') setMsg($('#rc-m'), 'Saldo final 950, mas o certo seria 1050: o depósito de T1 foi perdido. Os dois threads leram o saldo antes de qualquer um gravar.', 'bad');
+      else setMsg($('#rc-m'), 'Saldo final 1050, correto. Com sincronização, T2 só lê o saldo depois que T1 terminou de atualizá-lo.', 'ok');
+    } else setMsg($('#rc-m'), `Passo ${i} de ${L.length}.`);
+  });
+  $('#rc-reset').addEventListener('click', reset);
+  $$('#rc-mode .btn').forEach(b => b.addEventListener('click', () => { mode = b.dataset.m; $$('#rc-mode .btn').forEach(x => x.classList.toggle('sel', x === b)); reset(); }));
+  reset();
+})();
+
+/* 6.3 editor */
+(function(){
+  const inp = $('#ed-in'), mono = $('#ed-mono'); let saved = '', saving = false;
+  const now = () => new Date().toLocaleTimeString('pt-BR');
+  inp.addEventListener('input', () => {
+    flash('#lp-in'); $('#ed-buf').textContent = inp.value;
+    setTimeout(() => { flash('#lp-ex'); $('#ed-scr').textContent = inp.value; }, 60);
+  });
+  function save(){
+    if(inp.value === saved || saving) return;
+    if(mono.checked){
+      saving = true; inp.disabled = true; flash('#lp-gr');
+      setMsg($('#ed-m'), 'Monothread: gravando em disco... o único fluxo está ocupado, então o teclado não responde.', 'bad');
+      setTimeout(() => { saved = inp.value; $('#ed-dsk').textContent = saved + '\n— gravado às ' + now(); $('#ed-dsk').classList.remove('dim'); inp.disabled = false; saving = false; inp.focus(); setMsg($('#ed-m'), 'Gravação terminou; o teclado voltou a responder.'); }, 1800);
+    } else {
+      flash('#lp-gr'); saved = inp.value; $('#ed-dsk').textContent = saved + '\n— gravado às ' + now(); $('#ed-dsk').classList.remove('dim');
+      setMsg($('#ed-m'), 'Multithread: o thread de gravação salvou o texto e você continuou digitando normalmente.', 'ok');
+    }
+  }
+  setInterval(save, 4000);
+  mono.addEventListener('change', () => setMsg($('#ed-m'), mono.checked ? 'Modo monothread: a cada gravação, digitação e exibição param até o disco terminar.' : 'Modo multithread: digitação, exibição e gravação acontecem ao mesmo tempo.'));
+  inp.value = 'Sistemas operacionais'; inp.dispatchEvent(new Event('input'));
+})();
+
+/* 6.4 bloqueio por modelo */
+(function(){
+  const names = {tmu:'modo usuário', tmk:'modo kernel', hib:'híbrido', sa:'scheduler activations'};
+  const kmap = {1:'K1', 2:'K1', 3:'K2', 4:'K2'};
+  let mode = 'tmu', st = {};
+  const label = {exec:'executando', pronto:'pronto', bloq:'esperando a E/S', parado:'parado sem motivo próprio'};
+  function base(){ st = {1:'exec', 2:'exec', 3:'pronto', 4:'pronto'}; if(mode === 'tmu'){ st[2] = 'pronto'; } }
+  function render(){
+    const th = $('#bl-th'); th.innerHTML = '';
+    [1,2,3,4].forEach(i => {
+      const extra = mode === 'hib' ? ` · sobre ${kmap[i]}` : '';
+      const c = el('div', {class:'th ' + st[i]}, `<b>T${i}${extra}</b><small>${label[st[i]]}</small>`);
+      const b = el('button', {type:'button'}, 'pedir E/S'); b.disabled = st[i] !== 'exec' && st[i] !== 'pronto';
+      b.addEventListener('click', () => io(i)); c.appendChild(b); th.appendChild(c);
+    });
+    const k = $('#bl-k');
+    const ents = mode === 'tmu' ? ['Processo P (1 entidade)'] : mode === 'tmk' ? ['K1','K2','K3','K4'] : mode === 'hib' ? ['K1 (T1, T2)','K2 (T3, T4)'] : ['K1','K2','+ avisos (upcalls) à biblioteca'];
+    k.innerHTML = ents.map(e => `<span class="kent">${e}</span>`).join('');
+    $('#bl-par').innerHTML = mode === 'tmu' ? '1 thread por vez: o SO dá a UCP ao processo, não aos threads.' : '2 threads ao mesmo tempo, um em cada processador.';
+  }
+  function io(i){
+    base();
+    const others = [1,2,3,4].filter(x => x !== i);
+    st[i] = 'bloq';
+    let text, kind = 'ok';
+    if(mode === 'tmu'){ others.forEach(x => st[x] = 'parado'); kind = 'bad'; text = `O SO não conhece os threads: a E/S de T${i} é uma chamada bloqueante do processo, e o processo inteiro vai para espera. ${others.map(x => 'T' + x).join(', ')} param junto, mesmo prontos.`; }
+    else if(mode === 'tmk'){ const run = others.slice(0,2); run.forEach(x => st[x] = 'exec'); others.slice(2).forEach(x => st[x] = 'pronto'); text = `Só T${i} vai para espera. O núcleo escalona ${run.map(x => 'T' + x).join(' e ')} nos dois processadores. Custo: cada troca passou por chamada ao SO.`; }
+    else if(mode === 'hib'){ const sib = others.filter(x => kmap[x] === kmap[i]); const rest = others.filter(x => kmap[x] !== kmap[i]); sib.forEach(x => st[x] = 'parado'); st[rest[0]] = 'exec'; st[rest[1]] = 'pronto'; kind = 'bad'; text = `T${i} roda sobre ${kmap[i]}; a chamada bloqueante bloqueia ${kmap[i]} e, com ele, ${sib.map(x => 'T' + x).join(', ')}. Os threads do outro TMK continuam.`; }
+    else { const run = others.slice(0,2); run.forEach(x => st[x] = 'exec'); others.slice(2).forEach(x => st[x] = 'pronto'); text = `O núcleo avisa a biblioteca (upcall) que T${i} bloqueou e devolve o processador. A biblioteca coloca ${run.map(x => 'T' + x).join(' e ')} para executar. Ninguém fica preso.`; }
+    render(); setMsg($('#bl-m'), text, kind);
+  }
+  $$('#bl-mod .btn').forEach(b => b.addEventListener('click', () => { mode = b.dataset.m; $$('#bl-mod .btn').forEach(x => x.classList.toggle('sel', x === b)); base(); render(); setMsg($('#bl-m'), `Modelo: ${names[mode]}. Escolha um thread e peça uma E/S.`); }));
+  $('#bl-reset').addEventListener('click', () => { base(); render(); setMsg($('#bl-m'), 'E/S concluída: todos os threads podem voltar a executar.'); });
+  base(); render();
+})();
+
+/* 6.5 pthreads */
+(function(){
+  const out = $('#pt-out');
+  const line = (h, c) => out.appendChild(el('div', c ? {class:c} : {}, h));
+  function clr(){ out.innerHTML = ''; line('aluno@ifal:~$ <span class="cursor"></span>', 'pr'); }
+  $('#pt-run').addEventListener('click', () => {
+    $$('.pr', out).forEach(p => p.remove());
+    line('aluno@ifal:~$ ./prog');
+    const ord = [0,1,2]; for(let i = 2; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [ord[i], ord[j]] = [ord[j], ord[i]]; }
+    ord.forEach(k => line('thread ' + k + ' executando'));
+    line('main terminou');
+    line('<span class="c"># ordem desta execução: ' + ord.join(', ') + '</span>');
+    line('aluno@ifal:~$ <span class="cursor"></span>', 'pr');
+  });
+  $('#pt-clr').addEventListener('click', clr); clr();
+})();
+
+/* questões fechadas */
+(function(){
+  const Q = [
+    {q:'Em um ambiente monothread, como uma aplicação implementa concorrência?', a:['Com múltiplos processos independentes ou subprocessos.','Com vários threads dentro do mesmo processo.','Com scheduler activations.','Com uma única sub-rotina assíncrona.','Com interrupções geradas pelo hardware.'], c:0, e:'No monothread cada processo tem um único fluxo; para ter concorrência é preciso criar mais processos.'},
+    {q:'Qual é o principal problema de usar processos para implementar concorrência?', a:['O consumo de recursos na criação, eliminação e troca, e a comunicação lenta via SO.','A impossibilidade de usar a UCP.','A falta de proteção de memória entre os processos.','O fato de processos não poderem ser escalonados.','Só funcionarem em computadores com vários processadores.'], c:0, e:'Cada processo exige PCB, memória e recursos próprios, e os espaços separados obrigam a comunicação a passar pelo SO.'},
+    {q:'No ambiente monothread, processos se comunicam por meio de:', a:['mecanismos do SO, como pipes, sinais, semáforos, memória compartilhada ou mensagens.','leitura direta das variáveis do outro processo.','cópia dos registradores da UCP.','alteração do contador de programa do outro processo.','nenhum mecanismo: processos não se comunicam.'], c:0, e:'Como os espaços de endereçamento são separados, um processo não enxerga as variáveis do outro.'},
+    {q:'Um thread pode ser definido como:', a:['uma sub-rotina do programa executada de forma assíncrona, concorrentemente, dentro do processo.','um processo filho com espaço de endereçamento próprio.','o arquivo executável do programa.','uma interrupção de software.','uma biblioteca de E/S.'], c:0, e:'O programa principal cria o thread e segue executando sem esperar a sub-rotina terminar.'},
+    {q:'O que cada thread possui de forma exclusiva?', a:['Contexto de hardware.','Espaço de endereçamento.','Contexto de software.','Quotas de recursos.','Lista de arquivos abertos.'], c:0, e:'Cada thread tem PC, SP e registradores próprios; o resto é do processo.'},
+    {q:'Threads de um mesmo processo compartilham:', a:['o contexto de software e o espaço de endereçamento.','apenas os registradores.','o contador de programa.','a pilha e o apontador de pilha.','nada: cada thread tem tudo próprio.'], c:0, e:'Por isso criar e trocar threads é mais barato e a comunicação é feita pela memória.'},
+    {q:'Em um ambiente multithread, a unidade de escalonamento é:', a:['o thread.','o processo.','o programa executável.','o arquivo.','a página de memória.'], c:0, e:'O escalonador escolhe threads para usar a UCP.'},
+    {q:'Em um ambiente multithread, a unidade de alocação de recursos é:', a:['o processo.','o thread.','a UCP.','o escalonador.','a biblioteca de threads.'], c:0, e:'Memória, arquivos, quotas e privilégios pertencem ao processo e são compartilhados pelos threads.'},
+    {q:'Quais estados um thread pode assumir?', a:['Execução, pronto e espera, como um processo.','Apenas execução.','Ativo e inativo.','Usuário e kernel.','Criado e destruído, somente.'], c:0, e:'Como tem contexto de hardware próprio, o thread é escalonado e muda de estado como um processo.'},
+    {q:'Qual é uma desvantagem do compartilhamento do espaço de endereçamento entre threads?', a:['Não há proteção: um thread pode alterar dados de outro, o que exige sincronização.','A comunicação entre threads fica mais lenta.','O consumo de memória aumenta muito.','Impede o paralelismo em multiprocessadores.','As trocas de contexto ficam mais caras.'], c:0, e:'O SO não protege um thread do outro dentro do mesmo processo; o programa precisa sincronizar o acesso.'},
+    {q:'Em um editor com threads de entrada, exibição e gravação, qual o benefício?', a:['O usuário continua digitando enquanto o texto é exibido e gravado.','O arquivo é gravado sem uso do SO.','O editor passa a não precisar de memória.','O buffer deixa de ser necessário.','As operações de E/S deixam de existir.'], c:0, e:'Cada tarefa tem seu fluxo; a gravação em disco não trava a digitação.'},
+    {q:'Em um servidor de arquivos multithread:', a:['cada pedido é atendido por um thread; enquanto um espera o disco, os outros continuam atendendo.','os clientes são atendidos um de cada vez.','cada pedido gera um novo processo com espaço próprio.','não há acesso a disco.','um pedido em espera bloqueia todo o servidor.'], c:0, e:'Threads permitem atender vários clientes concorrentemente com baixo custo de criação.'},
+    {q:'Em um computador com vários processadores, threads podem:', a:['executar em paralelo, em processadores diferentes, se forem conhecidos pelo núcleo.','executar apenas um por vez, sempre.','ser usados apenas em modo usuário.','dispensar o escalonador.','executar somente se forem de processos diferentes.'], c:0, e:'Com threads de kernel, o SO distribui threads do mesmo processo entre os processadores.'},
+    {q:'Threads em modo usuário (TMU) são:', a:['implementados por uma biblioteca da aplicação, sem que o SO saiba de sua existência.','criados e escalonados pelo núcleo.','exclusivos de sistemas microkernel.','processos com espaços de endereçamento separados.','implementados em hardware.'], c:0, e:'O SO enxerga só o processo; a biblioteca faz a gerência dos threads.'},
+    {q:'Com threads em modo usuário, quando um thread faz uma chamada de sistema bloqueante:', a:['o processo inteiro fica bloqueado, e todos os threads param.','só aquele thread é bloqueado.','o SO cria um novo thread automaticamente.','a biblioteca migra o thread para outro processador.','nada acontece.'], c:0, e:'Como o SO só conhece o processo, é o processo que vai para espera.'},
+    {q:'Qual a principal desvantagem dos threads em modo kernel?', a:['Desempenho: as operações com threads exigem chamadas ao SO e mudanças de modo.','Um bloqueio para o processo inteiro.','Não permitem paralelismo.','O SO não conhece os threads.','Só funcionam em sistemas monothread.'], c:0, e:'Criar, trocar e sincronizar threads passa pelo núcleo, o que é mais lento.'},
+    {q:'No modelo híbrido:', a:['um processo pode ter vários TMK, e cada TMK pode executar vários TMU.','cada processo tem um único thread.','o núcleo desconhece todos os threads.','cada TMU tem seu próprio espaço de endereçamento.','não existe biblioteca de threads.'], c:0, e:'É a combinação M:N de threads de usuário sobre threads de kernel.'},
+    {q:'Qual é um problema herdado pelo modelo híbrido?', a:['Um TMU que faz chamada bloqueante bloqueia o TMK e todos os TMU associados a ele.','A impossibilidade de paralelismo.','A falta de uma biblioteca em modo usuário.','O SO não conseguir escalonar nenhum thread.','O fim do compartilhamento de memória.'], c:0, e:'O bloqueio atinge o TMK inteiro, levando junto os outros TMU daquele TMK.'},
+    {q:'No scheduler activations:', a:['núcleo e biblioteca trocam informações; o núcleo avisa quando um thread bloqueia, e a biblioteca escalona outro.','o núcleo desconhece os threads, como no modo usuário.','cada thread vira um processo.','não há biblioteca em modo usuário.','os threads não podem executar em paralelo.'], c:0, e:'Essa cooperação evita mudanças de modo desnecessárias e o bloqueio em cascata do híbrido.'},
+    {q:'Sobre o desenvolvimento de aplicações multithread, é correto afirmar:', a:['exige sincronizar o acesso aos dados compartilhados, e a depuração é difícil pela execução não determinística.','qualquer aplicação sequencial fica mais rápida com threads.','não há risco de deadlock entre threads.','a ordem de execução dos threads é sempre a mesma.','dispensa bibliotecas ou interfaces padronizadas.'], c:0, e:'Por isso existem padrões como o POSIX Threads e o capítulo 7 trata de sincronização.'}
+  ];
+  const ol = $('#qz'); const L = 'ABCDE'; let ok = 0, bad = 0;
+  $('#qz-t').textContent = Q.length;
+  function update(){
+    const n = ok + bad;
+    $('#qz-ok').textContent = ok; $('#qz-bad').textContent = bad; $('#qz-n').textContent = n;
+    $('#qz-mg').style.width = (ok / Q.length * 100) + '%'; $('#qz-mr').style.width = (bad / Q.length * 100) + '%';
+    const fin = $('#qz-final');
+    if(n === Q.length){
+      const pct = Math.round(ok / Q.length * 100);
+      $('#qz-ft').textContent = `Você acertou ${ok} de ${Q.length} (${pct}%).`;
+      $('#qz-fp').textContent = pct >= 80 ? 'Ótimo domínio do capítulo. Tente agora responder as questões abertas sem consultar o texto.' : pct >= 60 ? 'Bom resultado. Releia as explicações das questões que errou e as seções indicadas.' : 'Vale revisar o capítulo: releia as seções das questões erradas, use os simuladores e clique em Refazer.';
+      fin.hidden = false;
+    } else fin.hidden = true;
+  }
+  function build(){
+    ol.innerHTML = ''; ok = 0; bad = 0;
+    const shuf = n => { const r = [...Array(n).keys()]; for(let i = n - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [r[i], r[j]] = [r[j], r[i]]; } return r; };
+    const cur = Q.map(it => { const idx = shuf(it.a.length); return {...it, a: idx.map(i => it.a[i]), c: idx.indexOf(it.c)}; });
+    window.__Q = cur;
+    cur.forEach((it) => {
+      const li = el('li');
+      li.appendChild(el('div', {class:'qh'}, `<p>${it.q}</p>`));
+      const alts = el('div', {class:'alts'});
+      it.a.forEach((txt, j) => {
+        const b = el('button', {type:'button', class:'alt'}, `<span class="k">${L[j]}</span><span>${txt}</span>`);
+        b.addEventListener('click', () => {
+          const right = j === it.c;
+          $$('.alt', alts).forEach((x, k) => { x.disabled = true; if(k === it.c) x.classList.add('right'); });
+          if(!right) b.classList.add('wrong');
+          right ? ok++ : bad++;
+          li.appendChild(el('p', {class:'fb ' + (right ? 'ok' : 'bad'), role:'status'}, `<b>${right ? 'Correto!' : 'Incorreto.'}</b> ${right ? '' : 'A resposta certa é ' + L[it.c] + '. '}${it.e}`));
+          update();
+        });
+        alts.appendChild(b);
+      });
+      li.appendChild(alts); ol.appendChild(li);
+    });
+    update();
+  }
+  $('#qz-reset').addEventListener('click', () => { build(); $('#ex-b').scrollIntoView({behavior:'smooth'}); });
+  build();
+})();
+})();
+</script>
+</body></html>
