@@ -40,6 +40,19 @@ function iconePasta(nome){
   return ICONE.pasta;
 }
 
+/* Logomarca no topo: <a class="marca" data-fundo="claro|escuro"></a>
+   Se o arquivo da logo não for encontrado, aparece a sigla "IFAL". */
+function marcaHTML(fundo){
+  const escuro = fundo === "escuro", claro = SITE.logoClaro;
+  const src = escuro && claro ? claro : SITE.logo;
+  const placa = escuro && !claro ? " placa" : (!escuro && !claro ? " placa-escuro" : "");
+  const fonteEscura = !escuro && claro ? `<source srcset="${esc(claro)}" media="(prefers-color-scheme: dark)">` : "";
+  return `<span class="marca-logo${placa}"><picture>${fonteEscura}<img src="${esc(src)}" alt="Instituto Federal de Alagoas" onerror="this.closest('.marca-logo').outerHTML='<span class=&quot;marca-sigla&quot;>IFAL</span>'"></picture></span>
+    <span class="marca-div" aria-hidden="true"></span>
+    <span class="marca-nome"><b data-site="titulo"></b><small data-site="instituicao"></small></span>`;
+}
+document.querySelectorAll("a.marca").forEach(el => { el.innerHTML = marcaHTML(el.dataset.fundo); el.setAttribute("aria-label", SITE.titulo + " — página inicial"); });
+
 /* Preenche os elementos marcados com data-site="titulo", "autor" etc. */
 document.querySelectorAll("[data-site]").forEach(el => el.textContent = SITE[el.dataset.site] ?? "");
 

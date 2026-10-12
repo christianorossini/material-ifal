@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Materiais de Aula</title>
+<!-- TEMPLATE 3 · CARTÕES E ABAS — o conteúdo fica em conteudo.js -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="base.css">
+<style>
+  .barra{background:var(--marca-900);color:#fff}
+  .barra .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:64px;flex-wrap:wrap}
+  .barra .marca-div{background:rgba(255,255,255,.3)}
+  .barra .marca-nome b{color:#fff}
+  .barra .marca-sigla{background:#fff;color:var(--marca-900);box-shadow:inset 0 -3px 0 var(--marca-500)}
+  .barra .marca-nome small{color:rgba(255,255,255,.72)}
+  .areas{display:flex;gap:4px;list-style:none;margin:0;padding:0;overflow-x:auto}
+  .areas a{display:block;white-space:nowrap;padding:7px 14px;border-radius:999px;color:rgba(255,255,255,.82);text-decoration:none;font-size:14px;font-weight:500}
+  .areas a:hover{color:#fff;background:rgba(255,255,255,.1)}
+  .areas a.ativo{background:#fff;color:var(--marca-900)}
+
+  .hero{background:var(--marca-700);color:#fff;padding:48px 0 0;position:relative;overflow:hidden}
+  .hero::after{content:"";position:absolute;right:-120px;top:-160px;width:460px;height:460px;border-radius:50%;border:64px solid rgba(255,255,255,.05);pointer-events:none}
+  .hero .sobretitulo{color:#CFE7C2}
+  .hero .titulo-pag{color:#fff}
+  .hero .desc-pag{color:rgba(255,255,255,.86)}
+  .hero .trilha,.hero .trilha a{color:rgba(255,255,255,.72)}
+  .hero .trilha a:hover{color:#fff}
+  .hero-corpo{padding-bottom:40px;position:relative;z-index:1}
+  .hero.com-abas .hero-corpo{padding-bottom:28px}
+  .abas{display:flex;gap:2px;list-style:none;margin:0;padding:0;overflow-x:auto;position:relative;z-index:1}
+  .abas a{display:block;white-space:nowrap;padding:12px 16px;color:rgba(255,255,255,.78);text-decoration:none;font-size:14px;font-weight:500;border-radius:8px 8px 0 0}
+  .abas a:hover{color:#fff;background:rgba(255,255,255,.08)}
+  .abas a.ativo{background:var(--fundo);color:var(--txt);font-weight:600}
+
+  main.wrap{padding-top:32px}
+  /* pastas lado a lado dentro do assunto */
+  .pastas{grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px;padding:8px}
+  .pasta{border:1px solid var(--linha);border-radius:var(--raio-sm);background:var(--fundo);padding:0 0 6px}
+  .pasta-h{padding:12px 14px 6px}
+  .pasta .mats{padding:0 6px}
+  .pasta .mat:hover{background:var(--sup)}
+  .assunto-corpo{padding:4px}
+  .home-cartoes{margin-top:-24px;position:relative;z-index:2}
+  .area{background:var(--sup);border:1px solid var(--linha);border-radius:14px;padding:24px;box-shadow:var(--sombra-2)}
+  .area+.area{margin-top:20px}
+  .area .cartoes{grid-template-columns:repeat(auto-fill,minmax(min(100%,220px),1fr))}
+  .area .cartao{box-shadow:none;background:var(--fundo)}
+  .area .cartao:hover{background:var(--sup)}
+
+  @media (max-width:640px){
+    .barra .wrap{padding-top:10px;padding-bottom:10px}
+    .barra nav{width:100%}
+    .hero{padding-top:32px}
+    .area{padding:18px}
+  }
+</style>
+</head>
+<body>
+<header class="barra">
+  <div class="wrap">
+    <a class="marca" href="#" data-fundo="escuro"></a>
+    <nav aria-label="Áreas"><ul class="areas" id="areas"></ul></nav>
+  </div>
+</header>
+<div id="conteudo"></div>
+<footer class="rodape"><div class="wrap"><span data-site="aviso"></span><span data-site="autor"></span></div></footer>
+
+<script src="conteudo.js"></script>
+<script src="comum.js"></script>
+<script>
+$("areas").innerHTML = `<li><a href="#" data-id="">Início</a></li>` + MENU.map(a => `<li><a href="#${esc(a.id)}" data-id="${esc(a.id)}">${esc(a.titulo)}</a></li>`).join("");
+const trilha = (...p) => `<nav class="trilha" aria-label="Você está em"><a href="#">Início</a>${p.map(x => `<span class="sep">/</span>${x}`).join("")}</nav>`;
+
+iniciar(({ area, disc, assunto }) => {
+  let h;
+  if (area) {
+    const d = disc || area.disciplinas[0];
+    h = `<section class="hero com-abas"><div class="wrap"><div class="hero-corpo">${trilha(`<a href="#${esc(area.id)}">${esc(area.titulo)}</a>`, `<span>${esc(d.titulo)}</span>`)}
+          <p class="sobretitulo">${esc(area.titulo)}</p><h1 class="titulo-pag">${esc(d.titulo)}</h1><p class="desc-pag">${esc(d.descricao)}</p></div>
+        <ul class="abas" role="tablist">${area.disciplinas.map(x => `<li><a href="#${esc(area.id)}/${esc(x.id)}" class="${x === d ? "ativo" : ""}" ${x === d ? 'aria-current="page"' : ""}>${esc(x.titulo)}</a></li>`).join("")}</ul></div></section>
+      <main class="wrap">${barraHTML(d)}${assuntosHTML(area, d, disc === d ? assunto : null)}</main>`;
+  } else {
+    h = `<section class="hero"><div class="wrap hero-corpo" style="padding-bottom:64px"><p class="sobretitulo">${esc(SITE.instituicao)}</p><h1 class="titulo-pag">${esc(SITE.titulo)}</h1>
+        <p class="desc-pag">Apresentações, exercícios, experimentos e apostilas, organizados por disciplina e assunto. Disciplinas ministradas pelo ${esc(SITE.autor)}.</p></div></section>
+      <main class="wrap home-cartoes" style="padding-top:0">${MENU.map(a => `<section class="area"><div class="area-h"><h2>${esc(a.titulo)}</h2><a href="#${esc(a.id)}">Abrir área →</a></div>
+        <p class="area-d">${esc(a.descricao)}</p><div class="cartoes">${a.disciplinas.map(d => cartaoHTML(a, d)).join("")}</div></section>`).join("")}</main>`;
+  }
+  $("conteudo").innerHTML = h;
+  document.querySelectorAll(".areas a").forEach(a => a.classList.toggle("ativo", a.dataset.id === (area ? area.id : "")));
+});
+</script>
+</body>
+</html>

@@ -13,6 +13,12 @@
   .app{display:grid;grid-template-columns:288px minmax(0,1fr);min-height:100vh}
   .lateral{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;background:var(--sup);border-right:1px solid var(--linha)}
   .lateral-topo{padding:20px 20px 16px;border-bottom:1px solid var(--linha)}
+  .lateral-topo{padding:24px 20px 20px}
+  .lateral-topo .marca{flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px;width:100%}
+  .lateral-topo .marca-div{display:none}
+  .lateral-topo .marca-logo img{height:80px;max-width:230px}
+  .lateral-topo .marca-nome{align-items:center}
+  .lateral-topo .marca-nome b{font-size:16px}
   .lateral nav{flex:1;overflow:auto;padding:12px}
   .lateral-pe{padding:14px 20px;border-top:1px solid var(--linha);font-size:12px;color:var(--txt-3)}
   .lk{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--raio-sm);color:var(--txt-2);text-decoration:none;font-size:14px;font-weight:500}
@@ -55,12 +61,12 @@
 </head>
 <body>
 <div class="topo-movel">
-  <a class="marca" href="#"><span class="marca-sigla">MA</span><span class="marca-nome"><b data-site="titulo"></b><small data-site="instituicao"></small></span></a>
+  <a class="marca" href="#" data-fundo="claro"></a>
   <button id="hamb" aria-label="Abrir menu" aria-expanded="false"></button>
 </div>
 <div class="app">
   <aside class="lateral" id="lateral">
-    <div class="lateral-topo"><a class="marca" href="#"><span class="marca-sigla">MA</span><span class="marca-nome"><b data-site="titulo"></b><small data-site="instituicao"></small></span></a></div>
+    <div class="lateral-topo"><a class="marca" href="#" data-fundo="claro"></a></div>
     <nav aria-label="Áreas e disciplinas" id="arvore"></nav>
     <div class="lateral-pe" data-site="autor"></div>
   </aside>

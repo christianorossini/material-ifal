@@ -29,9 +29,19 @@
 
 const SITE = {
   titulo: "Materiais de Aula",
-  autor: "Prof. Christiano Rossini Martins Costa",
+  autor: "Prof. Christiano Rossini",
   instituicao: "IFAL · Campus Maceió",
-  aviso: "Dúvidas sobre os materiais? Fale com o professor em sala ou pelo SUAP."
+  aviso: "Dúvidas sobre os materiais? Fale com o professor em sala ou pelo Classroom.",
+
+  /* LOGOMARCA DO IFAL
+     Coloque o arquivo da logomarca oficial na pasta "img" do repositório.
+     • logo:      versão colorida (usada sobre fundo branco)
+     • logoClaro: versão branca/negativa (usada sobre fundo verde e no tema
+                  escuro). Se deixar vazio, a logo colorida aparece sobre
+                  uma placa branca.
+     Formatos aceitos: .svg (recomendado) ou .png com fundo transparente. */
+  logo: "img/logo-ifal2.png",
+  logoClaro: ""
 };
 
 const MENU = [
@@ -93,69 +103,21 @@ const MENU = [
           }
         ]
       },
-
-      {
-        id: "editor-de-texto",
-        titulo: "Editor de Texto",
-        descricao: "LibreOffice Writer e Word: formatação, estilos e documentos acadêmicos.",
-        assuntos: [
-          {
-            id: "formatacao",
-            titulo: "Formatação de texto e parágrafo",
-            pastas: [
-              { nome: "Apresentações", itens: [ { titulo: "Aula 01 · Formatação", tipo: "PPTX", link: "" } ]},
-              { nome: "Exercícios",    itens: [ { titulo: "Exercício · Currículo", tipo: "DOCX", link: "" } ]}
-            ]
-          },
-          {
-            id: "estilos",
-            titulo: "Estilos, sumário e numeração",
-            pastas: [
-              { nome: "Apresentações", itens: [ { titulo: "Aula 02 · Estilos e sumário", tipo: "PPTX", link: "" } ]},
-              { nome: "Exercícios",    itens: [ { titulo: "Exercício · Relatório técnico", tipo: "DOCX", link: "" } ]}
-            ]
-          }
-        ]
-      },
-
-      {
-        id: "power-point",
-        titulo: "Power Point",
-        descricao: "LibreOffice Impress e PowerPoint: apresentações claras e objetivas.",
-        assuntos: [
-          {
-            id: "criando-apresentacoes",
-            titulo: "Criando uma apresentação",
-            pastas: [
-              { nome: "Apresentações", itens: [ { titulo: "Aula 01 · Primeiros slides", tipo: "PPTX", link: "" } ]},
-              { nome: "Exercícios",    itens: [ { titulo: "Exercício · Apresentação de um tema técnico", tipo: "PPTX", link: "" } ]}
-            ]
-          }
-        ]
-      },
-
+      
       {
         id: "windows",
         titulo: "Windows",
         descricao: "Windows 11: interface, janelas, arquivos, pastas e programas.",
         assuntos: [
+          
           {
-            id: "interface",
-            titulo: "Interface, mouse e teclado",
-            pastas: [
-              { nome: "Apresentações", itens: [ { titulo: "Aula 01 · Interface do Windows 11", tipo: "PPTX", link: "" } ]},
-              { nome: "Apostilas",     itens: [ { titulo: "Apostila Windows 11 — Capítulos 1 e 2", tipo: "PDF", link: "" } ]}
+            id: "Windows-basico",
+            titulo: "Windows básico",
+            pastas: [              
+              { nome: "Apostilas",     itens: [ { titulo: "Apostila Windows 11", tipo: "HTML", link: "ibasica/windows/apostila-windows-basico.html" } ]}
             ]
           },
-          {
-            id: "arquivos-e-pastas",
-            titulo: "Arquivos, pastas e extensões",
-            pastas: [
-              { nome: "Apresentações", itens: [ { titulo: "Aula 02 · Hierarquia de arquivos", tipo: "PPTX", link: "" } ]},
-              { nome: "Experimentos",  itens: [ { titulo: "Experimento · Organizando pastas no laboratório", tipo: "PDF", link: "" } ]},
-              { nome: "Apostilas",     itens: [ { titulo: "Apostila Windows 11 — Capítulos 4 a 6", tipo: "PDF", link: "" } ]}
-            ]
-          }
+          
         ]
       }
     ]
@@ -173,36 +135,86 @@ const MENU = [
         descricao: "Processos, threads, escalonamento, memória e sistemas de arquivos.",
         assuntos: [
           {
-            id: "introducao",
-            titulo: "Introdução aos Sistemas Operacionais",
-            descricao: "Conceitos, funções e estrutura de um SO.",
-            pastas: [
-              { nome: "Apresentações", itens: [ { titulo: "Aula 01 · O que é um sistema operacional", tipo: "PPTX", link: "" } ]},
-              { nome: "Experimentos",  itens: [ { titulo: "Experimento 01 · Terminal Linux", descricao: "Comandos básicos e navegação", tipo: "PDF", link: "" } ]}
-            ]
-          },
-          {
             id: "processos-e-threads",
-            titulo: "Processos e Threads",
+            titulo: "Processos, Threads e Comunicação/Sincronização",
             descricao: "Ciclo de vida, PCB, troca de contexto e threads.",
             pastas: [
-              { nome: "Apresentações", itens: [ { titulo: "Aula 02 · Processos e Threads", tipo: "PPTX", link: "" } ]},
-              { nome: "Experimentos",  itens: [ { titulo: "Experimento 02 · Gerenciando processos", descricao: "ps, top, kill e sinais", tipo: "PDF", link: "" } ]},
-              { nome: "Exercícios",    itens: [ { titulo: "Lista 01 · Processos", tipo: "PDF", link: "" } ]}
+              { 
+                nome: "Apresentações", 
+                itens: [ 
+                  {titulo: "Aula 01 · Processos", tipo: "PPTX", link: "https://docs.google.com/presentation/d/1q4XupxbRHR1sbb8il-KVWXuR0pGMC0A8/edit?usp=sharing&ouid=111962110626612264587&rtpof=true&sd=true"},
+                  {titulo: "Aula 02 · Threads", tipo: "PPTX", link: "https://docs.google.com/presentation/d/1MufNdLVFhQmRCAj9-merzqm9yjJcv6Sg/edit?usp=sharing&ouid=111962110626612264587&rtpof=true&sd=true"},
+                  {titulo: "Aula 03 · Comunicação e Sincronização", tipo: "PPTX", link: "https://docs.google.com/presentation/d/15w59vwbGCV84-NUmpgpHNrs_hNVSa16n/edit?usp=sharing&ouid=111962110626612264587&rtpof=true&sd=true"},
+                ]
+              },
+             
+              { 
+                nome: "Apostilas", 
+                itens: [ 
+                  {titulo: "Aula 01 · Processos", tipo: "PPTX", link: "so/apostila-processos.html"},
+                  {titulo: "Aula 02 · Threads", tipo: "PPTX", link: "so/apostila-threads.html"},
+                  {titulo: "Aula 03 · Comunicação e Sincronização", tipo: "PPTX", link: "so/apostila-sincronizacao.html"},
+                ]
+              },
+             
+              { 
+                nome: "Práticas de laboratório", 
+                itens: [ 
+                  { titulo: "Prática 01 · Processos", descricao: "Práticas com o simulador SOSIM", tipo: "PDF", link: "https://drive.google.com/file/d/1N_3tBp_kyQu8btklR6AzyLbO-kyuPiOi/view?usp=sharing"},
+                  { titulo: "Prática 02 · Threads", descricao: "Práticas com Threads", tipo: "HTML", link: "so/lab/lab-threads.html" },
+                  { titulo: "Prática 03 · Comunicação e Sincronização", descricao: "Práticas com comunicação e sincronização", tipo: "HTML", link: "so/lab/lab-sincronizacao.html" },
+                ]
+              },
+              
+              { 
+                nome: "Outros materiais", 
+                itens: [ 
+                  { titulo: "Simulador SOSIM", tipo: "ZIP", link: "https://drive.google.com/drive/folders/1VjIR34QEmsGRrni9XuuOt9dylCYfa-vf?usp=sharing"},                
+                ]
+              },
             ]
           },
+         
           {
-            id: "escalonamento",
-            titulo: "Escalonamento de CPU",
-            descricao: "FCFS, SJF, prioridades e Round-Robin.",
+            id: "gerencia-processador",
+            titulo: "Gerência de Processador",
+            descricao: "Escalonamento, políticas de escalonamento",
             pastas: [
-              { nome: "Apresentações", itens: [ { titulo: "Aula 03 · Escalonamento", tipo: "PPTX", link: "" } ]},
-              { nome: "Experimentos",  itens: [ { titulo: "Experimento 03 · Simulando escalonadores", tipo: "PDF", link: "" } ]},
-              { nome: "Exercícios",    itens: [ { titulo: "Lista 02 · Escalonamento", tipo: "PDF", link: "" } ]}
+              { 
+                nome: "Apresentações", 
+                itens: [ 
+               
+                ]
+              },
+              { 
+                nome: "Apostilas", 
+                itens: [ 
+                ]
+              },
             ]
-          }
+          },
+        
+          {
+            id: "gerencia-memoria",
+            titulo: "Gerência de Memória",
+            descricao: "Gerência de memória, alocação e liberação de memória",
+            pastas: [
+              { 
+                nome: "Apresentações", 
+                itens: [ 
+              
+                ]
+              },
+              { 
+                nome: "Apostilas", 
+                itens: [ 
+                ]
+              },
+            ]
+          },
+
         ]
-      }
+      },
     ]
   }
 ];

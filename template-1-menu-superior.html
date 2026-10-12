@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Materiais de Aula</title>
+<!-- TEMPLATE 1 · MENU SUPERIOR — o conteúdo fica em conteudo.js -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="base.css">
+<style>
+  .barra{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--sup) 92%,transparent);backdrop-filter:saturate(1.4) blur(8px);border-bottom:1px solid var(--linha)}
+  .barra::before{content:"";display:block;height:3px;background:linear-gradient(90deg,var(--marca-700) 0 70%,var(--marca-500) 70%)}
+  .barra .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;height:64px}
+  .menu{display:flex;gap:2px;list-style:none;margin:0;padding:0}
+  .menu>li{position:relative}
+  .menu-btn{display:flex;align-items:center;gap:6px;font:inherit;font-size:14px;font-weight:500;color:var(--txt-2);background:none;border:0;border-radius:var(--raio-sm);padding:8px 12px;cursor:pointer}
+  .menu-btn:hover,.aberto>.menu-btn{background:var(--sup-2);color:var(--txt)}
+  .ativo>.menu-btn{color:var(--marca-texto)}
+  .menu-btn .ic{width:16px;height:16px;transition:transform .15s}
+  .aberto>.menu-btn .ic{transform:rotate(180deg)}
+  .painel{display:none;position:absolute;right:0;top:calc(100% + 8px);width:340px;background:var(--sup);border:1px solid var(--linha);border-radius:var(--raio);box-shadow:var(--sombra-2);padding:8px}
+  .aberto>.painel{display:block}
+  .painel a{display:block;padding:10px 12px;border-radius:var(--raio-sm);text-decoration:none;color:var(--txt)}
+  .painel a:hover,.painel a.ativo{background:var(--marca-50)}
+  .painel a b{display:block;font-size:14px;font-weight:600}
+  .painel a small{display:block;font-size:12.5px;color:var(--txt-3);line-height:1.4}
+  .painel .geral{border-top:1px solid var(--linha);margin-top:6px;padding-top:12px;font-size:13px;font-weight:500;color:var(--marca-texto)}
+  .hamb{display:none;background:none;border:1px solid var(--linha);border-radius:var(--raio-sm);color:var(--txt);padding:7px;cursor:pointer}
+  .hamb .ic{width:20px;height:20px}
+
+  .cabeca{background:var(--sup);border-bottom:1px solid var(--linha);padding:40px 0 32px}
+  .cabeca.home{padding:56px 0 48px;background:linear-gradient(180deg,var(--marca-50),var(--sup) 85%)}
+  main.wrap{padding-top:32px}
+  .duas{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:32px;align-items:start}
+  .indice{position:sticky;top:96px;font-size:14px}
+  .indice h4{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--txt-3);margin:0 0 10px;font-weight:600}
+  .indice button{font:inherit;background:none;border:0;width:100%;text-align:left;cursor:pointer}
+  .indice a,.indice button{display:block;line-height:1.4;padding:7px 12px;border-left:2px solid var(--linha);color:var(--txt-2);text-decoration:none}
+  .indice a:hover,.indice button:hover{color:var(--txt);border-color:var(--linha-forte)}
+  .indice a.ativo{color:var(--marca-texto);border-color:var(--marca-500);font-weight:600}
+
+  @media (max-width:860px){
+    .duas{grid-template-columns:1fr}.indice{display:none}
+  }
+  @media (max-width:720px){
+    .hamb{display:inline-flex}
+    nav{display:none;position:absolute;left:0;right:0;top:67px;background:var(--sup);border-bottom:1px solid var(--linha);box-shadow:var(--sombra-2);padding:8px 16px 16px;max-height:calc(100vh - 67px);overflow:auto}
+    nav.aberto{display:block}
+    .menu{flex-direction:column}
+    .menu-btn{width:100%;justify-content:space-between;padding:12px 8px;font-size:15px}
+    .painel{position:static;width:auto;box-shadow:none;border:0;padding:0 0 8px 8px}
+    .cabeca,.cabeca.home{padding:28px 0 24px}
+  }
+</style>
+</head>
+<body>
+<header class="barra">
+  <div class="wrap">
+    <a class="marca" href="#" data-fundo="claro"></a>
+    <button class="hamb" id="hamb" aria-label="Abrir menu" aria-expanded="false"></button>
+    <nav id="nav" aria-label="Áreas e disciplinas"><ul class="menu" id="menu"></ul></nav>
+  </div>
+</header>
+<div id="conteudo"></div>
+<footer class="rodape"><div class="wrap"><span data-site="aviso"></span><span data-site="autor"></span></div></footer>
+
+<script src="conteudo.js"></script>
+<script src="comum.js"></script>
+<script>
+$("hamb").innerHTML = ICONE.menu;
+$("menu").innerHTML = MENU.map(a => `
+  <li data-id="${esc(a.id)}">
+    <button class="menu-btn" aria-expanded="false">${esc(a.titulo)}${ICONE.baixo}</button>
+    <div class="painel">
+      ${a.disciplinas.map(d => `<a href="#${esc(a.id)}/${esc(d.id)}"><b>${esc(d.titulo)}</b><small>${esc(d.descricao)}</small></a>`).join("")}
+      <a class="geral" href="#${esc(a.id)}">Ver todas de ${esc(a.titulo)} →</a>
+    </div>
+  </li>`).join("");
+
+const fechar = () => document.querySelectorAll(".menu>li").forEach(li => { li.classList.remove("aberto"); li.firstElementChild.setAttribute("aria-expanded","false"); });
+document.querySelectorAll(".menu-btn").forEach(b => b.addEventListener("click", e => {
+  e.stopPropagation(); const li = b.parentElement, abrir = !li.classList.contains("aberto"); fechar();
+  if (abrir) { li.classList.add("aberto"); b.setAttribute("aria-expanded","true"); }
+}));
+document.addEventListener("click", e => { if (!e.target.closest(".menu")) fechar(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape") fechar(); });
+$("hamb").addEventListener("click", () => { const n = $("nav").classList.toggle("aberto"); $("hamb").setAttribute("aria-expanded", n); $("hamb").innerHTML = n ? ICONE.fechar : ICONE.menu; });
+
+const trilha = (...p) => `<nav class="trilha" aria-label="Você está em"><a href="#">Início</a>${p.map(x => `<span class="sep">/</span>${x}`).join("")}</nav>`;
+
+iniciar(({ area, disc, assunto }) => {
+  let h;
+  if (disc) {
+    h = `<section class="cabeca"><div class="wrap">${trilha(`<a href="#${esc(area.id)}">${esc(area.titulo)}</a>`, `<span>${esc(disc.titulo)}</span>`)}
+        <p class="sobretitulo">${esc(area.titulo)}</p><h1 class="titulo-pag">${esc(disc.titulo)}</h1><p class="desc-pag">${esc(disc.descricao)}</p></div></section>
+      <main class="wrap"><div class="duas"><div>${barraHTML(disc)}${assuntosHTML(area, disc, assunto)}</div>
+        <aside class="indice"><h4>Assuntos</h4>${(disc.assuntos || []).map((a,k) => `<button type="button" data-ir="as-${esc(a.id)}">${String(k+1).padStart(2,"0")} · ${esc(a.titulo)}</button>`).join("")}
+        <h4 style="margin-top:24px">Outras de ${esc(area.titulo)}</h4>${area.disciplinas.map(d => `<a href="#${esc(area.id)}/${esc(d.id)}" class="${d === disc ? "ativo" : ""}">${esc(d.titulo)}</a>`).join("")}</aside></div></main>`;
+  } else if (area) {
+    h = `<section class="cabeca"><div class="wrap">${trilha(`<span>${esc(area.titulo)}</span>`)}
+        <h1 class="titulo-pag">${esc(area.titulo)}</h1><p class="desc-pag">${esc(area.descricao)}</p></div></section>
+      <main class="wrap"><div class="cartoes">${area.disciplinas.map(d => cartaoHTML(area, d)).join("")}</div></main>`;
+  } else {
+    h = `<section class="cabeca home"><div class="wrap"><p class="sobretitulo" data-site="instituicao">${esc(SITE.instituicao)}</p>
+        <h1 class="titulo-pag">${esc(SITE.titulo)}</h1><p class="desc-pag">Apresentações, exercícios, experimentos e apostilas, organizados por disciplina e assunto. Disciplinas ministradas pelo ${esc(SITE.autor)}.</p></div></section>
+      <main class="wrap">${MENU.map(a => `<section class="area"><div class="area-h"><h2>${esc(a.titulo)}</h2><a href="#${esc(a.id)}">Ver área →</a></div>
+        <p class="area-d">${esc(a.descricao)}</p><div class="cartoes">${a.disciplinas.map(d => cartaoHTML(a, d)).join("")}</div></section>`).join("")}</main>`;
+  }
+  $("conteudo").innerHTML = h;
+  document.querySelectorAll(".menu>li").forEach(li => li.classList.toggle("ativo", !!area && li.dataset.id === area.id));
+  document.querySelectorAll(".painel a").forEach(a => a.classList.toggle("ativo", !!disc && a.getAttribute("href") === `#${area.id}/${disc.id}`));
+  fechar(); $("nav").classList.remove("aberto"); $("hamb").innerHTML = ICONE.menu;
+});
+</script>
+</body>
+</html>
