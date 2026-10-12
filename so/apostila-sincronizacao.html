@@ -317,7 +317,6 @@ details .ans{font-size:15px; color:var(--ink-2); display:grid; gap:4px}
 .final{border:2px solid var(--ink); border-radius:10px; padding:18px; display:grid; gap:6px; background:var(--surface)}
 .final h4{font-size:22px}
 footer.end{max-width:1160px; margin:64px auto 0; padding-top:18px; border-top:1px solid var(--line); font-family:var(--display); font-size:13px; color:var(--ink-2)}
-</style><style>
 body{margin:0}
 [hidden]{display:none!important}
 @media print{
@@ -330,7 +329,7 @@ body{margin:0}
   .top{padding-block:0 18px}
   .sec{break-before:page}
   #s1{break-before:auto}
-  .lab,.card,.def,.note,figure,table,.oq > li,.qz > li,.states,.thr{break-inside:avoid}
+  .lab,.card,.def,.note,.win,figure,table,.oq > li,.qz > li,.states,.thr{break-inside:avoid}
   pre.term{white-space:pre-wrap}
   details summary{display:none}
   .alt{padding:4px 10px}
@@ -342,6 +341,44 @@ body{margin:0}
 </style>
 </head><body>
 <style>
+/* ---- v2: quadros "No Windows" e componentes comuns ---- */
+.win{border:1.5px solid var(--wait); border-radius:8px; background:var(--surface); padding:16px 18px; display:grid; gap:10px}
+.win .lbl{font-family:var(--display); font-size:12px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--wait)}
+.win h4{font-size:17px}
+.win p,.win li{font-size:15.5px}
+.win ol,.win ul{margin:0; padding-left:1.3em; display:grid; gap:4px}
+.win kbd,.sec kbd{font-family:var(--mono); font-size:.82em; border:1px solid var(--line); border-bottom-width:2px; border-radius:4px; padding:0 5px; background:var(--bg)}
+.path2{font-family:var(--display); font-size:.92em; font-weight:600}
+pre.term.ps{background:#0F1A2B; color:#DCE6F4}
+pre.term.ps .c{color:#8DA2C0}
+.sub{font-family:var(--display); font-size:13px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-2)}
+.fig.big svg{max-width:760px}
+.sec > *, .lab > *{min-width:0}
+.seg2{display:flex; gap:8px; flex-wrap:wrap}
+.t.small td{font-size:14.5px}
+.three{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px}
+@media (max-width:760px){.three{grid-template-columns:minmax(0,1fr)}}
+/* linhas de tempo geradas por script */
+.tl{display:grid; gap:8px}
+.tlrow{display:grid; grid-template-columns:96px minmax(0,1fr) 72px; gap:10px; align-items:center; font-family:var(--display); font-size:13.5px; font-weight:700}
+.tlrow .track{display:flex; height:28px; border-radius:5px; overflow:hidden; background:var(--bg); border:1px solid var(--line)}
+.tlrow .track i{display:grid; place-items:center; height:100%; font-style:normal; font-size:11px; font-weight:700; overflow:hidden; white-space:nowrap}
+.tlrow .end{font-variant-numeric:tabular-nums; text-align:right; color:var(--ink-2); font-weight:600; font-size:12.5px; white-space:nowrap}
+.k-run{background:var(--run); color:var(--accent-ink)}
+.k-wait{background:var(--wait-soft); color:var(--wait)}
+.k-ready{background:var(--ready-soft); color:var(--ready)}
+.k-spin{background:var(--bad-soft); color:var(--bad)}
+.k-b{background:var(--wait); color:var(--surface)}
+.k-c{background:var(--ready); color:var(--surface)}
+.k-idle{background:transparent; color:var(--ink-2)}
+.tlleg{display:flex; gap:16px; flex-wrap:wrap; font-family:var(--display); font-size:13px; color:var(--ink-2)}
+.tlleg span{display:inline-flex; align-items:center; gap:6px}
+.tlleg i{display:inline-block; width:12px; height:12px; border-radius:3px}
+.axis{display:grid; grid-template-columns:96px minmax(0,1fr) 72px; gap:10px; font-family:var(--display); font-size:11.5px; color:var(--ink-2)}
+.axis div{display:flex; justify-content:space-between}
+</style>
+<style>
+.sec > *, .lab > *{min-width:0} pre.term{max-width:100%} select.sel{max-width:100%; min-width:0}
 .rc-grid{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:10px}
 @media (max-width:640px){.rc-grid{grid-template-columns:minmax(0,1fr)}}
 .code{font-family:var(--mono); font-size:13.5px; line-height:1.7; background:#101A12; color:#D6E8CB; border-radius:8px; padding:10px 12px}
@@ -399,8 +436,8 @@ select.sel{font:inherit; font-family:var(--display); font-size:14px; padding:7px
 <header class="top">
   <p class="eyebrow">Sistemas Operacionais · IFAL Campus Maceió · Material de referência</p>
   <h1>Sincronização<span>.</span></h1>
-  <p class="lede">Como processos e threads que compartilham recursos conseguem trabalhar juntos sem corromper dados, sem esperar para sempre e sem travar uns aos outros. Leia, experimente os simuladores e, no fim, teste o que aprendeu.</p>
-  <div class="meta"><span>Base: <b>Machado &amp; Maia, <i>Arquitetura de Sistemas Operacionais</i>, cap. 7</b></span><span>Prof. Christiano Rossini</span><span>12 seções · 6 simuladores · 33 exercícios</span></div>
+  <p class="lede">Como processos e threads que compartilham recursos conseguem trabalhar juntos sem corromper dados, sem esperar para sempre e sem travar uns aos outros. Leia, experimente os simuladores, veja os mesmos mecanismos no Windows e, no fim, teste o que aprendeu.</p>
+  <div class="meta"><span>Base: <b>Machado &amp; Maia, <i>Arquitetura de Sistemas Operacionais</i>, cap. 7</b></span><span>Prof. Christiano Rossini</span><span>12 seções · 9 simuladores · exemplos no Windows · 33 exercícios</span></div>
 </header>
 
 <div class="layout">
@@ -430,6 +467,8 @@ select.sel{font:inherit; font-family:var(--display); font-size:14px; padding:7px
   <p>Nos capítulos 5 e 6 vimos que um sistema multiprogramável executa vários processos e threads concorrentemente. Muitas vezes eles não são independentes: <b>cooperam</b> para realizar uma tarefa e, para isso, <b>compartilham recursos</b> como memória, arquivos e dispositivos.</p>
   <p>Um exemplo simples: um processo grava dados num buffer e outro processo lê esses dados. Para dar certo, o leitor não pode ler um buffer vazio, o gravador não pode gravar num buffer cheio, e os dois não podem mexer na mesma posição ao mesmo tempo.</p>
   <div class="def"><span class="lbl">Ideia central</span><p>Os <dfn>mecanismos de sincronização</dfn> garantem que a comunicação e o compartilhamento de recursos entre processos concorrentes aconteçam de forma <b>ordenada e correta</b>.</p></div>
+  <p>O capítulo responde a duas perguntas. A primeira é <b>quem usa o recurso agora?</b> Quando dois processos disputam o mesmo dado, é preciso garantir que um espere o outro terminar: é a exclusão mútua (seções 7.4 a 7.7). A segunda é <b>quando posso continuar?</b> Quando um processo depende de algo que outro ainda vai produzir, é preciso que ele espere o momento certo: é a sincronização condicional (seção 7.8). Semáforos, monitores e troca de mensagens (7.9 a 7.11) são ferramentas para resolver as duas. O capítulo termina com o deadlock (7.12), o problema que surge quando a espera nunca acaba.</p>
+  <p>Tudo isso vale tanto para processos quanto para threads. Como os threads de um processo compartilham a memória, os problemas de sincronização aparecem com eles com ainda mais frequência.</p>
 </section>
 
 <section class="sec" id="s2">
@@ -441,6 +480,15 @@ select.sel{font:inherit; font-family:var(--display); font-size:14px; padding:7px
     <div class="card"><h4>Troca de mensagens</h4><p>Um processo envia uma mensagem e o outro a recebe, com o SO como intermediário. Funciona até entre processos em computadores diferentes (seção 7.11).</p></div>
   </div>
   <p>Nos dois casos, os processos precisam <b>sincronizar</b> suas ações: um só deve ler o dado depois que o outro o tiver gravado.</p>
+  <p>Na memória compartilhada, o SO só entra para criar a área comum; depois, os processos a acessam diretamente, como acessam qualquer variável, e a responsabilidade de coordenar o acesso é do programa. Na troca de mensagens, cada envio e cada recebimento passa pelo SO, o que é mais lento, mas a sincronização vem embutida: quem espera uma mensagem só continua quando ela chega.</p>
+  <div class="win">
+    <span class="lbl">No Windows</span>
+    <h4>Canais de comunicação que já existem na sua máquina</h4>
+    <p>Programas do Windows conversam o tempo todo por <b>pipes nomeados</b>, um mecanismo de troca de mensagens. O PowerShell lista os que estão abertos agora:</p>
+    <pre class="term ps"><span class="c"># cada nome é um canal que algum processo criou para receber mensagens</span>
+PS&gt; Get-ChildItem \\.\pipe\ | Select-Object -First 15 Name</pre>
+    <p>Para memória compartilhada, o Windows oferece os <i>arquivos mapeados em memória</i>: dois processos mapeiam a mesma área e passam a enxergar os mesmos bytes. Os laboratórios de SO usam pipes e uma "caixa postal" em pasta para mostrar a troca de mensagens na prática.</p>
+  </div>
 </section>
 
 <section class="sec" id="s3">
@@ -461,13 +509,47 @@ BEGIN
   X := Temp1 + Temp2 - Temp3;
   WRITELN ('x = ', X);
 END.</pre>
+  <figure class="fig wide">
+    <svg viewBox="0 0 640 300" role="img" aria-label="Grafo de precedência: depois de PARBEGIN, três cálculos executam em paralelo; PAREND espera os três antes de calcular X"><defs><marker id="pr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--ink-2)"/></marker></defs><rect x="250" y="10" width="140" height="40" rx="9" fill="var(--ink)" stroke="var(--ink)" stroke-width="2"/><text x="320.0" y="35" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--bg)" font-family="var(--mono)">PARBEGIN</text><rect x="40" y="120" width="170" height="40" rx="9" fill="var(--wait-soft)" stroke="var(--wait)" stroke-width="2"/><text x="125.0" y="145" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)" font-family="var(--mono)">Temp1 := SQRT(1024)</text><path d="M320 50 L125 118" stroke="var(--ink-2)" stroke-width="2" fill="none" marker-end="url(#pr)"/><path d="M125 160 L320 208" stroke="var(--ink-2)" stroke-width="2" fill="none" marker-end="url(#pr)"/><rect x="245" y="120" width="170" height="40" rx="9" fill="var(--wait-soft)" stroke="var(--wait)" stroke-width="2"/><text x="330.0" y="145" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)" font-family="var(--mono)">Temp2 := 35.4 * 0.23</text><path d="M320 50 L330 118" stroke="var(--ink-2)" stroke-width="2" fill="none" marker-end="url(#pr)"/><path d="M330 160 L320 208" stroke="var(--ink-2)" stroke-width="2" fill="none" marker-end="url(#pr)"/><rect x="450" y="120" width="170" height="40" rx="9" fill="var(--wait-soft)" stroke="var(--wait)" stroke-width="2"/><text x="535.0" y="145" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)" font-family="var(--mono)">Temp3 := 302 / 7</text><path d="M320 50 L535 118" stroke="var(--ink-2)" stroke-width="2" fill="none" marker-end="url(#pr)"/><path d="M535 160 L320 208" stroke="var(--ink-2)" stroke-width="2" fill="none" marker-end="url(#pr)"/><rect x="250" y="210" width="140" height="40" rx="9" fill="var(--ink)" stroke="var(--ink)" stroke-width="2"/><text x="320.0" y="235" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--bg)" font-family="var(--mono)">PAREND</text><path d="M320 250 L320 262" stroke="var(--ink-2)" stroke-width="2" fill="none" marker-end="url(#pr)"/><text x="320" y="288" text-anchor="middle" font-size="13.5" font-weight="700" font-family="var(--mono)">X := Temp1 + Temp2 - Temp3</text><text x="100" y="184" text-anchor="middle" font-size="12" fill="var(--ink-2)">executam</text><text x="100" y="198" text-anchor="middle" font-size="12" fill="var(--ink-2)">concorrentemente</text></svg>
+    <figcaption>Figura 1. Grafo de precedência do programa Expressao. Os três cálculos não dependem uns dos outros e podem executar ao mesmo tempo; o cálculo de X depende dos três.</figcaption>
+  </figure>
+  <p>Repare no que permite a concorrência: <code>Temp1</code>, <code>Temp2</code> e <code>Temp3</code> não dependem uns dos outros, então a ordem em que são calculados não altera o resultado. Já <code>X</code> só pode ser calculado depois dos três. Identificar essas dependências é o primeiro passo para escrever qualquer aplicação concorrente. Com FORK e JOIN, o mesmo programa ficaria assim:</p>
+  <pre class="term">FORK Calcula_Temp1;     <span class="c">{ cria um processo para cada cálculo }</span>
+FORK Calcula_Temp2;
+Temp3 := 302 / 7;       <span class="c">{ o processo original faz o terceiro }</span>
+JOIN Calcula_Temp1;     <span class="c">{ espera os outros dois terminarem }</span>
+JOIN Calcula_Temp2;
+X := Temp1 + Temp2 - Temp3;</pre>
   <div class="note"><span class="lbl">Hoje</span><p>A mesma ideia aparece ao criar threads e esperar por elas, como <code>pthread_create</code> e <code>pthread_join</code>, vistos no capítulo 6.</p></div>
+  <div class="win">
+    <span class="lbl">No Windows</span>
+    <h4>FORK e JOIN no PowerShell</h4>
+    <p>Cada <code>Start-Job</code> cria um processo que executa em segundo plano (o FORK); <code>Receive-Job -Wait</code> espera o resultado (o JOIN).</p>
+    <pre class="term ps">PS&gt; $j1 = Start-Job { [math]::Sqrt(1024) }      <span class="c"># FORK</span>
+PS&gt; $j2 = Start-Job { 35.4 * 0.23 }             <span class="c"># FORK</span>
+PS&gt; $t3 = 302 / 7                               <span class="c"># o próprio PowerShell calcula</span>
+PS&gt; $t1 = Receive-Job $j1 -Wait                 <span class="c"># JOIN</span>
+PS&gt; $t2 = Receive-Job $j2 -Wait                 <span class="c"># JOIN</span>
+PS&gt; $t1 + $t2 - $t3</pre>
+  </div>
 </section>
 
 <section class="sec" id="s4">
   <div class="sec-head"><span class="num">7.4</span><h2>Problemas de compartilhamento de recursos</h2></div>
   <p>O livro mostra o problema com uma conta bancária. Dois caixas executam o mesmo programa ao mesmo tempo: cada um lê o saldo do cliente, calcula o novo valor e grava. Se o caixa 1 (saque de 200) e o caixa 2 (depósito de 300) leem o saldo de 1000 antes que qualquer um grave, o último a gravar apaga a operação do outro: o saldo final fica 800 ou 1300, quando deveria ser 1100.</p>
   <p>O mesmo acontece com um comando tão simples quanto <code>X := X + 1</code>. Em linguagem de máquina, ele vira três instruções: carregar X num registrador, somar 1 e gravar de volta. Se o processo perde a UCP no meio delas, outro processo pode ler o valor antigo de X.</p>
+  <div class="scroll wide"><table class="t">
+    <thead><tr><th>Ordem</th><th>Processo A (X := X + 1)</th><th>Processo B (X := X − 1)</th><th>X na memória</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td><code>LOAD X, Ra</code> → Ra = 2</td><td></td><td>2</td></tr>
+      <tr><td>2</td><td><code>ADD 1, Ra</code> → Ra = 3</td><td></td><td>2</td></tr>
+      <tr><td>3</td><td><i>perde a UCP</i></td><td><code>LOAD X, Rb</code> → Rb = 2</td><td>2</td></tr>
+      <tr><td>4</td><td></td><td><code>SUB 1, Rb</code> → Rb = 1</td><td>2</td></tr>
+      <tr><td>5</td><td><code>STORE Ra, X</code></td><td></td><td>3</td></tr>
+      <tr><td>6</td><td></td><td><code>STORE Rb, X</code></td><td><b>1</b></td></tr>
+    </tbody>
+  </table></div>
+  <p>A tabela mostra uma das ordens possíveis. X começou em 2 e deveria terminar em 2, mas termina em 1: a alteração de A se perdeu, porque B leu X antes de A gravar. O problema não está em nenhum dos dois programas isoladamente, e sim na <b>intercalação</b> das instruções, que depende de quando o SO troca de processo.</p>
   <div class="def"><span class="lbl">Condição de corrida</span><p>Quando o resultado depende da <b>ordem</b> em que os processos executam, dizemos que há uma <dfn>condição de corrida</dfn> (race condition). O erro aparece só às vezes, o que o torna difícil de encontrar.</p></div>
   <div class="lab">
     <div class="lab-head"><span class="tag">Simulador</span><h4>Você é o escalonador</h4></div>
@@ -479,6 +561,22 @@ END.</pre>
     </div>
     <div class="btns"><button class="btn primary" id="rc-sa">A executa</button><button class="btn primary" id="rc-sb">B executa</button><button class="btn ghost" id="rc-r">Recomeçar</button></div>
     <p class="msg" id="rc-m" aria-live="polite">Escolha qual processo executa a primeira instrução.</p>
+  </div>
+  <p>Condições de corrida são traiçoeiras porque o programa funciona na maior parte das vezes. A troca de processo precisa acontecer exatamente entre a leitura e a gravação para o erro aparecer. Em testes rápidos, isso quase nunca acontece; com milhares de usuários, acontece todo dia.</p>
+  <div class="win">
+    <span class="lbl">No Windows</span>
+    <h4>Dois caixas, um arquivo</h4>
+    <p>Abra duas janelas do PowerShell. O arquivo <code>saldo.txt</code> faz o papel da conta. O <code>Start-Sleep</code> alarga o intervalo entre ler e gravar, para que a corrida aconteça com certeza.</p>
+    <pre class="term ps"><span class="c"># nas DUAS janelas</span>
+PS&gt; $arq = "$env:USERPROFILE\Desktop\saldo.txt"
+<span class="c"># janela 1: cria a conta com 1000 e faz um saque de 200</span>
+PS&gt; Set-Content $arq 1000
+PS&gt; $s = [int](Get-Content $arq); Start-Sleep 15; Set-Content $arq ($s - 200)
+<span class="c"># janela 2, logo em seguida (antes de 15 s): depósito de 300</span>
+PS&gt; $s = [int](Get-Content $arq); Start-Sleep 15; Set-Content $arq ($s + 300)
+<span class="c"># depois que as duas terminarem</span>
+PS&gt; Get-Content $arq            <span class="c"># 1300, e não 1100</span></pre>
+    <p>O saque se perdeu, como no exemplo do livro. O Laboratório 1 de SO faz esta experiência passo a passo e mostra como corrigi-la trancando o arquivo.</p>
   </div>
 </section>
 
@@ -493,12 +591,19 @@ END.</pre>
   Sai_Regiao_Critica;      <span class="c">{ protocolo de saída }</span>
   ...
 END.</pre>
+  <p>Só a região crítica precisa ser protegida. O resto do código, que lida com dados próprios de cada processo, pode executar livremente em paralelo. Por isso, uma boa prática é manter a região crítica <b>o menor possível</b>: quanto mais tempo um processo fica nela, mais tempo os outros esperam.</p>
+  <p>No exemplo do banco, a região crítica é o trecho entre ler o saldo e gravar o novo valor. Se o caixa 2 só pudesse ler o saldo depois que o caixa 1 tivesse gravado, o resultado seria sempre 1100, em qualquer ordem.</p>
   <p>Uma boa solução de exclusão mútua também precisa evitar:</p>
   <ul>
     <li><b>Starvation</b> (inanição): um processo esperar indefinidamente para entrar na região crítica, porque outros sempre passam na frente.</li>
     <li>Um processo que está <b>fora</b> da sua região crítica impedir que os outros entrem.</li>
     <li>Depender da velocidade relativa dos processos ou do número de processadores.</li>
   </ul>
+  <div class="win">
+    <span class="lbl">No Windows</span>
+    <h4>"O arquivo está aberto em outro programa"</h4>
+    <p>Abra um documento no Word ou uma planilha no Excel e, com ele aberto, tente renomear ou excluir o arquivo no Explorador de Arquivos. O Windows recusa: o Office abriu o arquivo pedindo acesso exclusivo, e o SO garante a exclusão mútua sobre ele. Feche o documento e tente de novo: agora funciona. O Bloco de Notas não pede esse acesso exclusivo, por isso não bloqueia o arquivo.</p>
+  </div>
 </section>
 
 <section class="sec" id="s6">
@@ -513,7 +618,9 @@ END.</pre>
 até encontrar livre;
 Regiao_Critica;
 Bloqueio := falso;           <span class="c">{ libera }</span></pre>
+  <p>Por que precisa ser uma instrução só? Se o teste e a alteração fossem duas instruções separadas, dois processos poderiam testar a variável, ambos encontrá-la livre e ambos entrar. É a mesma condição de corrida que se quer evitar. Executada como uma única instrução, que o hardware não deixa ser interrompida no meio nem intercalada com outro processador, ela fecha essa brecha.</p>
   <p><b>Problemas:</b> enquanto espera, o processo fica testando a variável sem parar, gastando UCP (<b>espera ocupada</b>), e a escolha de quem entra é arbitrária, o que permite starvation.</p>
+  <div class="note"><span class="lbl">Nos processadores atuais</span><p>Os processadores x86 têm instruções como <code>XCHG</code> e <code>LOCK CMPXCHG</code>, que fazem o papel do test-and-set. O Windows as usa nas funções <code>InterlockedIncrement</code> e <code>InterlockedCompareExchange</code>, e o núcleo as usa nos <i>spinlocks</i>, travas de espera ocupada usadas por trechos curtíssimos, em que bloquear e acordar o processo custaria mais do que esperar.</p></div>
 </section>
 
 <section class="sec" id="s7">
@@ -526,6 +633,27 @@ enquanto quer[j] e vez = j:       <span class="c">{ espero só se ele também qu
     espera;                       <span class="c">{ e a vez é dele }</span>
 Regiao_Critica;
 quer[i] := falso;</pre>
+  <div class="scroll wide"><table class="t">
+    <thead><tr><th>Tentativa</th><th>Ideia</th><th>Por que falha</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Uma variável <code>vez</code> diz quem pode entrar; ao sair, o processo passa a vez ao outro.</td><td>Os processos são obrigados a alternar. Se um quer entrar duas vezes seguidas e o outro não quer entrar, o primeiro fica esperando por alguém que está fora da região crítica.</td></tr>
+      <tr><td>2</td><td>Cada processo tem uma variável que indica se está dentro; antes de entrar, testa a do outro.</td><td>Os dois podem testar ao mesmo tempo, ver o outro fora e entrar juntos. Não garante exclusão mútua.</td></tr>
+      <tr><td>3</td><td>Cada processo primeiro declara que quer entrar e só depois testa o outro.</td><td>Se os dois declaram ao mesmo tempo, cada um espera o outro desistir. Deadlock.</td></tr>
+      <tr><td>4</td><td>Como a 3, mas quem encontra o outro querendo entrar desiste por um instante e tenta de novo.</td><td>Os dois podem desistir e tentar sempre ao mesmo tempo, indefinidamente. Starvation.</td></tr>
+    </tbody>
+  </table></div>
+  <p>O algoritmo de Peterson junta a ideia da tentativa 3 (declarar que quer entrar) com a variável <code>vez</code> da tentativa 1, usada só como desempate. Se só um processo quer entrar, ele entra direto. Se os dois querem, quem escreveu <code>vez</code> por último cede a vez, e o outro entra.</p>
+  <div class="lab wide">
+    <div class="lab-head"><span class="tag">Simulador</span><h4>Tente quebrar o algoritmo de Peterson</h4></div>
+    <p class="lab-hint">Você é o escalonador: escolha qual processo executa a próxima linha. Tente colocar os dois na região crítica ao mesmo tempo. Na linha do <code>enquanto</code>, um processo que precisa esperar testa a condição e continua na mesma linha.</p>
+    <div class="rc-grid">
+      <div style="display:grid; gap:6px"><b style="font-family:var(--display); color:var(--run)">Processo 0</b><div class="code" id="pt-c0"></div></div>
+      <div class="mem" id="pt-vars"></div>
+      <div style="display:grid; gap:6px"><b style="font-family:var(--display); color:var(--wait)">Processo 1</b><div class="code" id="pt-c1"></div></div>
+    </div>
+    <div class="btns"><button class="btn primary" id="pt-s0">Processo 0 executa</button><button class="btn primary" id="pt-s1">Processo 1 executa</button><button class="btn ghost" id="pt-r">Recomeçar</button></div>
+    <p class="msg" id="pt-m" aria-live="polite">Os dois processos estão antes do protocolo de entrada.</p>
+  </div>
   <p>Para N processos, existe o <b>algoritmo da padaria</b>, de Lamport. Todas essas soluções, porém, mantêm a <b>espera ocupada</b>: o processo que espera continua usando a UCP para testar a condição. É isso que os semáforos (7.9) resolvem.</p>
 </section>
 
@@ -533,7 +661,18 @@ quer[i] := falso;</pre>
   <div class="sec-head"><span class="num">7.8</span><h2>Sincronização condicional</h2></div>
   <p>Às vezes não basta impedir o acesso simultâneo: um processo precisa <b>esperar até que uma condição seja verdadeira</b> para continuar. Isso é a <dfn>sincronização condicional</dfn>.</p>
   <p>O exemplo clássico é o <b>produtor/consumidor</b> com buffer limitado: o produtor grava dados num buffer de N posições e o consumidor os lê. O produtor precisa esperar quando o buffer está <b>cheio</b>, e o consumidor precisa esperar quando ele está <b>vazio</b>. Além disso, o acesso ao buffer em si exige exclusão mútua.</p>
+  <p>O buffer costuma ser implementado como um vetor <b>circular</b>: o produtor grava na posição indicada por um índice de entrada e o avança; o consumidor lê na posição indicada por um índice de saída e também o avança. Ao chegar ao fim do vetor, os índices voltam ao início. Um contador indica quantas posições estão ocupadas.</p>
+  <figure class="fig wide">
+    <svg viewBox="0 0 640 300" role="img" aria-label="Buffer circular com oito posições: o produtor grava na posição indicada por entrada e o consumidor lê na posição indicada por saída"><defs><marker id="bf" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--ink-2)"/></marker></defs><path d="M323.8 40.1 A110 110 0 0 1 395.0 69.6 L359.6 107.6 A58 58 0 0 0 322.0 92.0 Z" fill="var(--surface)" stroke="var(--ready)" stroke-width="2"/><text x="352.1" y="76.4" text-anchor="middle" font-size="12" font-weight="700" fill="var(--ink-2)">0</text><path d="M400.4 75.0 A110 110 0 0 1 429.9 146.2 L378.0 148.0 A58 58 0 0 0 362.4 110.4 Z" fill="var(--surface)" stroke="var(--ready)" stroke-width="2"/><text x="397.6" y="121.9" text-anchor="middle" font-size="12" font-weight="700" fill="var(--ink-2)">1</text><path d="M429.9 153.8 A110 110 0 0 1 400.4 225.0 L362.4 189.6 A58 58 0 0 0 378.0 152.0 Z" fill="var(--ready)" stroke="var(--ready)" stroke-width="2"/><text x="397.6" y="186.1" text-anchor="middle" font-size="12" font-weight="700" fill="var(--surface)">2</text><path d="M395.0 230.4 A110 110 0 0 1 323.8 259.9 L322.0 208.0 A58 58 0 0 0 359.6 192.4 Z" fill="var(--ready)" stroke="var(--ready)" stroke-width="2"/><text x="352.1" y="231.6" text-anchor="middle" font-size="12" font-weight="700" fill="var(--surface)">3</text><path d="M316.2 259.9 A110 110 0 0 1 245.0 230.4 L280.4 192.4 A58 58 0 0 0 318.0 208.0 Z" fill="var(--ready)" stroke="var(--ready)" stroke-width="2"/><text x="287.9" y="231.6" text-anchor="middle" font-size="12" font-weight="700" fill="var(--surface)">4</text><path d="M239.6 225.0 A110 110 0 0 1 210.1 153.8 L262.0 152.0 A58 58 0 0 0 277.6 189.6 Z" fill="var(--ready)" stroke="var(--ready)" stroke-width="2"/><text x="242.4" y="186.1" text-anchor="middle" font-size="12" font-weight="700" fill="var(--surface)">5</text><path d="M210.1 146.2 A110 110 0 0 1 239.6 75.0 L277.6 110.4 A58 58 0 0 0 262.0 148.0 Z" fill="var(--surface)" stroke="var(--ready)" stroke-width="2"/><text x="242.4" y="121.9" text-anchor="middle" font-size="12" font-weight="700" fill="var(--ink-2)">6</text><path d="M245.0 69.6 A110 110 0 0 1 316.2 40.1 L318.0 92.0 A58 58 0 0 0 280.4 107.6 Z" fill="var(--surface)" stroke="var(--ready)" stroke-width="2"/><text x="287.9" y="76.4" text-anchor="middle" font-size="12" font-weight="700" fill="var(--ink-2)">7</text><text x="320" y="146" text-anchor="middle" font-size="13" font-weight="800">buffer</text><text x="320" y="163" text-anchor="middle" font-size="12" fill="var(--ink-2)">N = 8</text><path d="M174.0 89.5 L212.8 105.6" stroke="var(--run)" stroke-width="2.5" fill="none" marker-end="url(#bf)"/><text x="166.0" y="93.5" text-anchor="end" font-size="13" font-weight="700" fill="var(--run)">entrada · produtor grava</text><path d="M466.0 210.5 L427.2 194.4" stroke="var(--wait)" stroke-width="2.5" fill="none" marker-end="url(#bf)"/><text x="474.0" y="214.5" text-anchor="start" font-size="13" font-weight="700" fill="var(--wait)">saída · consumidor lê</text></svg>
+    <figcaption>Figura 2. Buffer circular com 8 posições, 4 delas ocupadas. Se o índice de entrada alcançar o de saída com o buffer cheio, o produtor precisa esperar; se o de saída alcançar o de entrada com o buffer vazio, quem espera é o consumidor.</figcaption>
+  </figure>
+  <p>Note que há duas exigências diferentes no mesmo problema. A <b>exclusão mútua</b> impede que produtor e consumidor alterem o contador e os índices ao mesmo tempo. A <b>sincronização condicional</b> faz cada um esperar enquanto a sua condição não for verdadeira. Uma solução correta precisa das duas.</p>
   <p>Resolver isso com espera ocupada desperdiça UCP. As próximas seções mostram como fazer o processo realmente <b>dormir</b> até a condição mudar.</p>
+  <div class="win">
+    <span class="lbl">No Windows</span>
+    <h4>A fila de impressão é um produtor/consumidor</h4>
+    <p>Os programas que imprimem são os produtores: cada documento enviado entra numa fila. O serviço de spooler de impressão (<code>spoolsv.exe</code>) é o consumidor: retira um documento por vez e o entrega à impressora. Em <span class="path2">Configurações › Bluetooth e dispositivos › Impressoras e scanners</span>, abra a fila de uma impressora e pause-a. Envie dois ou três documentos: eles se acumulam na fila, como dados num buffer cujo consumidor está parado. Retome a impressão e a fila esvazia na ordem de chegada.</p>
+  </div>
 </section>
 
 <section class="sec" id="s9">
@@ -543,7 +682,17 @@ quer[i] := falso;</pre>
     <div class="card"><h4>DOWN (S) · também chamada P</h4><p>Se S &gt; 0, decrementa S e o processo continua. Se S = 0, o processo vai para o estado de <b>espera</b>, numa fila associada ao semáforo.</p></div>
     <div class="card"><h4>UP (S) · também chamada V</h4><p>Se há processos esperando no semáforo, <b>acorda</b> um deles. Se não há, incrementa S.</p></div>
   </div>
+  <p>Por dentro, o semáforo é uma estrutura do SO com dois campos: o <b>valor</b> e uma <b>fila de processos</b> bloqueados. DOWN e UP são chamadas de sistema. Para que sejam indivisíveis, o SO as executa protegidas por um dos mecanismos de hardware da seção 7.6, mas apenas pelas poucas instruções que alteram o valor e a fila. A espera longa, a do processo que não pode entrar, acontece com o processo bloqueado, fora da UCP.</p>
   <p>Como o processo bloqueado fica em espera, e não testando uma variável, <b>não há espera ocupada</b>. Semáforos que só assumem 0 e 1 são <b>binários</b> (mutexes) e servem para exclusão mútua; os que vão de 0 a N são <b>contadores</b> e servem para controlar recursos com várias unidades e para sincronização condicional.</p>
+
+  <div class="lab wide">
+    <div class="lab-head"><span class="tag">Simulador</span><h4>Espera ocupada × bloqueio</h4></div>
+    <p class="lab-hint">Uma UCP, três processos, fatias de 1 unidade de tempo. A está na região crítica e precisa de 6 unidades para sair. B quer entrar e precisa esperar. C não usa a região crítica e tem 6 unidades de trabalho. Compare as duas formas de B esperar.</p>
+    <div class="seg2" id="bw-mode"><button class="btn sel" data-m="spin">B testa sem parar (espera ocupada)</button><button class="btn" data-m="block">B dorme no semáforo</button></div>
+    <div class="tl" id="bw-tl"></div>
+    <div class="tlleg"><span><i class="k-run"></i>A (região crítica)</span><span><i class="k-spin"></i>B testando à toa</span><span><i class="k-b"></i>B trabalhando</span><span><i class="k-c"></i>C trabalhando</span></div>
+    <p class="msg" id="bw-m" aria-live="polite"></p>
+  </div>
 
   <h3>Exclusão mútua com semáforo</h3>
   <pre class="term">Mutex := 1;
@@ -559,6 +708,15 @@ UNTIL False;</pre>
     <div class="semrow"><div class="semval"><span>SEMÁFORO S</span><b id="sm-v">1</b></div><div class="queue" id="sm-q"><span class="lbl">Fila de espera:</span></div></div>
     <div class="semrow" id="sm-ps"></div>
     <p class="msg" id="sm-m" aria-live="polite">Todos os processos estão fora da região crítica.</p>
+  </div>
+
+  <div class="win">
+    <span class="lbl">No Windows</span>
+    <h4>Um semáforo de verdade, em três janelas</h4>
+    <p>O Windows oferece semáforos e mutexes como objetos do sistema, que vários processos podem usar pelo nome. Abra três janelas do PowerShell e, em cada uma, execute:</p>
+    <pre class="term ps">PS&gt; $s = New-Object System.Threading.Semaphore(2, 2, 'AulaSO')   <span class="c"># valor inicial 2</span>
+PS&gt; $s.WaitOne()          <span class="c"># DOWN: True quando consegue entrar</span></pre>
+    <p>As duas primeiras janelas entram na hora; a terceira fica parada, bloqueada pelo SO, sem gastar UCP. Na primeira janela, execute <code>$s.Release()</code> (o UP): a terceira janela acorda e entra. É o semáforo contador do simulador acima, agora entre processos reais. No Laboratório 2 de SO a experiência é guiada passo a passo.</p>
   </div>
 
   <h3>Sincronização condicional com semáforos</h3>
@@ -582,7 +740,8 @@ UNTIL False;                 UNTIL False;</pre>
   </div>
 
   <h3>Problemas clássicos</h3>
-  <p><b>Leitores e escritores.</b> Vários processos leem um dado e alguns o alteram. Vários leitores podem ler ao mesmo tempo, mas um escritor precisa de acesso exclusivo: enquanto ele escreve, ninguém lê nem escreve.</p>
+  <p>A ordem dos DOWN importa. Se o produtor fizesse <code>DOWN (Mutex)</code> antes de <code>DOWN (Vazio)</code> com o buffer cheio, ele bloquearia segurando o Mutex; o consumidor, para liberar uma posição, precisaria do Mutex, e nunca o conseguiria. Os dois ficariam parados para sempre: um deadlock causado só pela troca de duas linhas. É esse tipo de erro que torna os semáforos difíceis de usar e que motiva os monitores (7.10).</p>
+  <p><b>Leitores e escritores.</b> Vários processos leem um dado e alguns o alteram. Vários leitores podem ler ao mesmo tempo, mas um escritor precisa de acesso exclusivo: enquanto ele escreve, ninguém lê nem escreve. A solução clássica usa um contador de leitores ativos: o primeiro leitor a chegar bloqueia os escritores, e o último a sair os libera. Ela tem um efeito colateral: se sempre houver algum leitor lendo, o escritor pode esperar para sempre (starvation). Há variantes que dão prioridade aos escritores.</p>
   <p><b>Jantar dos filósofos.</b> Cinco filósofos sentam a uma mesa redonda, com um garfo entre cada dois. Para comer, cada um precisa dos dois garfos ao seu lado. Se todos pegarem o garfo da esquerda ao mesmo tempo, ninguém consegue o da direita: <b>deadlock</b>. Soluções: permitir no máximo quatro filósofos à mesa; pegar os dois garfos só se ambos estiverem livres (de forma atômica); ou fazer os filósofos ímpares pegarem primeiro o garfo da esquerda e os pares, o da direita.</p>
   <div class="lab">
     <div class="lab-head"><span class="tag">Simulador</span><h4>O jantar dos filósofos</h4></div>
@@ -598,6 +757,11 @@ UNTIL False;                 UNTIL False;</pre>
   <div class="sec-head"><span class="num">7.10</span><h2>Monitores</h2></div>
   <p>Semáforos resolvem o problema, mas são fáceis de usar errado: um DOWN esquecido, ou dois DOWN na ordem trocada, causam inconsistência ou deadlock. Os <dfn>monitores</dfn>, propostos por Brinch Hansen e Hoare no início dos anos 1970, são um mecanismo de <b>alto nível</b> que tira essa responsabilidade do programador.</p>
   <p>Um monitor agrupa <b>variáveis</b>, <b>procedimentos</b> e um <b>código de inicialização</b>. As variáveis só podem ser acessadas pelos procedimentos do próprio monitor, e o compilador garante que <b>apenas um processo por vez</b> execute um procedimento do monitor. Os demais esperam numa fila de entrada. A exclusão mútua é <b>automática</b>.</p>
+  <figure class="fig wide">
+    <svg viewBox="0 0 660 300" role="img" aria-label="Estrutura de um monitor: fila de entrada, área com variáveis e procedimentos onde só um processo executa por vez, e filas das variáveis de condição"><defs><marker id="mn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--ink-2)"/></marker></defs><text x="70" y="40" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink-2)">fila de entrada</text><rect x="30" y="56" width="80" height="34" rx="7" fill="var(--wait-soft)" stroke="var(--wait)" stroke-width="2"/><text x="70" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="var(--wait)">P4</text><rect x="30" y="100" width="80" height="34" rx="7" fill="var(--wait-soft)" stroke="var(--wait)" stroke-width="2"/><text x="70" y="122" text-anchor="middle" font-size="13" font-weight="700" fill="var(--wait)">P3</text><rect x="30" y="144" width="80" height="34" rx="7" fill="var(--wait-soft)" stroke="var(--wait)" stroke-width="2"/><text x="70" y="166" text-anchor="middle" font-size="13" font-weight="700" fill="var(--wait)">P2</text><path d="M112 120 L176 120" stroke="var(--ink-2)" stroke-width="2" fill="none" marker-end="url(#mn)"/><rect x="180" y="20" width="300" height="260" rx="14" fill="var(--surface)" stroke="var(--accent)" stroke-width="3"/><text x="200" y="46" font-size="13" font-weight="800" letter-spacing="2" fill="var(--accent)">MONITOR</text><rect x="200" y="60" width="260" height="40" rx="8" fill="var(--ready-soft)" stroke="var(--ready)"/><text x="330" y="85" text-anchor="middle" font-size="13" font-weight="700">variáveis (só acessíveis aqui)</text><rect x="200" y="112" width="260" height="36" rx="8" fill="var(--bg)" stroke="var(--line)"/><text x="214" y="135" font-size="13" font-weight="600" font-family="var(--mono)">procedimento Produz</text><rect x="200" y="158" width="260" height="36" rx="8" fill="var(--bg)" stroke="var(--line)"/><text x="214" y="181" font-size="13" font-weight="600" font-family="var(--mono)">procedimento Consome</text><rect x="200" y="210" width="260" height="30" rx="8" fill="var(--bg)" stroke="var(--line)" stroke-dasharray="4 4"/><text x="330" y="230" text-anchor="middle" font-size="12.5" fill="var(--ink-2)">código de inicialização</text><rect x="378" y="114" width="72" height="32" rx="7" fill="var(--run)"/><text x="414" y="135" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--accent-ink)">P1 aqui</text><text x="330" y="266" text-anchor="middle" font-size="12" fill="var(--ink-2)">só um processo por vez</text><text x="575" y="62" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink-2)">condição Cheio</text><rect x="530" y="70" width="42" height="32" rx="7" fill="var(--ready-soft)" stroke="var(--ready)" stroke-width="2"/><text x="551" y="91" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ready)">P5</text><path d="M482 86 L526 86" stroke="var(--ink-2)" stroke-width="1.6" stroke-dasharray="4 3" fill="none" marker-end="url(#mn)"/><text x="575" y="172" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink-2)">condição Vazio</text><rect x="530" y="180" width="42" height="32" rx="7" fill="var(--ready-soft)" stroke="var(--ready)" stroke-width="2"/><text x="551" y="201" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ready)">P6</text><rect x="578" y="180" width="42" height="32" rx="7" fill="var(--ready-soft)" stroke="var(--ready)" stroke-width="2"/><text x="599" y="201" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ready)">P7</text><path d="M482 196 L526 196" stroke="var(--ink-2)" stroke-width="1.6" stroke-dasharray="4 3" fill="none" marker-end="url(#mn)"/><text x="575" y="250" text-anchor="middle" font-size="11.5" fill="var(--ink-2)">WAIT põe na fila;</text><text x="575" y="265" text-anchor="middle" font-size="11.5" fill="var(--ink-2)">SIGNAL acorda um</text></svg>
+    <figcaption>Figura 3. Estrutura de um monitor. P1 executa um procedimento; P2, P3 e P4 esperam na fila de entrada; P5, P6 e P7 chamaram WAIT e esperam nas filas das condições.</figcaption>
+  </figure>
+  <p>A diferença para os semáforos está em quem cuida da exclusão mútua. Com semáforos, cada programador precisa lembrar de chamar DOWN e UP nos lugares certos, em todos os pontos do código que acessam o dado. Com monitores, o acesso ao dado só é possível pelos procedimentos do monitor, e o compilador gera sozinho o controle de entrada e saída. Um erro de esquecimento deixa de ser possível.</p>
   <p>Para a sincronização condicional, o monitor usa <b>variáveis de condição</b> com duas operações:</p>
   <ul>
     <li><code>WAIT (C)</code>: o processo espera na fila da condição C e libera o monitor para outro processo;</li>
@@ -614,7 +778,8 @@ UNTIL False;                 UNTIL False;</pre>
     lê do buffer; Cont := Cont - 1;
     IF Cont = TamBuf - 1 THEN SIGNAL (Cheio);
 END.</pre>
-  <div class="note"><span class="lbl">Hoje</span><p>Os métodos <code>synchronized</code> de Java, com <code>wait()</code> e <code>notify()</code>, funcionam como um monitor.</p></div>
+  <p>Ao chamar <code>WAIT</code>, o processo libera o monitor; se não liberasse, ninguém conseguiria entrar para mudar a condição que ele espera. Quando outro processo chama <code>SIGNAL</code>, é preciso decidir quem continua dentro do monitor, o que sinalizou ou o que foi acordado, porque os dois não podem estar lá ao mesmo tempo. Hoare propôs que o acordado execute primeiro; muitas linguagens atuais fazem o contrário, e por isso nelas o processo acordado precisa testar a condição de novo, num laço, antes de prosseguir.</p>
+  <div class="note"><span class="lbl">Hoje</span><p>Os métodos <code>synchronized</code> de Java, com <code>wait()</code> e <code>notify()</code>, funcionam como um monitor. Em C#, a instrução <code>lock</code> e a classe <code>Monitor</code> (com <code>Monitor.Wait</code> e <code>Monitor.Pulse</code>) fazem o mesmo papel; em Python, <code>threading.Condition</code>.</p></div>
 </section>
 
 <section class="sec" id="s11">
@@ -629,7 +794,8 @@ END.</pre>
     <li><b>Síncrona</b> (rendezvous): quem envia fica esperando até a mensagem ser recebida, e quem recebe espera até a mensagem chegar. Não precisa de buffer, mas limita a concorrência.</li>
     <li><b>Assíncrona</b>: quem envia não espera; a mensagem fica num buffer até ser lida. Aumenta a eficiência das aplicações, mas exige buffers e mecanismos para saber se a mensagem foi recebida.</li>
   </ul>
-  <p>Também é preciso tratar a <b>perda de mensagens</b>: o receptor envia uma confirmação (ACK), e o transmissor reenvia a mensagem se a confirmação não chegar.</p>
+  <p>Também é preciso tratar a <b>perda de mensagens</b>: o receptor envia uma confirmação (ACK), e o transmissor reenvia a mensagem se a confirmação não chegar. Se a confirmação é que se perdeu, o receptor recebe a mesma mensagem duas vezes; por isso as mensagens costumam levar um número de sequência, que permite descartar as repetidas. Entre computadores diferentes, ainda é preciso identificar os processos na rede e, muitas vezes, garantir que ninguém leia ou altere as mensagens no caminho.</p>
+  <p>As variações podem ser combinadas. Uma forma comum é a <b>assíncrona no envio e bloqueante no recebimento</b>: quem envia continua trabalhando, e quem chama RECEIVE espera até haver mensagem. É assim que funcionam, por exemplo, as filas de mensagens usadas entre serviços de um sistema web.</p>
   <div class="lab">
     <div class="lab-head"><span class="tag">Simulador</span><h4>Síncrona ou assíncrona?</h4></div>
     <div class="btns" id="ms-mode"><button class="btn sel" data-m="s">Síncrona</button><button class="btn" data-m="a">Assíncrona</button></div>
@@ -640,11 +806,18 @@ END.</pre>
     </div>
     <p class="msg" id="ms-m" aria-live="polite">Modo síncrono: envie uma mensagem.</p>
   </div>
+  <div class="win">
+    <span class="lbl">No Windows</span>
+    <h4>As janelas conversam por mensagens</h4>
+    <p>Todo programa com janela no Windows é guiado por uma fila de mensagens: cada clique, tecla ou pedido de redesenho chega como uma mensagem que o programa retira da fila e trata. O próprio Windows oferece as duas formas de envio do livro. <code>SendMessage</code> é <b>síncrona</b>: quem envia só continua depois que a janela de destino tratou a mensagem. <code>PostMessage</code> é <b>assíncrona</b>: a mensagem é colocada na fila e quem enviou segue em frente.</p>
+    <p>Quando um programa fica muito tempo sem retirar mensagens da fila, o Windows marca a janela como <span class="path2">Não respondendo</span>: as mensagens estão se acumulando sem ninguém para recebê-las.</p>
+  </div>
 </section>
 
 <section class="sec" id="s12">
   <div class="sec-head"><span class="num">7.12</span><h2>Deadlock</h2></div>
   <p><dfn>Deadlock</dfn> é a situação em que um processo espera por um recurso que nunca estará disponível ou por um evento que nunca vai ocorrer. O caso típico: o processo P1 tem o recurso R1 e quer R2; o processo P2 tem R2 e quer R1. Nenhum libera o que tem enquanto espera, e os dois ficam parados para sempre.</p>
+  <p>Deadlock não é o mesmo que starvation. No starvation, o processo poderia ser atendido, mas outros sempre passam na frente; basta mudar a política para que ele avance. No deadlock, um grupo de processos espera uns pelos outros num círculo, e nenhuma política de escolha resolve: sem uma intervenção, ninguém sai do lugar.</p>
   <p>Para haver deadlock, <b>quatro condições</b> precisam ocorrer ao mesmo tempo:</p>
   <ol>
     <li><b>Exclusão mútua</b>: cada recurso só pode estar alocado a um processo por vez.</li>
@@ -664,12 +837,40 @@ END.</pre>
     </div>
     <p class="msg" id="dl-m" aria-live="polite">Nenhum recurso alocado.</p>
   </div>
+  <p>O <b>grafo de alocação de recursos</b> usado no simulador é a forma clássica de enxergar o problema: processos e recursos são nós; uma seta do recurso para o processo indica que o recurso está alocado a ele; uma seta do processo para o recurso indica que o processo espera por ele. Quando cada recurso tem uma única unidade, haver um <b>ciclo</b> no grafo significa haver deadlock.</p>
   <h3 id="s12-1">7.12.1 Prevenção</h3>
+  <p>As estratégias contra o deadlock se dividem em três grupos: não deixar que ele aconteça (prevenção, e a variante de evitá-lo a cada pedido), deixar que aconteça e descobri-lo (detecção) e desfazê-lo depois de descoberto (correção).</p>
   <p>Garantir que uma das quatro condições nunca ocorra. Exemplos: exigir que o processo peça todos os recursos de uma vez (sem espera por recurso); permitir retirar recursos de um processo (preempção); numerar os recursos e obrigar a pedi-los sempre em ordem crescente (sem espera circular). Cada forma tem custo, como desperdício de recursos ou starvation. Outra abordagem é o <b>algoritmo do banqueiro</b>, de Dijkstra: o SO só concede um recurso se o sistema continuar num estado seguro, o que exige saber de antemão o máximo que cada processo vai pedir.</p>
+  <div class="scroll wide"><table class="t">
+    <thead><tr><th>Condição negada</th><th>Como</th><th>Custo</th></tr></thead>
+    <tbody>
+      <tr><td>Exclusão mútua</td><td>Tornar o recurso compartilhável, por exemplo com spooling (só o spooler acessa a impressora).</td><td>Nem todo recurso pode ser compartilhado.</td></tr>
+      <tr><td>Espera por recurso</td><td>O processo pede todos os recursos de uma vez, antes de começar.</td><td>Recursos ficam presos sem uso; o processo pode esperar muito para conseguir tudo junto.</td></tr>
+      <tr><td>Não preempção</td><td>Retirar recursos de um processo que espera por outros.</td><td>Difícil para recursos como impressora ou arquivo pela metade; pode causar starvation.</td></tr>
+      <tr><td>Espera circular</td><td>Numerar os recursos e exigir que sejam pedidos sempre em ordem crescente.</td><td>Os programas precisam seguir a ordem, mesmo quando ela não é natural.</td></tr>
+    </tbody>
+  </table></div>
+  <p>O algoritmo do banqueiro recebe esse nome por imitar um banco que só empresta se, mesmo emprestando, ainda tiver como atender todos os clientes até o fim. Um estado é <b>seguro</b> se existe alguma ordem em que todos os processos conseguem obter o máximo que declararam, terminar e devolver tudo. Antes de atender um pedido, o SO simula o atendimento e verifica se o estado continua seguro; se não continuar, o processo espera, mesmo havendo recursos livres.</p>
+  <div class="lab wide">
+    <div class="lab-head"><span class="tag">Simulador</span><h4>O algoritmo do banqueiro</h4></div>
+    <p class="lab-hint">O sistema tem 12 unidades de um recurso (por exemplo, unidades de fita). Cada processo declarou quanto pode pedir no máximo. Faça pedidos de 1 unidade e veja quando o SO atende e quando manda esperar.</p>
+    <div class="scroll"><table class="t" id="bk-t"></table></div>
+    <div class="btns" id="bk-b"></div>
+    <div class="btns"><button class="btn ghost" id="bk-r">Recomeçar</button></div>
+    <p class="msg" id="bk-m" aria-live="polite"></p>
+  </div>
   <h3 id="s12-2">7.12.2 Detecção</h3>
   <p>Deixar o deadlock acontecer e procurá-lo: o SO mantém estruturas com os recursos alocados e os pedidos pendentes de cada processo e, periodicamente, procura <b>espera circular</b>. Quanto mais frequente a verificação, mais UCP ela consome.</p>
+  <p>Há um compromisso na escolha do momento. Verificar a cada pedido de recurso descobre o deadlock assim que ele surge, mas custa caro. Verificar de tempos em tempos, ou quando a UCP fica ociosa por muito tempo, custa menos, mas o deadlock pode durar até a próxima verificação, com os processos envolvidos parados.</p>
   <h3 id="s12-3">7.12.3 Correção</h3>
   <p>Depois de detectado, o deadlock é desfeito <b>eliminando</b> um ou mais processos do ciclo, liberando seus recursos (escolhidos, por exemplo, por prioridade ou tempo de execução), ou fazendo <b>rollback</b>: voltar um processo a um ponto anterior, liberando os recursos obtidos depois dele.</p>
+  <p>Eliminar processos é simples, mas perde o trabalho que eles já fizeram; por isso costuma-se escolher a vítima pelo menor prejuízo: o processo com menor prioridade, o que executou por menos tempo ou o que tem menos recursos. O rollback preserva parte do trabalho, mas exige que o sistema guarde pontos de retorno (<i>checkpoints</i>) durante a execução.</p>
+  <div class="win">
+    <span class="lbl">No Windows</span>
+    <h4>Quem resolve o deadlock?</h4>
+    <p>Como a maioria dos sistemas de uso geral, o Windows não procura deadlocks entre os programas do usuário: na prática, eles são raros, e prevenir ou detectar sempre custaria caro. Se dois programas travam um esperando o outro, o efeito visível é uma janela em <span class="path2">Não respondendo</span>, e a correção fica com você: <span class="path2">Finalizar tarefa</span>, que é exatamente a eliminação de um processo do ciclo.</p>
+    <p>Já os gerenciadores de banco de dados, como o SQL Server, fazem detecção e correção automáticas: quando duas transações se bloqueiam em ciclo, o servidor escolhe uma delas como "vítima", desfaz o que ela fez (rollback) e devolve um erro ao programa, que pode tentar de novo. O Laboratório 2 de SO provoca um deadlock real com dois mutexes do Windows.</p>
+  </div>
 </section>
 
 <section class="sec" id="ex">
@@ -1016,4 +1217,125 @@ if('IntersectionObserver' in window){
 })();
 })();
 </script>
+
+<script>
+(function(){
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+function setMsg(node, text, kind){ node.textContent = text; node.className = 'msg' + (kind ? ' ' + kind : ''); }
+function seg(container, sel, cb){ $$(sel, container).forEach(b => b.addEventListener('click', () => { $$(sel, container).forEach(x => x.classList.toggle('sel', x === b)); cb(b); })); }
+const pct = (a, T) => (a / T * 100) + '%';
+
+/* ---------- 7.7 Peterson ---------- */
+(function(){
+  const c0 = $('#pt-c0'), c1 = $('#pt-c1'), vars = $('#pt-vars'), m = $('#pt-m');
+  if(!c0) return;
+  const L = i => { const j = 1 - i; return [`quer[${i}] := verdadeiro;`, `vez := ${j};`, `enquanto quer[${j}] e vez = ${j}: espera;`, `Regiao_Critica;`, `quer[${i}] := falso;`]; };
+  let S;
+  const reset = () => { S = {pc:[0, 0], quer:[false, false], vez:0, spins:[0, 0]}; draw(); setMsg(m, 'Os dois processos estão antes do protocolo de entrada.'); };
+  const draw = () => {
+    [c0, c1].forEach((el, i) => {
+      el.innerHTML = L(i).map((t, k) => `<div class="${k === S.pc[i] ? 'next' : ''}">${t}</div>`).join('');
+    });
+    const inRC = [0, 1].filter(i => S.pc[i] === 3);
+    vars.innerHTML = `<span>VARIÁVEIS COMPARTILHADAS</span><b style="font-size:19px">quer[0] = ${S.quer[0] ? 'V' : 'F'}</b><b style="font-size:19px">quer[1] = ${S.quer[1] ? 'V' : 'F'}</b><b style="font-size:19px">vez = ${S.vez}</b><span>região crítica: ${inRC.length ? inRC.map(i => 'P' + i).join(' e ') : 'livre'}</span>`;
+  };
+  const step = i => {
+    const j = 1 - i; let t, k = '';
+    switch(S.pc[i]){
+      case 0: S.quer[i] = true; S.pc[i] = 1; t = `P${i} declarou que quer entrar.`; break;
+      case 1: S.vez = j; S.pc[i] = 2; t = `P${i} deu a vez a P${j}. Se os dois quiserem entrar, quem escreveu "vez" por último é que espera.`; break;
+      case 2:
+        if(S.quer[j] && S.vez === j){ S.spins[i]++; t = `P${i} testou: P${j} quer entrar e a vez é dele. P${i} continua esperando (espera ocupada, ${S.spins[i]} teste${S.spins[i] > 1 ? 's' : ''} até agora).`; k = 'bad'; }
+        else { S.pc[i] = 3; t = `P${i} testou e pode entrar: ${S.quer[j] ? `P${j} também quer, mas a vez é de P${i}` : `P${j} não quer entrar`}. P${i} está na região crítica.`; k = 'ok'; }
+        break;
+      case 3: S.pc[i] = 4; t = `P${i} terminou a região crítica e vai executar o protocolo de saída.`; break;
+      case 4: S.quer[i] = false; S.pc[i] = 0; S.spins[i] = 0; t = `P${i} saiu: quer[${i}] = falso. Se P${j} estava esperando, agora pode entrar. P${i} volta ao início.`; k = 'ok'; break;
+    }
+    if(S.pc[0] === 3 && S.pc[1] === 3){ t = 'Os dois estão na região crítica!'; k = 'bad'; }
+    draw(); setMsg(m, t, k);
+  };
+  $('#pt-s0').addEventListener('click', () => step(0));
+  $('#pt-s1').addEventListener('click', () => step(1));
+  $('#pt-r').addEventListener('click', reset);
+  reset();
+})();
+
+/* ---------- 7.9 espera ocupada x bloqueio ---------- */
+(function(){
+  const tl = $('#bw-tl'), m = $('#bw-m');
+  if(!tl) return;
+  function simulate(mode){
+    const P = {A:{rc:6, done:false}, B:{rc:3, done:false, inRC:false, blocked:false}, C:{work:6, done:false}};
+    let lockHolder = 'A', q = ['A', 'B', 'C'], t = 0;
+    const slots = []; const fin = {};
+    while(q.length && t < 60){
+      const p = q.shift(); let kind;
+      if(p === 'A'){ P.A.rc--; kind = 'k-run'; if(P.A.rc === 0){ P.A.done = true; fin.A = t + 1; lockHolder = null; if(P.B.blocked){ P.B.blocked = false; q.push('B'); } } }
+      else if(p === 'C'){ P.C.work--; kind = 'k-c'; if(P.C.work === 0){ P.C.done = true; fin.C = t + 1; } }
+      else {
+        if(!P.B.inRC){
+          if(lockHolder){ kind = 'k-spin'; if(mode === 'block'){ P.B.blocked = true; } }
+          else { lockHolder = 'B'; P.B.inRC = true; P.B.rc--; kind = 'k-b'; }
+        } else { P.B.rc--; kind = 'k-b'; }
+        if(P.B.inRC && P.B.rc === 0){ P.B.done = true; fin.B = t + 1; lockHolder = null; }
+      }
+      slots.push({p, kind});
+      const done = (p === 'A' && P.A.done) || (p === 'C' && P.C.done) || (p === 'B' && (P.B.done || P.B.blocked));
+      if(!done) q.push(p);
+      t++;
+    }
+    return {slots, fin, waste:slots.filter(s => s.kind === 'k-spin').length, T:t};
+  }
+  const draw = mode => {
+    const r = simulate(mode), T = 20;
+    const cells = r.slots.map(s => `<i class="${s.kind}" style="width:${pct(1, T)}">${s.p}</i>`).join('') + (r.T < T ? `<i class="k-idle" style="width:${pct(T - r.T, T)}"></i>` : '');
+    tl.innerHTML = `<div class="tlrow">UCP<div class="track">${cells}</div><span class="end">${r.T} u.t.</span></div><div class="axis"><span></span><div><span>0</span><span>10</span><span>20</span></div><span></span></div>`;
+    setMsg(m, mode === 'spin'
+      ? `Espera ocupada: B ganhou a UCP ${r.waste} vezes só para testar a trava e descobrir que ainda não podia entrar. A saiu da região crítica em ${r.fin.A}, C terminou em ${r.fin.C} e tudo acabou em ${r.T}.`
+      : `Com bloqueio, B testou uma vez, foi para a fila do semáforo e saiu da disputa pela UCP. A saiu em ${r.fin.A} (antes, ${simulate('spin').fin.A}), C terminou em ${r.fin.C}, e tudo acabou em ${r.T}. Ao sair, A acordou B.`, mode === 'spin' ? 'bad' : 'ok');
+  };
+  seg($('#bw-mode'), 'button', b => draw(b.dataset.m));
+  draw('spin');
+})();
+
+/* ---------- 7.12 banqueiro ---------- */
+(function(){
+  const tb = $('#bk-t'), bb = $('#bk-b'), m = $('#bk-m');
+  if(!tb) return;
+  const TOTAL = 12;
+  let P;
+  const reset = () => { P = [{n:'P0', max:10, a:5, done:false}, {n:'P1', max:4, a:2, done:false}, {n:'P2', max:9, a:2, done:false}]; draw(); setMsg(m, `Disponível: ${avail()} unidades. O estado inicial é seguro: ${safe(P).seq.join(' → ')}.`, 'ok'); };
+  const avail = (ps = P) => TOTAL - ps.reduce((s, p) => s + (p.done ? 0 : p.a), 0);
+  function safe(ps){
+    let work = avail(ps); const fin = ps.map(p => p.done); const seq = [];
+    let moved = true;
+    while(moved){
+      moved = false;
+      ps.forEach((p, i) => { if(!fin[i] && p.max - p.a <= work){ work += p.a; fin[i] = true; seq.push(p.n); moved = true; } });
+    }
+    return {ok:fin.every(Boolean), seq};
+  }
+  const draw = () => {
+    tb.innerHTML = '<thead><tr><th>Processo</th><th>Máximo declarado</th><th>Alocado</th><th>Ainda pode pedir</th><th>Situação</th></tr></thead><tbody>' +
+      P.map(p => `<tr><td>${p.n}</td><td>${p.max}</td><td>${p.done ? '—' : p.a}</td><td>${p.done ? '—' : p.max - p.a}</td><td>${p.done ? 'terminou' : p.a === p.max ? 'tem tudo, pode terminar' : 'executando'}</td></tr>`).join('') +
+      `<tr><td>Disponível</td><td></td><td><b>${avail()}</b></td><td></td><td>de ${TOTAL} unidades</td></tr></tbody>`;
+    bb.innerHTML = P.map((p, i) => p.done ? '' : (p.a === p.max ? `<button class="btn" data-f="${i}">${p.n} termina e devolve</button>` : `<button class="btn primary" data-r="${i}">${p.n} pede 1</button>`)).join('');
+    $$('[data-r]', bb).forEach(b => b.addEventListener('click', () => request(+b.dataset.r)));
+    $$('[data-f]', bb).forEach(b => b.addEventListener('click', () => { const p = P[+b.dataset.f]; p.done = true; draw(); setMsg(m, `${p.n} terminou e devolveu ${p.a} unidades. Disponível: ${avail()}.`, 'ok'); }));
+  };
+  function request(i){
+    const p = P[i];
+    if(avail() === 0){ setMsg(m, `Não há unidades livres: ${p.n} espera.`, 'bad'); return; }
+    const trial = P.map(x => ({...x})); trial[i].a++;
+    const s = safe(trial);
+    if(s.ok){ p.a++; draw(); setMsg(m, `Pedido atendido. O estado continua seguro: existe a ordem ${s.seq.join(' → ')}, em que todos conseguem terminar.`, 'ok'); }
+    else { setMsg(m, `Pedido negado, mesmo com ${avail()} unidade(s) livre(s): se ${p.n} recebesse mais uma, nenhuma ordem garantiria que todos terminassem (estado inseguro). ${p.n} espera até alguém devolver recursos.`, 'bad'); }
+  }
+  $('#bk-r').addEventListener('click', reset);
+  reset();
+})();
+})();
+</script>
+
 </body></html>

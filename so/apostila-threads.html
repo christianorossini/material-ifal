@@ -317,7 +317,6 @@ details .ans{font-size:15px; color:var(--ink-2); display:grid; gap:4px}
 .final{border:2px solid var(--ink); border-radius:10px; padding:18px; display:grid; gap:6px; background:var(--surface)}
 .final h4{font-size:22px}
 footer.end{max-width:1160px; margin:64px auto 0; padding-top:18px; border-top:1px solid var(--line); font-family:var(--display); font-size:13px; color:var(--ink-2)}
-</style><style>
 body{margin:0}
 [hidden]{display:none!important}
 @media print{
@@ -330,7 +329,7 @@ body{margin:0}
   .top{padding-block:0 18px}
   .sec{break-before:page}
   #s1{break-before:auto}
-  .lab,.card,.def,.note,figure,table,.oq > li,.qz > li,.states,.thr{break-inside:avoid}
+  .lab,.card,.def,.note,.win,figure,table,.oq > li,.qz > li,.states,.thr{break-inside:avoid}
   pre.term{white-space:pre-wrap}
   details summary{display:none}
   .alt{padding:4px 10px}
@@ -341,6 +340,43 @@ body{margin:0}
 @media print{.gab{display:grid; gap:10px; break-before:page}}
 </style>
 </head><body>
+<style>
+/* ---- v2: quadros "No Windows" e componentes comuns ---- */
+.win{border:1.5px solid var(--wait); border-radius:8px; background:var(--surface); padding:16px 18px; display:grid; gap:10px}
+.win .lbl{font-family:var(--display); font-size:12px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--wait)}
+.win h4{font-size:17px}
+.win p,.win li{font-size:15.5px}
+.win ol,.win ul{margin:0; padding-left:1.3em; display:grid; gap:4px}
+.win kbd,.sec kbd{font-family:var(--mono); font-size:.82em; border:1px solid var(--line); border-bottom-width:2px; border-radius:4px; padding:0 5px; background:var(--bg)}
+.path2{font-family:var(--display); font-size:.92em; font-weight:600}
+pre.term.ps{background:#0F1A2B; color:#DCE6F4}
+pre.term.ps .c{color:#8DA2C0}
+.sub{font-family:var(--display); font-size:13px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-2)}
+.fig.big svg{max-width:760px}
+.sec > *, .lab > *{min-width:0}
+.seg2{display:flex; gap:8px; flex-wrap:wrap}
+.t.small td{font-size:14.5px}
+.three{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px}
+@media (max-width:760px){.three{grid-template-columns:minmax(0,1fr)}}
+/* linhas de tempo geradas por script */
+.tl{display:grid; gap:8px}
+.tlrow{display:grid; grid-template-columns:96px minmax(0,1fr) 72px; gap:10px; align-items:center; font-family:var(--display); font-size:13.5px; font-weight:700}
+.tlrow .track{display:flex; height:28px; border-radius:5px; overflow:hidden; background:var(--bg); border:1px solid var(--line)}
+.tlrow .track i{display:grid; place-items:center; height:100%; font-style:normal; font-size:11px; font-weight:700; overflow:hidden; white-space:nowrap}
+.tlrow .end{font-variant-numeric:tabular-nums; text-align:right; color:var(--ink-2); font-weight:600; font-size:12.5px; white-space:nowrap}
+.k-run{background:var(--run); color:var(--accent-ink)}
+.k-wait{background:var(--wait-soft); color:var(--wait)}
+.k-ready{background:var(--ready-soft); color:var(--ready)}
+.k-spin{background:var(--bad-soft); color:var(--bad)}
+.k-b{background:var(--wait); color:var(--surface)}
+.k-c{background:var(--ready); color:var(--surface)}
+.k-idle{background:transparent; color:var(--ink-2)}
+.tlleg{display:flex; gap:16px; flex-wrap:wrap; font-family:var(--display); font-size:13px; color:var(--ink-2)}
+.tlleg span{display:inline-flex; align-items:center; gap:6px}
+.tlleg i{display:inline-block; width:12px; height:12px; border-radius:3px}
+.axis{display:grid; grid-template-columns:96px minmax(0,1fr) 72px; gap:10px; font-family:var(--display); font-size:11.5px; color:var(--ink-2)}
+.axis div{display:flex; justify-content:space-between}
+</style>
 <style>
 /* ch6 widgets */
 .seg-row{display:flex; gap:10px; flex-wrap:wrap; align-items:center; font-family:var(--display); font-size:14px}
@@ -395,8 +431,8 @@ table.race{border-collapse:collapse; width:100%; font-size:15px}
 <header class="top">
   <p class="eyebrow">Sistemas Operacionais · IFAL Campus Maceió · Material de referência</p>
   <h1>Threads<span>.</span></h1>
-  <p class="lede">Por que um processo pode ter vários fluxos de execução, o que eles compartilham e como o sistema operacional os implementa. Leia, experimente os simuladores e, no fim, teste o que aprendeu.</p>
-  <div class="meta"><span>Base: <b>Machado &amp; Maia, <i>Arquitetura de Sistemas Operacionais</i>, cap. 6</b></span><span>Prof. Christiano Rossini</span><span>5 seções · 5 simuladores · 31 exercícios</span></div>
+  <p class="lede">Por que um processo pode ter vários fluxos de execução, o que eles compartilham e como o sistema operacional os implementa. Leia, experimente os simuladores, observe os threads do seu Windows e, no fim, teste o que aprendeu.</p>
+  <div class="meta"><span>Base: <b>Machado &amp; Maia, <i>Arquitetura de Sistemas Operacionais</i>, cap. 6</b></span><span>Prof. Christiano Rossini</span><span>5 seções · 7 simuladores · exemplos no Windows · 31 exercícios</span></div>
 </header>
 
 <div class="layout">
@@ -420,6 +456,16 @@ table.race{border-collapse:collapse; width:100%; font-size:15px}
   <p>No capítulo 5 vimos que o processo reúne tudo o que o sistema operacional precisa para executar um programa: contexto de hardware, contexto de software e espaço de endereçamento. Até o fim dos anos 1970, sistemas como Tops-10, MVS e Unix suportavam apenas processos com <b>um único thread</b>: um processo, um programa, um fluxo de execução.</p>
   <p>O problema aparece quando uma mesma aplicação precisa fazer várias coisas ao mesmo tempo. Com um fluxo por processo, a única saída é criar vários processos, o que custa caro. A partir do fim dos anos 1970 surgiu a ideia de <b>processos leves</b> (o sistema Toth, de 1979, é o marco citado), consolidada depois em sistemas como o Mach, que separa claramente os conceitos de processo e de thread. Hoje, praticamente todos os sistemas operacionais são multithread.</p>
   <div class="def"><span class="lbl">Ideia central</span><p>Com <dfn>múltiplos threads</dfn>, partes diferentes do código de um mesmo processo executam concorrentemente, com <b>menor overhead</b> do que usando vários processos, e compartilhando a mesma memória.</p></div>
+  <p>A palavra <i>thread</i> vem do inglês e significa "fio": cada thread é um fio de execução que percorre o código do programa. Em português, aparece como "o thread" ou "a thread"; o livro usa o masculino. Um processo sempre começa com um thread, o <b>thread principal</b>, e pode criar outros enquanto executa.</p>
+  <p>Uma imagem ajuda. Pense no processo como uma cozinha: os ingredientes, os utensílios e o fogão são os recursos (memória, arquivos). No modelo monothread, cada cozinha tem um único cozinheiro; para preparar três pratos ao mesmo tempo, seria preciso montar três cozinhas completas. No modelo multithread, vários cozinheiros trabalham na mesma cozinha, dividindo os ingredientes. Fica muito mais barato, mas eles precisam combinar quem usa o quê, para que dois não peguem a mesma panela ao mesmo tempo. Esse combinado é o tema do capítulo 7.</p>
+  <div class="win">
+    <span class="lbl">No Windows</span>
+    <h4>Há muito mais threads do que processos</h4>
+    <ol>
+      <li>Abra o Gerenciador de Tarefas (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Esc</kbd>) e vá a <span class="path2">Desempenho › CPU</span>. Abaixo do gráfico aparecem os totais de <span class="path2">Processos</span> e <span class="path2">Threads</span>. É comum haver de dez a vinte vezes mais threads do que processos.</li>
+      <li>Na guia <span class="path2">Detalhes</span>, clique com o botão direito no cabeçalho, escolha <span class="path2">Selecionar colunas</span> e marque <span class="path2">Threads</span>. Ordene por essa coluna: o navegador e o <code>explorer.exe</code> costumam ter dezenas de threads.</li>
+    </ol>
+  </div>
 </section>
 
 <!-- 6.2 -->
@@ -431,6 +477,7 @@ table.race{border-collapse:collapse; width:100%; font-size:15px}
     <li><b>Consumo de recursos.</b> A cada criação e eliminação de processo, o SO precisa alocar e liberar PCB, memória e demais recursos; as mudanças de contexto entre processos também são completas e custam tempo de UCP.</li>
     <li><b>Comunicação difícil e lenta.</b> Como cada processo tem seu próprio espaço de endereçamento, um não enxerga as variáveis do outro. Toda troca de dados precisa de mecanismos do SO, como pipes, sinais, semáforos, memória compartilhada ou troca de mensagens, o que deixa a aplicação mais lenta e mais complexa.</li>
   </ul>
+  <p>Um exemplo ajuda a ver o problema. Um servidor web monothread que precisa atender vários clientes ao mesmo tempo cria um subprocesso para cada conexão. Cada subprocesso recebe uma cópia do contexto de software e um espaço de endereçamento próprio, mesmo que todos executem o mesmo código. Com mil clientes, são mil espaços de endereçamento, mil conjuntos de quotas e mil trocas de contexto completas. Se os subprocessos precisam consultar uma informação comum, como uma tabela de usuários conectados, cada um precisa pedi-la aos outros por meio do SO.</p>
   <div class="lab">
     <div class="lab-head"><span class="tag">Experimente</span><h4>Quanto custa ter N fluxos?</h4></div>
     <p class="lab-hint">Escolha quantos fluxos a aplicação precisa e compare fazer isso com processos (monothread) ou com threads (multithread).</p>
@@ -443,6 +490,11 @@ table.race{border-collapse:collapse; width:100%; font-size:15px}
       <div class="counter"><b id="fl-c3">4</b><span>contextos de hardware</span></div>
       <div class="counter"><b id="fl-c4">via SO</b><span>comunicação entre fluxos</span></div>
     </div>
+  </div>
+  <div class="win">
+    <span class="lbl">No Windows</span>
+    <h4>Concorrência à moda monothread</h4>
+    <p>Você mesmo faz concorrência com processos quando abre o mesmo programa várias vezes. Abra três janelas do Prompt de Comando: no Gerenciador de Tarefas aparecem três processos <code>cmd.exe</code>, cada um com sua memória. Um não enxerga as variáveis do outro: crie uma variável em uma janela (<code>set NOME=Ana</code>) e tente lê-la na outra (<code>echo %NOME%</code>). Para trocar dados, as janelas precisariam de um arquivo, de um pipe ou de outro mecanismo do SO.</p>
   </div>
 </section>
 
@@ -464,6 +516,22 @@ fim</pre>
     </div>
     <figcaption>Figura 1. No multithread, só o contexto de hardware é duplicado.</figcaption>
   </figure>
+  <p>Além dos registradores, cada thread tem a sua própria <b>pilha</b>, guardada dentro do espaço de endereçamento do processo. É na pilha que ficam as variáveis locais e os endereços de retorno das sub-rotinas; como cada thread pode estar executando uma sub-rotina diferente, cada um precisa da sua. Já o código, as variáveis globais e o heap são únicos e vistos por todos os threads.</p>
+  <figure class="fig wide">
+    <svg viewBox="0 0 680 330" role="img" aria-label="Espaço de endereçamento de um processo com três threads: código, dados e heap compartilhados, e uma pilha para cada thread"><text x="190" y="22" text-anchor="middle" font-weight="800" font-size="15">Espaço de endereçamento do processo</text><rect x="80" y="36" width="220" height="40" fill="var(--wait-soft)" stroke="var(--line)"/><text x="190" y="61" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--wait)">pilha do T1</text><rect x="80" y="76" width="220" height="40" fill="var(--wait-soft)" stroke="var(--line)"/><text x="190" y="101" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--wait)">pilha do T2</text><rect x="80" y="116" width="220" height="40" fill="var(--wait-soft)" stroke="var(--line)"/><text x="190" y="141" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--wait)">pilha do T3</text><rect x="80" y="156" width="220" height="40" fill="var(--bg)" stroke="var(--line)" stroke-dasharray="4 4"/><text x="190" y="181" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink-2)">livre</text><rect x="80" y="196" width="220" height="40" fill="var(--ready-soft)" stroke="var(--line)"/><text x="190" y="221" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ready)">heap · compartilhado</text><rect x="80" y="236" width="220" height="40" fill="var(--ready-soft)" stroke="var(--line)"/><text x="190" y="261" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ready)">dados · compartilhados</text><rect x="80" y="276" width="220" height="40" fill="var(--run-soft)" stroke="var(--line)"/><text x="190" y="301" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--run)">código · compartilhado</text><rect x="80" y="36" width="220" height="280" fill="none" stroke="var(--ink)" stroke-width="2"/><defs><marker id="st6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--ink-2)"/></marker></defs><rect x="470" y="40" width="190" height="70" rx="10" fill="var(--surface)" stroke="var(--accent)" stroke-width="2"/><text x="565" y="62" text-anchor="middle" font-size="14" font-weight="800">Thread T1</text><text x="565" y="82" text-anchor="middle" font-size="12" fill="var(--ink-2)">contexto de hardware próprio</text><text x="565" y="99" text-anchor="middle" font-size="12" fill="var(--ink-2)">PC · SP · registradores · estado</text><path d="M468 70 L304 56" stroke="var(--ink-2)" stroke-width="1.6" fill="none" marker-end="url(#st6)"/><path d="M468 90 C420 90 380 300 304 286" stroke="var(--line)" stroke-width="1.4" stroke-dasharray="4 4" fill="none" marker-end="url(#st6)"/><rect x="470" y="140" width="190" height="70" rx="10" fill="var(--surface)" stroke="var(--accent)" stroke-width="2"/><text x="565" y="162" text-anchor="middle" font-size="14" font-weight="800">Thread T2</text><text x="565" y="182" text-anchor="middle" font-size="12" fill="var(--ink-2)">contexto de hardware próprio</text><text x="565" y="199" text-anchor="middle" font-size="12" fill="var(--ink-2)">PC · SP · registradores · estado</text><path d="M468 170 L304 96" stroke="var(--ink-2)" stroke-width="1.6" fill="none" marker-end="url(#st6)"/><path d="M468 190 C420 190 380 300 304 294" stroke="var(--line)" stroke-width="1.4" stroke-dasharray="4 4" fill="none" marker-end="url(#st6)"/><rect x="470" y="240" width="190" height="70" rx="10" fill="var(--surface)" stroke="var(--accent)" stroke-width="2"/><text x="565" y="262" text-anchor="middle" font-size="14" font-weight="800">Thread T3</text><text x="565" y="282" text-anchor="middle" font-size="12" fill="var(--ink-2)">contexto de hardware próprio</text><text x="565" y="299" text-anchor="middle" font-size="12" fill="var(--ink-2)">PC · SP · registradores · estado</text><path d="M468 270 L304 136" stroke="var(--ink-2)" stroke-width="1.6" fill="none" marker-end="url(#st6)"/><path d="M468 290 C420 290 380 300 304 302" stroke="var(--line)" stroke-width="1.4" stroke-dasharray="4 4" fill="none" marker-end="url(#st6)"/><text x="386" y="30" text-anchor="middle" font-size="11.5" fill="var(--ink-2)">SP aponta para a</text><text x="386" y="44" text-anchor="middle" font-size="11.5" fill="var(--ink-2)">pilha do thread</text><text x="380" y="326" text-anchor="middle" font-size="11.5" fill="var(--ink-2)">PC aponta para o código comum</text></svg>
+    <figcaption>Figura 2. Um processo com três threads. O apontador de pilha (SP) de cada thread aponta para a sua própria pilha; o contador de programa (PC) de todos aponta para o mesmo código.</figcaption>
+  </figure>
+  <p>O SO mantém, para cada thread, uma estrutura de controle própria, menor que o PCB, às vezes chamada de <b>TCB</b> (<i>Thread Control Block</i>): guarda o contexto de hardware, o estado, a prioridade e um ponteiro para o processo ao qual o thread pertence. No Windows, essa estrutura é a <code>ETHREAD</code>; no Linux, cada thread tem sua própria <code>task_struct</code>, que compartilha com as demais a memória e os arquivos abertos.</p>
+  <div class="win">
+    <span class="lbl">No Windows</span>
+    <h4>Os estados de cada thread</h4>
+    <p>O PowerShell mostra os threads de um processo e o estado de cada um. Os nomes estão em inglês: <code>Running</code> é execução, <code>Ready</code> é pronto e <code>Wait</code> é espera.</p>
+    <pre class="term ps"><span class="c"># threads do Explorador de Arquivos, agrupados por estado</span>
+PS&gt; (Get-Process explorer).Threads | Group-Object ThreadState | Select-Object Name, Count
+<span class="c"># os dez primeiros threads, com o motivo da espera</span>
+PS&gt; (Get-Process explorer).Threads | Select-Object -First 10 Id, ThreadState, WaitReason</pre>
+    <p>Quase todos aparecem em <code>Wait</code>: estão esperando um clique, uma mensagem ou um temporizador. Cada thread tem seu próprio número (<code>Id</code>) e seu próprio estado, embora todos pertençam ao mesmo processo.</p>
+  </div>
   <div class="def"><span class="lbl">Dois papéis separados</span><p>O <b>processo</b> passa a ser a <dfn>unidade de alocação de recursos</dfn> (recebe memória, arquivos, quotas e privilégios). O <b>thread</b> passa a ser a <dfn>unidade de escalonamento</dfn> (é quem o escalonador escolhe para usar a UCP).</p></div>
 
   <h3>Vantagens e riscos do compartilhamento</h3>
@@ -471,6 +539,7 @@ fim</pre>
     <div class="card"><h4>Vantagens</h4><ul><li>criar, eliminar e trocar threads é muito mais rápido do que fazer o mesmo com processos;</li><li>a comunicação é feita por variáveis na memória compartilhada, sem passar pelo SO;</li><li>menos recursos do sistema são consumidos.</li></ul></div>
     <div class="card"><h4>Desvantagens</h4><ul><li>não há proteção entre threads do mesmo processo: um pode alterar ou corromper os dados do outro;</li><li>o acesso aos dados compartilhados precisa ser <b>sincronizado</b> (capítulo 7);</li><li>um erro grave em um thread pode derrubar o processo inteiro.</li></ul></div>
   </div>
+  <p>Por que o thread é mais barato? Criar um processo exige montar um PCB, um espaço de endereçamento e um contexto de software; criar um thread exige apenas uma estrutura de controle pequena e uma pilha. Na troca entre threads do mesmo processo, o SO troca só os registradores: o mapa de memória continua o mesmo, e os dados que já estão no cache do processador continuam úteis. Em sistemas reais, criar um thread costuma ser uma ordem de grandeza mais rápido do que criar um processo.</p>
   <div class="lab">
     <div class="lab-head"><span class="tag">Experimente</span><h4>Dois threads, uma variável</h4></div>
     <p class="lab-hint">O saldo começa em 1000. O thread T1 deposita 100 e o thread T2 saca 50. O resultado esperado é 1050. Execute passo a passo nas duas situações.</p>
@@ -495,6 +564,15 @@ fim</pre>
     <p class="msg" id="ed-m" aria-live="polite">Modo multithread: digitação, exibição e gravação acontecem ao mesmo tempo.</p>
   </div>
   <p><b>Ambientes cliente-servidor.</b> Um servidor de arquivos monothread atenderia um pedido por vez: se um pedido espera o disco, todos os outros esperam. Com threads, cada solicitação é atendida por um thread; enquanto um espera a E/S, os outros continuam atendendo, e criar um thread por pedido é barato.</p>
+  <div class="lab wide">
+    <div class="lab-head"><span class="tag">Simulador</span><h4>Servidor de arquivos: um thread ou um thread por pedido?</h4></div>
+    <p class="lab-hint">Cada pedido usa a UCP por 1 unidade de tempo e depois espera 4 unidades pela leitura dos dados (disco ou rede), que pode acontecer ao mesmo tempo que a de outros pedidos. Escolha quantos pedidos chegam juntos e compare os dois servidores.</p>
+    <div class="range"><label for="sv-n">Pedidos simultâneos:</label><input type="range" id="sv-n" min="1" max="6" value="4"><output id="sv-o">4</output></div>
+    <div class="seg2" id="sv-mode"><button class="btn sel" data-m="mono">Servidor monothread</button><button class="btn" data-m="multi">Servidor multithread</button></div>
+    <div class="tl" id="sv-tl"></div>
+    <div class="tlleg"><span><i class="k-run"></i>usando a UCP</span><span><i class="k-wait"></i>esperando a leitura</span><span><i class="k-ready"></i>esperando ser atendido</span></div>
+    <p class="msg" id="sv-m" aria-live="polite"></p>
+  </div>
   <p><b>Múltiplos processadores.</b> Se o sistema escalona threads, cada um pode executar em um processador diferente. Assim, partes do mesmo programa rodam em <b>paralelo</b>, compartilhando a mesma memória, e a aplicação termina antes.</p>
   <p><b>Arquitetura microkernel.</b> Nessa arquitetura, os serviços do sistema rodam como processos servidores fora do núcleo. Com threads, cada servidor atende vários pedidos concorrentemente, o que compensa parte do custo da troca de mensagens.</p>
 </section>
@@ -512,6 +590,11 @@ fim</pre>
       <tr><td>Scheduler activations</td><td>Biblioteca e núcleo, cooperando e trocando avisos.</td><td>M : N com cooperação</td></tr>
     </tbody>
   </table></div>
+  <p>A diferença entre as abordagens está no que o núcleo enxerga. O escalonador do SO só consegue distribuir a UCP entre as entidades que conhece. Se ele conhece apenas o processo, decide só sobre o processo; se conhece cada thread, pode bloquear um, dar a UCP a outro e espalhá-los pelos processadores.</p>
+  <figure class="fig wide">
+    <svg viewBox="0 0 720 270" role="img" aria-label="Três formas de mapear threads de usuário em entidades do núcleo: N para 1, 1 para 1 e M para N"><rect x="10" y="6" width="220" height="256" rx="12" fill="var(--surface)" stroke="var(--line)" stroke-width="1.5"/><text x="120" y="30" text-anchor="middle" font-size="14" font-weight="800">Modo usuário · N:1</text><text x="22" y="56" font-size="11" font-weight="700" fill="var(--ink-2)">MODO USUÁRIO</text><line x1="20" y1="150" x2="220" y2="150" stroke="var(--ink-2)" stroke-width="1.5" stroke-dasharray="6 5"/><text x="22" y="232" font-size="11" font-weight="700" fill="var(--ink-2)">NÚCLEO</text><line x1="50" y1="100" x2="120" y2="196" stroke="var(--ink-2)" stroke-width="1.6"/><line x1="97" y1="100" x2="120" y2="196" stroke="var(--ink-2)" stroke-width="1.6"/><line x1="144" y1="100" x2="120" y2="196" stroke="var(--ink-2)" stroke-width="1.6"/><line x1="191" y1="100" x2="120" y2="196" stroke="var(--ink-2)" stroke-width="1.6"/><rect x="40" y="120" width="160" height="20" rx="4" fill="var(--ready-soft)" stroke="var(--ready)"/><text x="120" y="134" text-anchor="middle" font-size="11" font-weight="700" fill="var(--ready)">biblioteca de threads</text><circle cx="50" cy="100" r="15" fill="var(--run-soft)" stroke="var(--run)" stroke-width="2"/><text x="50" y="104" text-anchor="middle" font-size="11" font-weight="700" fill="var(--run)">T</text><circle cx="97" cy="100" r="15" fill="var(--run-soft)" stroke="var(--run)" stroke-width="2"/><text x="97" y="104" text-anchor="middle" font-size="11" font-weight="700" fill="var(--run)">T</text><circle cx="144" cy="100" r="15" fill="var(--run-soft)" stroke="var(--run)" stroke-width="2"/><text x="144" y="104" text-anchor="middle" font-size="11" font-weight="700" fill="var(--run)">T</text><circle cx="191" cy="100" r="15" fill="var(--run-soft)" stroke="var(--run)" stroke-width="2"/><text x="191" y="104" text-anchor="middle" font-size="11" font-weight="700" fill="var(--run)">T</text><rect x="103" y="186" width="34" height="26" rx="5" fill="var(--wait-soft)" stroke="var(--wait)" stroke-width="2"/><text x="120" y="203" text-anchor="middle" font-size="11" font-weight="700" fill="var(--wait)">K</text><text x="120" y="252" text-anchor="middle" font-size="12" fill="var(--ink-2)">o núcleo vê um só fluxo</text><rect x="250" y="6" width="220" height="256" rx="12" fill="var(--surface)" stroke="var(--line)" stroke-width="1.5"/><text x="360" y="30" text-anchor="middle" font-size="14" font-weight="800">Modo kernel · 1:1</text><text x="262" y="56" font-size="11" font-weight="700" fill="var(--ink-2)">MODO USUÁRIO</text><line x1="260" y1="150" x2="460" y2="150" stroke="var(--ink-2)" stroke-width="1.5" stroke-dasharray="6 5"/><text x="262" y="232" font-size="11" font-weight="700" fill="var(--ink-2)">NÚCLEO</text><line x1="290" y1="100" x2="290" y2="196" stroke="var(--ink-2)" stroke-width="1.6"/><line x1="337" y1="100" x2="337" y2="196" stroke="var(--ink-2)" stroke-width="1.6"/><line x1="384" y1="100" x2="384" y2="196" stroke="var(--ink-2)" stroke-width="1.6"/><line x1="431" y1="100" x2="431" y2="196" stroke="var(--ink-2)" stroke-width="1.6"/><circle cx="290" cy="100" r="15" fill="var(--run-soft)" stroke="var(--run)" stroke-width="2"/><text x="290" y="104" text-anchor="middle" font-size="11" font-weight="700" fill="var(--run)">T</text><circle cx="337" cy="100" r="15" fill="var(--run-soft)" stroke="var(--run)" stroke-width="2"/><text x="337" y="104" text-anchor="middle" font-size="11" font-weight="700" fill="var(--run)">T</text><circle cx="384" cy="100" r="15" fill="var(--run-soft)" stroke="var(--run)" stroke-width="2"/><text x="384" y="104" text-anchor="middle" font-size="11" font-weight="700" fill="var(--run)">T</text><circle cx="431" cy="100" r="15" fill="var(--run-soft)" stroke="var(--run)" stroke-width="2"/><text x="431" y="104" text-anchor="middle" font-size="11" font-weight="700" fill="var(--run)">T</text><rect x="273" y="186" width="34" height="26" rx="5" fill="var(--wait-soft)" stroke="var(--wait)" stroke-width="2"/><text x="290" y="203" text-anchor="middle" font-size="11" font-weight="700" fill="var(--wait)">K</text><rect x="320" y="186" width="34" height="26" rx="5" fill="var(--wait-soft)" stroke="var(--wait)" stroke-width="2"/><text x="337" y="203" text-anchor="middle" font-size="11" font-weight="700" fill="var(--wait)">K</text><rect x="367" y="186" width="34" height="26" rx="5" fill="var(--wait-soft)" stroke="var(--wait)" stroke-width="2"/><text x="384" y="203" text-anchor="middle" font-size="11" font-weight="700" fill="var(--wait)">K</text><rect x="414" y="186" width="34" height="26" rx="5" fill="var(--wait-soft)" stroke="var(--wait)" stroke-width="2"/><text x="431" y="203" text-anchor="middle" font-size="11" font-weight="700" fill="var(--wait)">K</text><text x="360" y="252" text-anchor="middle" font-size="12" fill="var(--ink-2)">o núcleo vê cada thread</text><rect x="490" y="6" width="220" height="256" rx="12" fill="var(--surface)" stroke="var(--line)" stroke-width="1.5"/><text x="600" y="30" text-anchor="middle" font-size="14" font-weight="800">Híbrido · M:N</text><text x="502" y="56" font-size="11" font-weight="700" fill="var(--ink-2)">MODO USUÁRIO</text><line x1="500" y1="150" x2="700" y2="150" stroke="var(--ink-2)" stroke-width="1.5" stroke-dasharray="6 5"/><text x="502" y="232" font-size="11" font-weight="700" fill="var(--ink-2)">NÚCLEO</text><line x1="530" y1="100" x2="553" y2="196" stroke="var(--ink-2)" stroke-width="1.6"/><line x1="577" y1="100" x2="553" y2="196" stroke="var(--ink-2)" stroke-width="1.6"/><line x1="624" y1="100" x2="647" y2="196" stroke="var(--ink-2)" stroke-width="1.6"/><line x1="671" y1="100" x2="647" y2="196" stroke="var(--ink-2)" stroke-width="1.6"/><circle cx="530" cy="100" r="15" fill="var(--run-soft)" stroke="var(--run)" stroke-width="2"/><text x="530" y="104" text-anchor="middle" font-size="11" font-weight="700" fill="var(--run)">T</text><circle cx="577" cy="100" r="15" fill="var(--run-soft)" stroke="var(--run)" stroke-width="2"/><text x="577" y="104" text-anchor="middle" font-size="11" font-weight="700" fill="var(--run)">T</text><circle cx="624" cy="100" r="15" fill="var(--run-soft)" stroke="var(--run)" stroke-width="2"/><text x="624" y="104" text-anchor="middle" font-size="11" font-weight="700" fill="var(--run)">T</text><circle cx="671" cy="100" r="15" fill="var(--run-soft)" stroke="var(--run)" stroke-width="2"/><text x="671" y="104" text-anchor="middle" font-size="11" font-weight="700" fill="var(--run)">T</text><rect x="536" y="186" width="34" height="26" rx="5" fill="var(--wait-soft)" stroke="var(--wait)" stroke-width="2"/><text x="553" y="203" text-anchor="middle" font-size="11" font-weight="700" fill="var(--wait)">K</text><rect x="630" y="186" width="34" height="26" rx="5" fill="var(--wait-soft)" stroke="var(--wait)" stroke-width="2"/><text x="647" y="203" text-anchor="middle" font-size="11" font-weight="700" fill="var(--wait)">K</text><text x="600" y="252" text-anchor="middle" font-size="12" fill="var(--ink-2)">vários T sobre cada K</text></svg>
+    <figcaption>Figura 3. Como os threads da aplicação (T) se apoiam em entidades do núcleo (K). A linha tracejada separa o modo usuário do núcleo.</figcaption>
+  </figure>
 
   <h3 id="s4-1">6.4.1 Threads em modo usuário</h3>
   <p>Os <dfn>threads em modo usuário</dfn> (TMU) são implementados pela própria aplicação, com uma <b>biblioteca de rotinas</b> executada em modo usuário. O sistema operacional não sabe da existência de múltiplos threads: ele enxerga e escalona apenas o processo.</p>
@@ -520,13 +603,15 @@ fim</pre>
     <div class="card"><h4>Desvantagens</h4><ul><li>se um thread faz uma <b>chamada de sistema bloqueante</b> (uma E/S, por exemplo), o SO coloca o <b>processo inteiro</b> em espera, e todos os threads param;</li><li>o SO dá UCP ao processo, não aos threads: <b>não há paralelismo</b> em vários processadores;</li><li>tratar sinais e fazer preempção entre threads fica a cargo da biblioteca, o que é complexo.</li></ul></div>
   </div>
 
+  <p>Para contornar o bloqueio, algumas bibliotecas substituem as chamadas bloqueantes por versões que primeiro verificam se a operação vai bloquear; se for, a biblioteca troca de thread em vez de chamar o SO. Essa técnica, às vezes chamada de <i>jacket</i> (invólucro), complica a biblioteca e não cobre todos os casos, como uma falta de página, em que o processo inteiro espera o disco sem que a biblioteca perceba.</p>
   <h3 id="s4-2">6.4.2 Threads em modo kernel</h3>
   <p>Os <dfn>threads em modo kernel</dfn> (TMK) são implementados pelo próprio núcleo, por meio de chamadas de sistema. O SO conhece cada thread e pode escalonar cada um individualmente.</p>
   <div class="twocol wide">
     <div class="card"><h4>Vantagens</h4><ul><li>quando um thread fica em espera, os outros threads do processo continuam executando;</li><li>com vários processadores, threads do mesmo processo executam em <b>paralelo</b>.</li></ul></div>
     <div class="card"><h4>Desvantagens</h4><ul><li><b>desempenho</b>: toda operação com threads (criar, trocar, sincronizar) passa pelo núcleo e exige mudança de modo usuário → kernel → usuário.</li></ul></div>
   </div>
-  <div class="note"><span class="lbl">Na prática</span><p>Linux e Windows usam essencialmente este modelo: cada thread criado pela aplicação corresponde a um thread do núcleo.</p></div>
+  <p>O custo da mudança de modo vem do mecanismo de proteção: para entrar no núcleo, o processador precisa sair do modo usuário por uma instrução especial, o SO confere os parâmetros, executa a rotina e devolve o controle. Isso leva bem mais tempo do que uma simples chamada de sub-rotina dentro da aplicação, que é o que acontece no modo usuário.</p>
+  <div class="note"><span class="lbl">Na prática</span><p>Linux e Windows usam essencialmente este modelo: cada thread criado pela aplicação corresponde a um thread do núcleo. No Linux, a biblioteca de threads padrão (NPTL) cria cada thread com a chamada <code>clone()</code>; no Windows, a função <code>CreateThread</code> pede ao núcleo um novo thread do processo.</p></div>
 
   <h3 id="s4-3">6.4.3 Threads em modo híbrido</h3>
   <p>A arquitetura <dfn>híbrida</dfn> combina as duas anteriores: um processo pode ter vários threads em modo kernel, e cada TMK pode executar vários threads em modo usuário. O programador ganha flexibilidade: pode usar TMK onde precisa de paralelismo e TMU onde precisa de trocas rápidas.</p>
@@ -534,6 +619,16 @@ fim</pre>
 
   <h3 id="s4-4">6.4.4 Scheduler activations</h3>
   <p>Proposto no início dos anos 1990 na Universidade de Washington, o <dfn>scheduler activations</dfn> busca reunir o melhor dos modelos anteriores fazendo o <b>núcleo e a biblioteca de threads cooperarem</b>. O núcleo avisa a biblioteca, por uma <i>upcall</i>, sempre que um thread bloqueia ou volta a ficar pronto; a biblioteca, por sua vez, informa ao núcleo quantos processadores precisa. Com essa troca de informações, a biblioteca escalona os threads sem mudanças de modo desnecessárias e, quando um thread bloqueia, simplesmente coloca outro para executar. É essa a vantagem em relação ao modelo híbrido: o bloqueio de um thread não prende os demais.</p>
+  <div class="scroll wide"><table class="t">
+    <thead><tr><th>Critério</th><th>Modo usuário</th><th>Modo kernel</th><th>Híbrido</th><th>Scheduler activations</th></tr></thead>
+    <tbody>
+      <tr><td>Um thread bloqueia</td><td>o processo inteiro para</td><td>só ele para</td><td>param os TMU do mesmo TMK</td><td>só ele para</td></tr>
+      <tr><td>Paralelismo em vários processadores</td><td>não</td><td>sim</td><td>sim</td><td>sim</td></tr>
+      <tr><td>Custo de criar e trocar threads</td><td>baixo</td><td>alto (mudança de modo)</td><td>baixo entre TMU</td><td>baixo</td></tr>
+      <tr><td>Precisa de suporte do SO</td><td>não</td><td>sim</td><td>sim</td><td>sim, e mais complexo</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note"><span class="lbl">Ideias que voltaram</span><p>O modelo M:N reaparece em linguagens atuais. As <i>goroutines</i> da linguagem Go e as <i>virtual threads</i> do Java 21 são threads leves gerenciados pela própria linguagem, que os distribui sobre um número menor de threads do SO. A biblioteca intercepta as operações bloqueantes e troca de thread sozinha, resolvendo o problema clássico dos threads em modo usuário.</p></div>
 
   <div class="lab wide">
     <div class="lab-head"><span class="tag">Simulador</span><h4>O que acontece quando um thread pede E/S?</h4></div>
@@ -547,6 +642,15 @@ fim</pre>
     <div class="btns"><button class="btn ghost" id="bl-reset">Concluir a E/S</button></div>
     <p class="msg" id="bl-m" aria-live="polite">Escolha um thread e peça uma E/S.</p>
   </div>
+  <div class="win">
+    <span class="lbl">No Windows</span>
+    <h4>Os modelos dentro do Windows</h4>
+    <ul>
+      <li><b>Threads em modo kernel:</b> todo thread criado com <code>CreateThread</code> é conhecido pelo núcleo e escalonado individualmente. É o que você vê na coluna <span class="path2">Threads</span> do Gerenciador de Tarefas.</li>
+      <li><b>Fibras (<i>fibers</i>):</b> o Windows também oferece threads em modo usuário. A aplicação cria fibras dentro de um thread e decide sozinha quando passar de uma para outra; o núcleo não as enxerga. Se uma fibra faz uma chamada bloqueante, o thread inteiro, com todas as fibras, para.</li>
+      <li><b>UMS (<i>User-Mode Scheduling</i>):</b> recurso das versões de 64 bits do Windows 7 em diante, com uma ideia próxima à do scheduler activations: o núcleo avisa a aplicação quando um thread bloqueia. Foi descontinuado nas versões mais recentes do Windows.</li>
+    </ul>
+  </div>
 </section>
 
 <!-- 6.5 -->
@@ -559,6 +663,23 @@ fim</pre>
     <li><b>Depuração.</b> A ordem de execução dos threads muda a cada execução (não determinismo), então um erro pode aparecer só de vez em quando e ser difícil de reproduzir.</li>
     <li><b>Padrões.</b> Para portabilidade, usam-se interfaces padronizadas, como o <b>POSIX Threads</b> (Pthreads, IEEE 1003.1c), e bibliotecas preparadas para uso por vários threads (<i>thread-safe</i>).</li>
   </ul>
+  <h3>Formas de organizar os threads</h3>
+  <p>Na prática, as aplicações multithread costumam seguir alguns padrões de organização:</p>
+  <div class="three wide">
+    <div class="card"><h4>Mestre e trabalhadores</h4><p>Um thread recebe as tarefas e as distribui entre threads trabalhadores. É o modelo do servidor que entrega cada pedido a um thread.</p></div>
+    <div class="card"><h4>Pool de threads</h4><p>Os trabalhadores são criados uma vez, no início, e reaproveitados. Uma tarefa nova entra numa fila e o primeiro thread livre a executa. Evita o custo de criar e destruir threads a todo momento e limita quantos existem.</p></div>
+    <div class="card"><h4>Linha de produção (pipeline)</h4><p>Cada thread faz uma etapa e passa o resultado ao próximo, como no editor de texto: entrada, exibição e gravação.</p></div>
+  </div>
+  <p>Escolher <b>quantos</b> threads usar depende do tipo de trabalho. Para tarefas que só calculam (CPU-bound), mais threads do que processadores não acelera nada: os threads extras apenas se revezam nos mesmos processadores, com mais trocas de contexto. Para tarefas que esperam muito por E/S (I/O-bound), vale ter mais threads, porque enquanto uns esperam, outros usam a UCP.</p>
+  <div class="lab wide">
+    <div class="lab-head"><span class="tag">Simulador</span><h4>Quantos threads para dois processadores?</h4></div>
+    <p class="lab-hint">Oito tarefas de cálculo, de durações diferentes, são divididas entre os threads de um pool. O computador tem 2 processadores. Mude o número de threads e veja quando o trabalho termina.</p>
+    <div class="range"><label for="pl-n">Threads no pool:</label><input type="range" id="pl-n" min="1" max="6" value="1"><output id="pl-o">1</output></div>
+    <div class="tl" id="pl-tl"></div>
+    <p class="msg" id="pl-m" aria-live="polite"></p>
+  </div>
+  <h3>Programando com threads</h3>
+  <p>O exemplo abaixo usa a interface POSIX Threads, disponível no Linux e em outros sistemas Unix. Logo depois, o mesmo programa com a API do Windows.</p>
   <pre class="term">#include &lt;pthread.h&gt;
 #include &lt;stdio.h&gt;
 
@@ -583,6 +704,33 @@ int main(void) {
     <div class="termbox" id="pt-out" aria-live="polite"></div>
     <div class="btns"><button class="btn primary" id="pt-run">$ ./prog</button><button class="btn ghost" id="pt-clr">Limpar</button></div>
   </div>
+  <pre class="term">#include &lt;windows.h&gt;
+#include &lt;stdio.h&gt;
+
+DWORD WINAPI tarefa(LPVOID arg) {
+    printf("thread %d executando\n", (int)(INT_PTR) arg);
+    return 0;
+}
+
+int main(void) {
+    HANDLE t[3];
+    for (int i = 0; i &lt; 3; i++)
+        t[i] = CreateThread(NULL, 0, tarefa, (LPVOID)(INT_PTR) i, 0, NULL); <span class="c">// cria</span>
+    WaitForMultipleObjects(3, t, TRUE, INFINITE);                         <span class="c">// espera os três</span>
+    printf("main terminou\n");
+    return 0;
+}</pre>
+  <p>As duas versões têm a mesma estrutura: criar os threads, deixá-los executar e esperar que terminem. <code>pthread_create</code> corresponde a <code>CreateThread</code>, e <code>pthread_join</code> a <code>WaitForMultipleObjects</code>. Linguagens de alto nível escondem essas chamadas: em Java, <code>new Thread(...).start()</code>; em C#, <code>new Thread(...).Start()</code>; em Python, <code>threading.Thread(...).start()</code>.</p>
+  <div class="win">
+    <span class="lbl">No Windows</span>
+    <h4>Veja threads sendo criados</h4>
+    <ol>
+      <li>Pressione <kbd>Win</kbd>+<kbd>R</kbd> e digite <code>resmon</code>. No Monitor de Recursos, a guia <span class="path2">CPU</span> mostra a coluna <span class="path2">Threads</span> de cada processo, atualizada em tempo real.</li>
+      <li>Marque o navegador na lista e abra várias abas com páginas diferentes. O número de threads do navegador sobe enquanto as páginas carregam e cai depois.</li>
+      <li>Repita com um programa simples, como a Calculadora. Programas que fazem pouca coisa ao mesmo tempo usam poucos threads.</li>
+    </ol>
+  </div>
+  <p class="sub">No Linux, para comparar</p>
   <pre class="term"><span class="c"># no Linux, observando threads</span>
 $ ps -eLf            <span class="c"># coluna LWP: um identificador por thread</span>
 $ top -H             <span class="c"># mostra threads em vez de processos</span>
@@ -835,4 +983,96 @@ if('IntersectionObserver' in window){
 })();
 })();
 </script>
+
+<script>
+(function(){
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+function setMsg(node, text, kind){ node.textContent = text; node.className = 'msg' + (kind ? ' ' + kind : ''); }
+function seg(container, sel, cb){ $$(sel, container).forEach(b => b.addEventListener('click', () => { $$(sel, container).forEach(x => x.classList.toggle('sel', x === b)); cb(b); })); }
+const pct = (a, T) => (a / T * 100) + '%';
+
+/* ---------- 6.3 servidor ---------- */
+(function(){
+  const tl = $('#sv-tl'), m = $('#sv-m'), rng = $('#sv-n');
+  if(!tl) return;
+  let mode = 'mono';
+  const draw = () => {
+    const n = +rng.value; $('#sv-o').textContent = n;
+    const T = 5 * n;
+    const rows = []; let sum = 0, last = 0;
+    for(let i = 0; i < n; i++){
+      const start = mode === 'mono' ? 5 * i : i;
+      const end = start + 5; sum += end; last = Math.max(last, end);
+      const segs = [];
+      if(start > 0) segs.push(`<i class="k-ready" style="width:${pct(start, T)}">${start >= 2 ? 'aguarda' : ''}</i>`);
+      segs.push(`<i class="k-run" style="width:${pct(1, T)}">UCP</i>`);
+      segs.push(`<i class="k-wait" style="width:${pct(4, T)}">leitura</i>`);
+      if(end < T) segs.push(`<i class="k-idle" style="width:${pct(T - end, T)}"></i>`);
+      rows.push(`<div class="tlrow">Pedido ${i + 1}<div class="track">${segs.join('')}</div><span class="end">fim: ${end}</span></div>`);
+    }
+    rows.push(`<div class="axis"><span></span><div><span>0</span><span>${T / 2}</span><span>${T}</span></div><span></span></div>`);
+    tl.innerHTML = rows.join('');
+    const media = (sum / n).toFixed(1).replace('.', ',');
+    setMsg(m, mode === 'mono'
+      ? `Monothread: o servidor só começa um pedido quando termina o anterior, inclusive a espera pela leitura. O último pedido termina em ${last}; o tempo médio de resposta é ${media}.`
+      : `Multithread: enquanto um thread espera a leitura, outro usa a UCP. O último pedido termina em ${last} (antes, ${5 * n}); o tempo médio de resposta cai para ${media}.`, mode === 'multi' ? 'ok' : '');
+  };
+  rng.addEventListener('input', draw);
+  seg($('#sv-mode'), 'button', b => { mode = b.dataset.m; draw(); });
+  draw();
+})();
+
+/* ---------- 6.5 pool de threads ---------- */
+(function(){
+  const tl = $('#pl-tl'), m = $('#pl-m'), rng = $('#pl-n');
+  if(!tl) return;
+  const TASKS = [5, 3, 4, 2, 6, 3, 4, 5];
+  const COL = ['var(--run)', 'var(--wait)', 'var(--ready)', 'var(--bad)', 'var(--neutral)', 'var(--ink-2)'];
+  function simulate(nt){
+    const queue = [...TASKS];
+    const th = Array.from({length:nt}, (_, i) => ({id:i + 1, left:0}));
+    const lanes = [[], []];
+    let rr = 0, t = 0, switches = 0;
+    const lastOn = [null, null];
+    while(true){
+      th.forEach(x => { if(x.left === 0 && queue.length) x.left = queue.shift(); });
+      const runnable = th.filter(x => x.left > 0);
+      if(!runnable.length) break;
+      // round robin: escolhe até 2 threads a partir de rr
+      const order = runnable.slice().sort((a, b) => ((a.id - 1 - rr + nt) % nt) - ((b.id - 1 - rr + nt) % nt));
+      const pick = order.slice(0, 2);
+      for(let c = 0; c < 2; c++){
+        const x = pick[c];
+        lanes[c].push(x ? x.id : 0);
+        if(x && lastOn[c] !== null && lastOn[c] !== x.id) switches++;
+        if(x) lastOn[c] = x.id;
+      }
+      pick.forEach(x => x.left--);
+      rr = (rr + 2) % nt;
+      t++;
+      if(t > 200) break;
+    }
+    return {lanes, t, switches};
+  }
+  const runs = arr => { const r = []; arr.forEach(v => { if(r.length && r[r.length - 1].v === v) r[r.length - 1].n++; else r.push({v, n:1}); }); return r; };
+  const draw = () => {
+    const nt = +rng.value; $('#pl-o').textContent = nt;
+    const r = simulate(nt), T = 32;
+    const row = (name, lane) => `<div class="tlrow">${name}<div class="track">${runs(lane).map(s => s.v
+      ? `<i style="width:${pct(s.n, T)}; background:${COL[s.v - 1]}; color:var(--surface)" title="T${s.v}">${s.n >= 2 ? 'T' + s.v : ''}</i>`
+      : `<i class="k-idle" style="width:${pct(s.n, T)}">${s.n >= 3 ? 'ociosa' : ''}</i>`).join('')}${r.t < T ? `<i class="k-idle" style="width:${pct(T - r.t, T)}"></i>` : ''}</div><span class="end">${lane.filter(Boolean).length} u.t.</span></div>`;
+    tl.innerHTML = row('UCP 1', r.lanes[0]) + row('UCP 2', r.lanes[1]) + `<div class="axis"><span></span><div><span>0</span><span>16</span><span>32</span></div><span></span></div>`;
+    let txt;
+    if(nt === 1) txt = `Com 1 thread, uma UCP fica ociosa o tempo todo. O trabalho termina em ${r.t} unidades de tempo.`;
+    else if(nt === 2) txt = `Com 2 threads, um por processador, o trabalho termina em ${r.t} unidades: praticamente a metade.`;
+    else { const r2 = simulate(2); txt = `Com ${nt} threads, o trabalho termina em ${r.t} unidades, praticamente o mesmo que com 2 threads (${r2.t}), porque só há 2 processadores. Os threads extras apenas se revezam, e as trocas de contexto sobem de ${r2.switches} para ${r.switches}.`; }
+    setMsg(m, txt, nt === 2 ? 'ok' : nt === 1 ? '' : 'bad');
+  };
+  rng.addEventListener('input', draw);
+  draw();
+})();
+})();
+</script>
+
 </body></html>

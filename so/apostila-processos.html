@@ -118,8 +118,7 @@ pre.term .c{color:#8FA88A}
 .st-espera{background:var(--wait-soft); color:var(--wait)}
 .st-criacao,.st-terminado{background:var(--neutral-soft); color:var(--neutral)}
 .scroll{overflow-x:auto}
-</style>
-<style>
+
 body{margin:0}
 [hidden]{display:none!important}
 @media print{
@@ -132,7 +131,7 @@ body{margin:0}
   .top{padding-block:0 18px}
   .sec{break-before:page}
   #s1{break-before:auto}
-  .lab,.card,.def,.note,figure,table,.oq > li,.qz > li,.states,.thr{break-inside:avoid}
+  .lab,.card,.def,.note,.win,figure,table,.oq > li,.qz > li,.states,.thr{break-inside:avoid}
   pre.term{white-space:pre-wrap}
   details summary{display:none}
   .alt{padding:4px 10px}
@@ -142,7 +141,108 @@ body{margin:0}
 .gab{display:none}
 @media print{.gab{display:grid; gap:10px; break-before:page}}
 </style>
+
 </head><body>
+<style>
+/* ---- v2: boxes "No Windows" ---- */
+.win{border:1.5px solid var(--wait); border-radius:8px; background:var(--surface); padding:16px 18px; display:grid; gap:10px}
+.win .lbl{font-family:var(--display); font-size:12px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--wait)}
+.win h4{font-size:17px}
+.win p,.win li{font-size:15.5px}
+.win ol,.win ul{margin:0; padding-left:1.3em; display:grid; gap:4px}
+.win kbd,.sec kbd{font-family:var(--mono); font-size:.82em; border:1px solid var(--line); border-bottom-width:2px; border-radius:4px; padding:0 5px; background:var(--bg)}
+.win .path2{font-family:var(--display); font-size:14px; font-weight:600}
+pre.term.ps{background:#0F1A2B; color:#DCE6F4}
+pre.term.ps .c{color:#8DA2C0}
+pre.term.ps .o{color:#A9D48F}
+.sub{font-family:var(--display); font-size:13px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-2)}
+
+/* generic svg figure text */
+.fig.big svg{max-width:760px}
+.gantt text{font-family:var(--display); font-size:12.5px}
+
+/* 5.2.3 memória */
+.memsim{display:grid; grid-template-columns:minmax(0,200px) minmax(0,1fr); gap:20px; align-items:start}
+@media (max-width:620px){.memsim{grid-template-columns:minmax(0,1fr)}}
+.ram{border:2px solid var(--ink); border-radius:6px; overflow:hidden; display:grid; font-family:var(--display); font-size:13px}
+.ram div{display:flex; justify-content:space-between; align-items:center; padding:0 10px; border-top:1px solid var(--line); transition:box-shadow .2s}
+.ram div:first-child{border-top:none}
+.ram .so{background:var(--neutral-soft); color:var(--ink); height:46px}
+.ram .pa{background:var(--run-soft); color:var(--run); height:96px; font-weight:700}
+.ram .pb{background:var(--wait-soft); color:var(--wait); height:64px; font-weight:700}
+.ram .fr{background:var(--bg); color:var(--ink-2); height:52px}
+.ram span{font-family:var(--mono); font-size:11.5px; font-weight:400; color:var(--ink-2)}
+.ram div.hitok{box-shadow:inset 0 0 0 3px var(--ok)}
+.ram div.hitbad{box-shadow:inset 0 0 0 3px var(--bad)}
+.ctrl{display:grid; gap:12px}
+.ctrl label{font-family:var(--display); font-size:14px; font-weight:600; display:grid; gap:6px}
+.ctrl input[type=range]{width:100%; accent-color:var(--accent)}
+.ctrl output{font-family:var(--mono); font-size:15px}
+.regline{font-family:var(--mono); font-size:13.5px; background:var(--bg); border:1.5px solid var(--line); border-radius:8px; padding:10px 12px; display:grid; gap:2px}
+
+/* 5.3 listas de PCBs */
+.qsim{display:grid; gap:14px}
+.qrow{display:grid; grid-template-columns:150px minmax(0,1fr); gap:12px; align-items:center}
+@media (max-width:620px){.qrow{grid-template-columns:minmax(0,1fr); gap:6px}}
+.qlab{font-family:var(--display); font-size:14px; font-weight:700; display:grid; gap:0}
+.qlab small{font-weight:500; font-size:12px; color:var(--ink-2)}
+.qline{display:flex; gap:8px; flex-wrap:wrap; min-height:44px; align-items:center; padding:6px 8px; border:1.5px dashed var(--line); border-radius:8px; background:var(--bg)}
+.qline.cpu{border-style:solid; border-color:var(--ink); background:var(--surface-2)}
+.pc{font-family:var(--mono); font-size:13px; font-weight:600; padding:6px 10px; border-radius:6px; border:1.5px solid; animation:pop .25s ease-out}
+.pc.x{background:var(--run-soft); color:var(--run); border-color:var(--run)}
+.pc.p{background:var(--ready-soft); color:var(--ready); border-color:var(--ready)}
+.pc.e{background:var(--wait-soft); color:var(--wait); border-color:var(--wait)}
+.qline .none{font-family:var(--display); font-size:13px; color:var(--ink-2)}
+.qline .arrow{color:var(--ink-2); font-family:var(--display); font-size:13px}
+
+/* 5.4 swapping fig */
+.swapfig text{font-family:var(--display)}
+
+/* 5.5 stepper */
+.stepper{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,280px); gap:18px; align-items:start}
+@media (max-width:700px){.stepper{grid-template-columns:minmax(0,1fr)}}
+.stl{list-style:none; margin:0; padding:0; display:grid; gap:6px; counter-reset:st}
+.stl li{counter-increment:st; display:grid; grid-template-columns:30px minmax(0,1fr); gap:10px; align-items:start; padding:8px 10px; border-radius:8px; border:1.5px solid var(--line); background:var(--bg); font-size:15px; opacity:.5; transition:opacity .2s, border-color .2s}
+.stl li::before{content:counter(st); width:26px; height:26px; border-radius:50%; display:grid; place-items:center; font-family:var(--display); font-size:13px; font-weight:700; background:var(--surface-2); color:var(--ink-2)}
+.stl li.done{opacity:1}
+.stl li.now{opacity:1; border-color:var(--accent); background:var(--accent-soft)}
+.stl li.now::before,.stl li.done::before{background:var(--accent); color:var(--accent-ink)}
+.pcbcard{border:2px solid var(--ink); border-radius:6px; overflow:hidden; font-family:var(--mono); font-size:13px}
+.pcbcard div{display:grid; grid-template-columns:110px minmax(0,1fr); gap:8px; padding:6px 10px; border-top:1px solid var(--line); transition:background .3s}
+.pcbcard div:first-child{border-top:none; background:var(--ink); color:var(--bg); grid-template-columns:1fr}
+.pcbcard span:first-child{color:var(--ink-2)}
+.pcbcard div.new{background:var(--accent-soft)}
+.pcbcard.gone2{opacity:.35}
+.seg2{display:flex; gap:8px; flex-wrap:wrap}
+
+/* 5.6 mix sim */
+.mix{display:grid; gap:12px}
+.lane{display:grid; grid-template-columns:70px minmax(0,1fr) 64px; gap:10px; align-items:center; font-family:var(--display); font-size:13.5px; font-weight:700}
+.lane .track{display:flex; height:30px; border-radius:5px; overflow:hidden; background:var(--bg); border:1px solid var(--line)}
+.lane .track i{display:block; height:100%; font-style:normal; font-size:11px; font-weight:700; display:grid; place-items:center; color:var(--accent-ink); overflow:hidden}
+.lane .pct{font-variant-numeric:tabular-nums; text-align:right}
+.track .k1{background:var(--run)} .track .k2{background:var(--wait)} .track .idle{background:transparent; color:var(--ink-2)}
+.mixleg{display:flex; gap:18px; flex-wrap:wrap; font-family:var(--display); font-size:13px; color:var(--ink-2)}
+.mixleg span::before{content:""; display:inline-block; width:12px; height:12px; border-radius:3px; margin-right:6px; vertical-align:-1px; background:var(--run)}
+.mixleg span.b::before{background:var(--wait)} .mixleg span.n::before{background:transparent; border:1px solid var(--line)}
+
+/* 5.8 fork x CreateProcess */
+.fc{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:14px}
+@media (max-width:700px){.fc{grid-template-columns:minmax(0,1fr)}}
+.fccol{border:1px solid var(--line); border-radius:10px; padding:14px; display:grid; gap:10px; align-content:start; background:var(--bg)}
+.fccol h5{font-family:var(--display); font-size:15px; margin:0}
+.fcstage{display:flex; gap:10px; flex-wrap:wrap; min-height:96px; align-items:flex-start}
+.pbx{border:2px solid var(--run); background:var(--surface); border-radius:8px; padding:8px 10px; font-family:var(--display); font-size:13px; display:grid; gap:2px; min-width:130px; animation:pop .25s ease-out}
+.pbx b{font-size:14px}
+.pbx code{font-size:12px}
+.pbx.child{border-color:var(--wait)}
+.pbx.end{border-style:dashed; opacity:.55}
+.fccode{font-family:var(--mono); font-size:13px; background:#101A12; color:#D6E8CB; border-radius:6px; padding:10px 12px; white-space:pre; overflow-x:auto}
+.fccode .hl{background:#2E6B1E; color:#FFFFFF}
+
+/* 5.10 tabela de processos do Windows */
+.t.small td{font-size:14.5px}
+</style>
 <style>
 /* 5.1 */
 .procs{display:grid; grid-template-columns:repeat(auto-fill, minmax(190px, 1fr)); gap:10px; min-height:84px}
@@ -232,8 +332,8 @@ table.t{border-collapse:collapse; width:100%; font-size:15.5px}
 <header class="top">
   <p class="eyebrow">Sistemas Operacionais · IFAL Campus Maceió · Material de referência</p>
   <h1>Processos<span>.</span></h1>
-  <p class="lede">O que é um processo, do que ele é feito, por quais estados passa e como o sistema operacional o cria, controla e avisa. Leia, experimente os simuladores e, no fim, teste o que aprendeu.</p>
-  <div class="meta"><span>Base: <b>Machado &amp; Maia, <i>Arquitetura de Sistemas Operacionais</i>, cap. 5</b></span><span>Prof. Christiano Rossini</span><span>11 seções · 8 simuladores · 36 exercícios</span></div>
+  <p class="lede">O que é um processo, do que ele é feito, por quais estados passa e como o sistema operacional o cria, controla e avisa. Leia, experimente os simuladores, observe tudo isso acontecendo no Windows e, no fim, teste o que aprendeu.</p>
+  <div class="meta"><span>Base: <b>Machado &amp; Maia, <i>Arquitetura de Sistemas Operacionais</i>, cap. 5</b></span><span>Prof. Christiano Rossini</span><span>11 seções · 13 simuladores · exemplos no Windows · 36 exercícios</span></div>
 </header>
 
 <div class="layout">
@@ -266,6 +366,29 @@ table.t{border-collapse:collapse; width:100%; font-size:15.5px}
   <p>Programa e processo não são a mesma coisa. O programa é <b>passivo</b>: um arquivo executável guardado em disco. O processo é <b>ativo</b>: é esse programa rodando, com seu próprio contexto. Por isso um mesmo programa pode dar origem a vários processos ao mesmo tempo, cada um em um ponto diferente da execução.</p>
   <p>Em sistemas multiusuário, cada usuário está associado a um processo: quando ele executa um programa, o programa roda no contexto de um processo. Todos os recursos do sistema (UCP, memória, arquivos, dispositivos) são alocados aos processos, e é por meio deles que o SO faz a gerência.</p>
 
+  <h3>Por que o processo é necessário</h3>
+  <p>Pense em um computador com uma única UCP e três programas abertos. A UCP só executa uma instrução de cada vez, então os três não rodam "ao mesmo tempo" de verdade: o SO dá a UCP a um deles por um intervalo curto, depois a outro, e assim por diante. Quando um programa pede algo lento, como ler um arquivo do disco, ele não precisa da UCP enquanto espera, e o SO aproveita esse tempo para executar outro programa. É isso que o livro chama de <b>concorrência</b>: os programas avançam intercalados e, para o usuário, parecem simultâneos.</p>
+  <p>Cada vez que o SO tira um programa da UCP, ele precisa anotar exatamente onde aquele programa parou e em que situação estava. Sem essa anotação, não haveria como continuar depois. O processo é justamente essa "ficha" completa de cada execução, mantida pelo SO durante toda a vida do programa.</p>
+  <figure class="fig big wide">
+    <svg class="gantt" viewBox="0 0 720 222" role="img" aria-label="Linha do tempo de três processos compartilhando uma UCP: só um executa por vez, e entre um e outro o SO faz a troca de contexto"><text x="100" y="47.0" text-anchor="end" font-weight="700">Processo A</text><rect x="110" y="30" width="580" height="26" fill="none" stroke="var(--line)"/><rect x="110" y="30" width="116" height="26" fill="var(--run)" stroke="var(--surface)" stroke-width="1.5"/><text x="168.0" y="47.0" text-anchor="middle" fill="var(--accent-ink)" font-weight="700">executa</text><rect x="226" y="30" width="290" height="26" fill="var(--ready-soft)" stroke="var(--surface)" stroke-width="1.5"/><text x="371.0" y="47.0" text-anchor="middle" fill="var(--ready)" font-weight="700">pronto</text><rect x="516" y="30" width="116" height="26" fill="var(--run)" stroke="var(--surface)" stroke-width="1.5"/><text x="574.0" y="47.0" text-anchor="middle" fill="var(--accent-ink)" font-weight="700">executa</text><rect x="632" y="30" width="58" height="26" fill="var(--ready-soft)" stroke="var(--surface)" stroke-width="1.5"/><text x="100" y="87.0" text-anchor="end" font-weight="700">Processo B</text><rect x="110" y="70" width="580" height="26" fill="none" stroke="var(--line)"/><rect x="110" y="70" width="145" height="26" fill="var(--ready-soft)" stroke="var(--surface)" stroke-width="1.5"/><text x="182.5" y="87.0" text-anchor="middle" fill="var(--ready)" font-weight="700">pronto</text><rect x="255" y="70" width="87" height="26" fill="var(--run)" stroke="var(--surface)" stroke-width="1.5"/><text x="298.5" y="87.0" text-anchor="middle" fill="var(--accent-ink)" font-weight="700">executa</text><rect x="342" y="70" width="174" height="26" fill="var(--wait-soft)" stroke="var(--surface)" stroke-width="1.5"/><text x="429.0" y="87.0" text-anchor="middle" fill="var(--wait)" font-weight="700">espera (E/S)</text><rect x="516" y="70" width="145" height="26" fill="var(--ready-soft)" stroke="var(--surface)" stroke-width="1.5"/><text x="588.5" y="87.0" text-anchor="middle" fill="var(--ready)" font-weight="700">pronto</text><rect x="661" y="70" width="29" height="26" fill="var(--run)" stroke="var(--surface)" stroke-width="1.5"/><text x="100" y="127.0" text-anchor="end" font-weight="700">Processo C</text><rect x="110" y="110" width="580" height="26" fill="none" stroke="var(--line)"/><rect x="110" y="110" width="261" height="26" fill="var(--ready-soft)" stroke="var(--surface)" stroke-width="1.5"/><text x="240.5" y="127.0" text-anchor="middle" fill="var(--ready)" font-weight="700">pronto</text><rect x="371" y="110" width="116" height="26" fill="var(--run)" stroke="var(--surface)" stroke-width="1.5"/><text x="429.0" y="127.0" text-anchor="middle" fill="var(--accent-ink)" font-weight="700">executa</text><rect x="487" y="110" width="203" height="26" fill="var(--ready-soft)" stroke="var(--surface)" stroke-width="1.5"/><text x="588.5" y="127.0" text-anchor="middle" fill="var(--ready)" font-weight="700">pronto</text><text x="100" y="167.0" text-anchor="end" font-weight="700">SO (troca)</text><rect x="110" y="150" width="580" height="26" fill="none" stroke="var(--line)"/><rect x="226" y="150" width="29" height="26" fill="var(--neutral)" stroke="var(--surface)" stroke-width="1.5"/><rect x="342" y="150" width="29" height="26" fill="var(--neutral)" stroke="var(--surface)" stroke-width="1.5"/><rect x="487" y="150" width="29" height="26" fill="var(--neutral)" stroke="var(--surface)" stroke-width="1.5"/><rect x="632" y="150" width="29" height="26" fill="var(--neutral)" stroke="var(--surface)" stroke-width="1.5"/><line x1="110" y1="192" x2="690" y2="192" stroke="var(--ink-2)" stroke-width="1.5"/><line x1="110" y1="192" x2="110" y2="197" stroke="var(--ink-2)"/><text x="110" y="210" text-anchor="middle" fill="var(--ink-2)">0</text><line x1="168" y1="192" x2="168" y2="197" stroke="var(--ink-2)"/><text x="168" y="210" text-anchor="middle" fill="var(--ink-2)">2</text><line x1="226" y1="192" x2="226" y2="197" stroke="var(--ink-2)"/><text x="226" y="210" text-anchor="middle" fill="var(--ink-2)">4</text><line x1="284" y1="192" x2="284" y2="197" stroke="var(--ink-2)"/><text x="284" y="210" text-anchor="middle" fill="var(--ink-2)">6</text><line x1="342" y1="192" x2="342" y2="197" stroke="var(--ink-2)"/><text x="342" y="210" text-anchor="middle" fill="var(--ink-2)">8</text><line x1="400" y1="192" x2="400" y2="197" stroke="var(--ink-2)"/><text x="400" y="210" text-anchor="middle" fill="var(--ink-2)">10</text><line x1="458" y1="192" x2="458" y2="197" stroke="var(--ink-2)"/><text x="458" y="210" text-anchor="middle" fill="var(--ink-2)">12</text><line x1="516" y1="192" x2="516" y2="197" stroke="var(--ink-2)"/><text x="516" y="210" text-anchor="middle" fill="var(--ink-2)">14</text><line x1="574" y1="192" x2="574" y2="197" stroke="var(--ink-2)"/><text x="574" y="210" text-anchor="middle" fill="var(--ink-2)">16</text><line x1="632" y1="192" x2="632" y2="197" stroke="var(--ink-2)"/><text x="632" y="210" text-anchor="middle" fill="var(--ink-2)">18</text><line x1="690" y1="192" x2="690" y2="197" stroke="var(--ink-2)"/><text x="690" y="210" text-anchor="middle" fill="var(--ink-2)">20</text><text x="100" y="210" text-anchor="end" fill="var(--ink-2)">tempo</text><text x="346" y="24" fill="var(--wait)" font-weight="700">B pede leitura de disco</text><line x1="342" y1="27" x2="342" y2="70" stroke="var(--wait)" stroke-width="2" stroke-dasharray="3 3"/></svg>
+    <figcaption>Figura 1. Três processos dividindo uma única UCP. Em cada instante, só um está em execução. Quando B pede uma leitura de disco, ele sai da UCP e espera, e o SO entrega a UCP a C. Os blocos cinza são as trocas feitas pelo SO.</figcaption>
+  </figure>
+  <p>A figura mostra três ideias que o resto do capítulo detalha: um processo pode estar <b>executando</b>, <b>pronto</b> para executar ou <b>esperando</b> algo (seção 5.3); a passagem de um estado a outro acontece por eventos (seção 5.4); e entre um processo e outro o SO precisa trocar o contexto, o que tem um custo (seção 5.2.1).</p>
+
+  <div class="win">
+    <span class="lbl">No Windows</span>
+    <h4>Veja os processos da sua máquina</h4>
+    <ol>
+      <li>Abra o Gerenciador de Tarefas com <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Esc</kbd> e vá à guia <span class="path2">Detalhes</span>. Cada linha é um processo; a coluna <span class="path2">PID</span> é o seu número de identificação.</li>
+      <li>Abra o Prompt de Comando três vezes (menu Iniciar, digite <code>cmd</code>). Na lista, aparecem três linhas <code>cmd.exe</code>, cada uma com um PID diferente: um único programa no disco, três processos na memória.</li>
+      <li>Repare que há dezenas, às vezes centenas, de processos, mas a máquina tem poucos núcleos de UCP. Eles se revezam, como na Figura 1.</li>
+    </ol>
+    <pre class="term ps"><span class="c"># no PowerShell: lista os processos cmd com PID e hora de início</span>
+PS&gt; Get-Process cmd | Select-Object Id, ProcessName, StartTime
+<span class="c"># quantos processos existem agora?</span>
+PS&gt; (Get-Process).Count</pre>
+  </div>
+
   <div class="lab">
     <div class="lab-head"><span class="tag">Experimente</span><h4>Um programa, vários processos</h4></div>
     <p class="lab-hint">Clique em executar algumas vezes. O arquivo em disco é sempre o mesmo, mas cada execução vira um processo diferente, com PID, contador de programa e estado próprios.</p>
@@ -290,12 +413,27 @@ table.t{border-collapse:collapse; width:100%; font-size:15.5px}
       <a href="#s2-1" class="part"><rect x="70" y="226" width="240" height="70" rx="10" fill="var(--wait-soft)" stroke="var(--wait)" stroke-width="2"/><text x="190" y="256" text-anchor="middle" font-size="16" font-weight="700">Contexto de hardware</text><text x="190" y="277" text-anchor="middle" font-size="12.5" fill="var(--ink-2)">registradores: PC, SP, status</text></a>
       <a href="#s2-3" class="part"><rect x="330" y="226" width="240" height="70" rx="10" fill="var(--ready-soft)" stroke="var(--ready)" stroke-width="2"/><text x="450" y="256" text-anchor="middle" font-size="16" font-weight="700">Espaço de endereçamento</text><text x="450" y="277" text-anchor="middle" font-size="12.5" fill="var(--ink-2)">memória do código e dos dados</text></a>
     </svg>
-    <figcaption>Figura 1. As três partes do processo. O SO reúne as informações delas no PCB (seção 5.2.4).</figcaption>
+    <figcaption>Figura 2. As três partes do processo. O SO reúne as informações delas no PCB (seção 5.2.4).</figcaption>
   </figure>
+  <p>Uma forma simples de lembrar: o <b>contexto de hardware</b> diz <i>onde</i> a execução parou; o <b>contexto de software</b> diz <i>quem</i> é o processo e <i>o que</i> ele pode fazer; o <b>espaço de endereçamento</b> guarda <i>com o que</i> ele trabalha, isto é, o código e os dados.</p>
 
   <h3 id="s2-1">5.2.1 Contexto de hardware</h3>
-  <p>O contexto de hardware guarda o <b>conteúdo dos registradores</b> da UCP: os registradores de uso geral e os de uso específico, como o contador de programa (PC), o apontador de pilha (SP) e o registrador de status (PSW). Enquanto o processo executa, esse contexto está nos próprios registradores da UCP. Quando ele perde a UCP, o SO salva esses valores; quando ele volta a executar, o SO os restaura.</p>
-  <p>Essa operação é a <dfn>mudança de contexto</dfn> (troca de contexto): salvar os registradores do processo que sai e carregar os do processo que entra. É ela que permite ao SO alternar processos sem que nenhum perceba a interrupção. Durante a troca, nenhum processo de usuário avança, então ela é um custo (<i>overhead</i>) do sistema.</p>
+  <p>O contexto de hardware guarda o <b>conteúdo dos registradores</b> da UCP: os registradores de uso geral e os de uso específico. Enquanto o processo executa, esse contexto está nos próprios registradores da UCP. Quando ele perde a UCP, o SO salva esses valores; quando ele volta a executar, o SO os restaura. Os registradores de uso específico mais importantes são estes:</p>
+  <div class="scroll wide"><table class="t">
+    <thead><tr><th>Registrador</th><th>O que guarda</th><th>Por que precisa ser salvo</th></tr></thead>
+    <tbody>
+      <tr><td>Contador de programa (PC)</td><td>O endereço da próxima instrução a ser executada.</td><td>Sem ele, o processo não saberia de onde continuar.</td></tr>
+      <tr><td>Apontador de pilha (SP)</td><td>O endereço do topo da pilha, onde ficam variáveis locais e endereços de retorno das sub-rotinas.</td><td>Sem ele, o processo perderia o controle das chamadas em andamento.</td></tr>
+      <tr><td>Registrador de status (PSW)</td><td>Indicadores do resultado das últimas operações (zero, negativo, estouro) e o modo de execução da UCP.</td><td>Uma comparação feita antes da troca precisa continuar válida depois dela.</td></tr>
+      <tr><td>Uso geral</td><td>Valores intermediários dos cálculos.</td><td>Uma conta pela metade não pode ser perdida.</td></tr>
+    </tbody>
+  </table></div>
+  <p>A operação de salvar os registradores do processo que sai e carregar os do processo que entra é a <dfn>mudança de contexto</dfn> (troca de contexto). É ela que permite ao SO alternar processos sem que nenhum perceba a interrupção. Ela acontece, por exemplo, quando termina a fatia de tempo do processo (interrupção do relógio), quando o processo pede uma operação de E/S e precisa esperar, ou quando chega um processo de maior prioridade.</p>
+  <figure class="fig wide">
+    <svg viewBox="0 0 640 500" role="img" aria-label="Mudança de contexto: A executa, o SO salva o contexto de A no PCB de A e carrega o de B, B executa, e depois o caminho inverso"><defs><marker id="cx" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--ink-2)"/></marker></defs><text x="130" y="22" text-anchor="middle" font-weight="800" font-size="15">Processo A</text><text x="320" y="22" text-anchor="middle" font-weight="800" font-size="15">Sistema operacional</text><text x="510" y="22" text-anchor="middle" font-weight="800" font-size="15">Processo B</text><rect x="95" y="40" width="70" height="90" rx="6" fill="var(--run)"/><text x="130" y="90.0" text-anchor="middle" font-size="13" font-weight="700" fill="var(--accent-ink)">executa</text><rect x="475" y="40" width="70" height="250" rx="6" fill="var(--ready-soft)"/><text x="510" y="170.0" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ready)">pronto</text><rect x="230" y="150" width="180" height="58" rx="8" fill="var(--neutral-soft)" stroke="var(--neutral)" stroke-width="1.5"/><text x="320" y="174" text-anchor="middle" font-size="13.5" font-weight="700">salva os registradores</text><text x="320" y="193" text-anchor="middle" font-size="13" fill="var(--ink-2)">de A no PCB de A</text><rect x="230" y="222" width="180" height="58" rx="8" fill="var(--neutral-soft)" stroke="var(--neutral)" stroke-width="1.5"/><text x="320" y="246" text-anchor="middle" font-size="13.5" font-weight="700">carrega os registradores</text><text x="320" y="265" text-anchor="middle" font-size="13" fill="var(--ink-2)">de B a partir do PCB de B</text><rect x="95" y="140" width="70" height="260" rx="6" fill="var(--ready-soft)"/><text x="130" y="275.0" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ready)">pronto</text><rect x="475" y="290" width="70" height="90" rx="6" fill="var(--run)"/><text x="510" y="340.0" text-anchor="middle" font-size="13" font-weight="700" fill="var(--accent-ink)">executa</text><rect x="230" y="392" width="180" height="58" rx="8" fill="var(--neutral-soft)" stroke="var(--neutral)" stroke-width="1.5"/><text x="320" y="416" text-anchor="middle" font-size="13.5" font-weight="700">salva B · carrega A</text><text x="320" y="435" text-anchor="middle" font-size="13" fill="var(--ink-2)">mesmo caminho, invertido</text><rect x="95" y="412" width="70" height="70" rx="6" fill="var(--run)"/><text x="130" y="452.0" text-anchor="middle" font-size="13" font-weight="700" fill="var(--accent-ink)">executa</text><rect x="475" y="392" width="70" height="90" rx="6" fill="var(--ready-soft)"/><text x="510" y="442.0" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ready)">pronto</text><path d="M165 130 L228 165" stroke="var(--ink-2)" stroke-width="2" fill="none" marker-end="url(#cx)"/><text x="204.5" y="141.5" text-anchor="start" font-size="12" fill="var(--ink-2)">interrupção</text><path d="M410 251 L473 300" stroke="var(--ink-2)" stroke-width="2" fill="none" marker-end="url(#cx)"/><path d="M473 372 L412 410" stroke="var(--ink-2)" stroke-width="2" fill="none" marker-end="url(#cx)"/><text x="434.5" y="385.0" text-anchor="end" font-size="12" fill="var(--ink-2)">interrupção</text><path d="M228 435 L167 445" stroke="var(--ink-2)" stroke-width="2" fill="none" marker-end="url(#cx)"/><rect x="222" y="142" width="196" height="146" rx="10" fill="none" stroke="var(--bad)" stroke-width="1.5" stroke-dasharray="5 4"/><text x="320" y="306" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--bad)">overhead: nenhum processo</text><text x="320" y="322" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--bad)">de usuário avança</text><line x1="20" y1="40" x2="20" y2="480" stroke="var(--line)" stroke-width="2" marker-end="url(#cx)"/><text x="14" y="260" font-size="12" fill="var(--ink-2)" transform="rotate(-90 14 260)" text-anchor="middle">tempo</text></svg>
+    <figcaption>Figura 3. Mudança de contexto entre os processos A e B. Enquanto o SO salva e carrega os contextos (área tracejada), nenhum processo de usuário executa.</figcaption>
+  </figure>
+  <p>Durante a troca, nenhum processo de usuário avança, então ela é um custo (<i>overhead</i>) do sistema. Cada troca leva pouco tempo, na casa dos microssegundos, mas um sistema comum faz milhares delas por segundo. Por isso os projetistas de SO procuram tornar a troca rápida e evitar trocas desnecessárias. Esse custo é também uma das motivações das threads (seção 5.9): trocar de uma thread para outra do mesmo processo é mais barato, porque o espaço de endereçamento continua o mesmo.</p>
 
   <div class="lab">
     <div class="lab-head"><span class="tag">Experimente</span><h4>Mudança de contexto, passo a passo</h4></div>
@@ -310,8 +448,19 @@ table.t{border-collapse:collapse; width:100%; font-size:15.5px}
     <p class="msg" id="cs-msg" aria-live="polite">O processo A está executando. Os registradores da UCP contêm os valores de A.</p>
   </div>
 
+  <div class="win">
+    <span class="lbl">No Windows</span>
+    <h4>Quantas trocas de contexto por segundo?</h4>
+    <ol>
+      <li>Pressione <kbd>Win</kbd>+<kbd>R</kbd>, digite <code>perfmon</code> e confirme. Abre o Monitor de Desempenho.</li>
+      <li>Em <span class="path2">Ferramentas de Monitoramento › Monitor de Desempenho</span>, clique no botão <b>+</b> (Adicionar contadores).</li>
+      <li>No grupo <span class="path2">Sistema</span>, escolha <span class="path2">Trocas de contexto/s</span> e adicione.</li>
+      <li>Observe o valor com a máquina parada e depois abrindo programas ou rolando uma página. Mesmo "parado", o sistema faz milhares de trocas por segundo.</li>
+    </ol>
+  </div>
+
   <h3 id="s2-2">5.2.2 Contexto de software</h3>
-  <p>O contexto de software especifica as características e os <b>limites dos recursos</b> que o processo pode usar. A maior parte dessas informações vem do cadastro do usuário no sistema (no Linux, <code>/etc/passwd</code> e os limites configurados; no Windows, a base de contas). O contexto de software é formado por três grupos:</p>
+  <p>O contexto de software especifica as características e os <b>limites dos recursos</b> que o processo pode usar. A maior parte dessas informações vem do cadastro do usuário no sistema (no Linux, <code>/etc/passwd</code> e os limites configurados; no Windows, a conta do usuário e as políticas do sistema). Quando o processo é criado, o SO copia essas características para o contexto de software do novo processo. Ele é formado por três grupos:</p>
   <div class="scroll wide"><table class="t">
     <thead><tr><th>Grupo</th><th>O que guarda</th><th>Exemplos</th></tr></thead>
     <tbody>
@@ -320,18 +469,65 @@ table.t{border-collapse:collapse; width:100%; font-size:15.5px}
       <tr><td>Privilégios</td><td>O que o processo pode fazer em relação a si mesmo, a outros processos e ao sistema.</td><td>Alterar a própria prioridade; eliminar outros processos; desligar o sistema, criar usuários. Privilégios totais pertencem ao administrador (root).</td></tr>
     </tbody>
   </table></div>
+  <p>Além do PID, a identificação costuma incluir o número do processo que o criou (no Windows, <i>ParentProcessId</i>; no Linux, PPID), o que permite ao SO saber quem é "pai" de quem (seção 5.9). Quando um processo tenta ultrapassar uma quota, o SO recusa o pedido: a abertura de mais um arquivo falha, a alocação de memória não é atendida, a criação de mais um subprocesso é negada. O programa recebe um código de erro e precisa lidar com ele.</p>
   <div class="note"><span class="lbl">Consequência</span><p>Como quotas e privilégios pertencem ao processo, o <b>mesmo programa</b> pode rodar normalmente no processo de um usuário e falhar no de outro: basta que este não tenha a quota ou o privilégio necessários (por exemplo, permissão para abrir certo arquivo).</p></div>
+  <div class="win">
+    <span class="lbl">No Windows</span>
+    <h4>Mesmo programa, privilégios diferentes</h4>
+    <ol>
+      <li>Abra o Bloco de Notas normalmente e tente salvar um arquivo em <code>C:\Windows</code>. O Windows recusa: o processo não tem esse privilégio.</li>
+      <li>Agora clique com o botão direito no Bloco de Notas e escolha <span class="path2">Executar como administrador</span>. A mesma tentativa funciona. O programa é o mesmo; o contexto de software do processo mudou.</li>
+      <li>No Gerenciador de Tarefas, guia <span class="path2">Detalhes</span>, clique com o botão direito no cabeçalho, escolha <span class="path2">Selecionar colunas</span> e marque <span class="path2">Elevado</span>. A coluna mostra quais processos têm privilégios de administrador. A coluna <span class="path2">Nome de usuário</span> mostra o dono de cada processo.</li>
+    </ol>
+    <pre class="term ps"><span class="c"># identificação: PID, nome e prioridade de cada processo</span>
+PS&gt; Get-Process | Select-Object Id, ProcessName, PriorityClass
+<span class="c"># com o dono de cada processo (no Prompt de Comando)</span>
+C:\&gt; tasklist /v</pre>
+  </div>
+  <p class="sub">No Linux, para comparar</p>
   <pre class="term"><span class="c"># identificação: PID, UID e nome de cada processo</span>
-$ ps -eo pid,uid,comm
+$ ps -eo pid,ppid,uid,comm
 <span class="c"># quotas do processo atual (limites de recursos)</span>
 $ ulimit -a</pre>
 
   <h3 id="s2-3">5.2.3 Espaço de endereçamento</h3>
-  <p>O espaço de endereçamento é a <b>área de memória pertencente ao processo</b>, onde ficam as instruções e os dados do programa para execução. Cada processo tem o seu, e ele deve ser <b>protegido</b> do acesso dos demais: um processo não pode ler nem alterar a memória de outro. Os mecanismos que garantem isso são estudados em gerência de memória e memória virtual (capítulos 9 e 10).</p>
+  <p>O espaço de endereçamento é a <b>área de memória pertencente ao processo</b>, onde ficam as instruções e os dados do programa para execução. Ele costuma ser organizado em regiões: o <b>código</b> (as instruções do programa), os <b>dados</b> (variáveis globais), o <b>heap</b> (memória pedida durante a execução, por exemplo quando o programa abre uma imagem) e a <b>pilha</b> (variáveis locais e endereços de retorno das sub-rotinas).</p>
+  <p>Cada processo tem o seu espaço, e ele deve ser <b>protegido</b> do acesso dos demais: um processo não pode ler nem alterar a memória de outro. Sem essa proteção, um erro em um programa poderia corromper os dados de outro, e um programa malicioso poderia ler senhas guardadas na memória de outro processo. A proteção é feita em conjunto pelo SO e pelo hardware: a cada acesso à memória, o hardware confere se o endereço pertence ao processo em execução; se não pertencer, gera uma exceção, e o SO normalmente encerra o processo.</p>
+  <figure class="fig wide">
+    <svg viewBox="0 0 640 310" role="img" aria-label="Dois processos, cada um com seu espaço de endereçamento (código, dados, heap e pilha); o acesso de um à memória do outro é bloqueado"><defs><marker id="ad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--bad)"/></marker></defs><text x="140" y="22" text-anchor="middle" font-weight="800" font-size="15">Processo A</text><rect x="60" y="40" width="160" height="50" fill="var(--wait-soft)" stroke="var(--line)"/><text x="140" y="64.0" text-anchor="middle" font-size="14" font-weight="700" fill="var(--wait)">pilha</text><text x="140" y="79.0" text-anchor="middle" font-size="11" fill="var(--ink-2)">variáveis locais, retornos</text><rect x="60" y="90" width="160" height="60" fill="var(--bg)" stroke="var(--line)" stroke-dasharray="4 4"/><text x="140" y="119.0" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink-2)">livre</text><text x="140" y="134.0" text-anchor="middle" font-size="11" fill="var(--ink-2)">cresce conforme o uso</text><rect x="60" y="150" width="160" height="40" fill="var(--ready-soft)" stroke="var(--line)"/><text x="140" y="169.0" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ready)">heap</text><text x="140" y="184.0" text-anchor="middle" font-size="11" fill="var(--ink-2)">memória alocada em execução</text><rect x="60" y="190" width="160" height="40" fill="var(--ready-soft)" stroke="var(--line)"/><text x="140" y="209.0" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ready)">dados</text><text x="140" y="224.0" text-anchor="middle" font-size="11" fill="var(--ink-2)">variáveis globais</text><rect x="60" y="230" width="160" height="50" fill="var(--run-soft)" stroke="var(--line)"/><text x="140" y="254.0" text-anchor="middle" font-size="14" font-weight="700" fill="var(--run)">código</text><text x="140" y="269.0" text-anchor="middle" font-size="11" fill="var(--ink-2)">instruções do programa</text><rect x="60" y="40" width="160" height="240" fill="none" stroke="var(--ink)" stroke-width="2"/><text x="500" y="22" text-anchor="middle" font-weight="800" font-size="15">Processo B</text><rect x="420" y="40" width="160" height="50" fill="var(--wait-soft)" stroke="var(--line)"/><text x="500" y="64.0" text-anchor="middle" font-size="14" font-weight="700" fill="var(--wait)">pilha</text><text x="500" y="79.0" text-anchor="middle" font-size="11" fill="var(--ink-2)">variáveis locais, retornos</text><rect x="420" y="90" width="160" height="60" fill="var(--bg)" stroke="var(--line)" stroke-dasharray="4 4"/><text x="500" y="119.0" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink-2)">livre</text><text x="500" y="134.0" text-anchor="middle" font-size="11" fill="var(--ink-2)">cresce conforme o uso</text><rect x="420" y="150" width="160" height="40" fill="var(--ready-soft)" stroke="var(--line)"/><text x="500" y="169.0" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ready)">heap</text><text x="500" y="184.0" text-anchor="middle" font-size="11" fill="var(--ink-2)">memória alocada em execução</text><rect x="420" y="190" width="160" height="40" fill="var(--ready-soft)" stroke="var(--line)"/><text x="500" y="209.0" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ready)">dados</text><text x="500" y="224.0" text-anchor="middle" font-size="11" fill="var(--ink-2)">variáveis globais</text><rect x="420" y="230" width="160" height="50" fill="var(--run-soft)" stroke="var(--line)"/><text x="500" y="254.0" text-anchor="middle" font-size="14" font-weight="700" fill="var(--run)">código</text><text x="500" y="269.0" text-anchor="middle" font-size="11" fill="var(--ink-2)">instruções do programa</text><rect x="420" y="40" width="160" height="240" fill="none" stroke="var(--ink)" stroke-width="2"/><path d="M224 210 L414 210" stroke="var(--bad)" stroke-width="2.5" stroke-dasharray="6 5" fill="none" marker-end="url(#ad)"/><circle cx="320" cy="210" r="15" fill="var(--bad)"/><path d="M313 203 L327 217 M327 203 L313 217" stroke="var(--surface)" stroke-width="3"/><text x="320" y="176" text-anchor="middle" font-size="13" font-weight="700" fill="var(--bad)">acesso bloqueado</text><text x="320" y="248" text-anchor="middle" font-size="12" fill="var(--ink-2)">A tenta ler a memória de B</text><text x="320" y="302" text-anchor="middle" font-size="12" fill="var(--ink-2)">endereços crescem de baixo para cima</text></svg>
+    <figcaption>Figura 4. Cada processo tem seu próprio espaço de endereçamento, dividido em regiões. Um processo não alcança a memória do outro.</figcaption>
+  </figure>
+  <div class="lab">
+    <div class="lab-head"><span class="tag">Experimente</span><h4>Proteção de memória com registradores base e limite</h4></div>
+    <p class="lab-hint">Uma das formas mais simples de proteção: o SO guarda no PCB o endereço inicial (base) e o tamanho (limite) da área de cada processo e, na troca de contexto, carrega esses valores em registradores do hardware. Escolha o processo em execução, um endereço, e tente o acesso.</p>
+    <div class="memsim">
+      <div class="ram" id="mem-ram">
+        <div class="so">SO <span>0–3999</span></div>
+        <div class="pa" id="mem-a">Processo A <span>4000–6999</span></div>
+        <div class="pb" id="mem-b">Processo B <span>7000–8999</span></div>
+        <div class="fr" id="mem-f">livre <span>9000–11999</span></div>
+      </div>
+      <div class="ctrl">
+        <div class="btns" id="mem-p"><button class="btn sel" data-p="A">Processo A executa</button><button class="btn" data-p="B">Processo B executa</button></div>
+        <div class="regline" id="mem-regs"></div>
+        <label for="mem-addr">Endereço que o processo quer acessar: <output id="mem-out">5000</output></label>
+        <input type="range" id="mem-addr" min="0" max="11999" step="100" value="5000">
+        <div class="btns"><button class="btn primary" id="mem-go">Acessar endereço</button></div>
+        <p class="msg" id="mem-m" aria-live="polite">Escolha um endereço e tente o acesso.</p>
+      </div>
+    </div>
+  </div>
+  <p>Os mecanismos de proteção usados nos sistemas atuais, como a paginação, são estudados em gerência de memória e memória virtual (capítulos 9 e 10).</p>
+  <div class="win">
+    <span class="lbl">No Windows</span>
+    <h4>A memória de cada processo</h4>
+    <p>No Gerenciador de Tarefas, guia <span class="path2">Detalhes</span>, a coluna <span class="path2">Memória (conjunto de trabalho privado)</span> mostra quanta memória cada processo ocupa só para si. Quando um programa tenta acessar um endereço que não lhe pertence, o Windows gera uma <b>violação de acesso</b> (código <code>0xC0000005</code>) e fecha o programa; é a mensagem "o programa parou de funcionar" que você já deve ter visto.</p>
+  </div>
 
   <h3 id="s2-4">5.2.4 Bloco de controle do processo (PCB)</h3>
   <p>O SO implementa o processo por meio de uma estrutura de dados chamada <dfn>bloco de controle do processo</dfn> (<i>Process Control Block</i>, PCB). O PCB reúne as informações do contexto de hardware, do contexto de software e do espaço de endereçamento. Os PCBs de todos os processos ficam em uma área de memória exclusiva do sistema operacional, cujo tamanho costuma ser limitado por um parâmetro do sistema; por isso existe um número máximo de processos.</p>
-  <p>Criar um processo é, na prática, alocar e preencher um PCB; eliminar um processo é liberar o PCB. Toda a gerência de processos é feita por chamadas de sistema que consultam e alteram esses blocos. No Linux, o PCB corresponde à estrutura <code>task_struct</code>.</p>
+  <p>Criar um processo é, na prática, alocar e preencher um PCB; eliminar um processo é liberar o PCB. Toda a gerência de processos é feita por chamadas de sistema que consultam e alteram esses blocos. No Linux, o PCB corresponde à estrutura <code>task_struct</code>; no Windows, à estrutura <code>EPROCESS</code>, mantida no núcleo.</p>
+  <p>Um PCB típico guarda, além dos registradores: o <b>estado</b> do processo (pronto, execução, espera); a <b>prioridade</b> usada pelo escalonador; as informações de memória (onde fica o espaço de endereçamento e quais são seus limites); a <b>lista de arquivos e dispositivos abertos</b>; dados de contabilização, como o tempo de UCP já consumido; e <b>ponteiros</b> que ligam o PCB a outros PCBs, formando as listas que o SO usa para organizar os processos (seção 5.3). O PCB é a "certidão" do processo: tudo o que o SO sabe sobre ele está ali.</p>
   <div class="lab">
     <div class="lab-head"><span class="tag">Experimente</span><h4>De onde vem cada campo do PCB?</h4></div>
     <p class="lab-hint">Escolha uma parte do processo e veja quais campos do PCB a representam.</p>
@@ -351,6 +547,13 @@ $ ulimit -a</pre>
       <p class="msg" id="pcb-m" aria-live="polite">Nenhuma parte selecionada.</p>
     </div>
   </div>
+  <div class="win">
+    <span class="lbl">No Windows</span>
+    <h4>Campos do PCB à vista</h4>
+    <p>A guia <span class="path2">Detalhes</span> do Gerenciador de Tarefas é, na prática, uma janela para os PCBs. Clique com o botão direito no cabeçalho, escolha <span class="path2">Selecionar colunas</span> e acrescente <span class="path2">Prioridade base</span>, <span class="path2">Tempo de CPU</span>, <span class="path2">Identificadores</span> e <span class="path2">Threads</span>. Cada coluna é um campo que o SO guarda para cada processo. Na guia <span class="path2">Desempenho › CPU</span>, os totais de <span class="path2">Processos</span>, <span class="path2">Threads</span> e <span class="path2">Identificadores</span> mostram quantos blocos o SO está controlando agora.</p>
+    <pre class="term ps"><span class="c"># alguns campos do "PCB" do próprio PowerShell</span>
+PS&gt; Get-Process -Id $PID | Select-Object Id, ProcessName, PriorityClass, TotalProcessorTime, HandleCount, StartTime</pre>
+  </div>
 </section>
 
 <!-- 5.3 -->
@@ -362,8 +565,35 @@ $ ulimit -a</pre>
     <div class="state p"><small>ready</small><h4>Pronto</h4><p>O processo aguarda apenas a oportunidade de usar a UCP. A ordem em que os prontos são escolhidos é definida pela política de escalonamento.</p><p class="an">No banco: na fila, esperando o próximo caixa livre.</p></div>
     <div class="state e"><small>wait</small><h4>Espera</h4><p>O processo aguarda um evento externo ou um recurso para prosseguir: o fim de uma operação de E/S, a liberação de um recurso, um sinal.</p><p class="an">No banco: saiu da fila para buscar um documento.</p></div>
   </div>
-  <p>O SO organiza os processos em <b>listas encadeadas de PCBs</b>: uma lista de processos prontos e uma ou mais listas de processos em espera, geralmente separadas pelo tipo de evento ou dispositivo aguardado (espera pelo disco, pelo teclado etc.). O processo em execução não está em lista nenhuma: está na UCP.</p>
+  <p>Com vários processadores, até N processos podem estar em execução ao mesmo tempo, um por processador. Os demais ficam prontos ou em espera. Note a diferença entre os dois: o processo <b>pronto</b> já tem tudo de que precisa e só falta a UCP; o processo em <b>espera</b> não adiantaria receber a UCP, porque ainda não tem o dado ou o recurso para continuar.</p>
+  <p>O SO organiza os processos em <b>listas encadeadas de PCBs</b>: uma lista de processos prontos e uma ou mais listas de processos em espera, geralmente separadas pelo tipo de evento ou dispositivo aguardado (espera pelo disco, pelo teclado etc.). O processo em execução não está em lista nenhuma: está na UCP. Mudar um processo de estado é, para o SO, tirar o PCB de uma lista e colocá-lo em outra.</p>
+  <div class="lab wide">
+    <div class="lab-head"><span class="tag">Simulador</span><h4>As listas de PCBs do sistema</h4></div>
+    <p class="lab-hint">Cinco processos dividem uma UCP. Provoque eventos e veja os PCBs mudando de lista. A lista de prontos é atendida em ordem de chegada.</p>
+    <div class="qsim">
+      <div class="qrow"><div class="qlab">UCP<small>em execução</small></div><div class="qline cpu" id="q-cpu"></div></div>
+      <div class="qrow"><div class="qlab">Lista de prontos<small>aguardam a UCP</small></div><div class="qline" id="q-ready"></div></div>
+      <div class="qrow"><div class="qlab">Espera: disco<small>aguardam leitura</small></div><div class="qline" id="q-disk"></div></div>
+      <div class="qrow"><div class="qlab">Espera: teclado<small>aguardam o usuário</small></div><div class="qline" id="q-kbd"></div></div>
+    </div>
+    <div class="evbtns" id="q-ev">
+      <button class="btn" data-q="sched">Escalonador: próximo pronto</button>
+      <button class="btn" data-q="slice">Fim da fatia de tempo</button>
+      <button class="btn" data-q="disk">Processo pede leitura de disco</button>
+      <button class="btn" data-q="kbd">Processo espera o teclado</button>
+      <button class="btn" data-q="diskdone">Disco conclui uma leitura</button>
+      <button class="btn" data-q="key">Usuário digita algo</button>
+    </div>
+    <div class="btns"><button class="btn ghost" id="q-reset">Recomeçar</button></div>
+    <p class="msg" id="q-m" aria-live="polite">P1 está na UCP. P2, P3 e P4 estão prontos; P5 espera o disco.</p>
+  </div>
   <div class="note"><span class="lbl">Nomenclatura</span><p>Alguns sistemas e autores chamam o estado de espera de <b>bloqueado</b> (<i>blocked</i>). Há sistemas que distinguem os dois: <i>espera</i> quando o processo aguarda um evento, e <i>bloqueado</i> quando aguarda um recurso do sistema.</p></div>
+  <div class="win">
+    <span class="lbl">No Windows</span>
+    <h4>Quase todos os processos estão esperando</h4>
+    <p>Abra a guia <span class="path2">Detalhes</span> do Gerenciador de Tarefas e ordene pela coluna <span class="path2">CPU</span>. A grande maioria dos processos mostra <b>00</b>: neste instante, eles estão em espera (por um clique, uma tecla, um pacote de rede, um temporizador) ou prontos, e não usando a UCP. Só alguns aparecem consumindo processamento.</p>
+    <p>A coluna <span class="path2">Status</span> não mostra os estados do livro. "Em execução" ali quer dizer apenas que o processo existe e não foi suspenso; "Suspenso" aparece em aplicativos que o Windows congelou para economizar recursos; "Não respondendo" indica um programa cuja janela parou de atender às mensagens do sistema.</p>
+  </div>
 </section>
 
 <!-- 5.4 -->
@@ -379,8 +609,14 @@ $ ulimit -a</pre>
       <tr><td>(d) Execução → Pronto</td><td>O processo perde a UCP por um evento do sistema, como o fim da sua fatia de tempo (<i>time-slice</i>) ou a chegada de um processo mais prioritário (preempção).</td></tr>
     </tbody>
   </table></div>
-  <div class="note"><span class="lbl">Atenção</span><p>Não existe a mudança <b>Espera → Execução</b>. Quando o evento ocorre, o processo vai primeiro para a lista de prontos e aguarda ser escolhido pelo escalonador, como qualquer outro.</p></div>
-  <p>Um processo em pronto ou em espera pode, ainda, não estar na memória principal. Quando falta memória, o SO pode transferir processos para a memória secundária (<dfn>swapping</dfn>): o processo continua no mesmo estado, mas precisa voltar à memória principal (<i>swap in</i>) antes de executar. Assim, pronto e espera passam a existir em duas versões, na memória principal e na secundária.</p>
+  <div class="note"><span class="lbl">Atenção</span><p>Não existe a mudança <b>Espera → Execução</b>. Quando o evento ocorre, o processo vai primeiro para a lista de prontos e aguarda ser escolhido pelo escalonador, como qualquer outro. Também não existe <b>Pronto → Espera</b>: só quem está executando pode pedir algo e passar a esperar.</p></div>
+  <p>Acompanhe um editor de texto em uso. Ele está em espera, aguardando o teclado. O usuário digita uma letra: o evento ocorre e o editor vai para pronto (c). O escalonador o escolhe e ele executa (a), desenhando a letra na tela. Sem mais nada a fazer, ele pede a próxima tecla e volta a esperar (b). Esse ciclo se repete a cada tecla, dezenas de vezes por minuto. Já um programa que calcula sem parar quase nunca vai para espera: ele alterna entre execução e pronto, perdendo a UCP a cada fim de fatia de tempo (d).</p>
+  <p>As mudanças (a) e (d) são decididas pelo escalonador, assunto do capítulo 8. A mudança (d) só existe em sistemas <b>preemptivos</b>, nos quais o SO pode tirar a UCP de um processo que não a liberou. Nos sistemas não preemptivos, o processo só sai da UCP quando termina ou quando ele mesmo passa a esperar.</p>
+  <p>Um processo em pronto ou em espera pode, ainda, não estar na memória principal. Quando falta memória, o SO pode transferir processos inteiros para a memória secundária (<dfn>swapping</dfn>), escolhendo de preferência os que estão em espera. O processo continua no mesmo estado, mas precisa voltar à memória principal (<i>swap in</i>) antes de executar. Assim, pronto e espera passam a existir em duas versões, na memória principal e na secundária.</p>
+  <figure class="fig wide">
+    <svg class="swapfig" viewBox="0 0 640 340" role="img" aria-label="Diagrama de estados com swapping: pronto e espera existem na memória principal e na secundária"><defs><marker id="sw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--ink-2)"/></marker></defs><line x1="10" y1="226" x2="630" y2="226" stroke="var(--line)" stroke-width="2" stroke-dasharray="8 6"/><text x="320" y="216" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink-2)">MEMÓRIA PRINCIPAL</text><text x="320" y="246" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink-2)">MEMÓRIA SECUNDÁRIA (disco)</text><rect x="250" y="20" width="140" height="46" rx="10" fill="var(--run-soft)" stroke="var(--run)" stroke-width="2"/><text x="320.0" y="49" text-anchor="middle" font-size="15" font-weight="700">Execução</text><rect x="60" y="130" width="150" height="46" rx="10" fill="var(--ready-soft)" stroke="var(--ready)" stroke-width="2"/><text x="135.0" y="159" text-anchor="middle" font-size="15" font-weight="700">Pronto</text><rect x="430" y="130" width="150" height="46" rx="10" fill="var(--wait-soft)" stroke="var(--wait)" stroke-width="2"/><text x="505.0" y="159" text-anchor="middle" font-size="15" font-weight="700">Espera</text><rect x="60" y="268" width="150" height="46" rx="10" fill="var(--surface)" stroke="var(--ready)" stroke-width="2"/><text x="135.0" y="297" text-anchor="middle" font-size="15" font-weight="700">Pronto (swap)</text><rect x="430" y="268" width="150" height="46" rx="10" fill="var(--surface)" stroke="var(--wait)" stroke-width="2"/><text x="505.0" y="297" text-anchor="middle" font-size="15" font-weight="700">Espera (swap)</text><path d="M110 128 L110 36 L248 36" stroke="var(--ink-2)" stroke-width="2" fill="none" marker-end="url(#sw)"/><text x="92" y="90" font-size="14" font-weight="800" fill="var(--ink-2)">a</text><path d="M250 56 L160 56 L160 128" stroke="var(--ink-2)" stroke-width="2" fill="none" marker-end="url(#sw)"/><text x="168" y="98" font-size="14" font-weight="800" fill="var(--ink-2)">d</text><path d="M390 43 L505 43 L505 128" stroke="var(--ink-2)" stroke-width="2" fill="none" marker-end="url(#sw)"/><text x="513" y="90" font-size="14" font-weight="800" fill="var(--ink-2)">b</text><path d="M428 153 L212 153" stroke="var(--ink-2)" stroke-width="2" fill="none" marker-end="url(#sw)"/><text x="320" y="146" font-size="14" font-weight="800" fill="var(--ink-2)">c</text><path d="M100 176 L100 266" stroke="var(--ink-2)" stroke-width="2" fill="none" marker-end="url(#sw)"/><path d="M150 268 L150 178" stroke="var(--ink-2)" stroke-width="2" fill="none" marker-end="url(#sw)"/><path d="M490 176 L490 266" stroke="var(--ink-2)" stroke-width="2" fill="none" marker-end="url(#sw)"/><path d="M540 268 L540 178" stroke="var(--ink-2)" stroke-width="2" fill="none" marker-end="url(#sw)"/><path d="M428 291 L212 291" stroke="var(--ink-2)" stroke-width="2" fill="none" marker-end="url(#sw)"/><text x="94" y="200" text-anchor="end" font-size="12" fill="var(--ink-2)">swap out</text><text x="156" y="200" text-anchor="start" font-size="12" fill="var(--ink-2)">swap in</text><text x="484" y="200" text-anchor="end" font-size="12" fill="var(--ink-2)">swap out</text><text x="546" y="200" text-anchor="start" font-size="12" fill="var(--ink-2)">swap in</text><text x="320" y="284" text-anchor="middle" font-size="12" fill="var(--ink-2)">o evento ocorre</text></svg>
+    <figcaption>Figura 5. Estados do processo com swapping. Um processo levado ao disco (swap out) continua pronto ou em espera, mas só volta a executar depois de retornar à memória principal (swap in).</figcaption>
+  </figure>
 
   <div class="lab wide">
     <div class="lab-head"><span class="tag">Simulador</span><h4>A vida de um processo</h4></div>
@@ -557,7 +793,36 @@ footer.end{max-width:1160px; margin:64px auto 0; padding-top:18px; border-top:1p
     <li><b>eliminação por outro processo</b> que tenha o privilégio de fazê-lo (por exemplo, com o comando <code>kill</code>);</li>
     <li><b>eliminação forçada</b> pelo SO, por falta de recursos disponíveis ou por um erro que ele não tolera.</li>
   </ul>
+  <p>O processo pode, ainda, ser eliminado quando o usuário encerra a sessão (logoff) ou, nos sistemas em que há dependência entre pai e filhos, quando o processo pai é eliminado (seção 5.9).</p>
+  <h3>O que o SO faz, passo a passo</h3>
+  <p>Criar e eliminar processos são tarefas do SO, pedidas por meio de chamadas de sistema. Na criação, o SO monta o PCB e prepara tudo para a primeira execução; na eliminação, faz o caminho inverso, devolvendo cada recurso. Percorra as duas sequências e veja o PCB ser preenchido e esvaziado.</p>
+  <div class="lab wide">
+    <div class="lab-head"><span class="tag">Experimente</span><h4>Nascimento e morte de um processo</h4></div>
+    <div class="seg2" id="cr-mode"><button class="btn sel" data-m="new">Criação</button><button class="btn" data-m="del">Eliminação</button></div>
+    <div class="stepper">
+      <ol class="stl" id="cr-steps"></ol>
+      <div class="pcbcard" id="cr-pcb"></div>
+    </div>
+    <div class="btns"><button class="btn primary" id="cr-next">Próximo passo</button><button class="btn ghost" id="cr-reset">Recomeçar</button></div>
+    <p class="msg" id="cr-m" aria-live="polite">Clique em "Próximo passo".</p>
+  </div>
   <div class="note"><span class="lbl">No Linux</span><p>Um processo que terminou, mas cujo registro ainda existe à espera do processo pai, aparece com o estado <code>Z</code> (<i>zombie</i>) no comando <code>ps</code>: é o estado de terminado do livro, visto na prática.</p></div>
+  <div class="win">
+    <span class="lbl">No Windows</span>
+    <h4>Criar, observar e eliminar um processo</h4>
+    <p>As três formas de eliminação aparecem no PowerShell. O comando <code>ping -n 60</code> fica um minuto em execução, tempo suficiente para observar:</p>
+    <pre class="term ps"><span class="c"># cria um processo e guarda a referência a ele</span>
+PS&gt; $p = Start-Process ping -ArgumentList '-n 60 127.0.0.1' -PassThru
+PS&gt; $p.Id                      <span class="c"># o PID atribuído pelo SO</span>
+<span class="c"># eliminação por outro processo (aqui, o PowerShell)</span>
+PS&gt; Stop-Process -Id $p.Id
+PS&gt; $p.HasExited               <span class="c"># True</span>
+PS&gt; $p.ExitCode                <span class="c"># código de saída de quem foi eliminado</span>
+<span class="c"># término normal: ping -n 3 termina sozinho</span>
+PS&gt; $q = Start-Process ping -ArgumentList '-n 3 127.0.0.1' -PassThru -Wait
+PS&gt; $q.ExitCode                <span class="c"># 0 = terminou normalmente</span></pre>
+    <p>O mesmo vale pelo Gerenciador de Tarefas: <span class="path2">Detalhes › botão direito › Finalizar tarefa</span>. Repare que, mesmo depois do término, o PowerShell ainda consegue consultar <code>$p.ExitCode</code>: o Windows mantém as informações do processo terminado enquanto alguém ainda guarda uma referência a ele, como no estado de terminado do livro.</p>
+  </div>
 </section>
 
 <!-- 5.6 -->
@@ -575,11 +840,34 @@ footer.end{max-width:1160px; margin:64px auto 0; padding-top:18px; border-top:1p
       <div class="barrow">I/O-bound<div class="bar"><i class="u" style="width:6%"></i><i class="io" style="width:20%"></i><i class="u" style="width:5%"></i><i class="io" style="width:22%"></i><i class="u" style="width:6%"></i><i class="io" style="width:20%"></i><i class="u" style="width:4%"></i><i class="io" style="width:17%"></i></div></div>
     </div>
   </div>
-  <p>A classificação importa para o escalonamento (capítulo 8): misturar processos dos dois tipos permite que a UCP e os dispositivos de E/S fiquem ocupados ao mesmo tempo.</p>
+  <p>A classificação não é uma propriedade fixa do programa: um mesmo programa pode ter fases dos dois tipos. Um compactador de arquivos, por exemplo, é I/O-bound enquanto lê os arquivos do disco e CPU-bound enquanto calcula a compressão.</p>
+  <p>A classificação importa para o escalonamento (capítulo 8): misturar processos dos dois tipos permite que a UCP e os dispositivos de E/S fiquem ocupados ao mesmo tempo. Enquanto o processo I/O-bound espera o disco, o CPU-bound usa a UCP; quando o disco termina, o I/O-bound usa a UCP por um instante e volta a pedir o disco. Se todos os processos forem CPU-bound, o disco fica parado; se todos forem I/O-bound, a UCP fica ociosa e os processos fazem fila no disco.</p>
+  <div class="lab wide">
+    <div class="lab-head"><span class="tag">Simulador</span><h4>UCP e disco ocupados ao mesmo tempo</h4></div>
+    <p class="lab-hint">Dois processos dividem uma UCP e um disco durante 40 unidades de tempo. O CPU-bound usa a UCP por 8 unidades e o disco por 1; o I/O-bound usa a UCP por 1 e o disco por 4. Escolha a combinação e compare a ocupação.</p>
+    <div class="seg2" id="mx-sel"><button class="btn" data-s="cc">Dois CPU-bound</button><button class="btn" data-s="ii">Dois I/O-bound</button><button class="btn sel" data-s="ci">Um de cada</button></div>
+    <div class="mix">
+      <div class="lane">UCP<div class="track" id="mx-cpu"></div><span class="pct" id="mx-pc"></span></div>
+      <div class="lane">Disco<div class="track" id="mx-dsk"></div><span class="pct" id="mx-pd"></span></div>
+      <div class="mixleg" id="mx-leg"></div>
+    </div>
+    <p class="msg" id="mx-m" aria-live="polite"></p>
+  </div>
   <div class="lab">
     <div class="lab-head"><span class="tag">Experimente</span><h4>Classifique as aplicações</h4></div>
     <ul class="cls" id="cls"></ul>
     <p class="msg" id="cls-m" aria-live="polite">Acertos: 0 de 6.</p>
+  </div>
+  <div class="win">
+    <span class="lbl">No Windows</span>
+    <h4>Provoque um processo de cada tipo</h4>
+    <ol>
+      <li>Deixe o Gerenciador de Tarefas aberto na guia <span class="path2">Processos</span>, com as colunas <span class="path2">CPU</span> e <span class="path2">Disco</span> visíveis.</li>
+      <li><b>CPU-bound:</b> no PowerShell, execute o laço abaixo. A coluna CPU do processo sobe e fica alta; a de Disco fica em zero. Pare com <kbd>Ctrl</kbd>+<kbd>C</kbd>.</li>
+      <li><b>I/O-bound:</b> copie uma pasta grande (fotos, vídeos) para outro lugar do disco ou para um pendrive. O Explorador de Arquivos mostra muito uso de disco e pouca CPU.</li>
+    </ol>
+    <pre class="term ps"><span class="c"># laço sem fim: só calcula, nunca pede E/S</span>
+PS&gt; while ($true) { }</pre>
   </div>
 </section>
 
@@ -591,8 +879,24 @@ footer.end{max-width:1160px; margin:64px auto 0; padding-top:18px; border-top:1p
     <div class="card"><h4>Foreground</h4><p>Permite a <b>comunicação direta do usuário</b> com o processo durante o processamento. Os canais de entrada e saída estão associados a um terminal: o teclado envia os dados e o monitor mostra os resultados.</p><div class="flow"><b>Teclado</b><em>→</em><b class="p">Processo</b><em>→</em><b>Monitor</b></div></div>
     <div class="card"><h4>Background</h4><p><b>Não há comunicação</b> com o usuário durante o processamento. Os canais de E/S não estão ligados a um dispositivo interativo, mas, em geral, a arquivos. Útil para tarefas longas, como backups.</p><div class="flow"><b>Arquivo</b><em>→</em><b class="p">Processo</b><em>→</em><b>Arquivo</b></div></div>
   </div>
-  <p>É possível também ligar o canal de saída de um processo ao canal de entrada de outro. Dizemos então que existe um <dfn>pipe</dfn> entre os dois processos: a saída do primeiro passa a ser a entrada do segundo.</p>
+  <p>Nos sistemas atuais esses canais têm nomes padronizados: a <b>entrada padrão</b> (<i>stdin</i>), a <b>saída padrão</b> (<i>stdout</i>) e a <b>saída de erros</b> (<i>stderr</i>). Por padrão, os três estão ligados ao terminal. O usuário pode <b>redirecionar</b> esses canais para arquivos, por exemplo para guardar a saída de um comando em vez de vê-la na tela. Um processo em background costuma ter a saída redirecionada justamente porque não há ninguém olhando o terminal.</p>
+  <p>É possível também ligar o canal de saída de um processo ao canal de entrada de outro. Dizemos então que existe um <dfn>pipe</dfn> entre os dois processos: a saída do primeiro passa a ser a entrada do segundo. Os dois processos rodam ao mesmo tempo, e o segundo vai consumindo os dados à medida que o primeiro os produz. Com pipes, comandos simples se combinam para fazer tarefas mais elaboradas.</p>
   <div class="flow"><b class="p">ls -l</b><em>→ pipe →</em><b class="p">grep .txt</b><em>→</em><b>Monitor</b></div>
+  <div class="win">
+    <span class="lbl">No Windows</span>
+    <h4>Foreground, background e pipe no PowerShell</h4>
+    <pre class="term ps"><span class="c"># foreground: o prompt só volta quando o comando termina (cerca de 10 s)</span>
+PS&gt; Start-Sleep -Seconds 10
+<span class="c"># background: o comando vira um "job" e o prompt volta na hora</span>
+PS&gt; $j = Start-Job { Start-Sleep -Seconds 10; "terminei" }
+PS&gt; Get-Job                     <span class="c"># State: Running, depois Completed</span>
+PS&gt; Receive-Job $j              <span class="c"># lê a saída que o job produziu</span>
+<span class="c"># pipe: a saída de Get-Process vira a entrada de Sort-Object</span>
+PS&gt; Get-Process | Sort-Object CPU -Descending | Select-Object -First 5
+<span class="c"># redirecionamento: a saída vai para um arquivo, não para a tela</span>
+PS&gt; Get-Process &gt; processos.txt</pre>
+    <p>Enquanto o job roda, abra o Gerenciador de Tarefas: aparece um novo processo do PowerShell, sem janela, executando em segundo plano.</p>
+  </div>
   <div class="lab">
     <div class="lab-head"><span class="tag">Experimente</span><h4>Terminal: primeiro plano ou segundo plano?</h4></div>
     <p class="lab-hint">Execute o mesmo backup das duas formas e compare o que acontece com o terminal.</p>
@@ -612,6 +916,31 @@ $ ./soma &amp;</pre></div>
     <div class="card"><h4>Via rotina do SO</h4><ol><li>Um programa em execução chama uma rotina do sistema (chamada de sistema).</li><li>O SO cria o novo processo, que pode ser independente ou um subprocesso.</li></ol><pre class="term">fork()          <span class="c">// Unix/Linux</span>
 CreateProcess() <span class="c">// Windows</span></pre></div>
   </div>
+  <p>As três formas acabam no mesmo ponto: alguém pede ao SO, por uma chamada de sistema, que crie o processo. No logon, quem pede é o próprio sistema, depois de conferir a senha; na linguagem de comandos, é o interpretador (shell); na terceira forma, é o programa do usuário. O que muda é <b>quem dispara</b> a criação.</p>
+  <h3>Logon no Windows</h3>
+  <p>No Windows, o logon interativo envolve vários processos do sistema. O <code>winlogon.exe</code> exibe a tela de entrada e repassa as credenciais ao <code>lsass.exe</code>, que as confere. Se estiverem corretas, o <code>winlogon.exe</code> cria o processo <code>userinit.exe</code>, que por sua vez cria o <code>explorer.exe</code>: a área de trabalho, a barra de tarefas e o menu Iniciar. A partir daí, todo programa aberto com um clique é criado pelo <code>explorer.exe</code> e herda dele a identificação do usuário.</p>
+  <h3>Duas maneiras de criar por rotina do SO</h3>
+  <p>Unix e Windows oferecem rotinas diferentes. No Unix e no Linux, <code>fork()</code> cria uma <b>cópia</b> do processo que a chamou: o filho começa com o mesmo programa, os mesmos dados e os mesmos arquivos abertos do pai. Para executar outro programa, o filho chama em seguida <code>exec()</code>, que troca o programa do processo por outro. No Windows, <code>CreateProcess()</code> faz tudo de uma vez: recebe o nome do arquivo executável e cria um processo novo já com aquele programa.</p>
+  <div class="lab wide">
+    <div class="lab-head"><span class="tag">Experimente</span><h4>fork() e CreateProcess(), lado a lado</h4></div>
+    <p class="lab-hint">Um shell quer executar outro programa. Avance passo a passo e compare os dois caminhos.</p>
+    <div class="fc">
+      <div class="fccol"><h5>Unix/Linux: fork() + exec()</h5><div class="fccode" id="fk-code"></div><div class="fcstage" id="fk-stage"></div></div>
+      <div class="fccol"><h5>Windows: CreateProcess()</h5><div class="fccode" id="cp-code"></div><div class="fcstage" id="cp-stage"></div></div>
+    </div>
+    <div class="btns"><button class="btn primary" id="fc-next">Próximo passo</button><button class="btn ghost" id="fc-reset">Recomeçar</button></div>
+    <p class="msg" id="fc-m" aria-live="polite">Os dois shells estão prontos para criar um processo.</p>
+  </div>
+  <div class="win">
+    <span class="lbl">No Windows</span>
+    <h4>Quem criou quem?</h4>
+    <p>O Gerenciador de Tarefas não mostra o processo criador, mas o PowerShell mostra. Abra um Prompt de Comando pelo menu Iniciar e, no PowerShell, consulte:</p>
+    <pre class="term ps"><span class="c"># PID de cada cmd.exe e PID do processo que o criou</span>
+PS&gt; Get-CimInstance Win32_Process -Filter "Name='cmd.exe'" | Select-Object ProcessId, ParentProcessId
+<span class="c"># troque 1234 pelo ParentProcessId que apareceu</span>
+PS&gt; Get-Process -Id 1234</pre>
+    <p>O criador costuma ser o <code>explorer.exe</code> (você clicou no menu Iniciar). Se você abrir o <code>cmd</code> digitando no próprio PowerShell, o criador passa a ser o PowerShell: a criação via linguagem de comandos.</p>
+  </div>
 </section>
 
 <!-- 5.9 -->
@@ -630,7 +959,13 @@ CreateProcess() <span class="c">// Windows</span></pre></div>
     </div>
     <div class="btns"><button class="btn ghost" id="tree-r">Restaurar todos</button></div>
   </div>
-  <p>O problema dos subprocessos é o custo: cada um tem contexto completo, então criar, eliminar e alternar entre eles consome tempo de UCP e memória. É daí que vem a ideia de thread.</p>
+  <div class="win">
+    <span class="lbl">No Windows</span>
+    <h4>Pai e filhos, mas sem dependência obrigatória</h4>
+    <p>O modelo do livro, em que eliminar o pai elimina os filhos, vale para sistemas que implementam subprocessos dessa forma. O Windows guarda quem criou cada processo, mas, por padrão, <b>o filho continua vivo quando o pai termina</b>. Para eliminar o pai e todos os descendentes, o Gerenciador de Tarefas oferece, na guia <span class="path2">Detalhes</span>, a opção <span class="path2">Finalizar árvore de processos</span> (botão direito sobre o processo). Os programas que precisam da dependência existencial usam um recurso chamado <i>job object</i>, que agrupa processos e permite encerrá-los juntos.</p>
+    <p>Teste: abra um Prompt de Comando e, dentro dele, digite <code>charmap</code>. O Mapa de Caracteres que se abre é filho do <code>cmd.exe</code>. Feche o Prompt de Comando: o Mapa de Caracteres continua aberto.</p>
+  </div>
+  <p>O problema dos subprocessos é o custo: cada um tem contexto completo, então criar, eliminar e alternar entre eles consome tempo de UCP e memória. Além disso, como cada subprocesso tem seu próprio espaço de endereçamento, eles não enxergam a memória uns dos outros e precisam de mecanismos do SO para trocar dados (capítulo 7). É daí que vem a ideia de thread.</p>
   <h3>Threads</h3>
   <p>Em um ambiente <dfn>multithread</dfn>, um único processo tem vários fluxos de execução, as <b>threads</b>. Cada thread tem seu <b>próprio contexto de hardware</b>, mas todas <b>compartilham o contexto de software e o espaço de endereçamento</b> do processo. Por isso criar, alternar e comunicar threads é mais barato do que fazer o mesmo com subprocessos. O capítulo 6 aprofunda o tema.</p>
   <figure class="fig wide">
@@ -638,8 +973,27 @@ CreateProcess() <span class="c">// Windows</span></pre></div>
       <div class="pbox"><h5>Dois subprocessos</h5><div class="pair"><div class="col"><small>Filho 1</small><span class="seg sw">Contexto de software</span><span class="seg hw">Contexto de hardware</span><span class="seg ea">Espaço de endereçamento</span></div><div class="col"><small>Filho 2</small><span class="seg sw">Contexto de software</span><span class="seg hw">Contexto de hardware</span><span class="seg ea">Espaço de endereçamento</span></div></div></div>
       <div class="pbox mt"><h5>Um processo com três threads</h5><span class="seg sw">Contexto de software · compartilhado</span><div class="trio"><div class="col"><small>Thread 1</small><span class="seg hw">Contexto de hardware</span></div><div class="col"><small>Thread 2</small><span class="seg hw">Contexto de hardware</span></div><div class="col"><small>Thread 3</small><span class="seg hw">Contexto de hardware</span></div></div><span class="seg ea">Espaço de endereçamento · compartilhado</span></div>
     </div>
-    <figcaption>Figura 2. Subprocessos duplicam tudo; threads duplicam só o contexto de hardware.</figcaption>
+    <figcaption>Figura 6. Subprocessos duplicam tudo; threads duplicam só o contexto de hardware.</figcaption>
   </figure>
+  <div class="scroll wide"><table class="t">
+    <thead><tr><th>Aspecto</th><th>Processos independentes</th><th>Subprocessos</th><th>Threads</th></tr></thead>
+    <tbody>
+      <tr><td>Contexto de hardware</td><td>próprio</td><td>próprio</td><td>próprio</td></tr>
+      <tr><td>Contexto de software</td><td>próprio</td><td>próprio (pode dividir quotas com o pai)</td><td>compartilhado</td></tr>
+      <tr><td>Espaço de endereçamento</td><td>próprio</td><td>próprio</td><td>compartilhado</td></tr>
+      <tr><td>Vínculo com o criador</td><td>nenhum</td><td>hierarquia pai e filho</td><td>pertencem ao mesmo processo</td></tr>
+      <tr><td>Custo de criar e alternar</td><td>alto</td><td>alto</td><td>baixo</td></tr>
+      <tr><td>Troca de dados</td><td>por mecanismos do SO</td><td>por mecanismos do SO</td><td>direta, pela memória comum</td></tr>
+    </tbody>
+  </table></div>
+  <div class="win">
+    <span class="lbl">No Windows</span>
+    <h4>Conte as threads</h4>
+    <p>No Gerenciador de Tarefas, guia <span class="path2">Detalhes</span>, acrescente a coluna <span class="path2">Threads</span>. Navegadores, o <code>explorer.exe</code> e o processo <code>System</code> costumam ter dezenas ou centenas. Um processo do Bloco de Notas tem poucas.</p>
+    <pre class="term ps"><span class="c"># os cinco processos com mais threads</span>
+PS&gt; Get-Process | Sort-Object { $_.Threads.Count } -Descending |
+      Select-Object -First 5 Name, Id, @{n='Threads'; e={ $_.Threads.Count }}</pre>
+  </div>
 </section>
 
 <!-- 5.10 -->
@@ -658,6 +1012,35 @@ CreateProcess() <span class="c">// Windows</span></pre></div>
     <li>Interface de comandos (shell)<span>bash, PowerShell</span></li>
   </ul>
   <div class="note"><span class="lbl">Ligação com a arquitetura do SO</span><p>Essa ideia é levada ao extremo na <b>arquitetura microkernel</b> (capítulo 4): o núcleo oferece só o essencial, e a maior parte dos serviços do sistema roda como processos separados, que se comunicam por troca de mensagens.</p></div>
+  <p>Esses processos têm características em comum: são criados durante a inicialização do sistema, antes de qualquer usuário fazer logon; rodam em background, sem janela e sem terminal; e ficam a maior parte do tempo em espera, aguardando um pedido, um horário ou um evento. Muitos executam com privilégios elevados, porque cuidam de recursos do sistema inteiro.</p>
+  <h3>Os processos do sistema no Windows</h3>
+  <p>Na guia <span class="path2">Detalhes</span> do Gerenciador de Tarefas, ordenada por PID, os primeiros processos são do próprio Windows. Alguns deles:</p>
+  <div class="scroll wide"><table class="t small">
+    <thead><tr><th>Processo</th><th>Papel</th></tr></thead>
+    <tbody>
+      <tr><td>System (PID 4)</td><td>Representa o núcleo do Windows. Suas threads executam tarefas internas do sistema.</td></tr>
+      <tr><td>smss.exe</td><td>Gerenciador de sessões: um dos primeiros processos, prepara as sessões de usuário.</td></tr>
+      <tr><td>csrss.exe</td><td>Subsistema cliente/servidor: apoia a criação de processos e threads e as janelas de console.</td></tr>
+      <tr><td>wininit.exe</td><td>Inicializa o sistema e cria <code>services.exe</code> e <code>lsass.exe</code>.</td></tr>
+      <tr><td>services.exe</td><td>Gerenciador de controle de serviços: inicia, para e acompanha os serviços.</td></tr>
+      <tr><td>lsass.exe</td><td>Autoridade de segurança local: confere senhas e aplica políticas de segurança.</td></tr>
+      <tr><td>winlogon.exe</td><td>Cuida do logon, do bloqueio de tela e do logoff.</td></tr>
+      <tr><td>svchost.exe</td><td>Hospedeiro de serviços: cada cópia executa um ou mais serviços. Por isso aparecem várias.</td></tr>
+    </tbody>
+  </table></div>
+  <div class="win">
+    <span class="lbl">No Windows</span>
+    <h4>Serviços: os daemons do Windows</h4>
+    <ol>
+      <li>No Gerenciador de Tarefas, abra a guia <span class="path2">Serviços</span>. A coluna <span class="path2">PID</span> mostra em qual processo cada serviço está rodando; serviços parados não têm PID.</li>
+      <li>Clique com o botão direito em um serviço em execução e escolha <span class="path2">Ir para detalhes</span>: o Windows mostra o processo, muitas vezes um <code>svchost.exe</code>.</li>
+      <li>Para uma visão completa, pressione <kbd>Win</kbd>+<kbd>R</kbd> e digite <code>services.msc</code>. A coluna <span class="path2">Tipo de Inicialização</span> diz se o serviço começa sozinho com o sistema.</li>
+    </ol>
+    <pre class="term ps"><span class="c"># serviços em execução</span>
+PS&gt; Get-Service | Where-Object Status -eq 'Running'
+<span class="c"># quais serviços cada processo hospeda (no Prompt de Comando)</span>
+C:\&gt; tasklist /svc</pre>
+  </div>
 </section>
 
 <!-- 5.11 -->
@@ -667,6 +1050,40 @@ CreateProcess() <span class="c">// Windows</span></pre></div>
   <p>Exemplos de eventos que geram sinais: teclar <kbd>Ctrl</kbd>+<kbd>C</kbd> para interromper um programa; o fim de um temporizador; uma exceção, como divisão por zero ou <i>overflow</i>; e o pedido explícito de outro processo, como o comando <code>kill</code>. A eliminação de um processo, aliás, é feita dessa forma: o processo que quer eliminar outro envia a ele um sinal de término.</p>
   <p>Quando o sinal chega, o SO o registra no PCB do processo de destino, e ele é tratado quando esse processo volta a executar. O processo pode tratar o sinal com uma <b>rotina de tratamento</b> própria (<i>signal handler</i>) ou deixar que ocorra a <b>ação padrão</b>, que em geral é terminar. Alguns sinais, como o <code>SIGKILL</code>, não podem ser tratados nem ignorados.</p>
   <div class="def"><span class="lbl">Analogia</span><p>O sinal está para o processo assim como as interrupções e exceções estão para o sistema operacional: um aviso assíncrono de que algo aconteceu e precisa ser tratado.</p></div>
+  <p>A vida de um sinal tem duas etapas. Na <b>geração</b>, o evento acontece e o SO anota o sinal como pendente no PCB do destino. Na <b>entrega</b>, quando o processo vai voltar a executar, o SO desvia a execução para o tratamento. Se o processo estiver em espera, alguns sinais o acordam: ele vai para pronto para poder tratá-los. Para cada sinal, o processo pode escolher entre três reações: <b>tratar</b> com uma rotina própria, <b>ignorar</b> ou deixar a <b>ação padrão</b> do sistema.</p>
+  <div class="scroll wide"><table class="t small">
+    <thead><tr><th>Sinal (Unix/Linux)</th><th>Quando é gerado</th><th>Ação padrão</th><th>Pode ser tratado?</th></tr></thead>
+    <tbody>
+      <tr><td>SIGINT</td><td>usuário tecla <kbd>Ctrl</kbd>+<kbd>C</kbd></td><td>terminar</td><td>sim</td></tr>
+      <tr><td>SIGTERM</td><td>pedido educado de término (<code>kill PID</code>)</td><td>terminar</td><td>sim</td></tr>
+      <tr><td>SIGKILL</td><td>término imediato (<code>kill -9 PID</code>)</td><td>terminar</td><td>não</td></tr>
+      <tr><td>SIGALRM</td><td>temporizador pedido pelo processo expirou</td><td>terminar</td><td>sim</td></tr>
+      <tr><td>SIGFPE</td><td>erro aritmético, como divisão inteira por zero</td><td>terminar</td><td>sim</td></tr>
+      <tr><td>SIGSEGV</td><td>acesso a memória que não pertence ao processo</td><td>terminar</td><td>sim</td></tr>
+      <tr><td>SIGCHLD</td><td>um processo filho terminou</td><td>ignorar</td><td>sim</td></tr>
+      <tr><td>SIGSTOP / SIGCONT</td><td>suspender / retomar o processo</td><td>parar / continuar</td><td>SIGSTOP não</td></tr>
+    </tbody>
+  </table></div>
+  <p>SIGTERM e SIGKILL mostram por que a possibilidade de tratar importa. Com SIGTERM, o programa pode salvar o trabalho, apagar arquivos temporários e só então terminar. SIGKILL existe para quando o programa não colabora: o SO elimina o processo sem dar a ele nenhuma chance de reagir.</p>
+  <div class="win">
+    <span class="lbl">No Windows</span>
+    <h4>Avisos equivalentes aos sinais</h4>
+    <p>O Windows não implementa os sinais do Unix da mesma forma, mas tem mecanismos com o mesmo papel:</p>
+    <ul>
+      <li><kbd>Ctrl</kbd>+<kbd>C</kbd> em um programa de console gera um <b>evento de controle</b> que o programa pode tratar, como o SIGINT.</li>
+      <li><code>taskkill /PID n</code> pede ao programa que feche, como o SIGTERM. Um programa com janela recebe o pedido e pode reagir, por exemplo perguntando se você quer salvar.</li>
+      <li><code>taskkill /F /PID n</code> e <span class="path2">Finalizar tarefa</span> encerram o processo à força, como o SIGKILL.</li>
+      <li>Divisão por zero e acesso indevido à memória geram <b>exceções</b>, que o programa pode tratar ou que encerram o processo.</li>
+    </ul>
+    <pre class="term ps"><span class="c"># um processo sem janela, rodando por um minuto</span>
+C:\&gt; start ping -n 60 127.0.0.1
+C:\&gt; tasklist /fi "imagename eq ping.exe"
+<span class="c"># pedido educado: processos sem janela costumam recusá-lo</span>
+C:\&gt; taskkill /im ping.exe
+<span class="c"># término forçado</span>
+C:\&gt; taskkill /f /im ping.exe</pre>
+    <p>Observe a resposta do primeiro <code>taskkill</code>: em processos sem janela, como o <code>ping</code>, o Windows informa que só é possível encerrá-los de forma forçada, com <code>/F</code>.</p>
+  </div>
   <div class="lab">
     <div class="lab-head"><span class="tag">Experimente</span><h4>Enviando sinais a um processo</h4></div>
     <div class="sig">
@@ -1054,4 +1471,220 @@ if('IntersectionObserver' in window){
 })();
 })();
 </script>
+
+<script>
+(function(){
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+function setMsg(node, text, kind){ node.textContent = text; node.className = 'msg' + (kind ? ' ' + kind : ''); }
+function seg(container, sel, cb){ $$(sel, container).forEach(b => b.addEventListener('click', () => { $$(sel, container).forEach(x => x.classList.toggle('sel', x === b)); cb(b); })); }
+
+/* ---------- 5.2.3 proteção de memória ---------- */
+(function(){
+  const R = {A:{base:4000, lim:3000, el:'#mem-a'}, B:{base:7000, lim:2000, el:'#mem-b'}};
+  let cur = 'A';
+  const regs = $('#mem-regs'), out = $('#mem-out'), rng = $('#mem-addr'), m = $('#mem-m');
+  if(!regs) return;
+  const show = () => {
+    const r = R[cur];
+    regs.innerHTML = `<span>registrador base   = ${r.base}</span><span>registrador limite = ${r.lim}</span><span>endereços válidos  = ${r.base} a ${r.base + r.lim - 1}</span>`;
+  };
+  const clear = () => $$('#mem-ram div').forEach(d => d.classList.remove('hitok','hitbad'));
+  seg($('#mem-p'), 'button', b => { cur = b.dataset.p; clear(); show(); setMsg(m, `Troca de contexto: o SO carregou nos registradores a base e o limite do processo ${cur}.`); });
+  rng.addEventListener('input', () => { out.textContent = rng.value; });
+  $('#mem-go').addEventListener('click', () => {
+    clear();
+    const a = +rng.value, r = R[cur];
+    const region = a < 4000 ? '#mem-ram .so' : a < 7000 ? '#mem-a' : a < 9000 ? '#mem-b' : '#mem-f';
+    const ok = a >= r.base && a < r.base + r.lim;
+    $(region).classList.add(ok ? 'hitok' : 'hitbad');
+    if(ok) setMsg(m, `Acesso permitido: ${a} está entre ${r.base} e ${r.base + r.lim - 1}, dentro do espaço de endereçamento de ${cur}.`, 'ok');
+    else {
+      const dono = a < 4000 ? 'do sistema operacional' : a < 7000 ? 'do processo A' : a < 9000 ? 'do processo B' : 'de uma área livre';
+      setMsg(m, `Acesso negado: o endereço ${a} é ${dono}, fora dos limites de ${cur}. O hardware gera uma exceção e o SO, em geral, encerra o processo ${cur}.`, 'bad');
+    }
+  });
+  show();
+})();
+
+/* ---------- 5.3 listas de PCBs ---------- */
+(function(){
+  const box = {cpu:$('#q-cpu'), ready:$('#q-ready'), disk:$('#q-disk'), kbd:$('#q-kbd')};
+  const m = $('#q-m');
+  if(!box.cpu) return;
+  let S;
+  const reset = () => { S = {cpu:'P1', ready:['P2','P3','P4'], disk:['P5'], kbd:[]}; draw(); setMsg(m, 'P1 está na UCP. P2, P3 e P4 estão prontos; P5 espera o disco.'); };
+  const chip = (p, k) => `<span class="pc ${k}">${p}</span>`;
+  const list = (arr, k, empty) => arr.length ? arr.map((p, i) => chip(p, k) + (i < arr.length - 1 ? '<span class="arrow">→</span>' : '')).join('') : `<span class="none">${empty}</span>`;
+  const draw = () => {
+    box.cpu.innerHTML = S.cpu ? chip(S.cpu, 'x') : '<span class="none">UCP ociosa: nenhum processo pronto</span>';
+    box.ready.innerHTML = list(S.ready, 'p', 'vazia');
+    box.disk.innerHTML = list(S.disk, 'e', 'vazia');
+    box.kbd.innerHTML = list(S.kbd, 'e', 'vazia');
+  };
+  const act = {
+    sched(){
+      if(S.cpu) return [`${S.cpu} ainda está na UCP. O escalonador só escolhe outro quando a UCP fica livre (ou na preempção, com "Fim da fatia de tempo").`, 'bad'];
+      if(!S.ready.length) return ['A lista de prontos está vazia: não há quem escolher. A UCP fica ociosa até algum evento ocorrer.', 'bad'];
+      S.cpu = S.ready.shift(); return [`(a) Pronto → Execução: ${S.cpu}, o primeiro da lista de prontos, recebeu a UCP. O SO carregou o contexto dele.`, 'ok'];
+    },
+    slice(){
+      if(!S.cpu) return ['Não há processo na UCP para perder a fatia de tempo.', 'bad'];
+      const p = S.cpu; S.ready.push(p); S.cpu = S.ready.shift();
+      return [`(d) Execução → Pronto: ${p} foi para o fim da lista de prontos, e ${S.cpu} recebeu a UCP. Duas mudanças de estado com uma troca de contexto.`, 'ok'];
+    },
+    disk(){
+      if(!S.cpu) return ['Só o processo em execução pode pedir uma leitura. Primeiro, escalone alguém.', 'bad'];
+      const p = S.cpu; S.disk.push(p); S.cpu = S.ready.shift() || null;
+      return [`(b) Execução → Espera: ${p} pediu o disco e foi para a lista de espera do disco.` + (S.cpu ? ` ${S.cpu} assumiu a UCP.` : ' Não há prontos: a UCP fica ociosa.'), 'ok'];
+    },
+    kbd(){
+      if(!S.cpu) return ['Só o processo em execução pode passar a esperar o teclado.', 'bad'];
+      const p = S.cpu; S.kbd.push(p); S.cpu = S.ready.shift() || null;
+      return [`(b) Execução → Espera: ${p} aguarda o usuário e foi para a lista do teclado.` + (S.cpu ? ` ${S.cpu} assumiu a UCP.` : ' Não há prontos: a UCP fica ociosa.'), 'ok'];
+    },
+    diskdone(){
+      if(!S.disk.length) return ['Nenhum processo espera o disco.', 'bad'];
+      const p = S.disk.shift(); S.ready.push(p);
+      return [`(c) Espera → Pronto: a leitura de ${p} terminou. Ele foi para o fim da lista de prontos, e não direto para a UCP.`, 'ok'];
+    },
+    key(){
+      if(!S.kbd.length) return ['Nenhum processo espera o teclado: a tecla não acorda ninguém.', 'bad'];
+      const p = S.kbd.shift(); S.ready.push(p);
+      return [`(c) Espera → Pronto: ${p} recebeu a tecla e voltou para a lista de prontos.`, 'ok'];
+    },
+  };
+  $$('#q-ev .btn').forEach(b => b.addEventListener('click', () => { const [t, k] = act[b.dataset.q](); draw(); setMsg(m, t, k); }));
+  $('#q-reset').addEventListener('click', reset);
+  reset();
+})();
+
+/* ---------- 5.5 criação e eliminação ---------- */
+(function(){
+  const steps = $('#cr-steps'), card = $('#cr-pcb'), m = $('#cr-m');
+  if(!steps) return;
+  const FIELDS = ['PID','Estado','Dono e privilégios','Memória','Programa','Registradores','Arquivos abertos'];
+  const NEW = [
+    ['O pedido chega ao SO', 'Um usuário, o shell ou outro programa pede a criação por uma chamada de sistema. O SO confere se o limite de processos e as quotas permitem.', {}],
+    ['Atribuir um PID e um PCB', 'O SO escolhe um número de identificação livre e reserva um PCB na sua área de memória. O processo está no estado de criação.', {PID:'5120', Estado:'criação'}],
+    ['Preencher o contexto de software', 'Dono, quotas e privilégios vêm do usuário ou do processo criador.', {'Dono e privilégios':'aluno · padrão'}],
+    ['Alocar o espaço de endereçamento', 'O SO reserva memória e carrega nela o código e os dados do programa.', {Memória:'40 MB reservados', Programa:'ping.exe carregado'}],
+    ['Inicializar o contexto de hardware', 'O contador de programa (PC) recebe o endereço da primeira instrução; a pilha começa vazia.', {Registradores:'PC = início · SP = topo'}],
+    ['Abrir os canais padrão', 'Entrada, saída e saída de erros são ligadas ao terminal ou herdadas do criador.', {'Arquivos abertos':'stdin, stdout, stderr'}],
+    ['Admitir na lista de prontos', 'O PCB entra na lista de prontos. O processo passa a disputar a UCP.', {Estado:'pronto'}],
+  ];
+  const DEL = [
+    ['Motivo do término', 'O programa terminou normalmente, outro processo pediu a eliminação, ou o SO o encerrou por erro ou falta de recursos.', {}],
+    ['Fechar arquivos e dispositivos', 'O SO fecha o que ficou aberto e libera os dispositivos alocados.', {'Arquivos abertos':'—'}],
+    ['Liberar o espaço de endereçamento', 'A memória do código, dos dados, do heap e da pilha volta a ficar livre.', {Memória:'—', Programa:'—', Registradores:'—'}],
+    ['Estado de terminado', 'O PCB continua existindo, com o código de saída e a contabilização de recursos, até que o criador (ou o sistema) consulte essas informações.', {Estado:'terminado'}],
+    ['Liberar o PCB', 'O PCB é devolvido e o PID fica disponível para outro processo. O processo deixou de existir.', {}],
+  ];
+  const FULL = {PID:'5120', Estado:'execução', 'Dono e privilégios':'aluno · padrão', Memória:'40 MB reservados', Programa:'ping.exe carregado', Registradores:'PC = 0x4A1F · SP = 0x7FF0', 'Arquivos abertos':'stdin, stdout, stderr'};
+  let mode = 'new', i = 0, vals = {};
+  const draw = (changed = []) => {
+    const L = mode === 'new' ? NEW : DEL;
+    steps.innerHTML = L.map((s, k) => `<li class="${k < i - 1 ? 'done' : k === i - 1 ? 'now' : ''}"><span><b>${s[0]}.</b> ${s[1]}</span></li>`).join('');
+    const gone = mode === 'del' && i === L.length;
+    card.className = 'pcbcard' + (gone ? ' gone2' : '');
+    card.innerHTML = `<div>${gone ? 'PCB liberado' : 'PCB do novo processo'}</div>` + FIELDS.map(f => `<div class="${changed.includes(f) ? 'new' : ''}"><span>${f}</span><span>${vals[f] || '—'}</span></div>`).join('');
+  };
+  const reset = () => {
+    i = 0; vals = mode === 'new' ? {} : {...FULL};
+    draw();
+    setMsg(m, mode === 'new' ? 'Nenhum processo ainda. Clique em "Próximo passo".' : 'O processo 5120 está em execução. Clique em "Próximo passo" para eliminá-lo.');
+    $('#cr-next').disabled = false;
+  };
+  $('#cr-next').addEventListener('click', () => {
+    const L = mode === 'new' ? NEW : DEL;
+    if(i >= L.length) return;
+    const [t, , set] = L[i]; i++;
+    Object.assign(vals, set);
+    if(mode === 'del' && i === L.length) vals = {};
+    draw(Object.keys(set));
+    const end = i === L.length;
+    setMsg(m, end ? (mode === 'new' ? 'Pronto: o processo existe e está na lista de prontos. Agora depende do escalonador.' : 'O processo deixou de existir. Todos os recursos voltaram ao sistema.') : `Passo ${i}: ${t}.`, end ? 'ok' : '');
+    $('#cr-next').disabled = end;
+  });
+  $('#cr-reset').addEventListener('click', reset);
+  seg($('#cr-mode'), 'button', b => { mode = b.dataset.m; reset(); });
+  reset();
+})();
+
+/* ---------- 5.6 UCP e disco ---------- */
+(function(){
+  const cpuT = $('#mx-cpu'), dskT = $('#mx-dsk'), m = $('#mx-m');
+  if(!cpuT) return;
+  const TYPES = {c:{name:'CPU-bound', cpu:8, io:1}, i:{name:'I/O-bound', cpu:1, io:4}};
+  function simulate(kinds, T = 40){
+    const P = kinds.map((k, n) => ({n:n + 1, k, phase:'cpu', left:TYPES[k].cpu}));
+    let ready = [...P], disk = [], running = null, onDisk = null;
+    const cpu = [], dsk = [];
+    for(let t = 0; t < T; t++){
+      if(!running && ready.length) running = ready.shift();
+      if(!onDisk && disk.length) onDisk = disk.shift();
+      cpu.push(running ? running.n : 0); dsk.push(onDisk ? onDisk.n : 0);
+      let toDisk = null, toReady = null;
+      if(running){ running.left--; if(running.left === 0){ running.phase = 'io'; running.left = TYPES[running.k].io; toDisk = running; running = null; } }
+      if(onDisk){ onDisk.left--; if(onDisk.left === 0){ onDisk.phase = 'cpu'; onDisk.left = TYPES[onDisk.k].cpu; toReady = onDisk; onDisk = null; } }
+      if(toReady) ready.push(toReady);
+      if(toDisk) disk.push(toDisk);
+    }
+    return {cpu, dsk};
+  }
+  const runs = arr => { const r = []; arr.forEach(v => { if(r.length && r[r.length - 1].v === v) r[r.length - 1].n++; else r.push({v, n:1}); }); return r; };
+  const paint = (track, arr) => {
+    track.innerHTML = runs(arr).map(r => `<i class="${r.v ? 'k' + r.v : 'idle'}" style="width:${r.n / arr.length * 100}%" title="${r.v ? 'P' + r.v : 'ocioso'}: ${r.n} u.t.">${r.v && r.n >= 2 ? 'P' + r.v : ''}</i>`).join('');
+    return Math.round(arr.filter(Boolean).length / arr.length * 100);
+  };
+  const MSG = {
+    cc:'Com dois CPU-bound, a UCP fica quase sempre ocupada, mas o disco passa a maior parte do tempo parado.',
+    ii:'Com dois I/O-bound, os processos fazem fila no disco, e a UCP fica ociosa na maior parte do tempo.',
+    ci:'Com um de cada, enquanto o I/O-bound usa o disco, o CPU-bound usa a UCP. Os dois recursos trabalham ao mesmo tempo.',
+  };
+  const run = s => {
+    const kinds = s.split('');
+    const r = simulate(kinds);
+    const pc = paint(cpuT, r.cpu), pd = paint(dskT, r.dsk);
+    $('#mx-pc').textContent = pc + '%'; $('#mx-pd').textContent = pd + '%';
+    $('#mx-leg').innerHTML = kinds.map((k, n) => `<span class="${n ? 'b' : ''}">P${n + 1} · ${TYPES[k].name}</span>`).join('') + '<span class="n">recurso ocioso</span>';
+    setMsg(m, `UCP ocupada ${pc}% do tempo; disco ocupado ${pd}%. ${MSG[s]}`);
+  };
+  seg($('#mx-sel'), 'button', b => run(b.dataset.s));
+  run('ci');
+})();
+
+/* ---------- 5.8 fork x CreateProcess ---------- */
+(function(){
+  const fkC = $('#fk-code'), fkS = $('#fk-stage'), cpC = $('#cp-code'), cpS = $('#cp-stage'), m = $('#fc-m');
+  if(!fkC) return;
+  const FK = ['pid = fork();', 'if (pid == 0)', '    exec("ls");', 'else', '    wait(pid);'];
+  const CP = ['CreateProcess("notepad.exe", ...);', 'WaitForSingleObject(h, ...);'];
+  const box = (cls, title, pid, prog, note) => `<div class="pbx ${cls}"><b>${title}</b><span>PID ${pid}</span><code>${prog}</code>${note ? `<span>${note}</span>` : ''}</div>`;
+  const STEPS = [
+    {fk:-1, fs:[box('', 'shell (pai)', 100, 'sh')], cp:-1, cs:[box('', 'cmd.exe (pai)', 4200, 'cmd.exe')],
+     t:'Os dois shells estão prontos para criar um processo.'},
+    {fk:0, fs:[box('', 'shell (pai)', 100, 'sh', 'fork() devolve 101'), box('child', 'filho', 101, 'sh (cópia)', 'fork() devolve 0')], cp:0, cs:[box('', 'cmd.exe (pai)', 4200, 'cmd.exe'), box('child', 'filho', 5120, 'notepad.exe')],
+     t:'fork() criou uma cópia do shell: o filho tem o mesmo programa e os mesmos dados do pai. CreateProcess() criou um processo novo já com o notepad.exe carregado.'},
+    {fk:2, fs:[box('', 'shell (pai)', 100, 'sh'), box('child', 'filho', 101, 'ls', 'exec() trocou o programa')], cp:1, cs:[box('', 'cmd.exe (pai)', 4200, 'cmd.exe', 'espera o filho'), box('child', 'filho', 5120, 'notepad.exe')],
+     t:'No Unix, o filho chamou exec("ls"): o PID continua 101, mas o programa agora é o ls. No Windows esse passo não existe, porque o programa já foi indicado na criação.'},
+    {fk:4, fs:[box('', 'shell (pai)', 100, 'sh', 'wait() retorna'), box('child end', 'filho', 101, 'ls', 'terminou')], cp:1, cs:[box('', 'cmd.exe (pai)', 4200, 'cmd.exe', 'volta a executar'), box('child end', 'filho', 5120, 'notepad.exe', 'terminou')],
+     t:'Os filhos terminaram, e os pais, que esperavam por eles, voltam a executar. Mesmo resultado final, por caminhos diferentes: fork + exec em duas etapas, CreateProcess em uma.'},
+  ];
+  let i = 0;
+  const code = (lines, hl) => lines.map((l, k) => `<span class="${k === hl ? 'hl' : ''}">${l.replace(/</g, '&lt;')}</span>`).join('\n');
+  const draw = () => {
+    const s = STEPS[i];
+    fkC.innerHTML = code(FK, s.fk); cpC.innerHTML = code(CP, s.cp);
+    fkS.innerHTML = s.fs.join(''); cpS.innerHTML = s.cs.join('');
+    setMsg(m, s.t, i === STEPS.length - 1 ? 'ok' : '');
+    $('#fc-next').disabled = i === STEPS.length - 1;
+  };
+  $('#fc-next').addEventListener('click', () => { if(i < STEPS.length - 1){ i++; draw(); } });
+  $('#fc-reset').addEventListener('click', () => { i = 0; draw(); });
+  draw();
+})();
+})();
+</script>
+
 </body></html>
