@@ -151,9 +151,9 @@ const MENU = [
               { 
                 nome: "Apostilas", 
                 itens: [ 
-                  {titulo: "Aula 01 · Processos", tipo: "PPTX", link: "so/apostila-processos.html"},
-                  {titulo: "Aula 02 · Threads", tipo: "PPTX", link: "so/apostila-threads.html"},
-                  {titulo: "Aula 03 · Comunicação e Sincronização", tipo: "PPTX", link: "so/apostila-sincronizacao.html"},
+                  {titulo: "Aula 01 · Processos", tipo: "HTML", link: "so/apostila-processos.html"},
+                  {titulo: "Aula 02 · Threads", tipo: "HTML", link: "so/apostila-threads.html"},
+                  {titulo: "Aula 03 · Comunicação e Sincronização", tipo: "HTML", link: "so/apostila-sincronizacao.html"},
                 ]
               },
              
