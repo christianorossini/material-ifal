@@ -59,18 +59,26 @@ const MENU = [
         descricao: "LibreOffice Calc e Excel: fórmulas, funções, referências e gráficos.",
         assuntos: [
           {
-            id: "introducao",
-            titulo: "Introdução às planilhas",
-            descricao: "Células, linhas, colunas e a interface do Calc.",
+            id: "primeiros-passos",
+            titulo: "Primeiros passos",
+            descricao: "Introdução, ambiente, formatação",
             pastas: [
               { nome: "Apresentações", itens: [
-                { titulo: "Aula 01 · Conhecendo a planilha", tipo: "PPTX", link: "" }
+                { titulo: "Módulo 01 · Primeiros passos", tipo: "PDF", link: "ibasica/planilhas/slides/primeiros-passos.pdf" },
+                { titulo: "Módulo 02 · Primeiros passos", tipo: "PDF", link: "ibasica/planilhas/slides/m2_formulas_funcoes_calc.pdf" },
+                { titulo: "Módulo 03 · Primeiros passos", tipo: "PDF", link: "ibasica/planilhas/slides/m3_logica_decisoes_calc.pdf" },
+              ]},
+              { nome: "Exercícios", itens: [
+                { titulo: "Módulo 01 · Exercícios", tipo: "ODS", link: "ibasica/planilhas/exercicios/m1_exercicios.ods" },
+                { titulo: "Módulo 02 · Exercícios", tipo: "ODS", link: "" },
+                { titulo: "Módulo 03 · Exercícios", tipo: "ODS", link: "ibasica/planilhas/exercicios/m3_exercicios.ods" },
               ]},
               { nome: "Apostilas", itens: [
-                { titulo: "Apostila de Planilhas — Capítulo 1", tipo: "PDF", link: "" }
+                { titulo: "Apostila de Planilhas", tipo: "HTML", link: "" }
               ]}
             ]
           },
+          
           {
             id: "formulas",
             titulo: "Fórmulas e operadores",
