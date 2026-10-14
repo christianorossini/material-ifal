@@ -64,7 +64,7 @@ const MENU = [
             descricao: "Introdução, ambiente, formatação",
             pastas: [
               { nome: "Apresentações", itens: [
-                { titulo: "Módulo 01 · Primeiros passos", tipo: "PDF", link: "ibasica/planilhas/slides/primeiros-passos.pdf" },                
+                { titulo: "Módulo 01 · Primeiros passos", tipo: "PDF", link: "ibasica/planilhas/slides/m1_primeiros_passos_calc.pdf" },                
               ]},
               { nome: "Exercícios", itens: [
                 { titulo: "Módulo 01 · Exercícios", tipo: "ODS", link: "ibasica/planilhas/exercicios/m1_exercicios.ods" },                
