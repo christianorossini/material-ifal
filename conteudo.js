@@ -64,14 +64,10 @@ const MENU = [
             descricao: "Introdução, ambiente, formatação",
             pastas: [
               { nome: "Apresentações", itens: [
-                { titulo: "Módulo 01 · Primeiros passos", tipo: "PDF", link: "ibasica/planilhas/slides/primeiros-passos.pdf" },
-                { titulo: "Módulo 02 · Primeiros passos", tipo: "PDF", link: "ibasica/planilhas/slides/m2_formulas_funcoes_calc.pdf" },
-                { titulo: "Módulo 03 · Primeiros passos", tipo: "PDF", link: "ibasica/planilhas/slides/m3_logica_decisoes_calc.pdf" },
+                { titulo: "Módulo 01 · Primeiros passos", tipo: "PDF", link: "ibasica/planilhas/slides/primeiros-passos.pdf" },                
               ]},
               { nome: "Exercícios", itens: [
-                { titulo: "Módulo 01 · Exercícios", tipo: "ODS", link: "ibasica/planilhas/exercicios/m1_exercicios.ods" },
-                { titulo: "Módulo 02 · Exercícios", tipo: "ODS", link: "" },
-                { titulo: "Módulo 03 · Exercícios", tipo: "ODS", link: "ibasica/planilhas/exercicios/m3_exercicios.ods" },
+                { titulo: "Módulo 01 · Exercícios", tipo: "ODS", link: "ibasica/planilhas/exercicios/m1_exercicios.ods" },                
               ]},
               { nome: "Apostilas", itens: [
                 { titulo: "Apostila de Planilhas", tipo: "HTML", link: "" }
@@ -80,35 +76,39 @@ const MENU = [
           },
           
           {
-            id: "formulas",
-            titulo: "Fórmulas e operadores",
-            descricao: "Operadores aritméticos, precedência e as funções SOMA e MÉDIA.",
+            id: "formulas-e-funcoes",
+            titulo: "Fórmulas e Funções",
+            descricao: "Fórmulas, funções",
             pastas: [
-              { nome: "Apresentações", itens: [
-                { titulo: "Aula 02 · Fórmulas e operadores", tipo: "PPTX", link: "" }
+              { nome: "Apresentações", itens: [                
+                { titulo: "Módulo 02 · Fórmulas e Funções", tipo: "PDF", link: "ibasica/planilhas/slides/m2_formulas_funcoes_calc.pdf" },                
               ]},
-              { nome: "Exercícios", itens: [
-                { titulo: "Exercício 01 · Cantina escolar", descricao: "Operadores e totais", tipo: "XLSX", link: "" },
-                { titulo: "Exercício 02 · Soma manual × SOMA()", tipo: "XLSX", link: "" }
+              { nome: "Exercícios", itens: [                
+                { titulo: "Módulo 02 · Exercícios", tipo: "ODS", link: "" },                
+              ]},
+              { nome: "Apostilas", itens: [
+                { titulo: "Apostila de Planilhas", tipo: "HTML", link: "" }
               ]}
             ]
           },
+          
           {
-            id: "referencias",
-            titulo: "Referências relativas e absolutas",
-            descricao: "O uso do $ e a cópia de fórmulas.",
+            id: "Lógica-e-Decisões",
+            titulo: "Lógica e Decisões",
+            descricao: "Lógica, decisões",
             pastas: [
-              { nome: "Apresentações", itens: [
-                { titulo: "Aula 03 · Referências", tipo: "PPTX", link: "" }
+              { nome: "Apresentações", itens: [                
+                { titulo: "Módulo 03 · Lógica e Decisões", tipo: "PDF", link: "ibasica/planilhas/slides/m3_logica_decisoes_calc.pdf" },
               ]},
-              { nome: "Exercícios", itens: [
-                { titulo: "Exercício 03 · Boletim da turma", descricao: "Média com bônus fixo", tipo: "XLSX", link: "" }
+              { nome: "Exercícios", itens: [                
+                { titulo: "Módulo 03 · Exercícios", tipo: "ODS", link: "ibasica/planilhas/exercicios/m3_exercicios.ods" },
               ]},
-              { nome: "Gabaritos", itens: [
-                { titulo: "Gabarito · Boletim da turma", tipo: "XLSX", link: "" }
+              { nome: "Apostilas", itens: [
+                { titulo: "Apostila de Planilhas", tipo: "HTML", link: "" }
               ]}
             ]
-          }
+          },
+
         ]
       },
       
