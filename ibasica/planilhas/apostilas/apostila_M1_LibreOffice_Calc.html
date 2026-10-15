@@ -1,0 +1,1731 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apostila M1 · Primeiros passos no LibreOffice Calc</title>
+<meta name="description" content="Apostila interativa do Módulo 1 do curso de LibreOffice Calc: ambiente, células e intervalos, tipos de dados, formatação, produtividade e impressão.">
+<style>
+:root{
+  --bg:#F6F7F3; --paper:#FFFFFF; --ink:#1C2420; --body:#3A4540; --muted:#5F6B63; --line:#DDE2DD;
+  --green:#237A31; --green2:#32A041; --dark:#163D1F; --lg:#E3F1E5; --lg2:#C4E3C9; --red:#C8191E; --pink:#FBE3E3;
+  --yellow:#FFF2CC; --blue:#2A6099; --blue-l:#E3EDF8; --ok:#1E7B34; --ok-bg:#DFF3E3; --bad:#B3261E; --bad-bg:#FBE3E3;
+  --shadow:0 1px 2px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.05);
+  --mono:ui-monospace,"Cascadia Mono","DejaVu Sans Mono",Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#111613; --paper:#1A211D; --ink:#E8EEE9; --body:#C9D3CC; --muted:#93A198; --line:#2C3830;
+  --green:#5CC46C; --green2:#5CC46C; --dark:#0C1F10; --lg:#1F3524; --lg2:#2B4A32; --red:#F06A6E; --pink:#3A2022;
+  --yellow:#3B3418; --blue:#7FB2E8; --blue-l:#1B2A3A; --ok:#7BD88B; --ok-bg:#1C3322; --bad:#F38B86; --bad-bg:#3A2022;
+}}
+:root[data-theme="dark"]{
+  --bg:#111613; --paper:#1A211D; --ink:#E8EEE9; --body:#C9D3CC; --muted:#93A198; --line:#2C3830;
+  --green:#5CC46C; --green2:#5CC46C; --dark:#0C1F10; --lg:#1F3524; --lg2:#2B4A32; --red:#F06A6E; --pink:#3A2022;
+  --yellow:#3B3418; --blue:#7FB2E8; --blue-l:#1B2A3A; --ok:#7BD88B; --ok-bg:#1C3322; --bad:#F38B86; --bad-bg:#3A2022;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 "Open Sans","Segoe UI",Roboto,Arial,sans-serif}
+a{color:var(--green)}
+kbd{font:600 .82em var(--mono);background:var(--paper);border:1px solid var(--line);border-bottom-width:3px;border-radius:6px;padding:1px 7px;white-space:nowrap}
+code{font:600 .9em var(--mono);background:var(--lg);padding:1px 6px;border-radius:5px}
+button{font:inherit;cursor:pointer}
+/* ---------- topo ---------- */
+.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:12px;padding:10px 16px;background:var(--dark);color:#F6F7F3}
+.top .brand{font-weight:800;letter-spacing:.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top .sp{flex:1}
+.top button{background:transparent;color:#F6F7F3;border:1px solid rgba(255,255,255,.3);border-radius:8px;padding:5px 10px;font-size:14px}
+.top button:hover{background:rgba(255,255,255,.1)}
+#menuBtn{display:none}
+.progress{position:absolute;left:0;bottom:0;height:3px;background:var(--green2);width:0;transition:width .15s}
+/* ---------- layout ---------- */
+.wrap{display:grid;grid-template-columns:270px minmax(0,1fr);max-width:1240px;margin:0 auto}
+nav.toc{position:sticky;top:54px;align-self:start;height:calc(100vh - 54px);overflow:auto;padding:22px 14px 40px;border-right:1px solid var(--line)}
+nav.toc h2{font-size:12px;letter-spacing:2px;color:var(--muted);margin:0 0 8px 10px}
+nav.toc a{display:flex;gap:8px;align-items:baseline;padding:7px 10px;border-radius:8px;color:var(--body);text-decoration:none;font-size:15px}
+nav.toc a .n{font-weight:800;color:var(--green);min-width:28px}
+nav.toc a:hover{background:var(--lg)}
+nav.toc a.on{background:var(--lg);color:var(--ink);font-weight:700}
+nav.toc a .done{margin-left:auto;color:var(--ok);font-size:13px;visibility:hidden}
+nav.toc a.complete .done{visibility:visible}
+main{padding:28px 40px 80px;min-width:0}
+section.cap{margin:0 0 56px}
+.hero{background:var(--dark);color:#F6F7F3;border-radius:20px;padding:44px 40px;position:relative;overflow:hidden}
+.hero .eb{color:#8FCB98;font-weight:700;letter-spacing:3px;font-size:13px}
+.hero h1{font-size:44px;line-height:1.1;margin:10px 0 12px;max-width:640px}
+.hero p{color:#DCE8DE;max-width:600px;margin:0 0 6px}
+.hero .grid-deco{position:absolute;right:-20px;top:20px;opacity:.5;width:300px}
+h2.t{font-size:32px;line-height:1.2;margin:8px 0 4px}
+.eyebrow{font-size:13px;font-weight:700;letter-spacing:2px;color:var(--green);text-transform:uppercase}
+h3{font-size:22px;margin:34px 0 8px}
+p{margin:0 0 14px;color:var(--body)}
+.lead{font-size:19px;color:var(--ink)}
+.q{border-left:6px solid var(--red);padding:6px 0 6px 18px;margin:16px 0 18px;font-size:19px;color:var(--ink)}
+.goals{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin:10px 0 6px}
+.goals div{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-size:15px}
+.goals b{color:var(--green);display:block;font-size:13px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:20px 22px;margin:16px 0;box-shadow:var(--shadow)}
+.card.dark{background:var(--dark);color:#F6F7F3;border:0}
+.card.dark p{color:#DCE8DE}
+.tip,.warn,.key{border-radius:14px;padding:14px 18px;margin:16px 0;display:flex;gap:12px}
+.tip{background:var(--lg)} .warn{background:var(--pink)} .key{background:var(--blue-l)}
+.tip::before{content:"💡"} .warn::before{content:"⚠️"} .key::before{content:"🔑"}
+.tip p,.warn p,.key p{margin:0}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+table.t{width:100%;border-collapse:collapse;background:var(--paper);border-radius:12px;overflow:hidden;font-size:16px;margin:12px 0}
+table.t th{background:var(--dark);color:#F6F7F3;text-align:left;padding:10px 14px}
+table.t td{padding:9px 14px;border-bottom:1px solid var(--line);color:var(--body)}
+.scroll-x{overflow-x:auto}
+/* ---------- planilha simulada ---------- */
+.sheet{font:15px Arial,Helvetica,sans-serif;background:#fff;color:#222;border:1px solid #C8C8C8;border-radius:8px;overflow:hidden;user-select:none;max-width:100%}
+.sheet .bar{display:flex;align-items:center;gap:8px;padding:6px 8px;border-bottom:1px solid #C8C8C8;background:#fff}
+.sheet .nb{width:90px;border:1px solid #BDBDBD;padding:3px 6px;font-weight:600;background:#fff;color:#222}
+.sheet .ic{color:#555;font-style:italic;font-size:14px;letter-spacing:6px}
+.sheet .fx{flex:1;border:1px solid #BDBDBD;padding:3px 8px;min-height:26px;background:#fff;color:#222;font-family:var(--mono);font-size:14px}
+.sheet table{border-collapse:collapse;width:100%}
+.sheet th{background:#F0F0F0;color:#444;font-weight:400;border:1px solid #D9D9D9;padding:3px 6px;font-size:13px;min-width:28px}
+.sheet th.hl{background:#C9D7EA;color:#1B3F6E;font-weight:700}
+.sheet td{border:1px solid #E1E1E1;height:30px;min-width:64px;padding:2px 6px;white-space:nowrap}
+.sheet td.r{text-align:right} .sheet td.c{text-align:center}
+.sheet td.sel{background:rgba(42,96,153,.14);outline:2px solid #2A6099;outline-offset:-2px}
+.sheet td.act{outline:3px solid #2A6099;outline-offset:-3px}
+.sheet td.goal{background:#FFF2CC}
+.sheet td.hit{background:#DFF3E3}
+.sheet .status{display:flex;gap:18px;justify-content:space-between;padding:4px 10px;font-size:13px;background:#F4F4F4;border-top:1px solid #C8C8C8;color:#333}
+.sheet.click td{cursor:cell}
+/* ---------- janela do Calc (hotspots) ---------- */
+.win{position:relative;max-width:820px}
+.win svg{width:100%;height:auto;display:block;border-radius:10px;border:1px solid var(--line)}
+.hot{position:absolute;border:2px dashed transparent;border-radius:8px;background:transparent;padding:0}
+.hot:hover,.hot:focus{border-color:var(--red);background:rgba(200,25,30,.07);outline:none}
+.hot.on{border-color:var(--red);border-style:solid;background:rgba(200,25,30,.1)}
+.hot span{position:absolute;top:-12px;left:-12px;width:26px;height:26px;border-radius:50%;background:var(--red);color:#fff;font:700 14px/26px Arial;text-align:center}
+.explain{min-height:74px;margin-top:10px}
+/* ---------- widgets ---------- */
+.widget{background:var(--paper);border:2px solid var(--lg2);border-radius:18px;padding:18px 20px;margin:20px 0;box-shadow:var(--shadow)}
+.widget>.wt{font-weight:800;color:var(--green);font-size:14px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;display:flex;gap:8px;align-items:center}
+.widget>.wt::before{content:"▶";font-size:11px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+input[type=text],input[type=number],select{font:inherit;padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);min-width:0}
+input[type=text]:focus,select:focus{outline:2px solid var(--green);outline-offset:1px}
+.btn{background:var(--green);color:#fff;border:0;border-radius:10px;padding:9px 16px;font-weight:700}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:transparent;color:var(--green);border:1px solid var(--green)}
+.out{margin-top:12px;padding:12px 16px;border-radius:12px;background:var(--bg);min-height:48px}
+.pill{display:inline-block;border-radius:999px;padding:2px 12px;font-weight:700;font-size:14px}
+.pill.txt{background:#ECECEC;color:#333} .pill.num{background:#DCE8F7;color:#1A5FB4} .pill.dat{background:#F5E6CC;color:#7A4E00}
+.cellbox{display:inline-block;min-width:150px;border:2px solid #2A6099;background:#fff;color:#222;padding:4px 10px;font:16px Arial;margin:0 6px}
+.flash{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
+.flash button{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px;min-height:96px;color:var(--ink);text-align:center;transition:transform .15s}
+.flash button:hover{transform:translateY(-2px)}
+.flash button .b{display:none;color:var(--body);font-size:15px}
+.flash button.flip{background:var(--lg)}
+.flash button.flip .f{display:none} .flash button.flip .b{display:block}
+/* ---------- quiz ---------- */
+.quiz{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:6px 20px 18px;margin:22px 0;box-shadow:var(--shadow)}
+.quiz h4{margin:14px 0 4px;font-size:15px;letter-spacing:1.5px;color:var(--green);text-transform:uppercase}
+.qi{border-top:1px solid var(--line);padding:14px 0}
+.qi:first-of-type{border-top:0}
+.qi .st{font-weight:600;color:var(--ink);margin-bottom:8px}
+.qi .st .num{display:inline-block;min-width:28px;color:var(--green);font-weight:800}
+.opts{display:grid;gap:8px}
+.opts button{text-align:left;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:9px 14px}
+.opts button:hover{border-color:var(--green)}
+.opts button.right{background:var(--ok-bg);border-color:var(--ok);color:var(--ok);font-weight:700}
+.opts button.wrong{background:var(--bad-bg);border-color:var(--bad);color:var(--bad)}
+.opts button:disabled{cursor:default}
+.fb{margin-top:8px;font-size:15px;padding:8px 12px;border-radius:10px;display:none}
+.fb.show{display:block}
+.fb.ok{background:var(--ok-bg);color:var(--ok)} .fb.no{background:var(--bad-bg);color:var(--bad)}
+.match{display:grid;grid-template-columns:1fr 1.4fr;gap:8px 12px;align-items:center}
+.order li{display:flex;gap:8px;align-items:center;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:7px 10px;margin:6px 0}
+.order li span{flex:1}
+.order li button{border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:8px;width:34px;height:30px}
+.order{padding:0;list-style:none;margin:0}
+.score{display:flex;align-items:center;gap:16px;flex-wrap:wrap;background:var(--dark);color:#F6F7F3;border-radius:16px;padding:16px 20px;position:sticky;bottom:12px;z-index:5;margin-top:20px}
+.score .big{font-size:30px;font-weight:800}
+.meter{flex:1;min-width:140px;height:12px;background:rgba(255,255,255,.15);border-radius:99px;overflow:hidden}
+.meter i{display:block;height:100%;background:#8FCB98;width:0;transition:width .3s}
+.check li{list-style:none;margin:6px 0}
+.check label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.check input{width:20px;height:20px;margin-top:3px;accent-color:var(--green)}
+ul.check{padding:0}
+details{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:10px 16px;margin:10px 0}
+details summary{cursor:pointer;font-weight:700;color:var(--green)}
+footer{border-top:1px solid var(--line);padding:24px 40px;color:var(--muted);font-size:14px;text-align:center}
+.sr{position:absolute;left:-9999px}
+.freeze{height:200px;overflow:auto;border:1px solid #C8C8C8;border-radius:8px;background:#fff}
+.freeze table{border-collapse:collapse;width:100%;font:14px Arial;color:#222}
+.freeze th,.freeze td{border:1px solid #E1E1E1;padding:5px 8px}
+.freeze thead th{background:#163D1F;color:#fff}
+.freeze.on thead th{position:sticky;top:0}
+.freeze.on thead tr{box-shadow:0 2px 0 #555}
+
+figure.shot{margin:18px 0;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:12px;box-shadow:var(--shadow)}
+figure.shot svg{display:block;margin:0 auto;border-radius:6px}
+figure.shot figcaption{font-size:14px;color:var(--muted);text-align:center;margin-top:8px}
+.stepbox{background:var(--paper);border:1px solid var(--line);border-left:6px solid var(--green);border-radius:14px;padding:14px 18px;margin:16px 0}
+.sbt{font-weight:800;color:var(--green);font-size:14px;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+ol.steps{counter-reset:st;list-style:none;padding:0;margin:0}
+ol.steps li{counter-increment:st;position:relative;padding:6px 0 6px 40px;color:var(--body)}
+ol.steps li::before{content:counter(st);position:absolute;left:0;top:6px;width:27px;height:27px;border-radius:50%;background:var(--green);color:#fff;font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center}
+.stnote{margin:8px 0 0;font-size:15px;color:var(--muted)}
+.errs{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
+.err{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:12px 16px}
+.err .e1{color:var(--bad);font-weight:700;margin:0 0 6px}.err .e2{color:var(--ok);margin:0}
+.altbox{background:var(--blue-l);border-radius:16px;padding:16px 20px;margin:12px 0}
+.altbox table.t{margin:8px 0}
+details.diff{border-left:6px solid var(--blue)}
+details.diff p{margin:8px 0}
+.canbox{background:var(--lg);border-radius:16px;padding:14px 20px;margin:20px 0}
+.canbox .check label span{color:var(--ink)}
+.cat{display:grid;grid-template-columns:150px 1fr 150px;gap:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--paper);font-size:15px}
+.cat>div{padding:8px 12px;border-bottom:1px solid var(--line)}
+.cat>div.h{background:var(--dark);color:#F6F7F3;font-weight:700}
+.cat>div:nth-last-child(-n+3){border-bottom:0}
+/* mesa de formatação */
+.mesa .tb{display:flex;flex-wrap:wrap;gap:6px;align-items:center;background:#F4F4F4;border:1px solid #C8C8C8;border-radius:10px;padding:8px;color:#222}
+.mesa .tb button,.mesa .tb select{font:13px Arial;border:1px solid #BDBDBD;background:#fff;color:#222;border-radius:6px;padding:5px 9px;min-width:34px}
+.mesa .tb button:hover{background:#E3EDF8}
+.mesa .tb button.on{background:#C9D7EA;border-color:#2A6099}
+.mesa .tb .sep{width:1px;height:26px;background:#C8C8C8;margin:0 2px}
+.mesa .tb label{font:12px Arial;color:#555}
+.mesa .grid{margin-top:10px;overflow-x:auto}
+.mesa table.m{border-collapse:collapse;font:15px Arial;background:#fff;color:#222}
+.mesa table.m td{border:1px solid #E1E1E1;padding:6px 10px;min-width:96px;height:38px;cursor:cell;position:relative}
+.mesa table.m td.sel{box-shadow:inset 0 0 0 3px rgba(42,96,153,.85)}
+.mesa table.m th{background:#F0F0F0;color:#444;font:12px Arial;border:1px solid #D9D9D9;padding:2px 6px}
+.mesa .fxl{display:flex;gap:8px;align-items:center;margin-top:8px;font:14px Arial;color:#222;background:#fff;border:1px solid #C8C8C8;border-radius:8px;padding:5px 8px}
+.mesa .fxl b{min-width:44px}
+.mesa .goal li{margin:3px 0}
+.mesa .goal li.ok{color:var(--ok)} .mesa .goal li.ok::marker{content:"✔ "}
+.mesa .goal li.no::marker{content:"○ "}
+.decdemo{font:22px Arial;background:#fff;color:#222;border:2px solid #2A6099;padding:6px 14px;display:inline-block;min-width:200px;text-align:right}
+
+@media (max-width:900px){
+  .wrap{grid-template-columns:1fr}
+  nav.toc{position:fixed;left:0;top:54px;width:280px;background:var(--paper);z-index:30;transform:translateX(-100%);transition:transform .2s;box-shadow:var(--shadow)}
+  nav.toc.open{transform:none}
+  #menuBtn{display:inline-block}
+  main{padding:20px 16px 80px}
+  .hero{padding:30px 22px}.hero h1{font-size:32px}.hero .grid-deco{display:none}
+  h2.t{font-size:26px}
+  .match{grid-template-columns:1fr}
+}
+@media (max-width:600px){
+  .top .lbl{display:none} .top button{padding:5px 9px}
+  .score{padding:8px 14px;gap:10px;bottom:8px} .score .big{font-size:20px} .score .lbl2,#fixMsg{display:none}
+}
+@media print{
+  .top,nav.toc,.score,button.btn{display:none!important}
+  .wrap{display:block} main{padding:0}
+  .card,.widget,.quiz{box-shadow:none;break-inside:avoid}
+  details{display:block} details>*{display:block}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <button id="menuBtn" aria-label="Abrir sumário">☰</button>
+  <div class="brand">M1 · Primeiros passos no LibreOffice Calc</div>
+  <div class="sp"></div>
+  <button id="themeBtn" aria-label="Alternar tema claro ou escuro">☾<span class="lbl"> Tema</span></button>
+  <button onclick="window.print()" aria-label="Imprimir">⎙<span class="lbl"> Imprimir</span></button>
+  <div class="progress" id="prog"></div>
+</header>
+
+<div class="wrap">
+<nav class="toc" id="toc" aria-label="Sumário">
+  <h2>SUMÁRIO</h2>
+  <a href="#inicio"><span class="n">★</span>Como usar esta apostila<span class="done">✔</span></a>
+  <a href="#a11"><span class="n">1.1</span>Ambiente do Calc<span class="done">✔</span></a>
+  <a href="#a12"><span class="n">1.2</span>Células e intervalos<span class="done">✔</span></a>
+  <a href="#a13"><span class="n">1.3</span>Tipos de dados<span class="done">✔</span></a>
+  <a href="#a14"><span class="n">1.4</span>Formatação<span class="done">✔</span></a>
+  <a href="#a15"><span class="n">1.5</span>Produtividade e impressão<span class="done">✔</span></a>
+  <a href="#fixacao"><span class="n">✎</span>Exercícios de fixação<span class="done">✔</span></a>
+  <a href="#resumo"><span class="n">≡</span>Atalhos e glossário</a>
+</nav>
+
+<main id="conteudo">
+<!-- ===================== INÍCIO ===================== -->
+<section class="cap" id="inicio">
+  <div class="hero">
+    <svg class="grid-deco" viewBox="0 0 300 240" aria-hidden="true"><g fill="none" stroke="#2F6B3B" stroke-width="2"><rect x="1" y="1" width="298" height="238"/><path d="M60 1v238M140 1v238M220 1v238M1 40h298M1 90h298M1 140h298M1 190h298"/></g><rect x="140" y="90" width="80" height="50" fill="#32A041"/><rect x="140" y="90" width="80" height="50" fill="none" stroke="#F6F7F3" stroke-width="4"/><text x="180" y="122" fill="#fff" font-family="Arial" font-size="20" font-weight="700" text-anchor="middle">B3</text><rect x="220" y="40" width="78" height="50" fill="#C8191E"/></svg>
+    <div class="eb">CURSO DE LIBREOFFICE CALC · MÓDULO 1 DE 6</div>
+    <h1>Primeiros passos no LibreOffice Calc</h1>
+    <p>Do caderno da cantina à primeira planilha organizada, formatada e pronta para entregar.</p>
+    <p style="color:#8FCB98;font-size:15px">Instituto Federal de Alagoas · Prof. Christiano Rossini Martins Costa</p>
+  </div>
+
+  <h3>Como usar esta apostila</h3>
+  <div class="cols">
+    <div class="card"><b>1. Leia com o Calc aberto.</b><p style="margin:6px 0 0">Tudo o que aparece aqui foi pensado para você testar na hora, no seu computador.</p></div>
+    <div class="card"><b>2. Mexa nos blocos ▶ interativos.</b><p style="margin:6px 0 0">Clique, digite, arraste: eles simulam o Calc e explicam o que acontece.</p></div>
+    <div class="card"><b>3. Confira no fim de cada aula.</b><p style="margin:6px 0 0">Cada aula termina com perguntas rápidas. No fim, os exercícios de fixação mostram sua nota.</p></div>
+  </div>
+  <h3>Os símbolos desta apostila</h3>
+  <div class="cols">
+    <div class="tip"><p><b>Dica:</b> um atalho ou jeito mais rápido.</p></div>
+    <div class="warn"><p><b>Atenção:</b> um erro comum que vale evitar.</p></div>
+    <div class="key"><p><b>Ideia-chave:</b> o que você precisa levar da aula.</p></div>
+  </div>
+  <p>Os caminhos de menu aparecem assim: <b>Formatar › Células › Números</b>. Leia como “abra o menu Formatar, clique em Células e depois na aba Números”. As teclas aparecem como <kbd>Ctrl</kbd> + <kbd>S</kbd>: segure a primeira e toque a segunda.</p>
+  <p>No fim de cada aula há: <b>erros comuns</b>, <b>outro exemplo</b> fora da cantina, um quadro <b>“e se no meu computador estiver diferente?”</b>, uma lista do que você <b>deve saber fazer</b> e as <b>perguntas de conferência</b>.</p>
+  <h3>O problema que vamos resolver</h3>
+  <p class="lead">A cantina da escola controla tudo num caderno: os preços mudam e o caderno fica rasurado, o estoque é contado à mão e as vendas são somadas na calculadora, uma a uma.</p>
+  <p>Neste módulo, você vai passar o caderno para uma planilha. Ao final, terá o arquivo <b>Cantina.ods</b> com os produtos cadastrados, organizados, formatados e exportados em PDF. Esse arquivo acompanha você até o fim do curso.</p>
+  <div class="scroll-x"><table class="t">
+    <tr><th>Aula</th><th>Assunto</th><th>Pergunta da aula</th></tr>
+    <tr><td><b>1.1</b></td><td>Ambiente do Calc</td><td>Onde ficam e como se encontram as coisas numa planilha?</td></tr>
+    <tr><td><b>1.2</b></td><td>Células e intervalos</td><td>Como dizer ao Calc exatamente qual dado eu quero?</td></tr>
+    <tr><td><b>1.3</b></td><td>Tipos de dados</td><td>Por que a soma da cantina deu errado?</td></tr>
+    <tr><td><b>1.4</b></td><td>Formatação</td><td>Como fazer a tabela ser entendida em 5 segundos?</td></tr>
+    <tr><td><b>1.5</b></td><td>Produtividade e impressão</td><td>Como trabalhar mais rápido e entregar a planilha pronta?</td></tr>
+  </table></div>
+</section>
+
+<!-- ===================== 1.1 ===================== -->
+<section class="cap" id="a11">
+  <div class="eyebrow">Aula 1.1</div>
+  <h2 class="t">Ambiente do Calc</h2>
+  <p class="q"><b>Pergunta da aula:</b> onde ficam e como se encontram as coisas numa planilha?</p>
+  <div class="goals"><div><b>VOCÊ VAI</b>reconhecer as partes da janela</div><div><b>VOCÊ VAI</b>diferenciar arquivo e planilha</div><div><b>VOCÊ VAI</b>navegar com o teclado</div></div>
+
+  <h3>O que é uma planilha?</h3>
+  <div class="scroll-x"><table class="t">
+    <tr><th>Tarefa</th><th>No caderno</th><th>Na planilha</th></tr>
+    <tr><td>Organizar os dados</td><td>linhas traçadas à mão</td><td>linhas e colunas prontas</td></tr>
+    <tr><td>Fazer contas</td><td>calculadora, uma a uma</td><td>fórmulas que calculam sozinhas</td></tr>
+    <tr><td>Mudar um preço</td><td>apagar e refazer as contas</td><td>muda uma célula, o resto se atualiza</td></tr>
+    <tr><td>Achar um produto</td><td>folhear página por página</td><td>filtrar e encontrar em segundos</td></tr>
+  </table></div>
+  <div class="card dark"><p style="font-size:20px;margin:0"><b>Planilha é um caderno quadriculado que sabe fazer contas.</b></p></div>
+
+  <h3>Anatomia da janela</h3>
+  <div class="widget">
+    <div class="wt">Clique em cada número para conhecer a parte</div>
+    <div class="win" id="win">
+      <svg viewBox="0 0 1000 560" role="img" aria-label="Janela do LibreOffice Calc">
+        <rect width="1000" height="560" fill="#fff"/>
+        <rect width="1000" height="34" fill="#E6E6E6"/><text x="500" y="23" font-family="Arial" font-size="15" text-anchor="middle" fill="#222">Cantina.ods — LibreOffice Calc</text>
+        <rect y="34" width="1000" height="30" fill="#F4F4F4"/>
+        <g font-family="Arial" font-size="14" fill="#222"><text x="14" y="54">Arquivo</text><text x="86" y="54">Editar</text><text x="148" y="54">Exibir</text><text x="210" y="54">Inserir</text><text x="272" y="54">Formatar</text><text x="350" y="54">Estilos</text><text x="416" y="54">Planilha</text><text x="490" y="54">Dados</text><text x="550" y="54">Ferramentas</text><text x="652" y="54">Janela</text><text x="712" y="54">Ajuda</text></g>
+        <rect y="64" width="1000" height="70" fill="#F4F4F4"/><line x1="0" y1="99" x2="1000" y2="99" stroke="#E0E0E0"/>
+        <g fill="#D5DBE3"><rect x="14" y="70" width="22" height="22" rx="3"/><rect x="44" y="70" width="22" height="22" rx="3"/><rect x="74" y="70" width="22" height="22" rx="3"/><rect x="114" y="70" width="22" height="22" rx="3"/><rect x="144" y="70" width="22" height="22" rx="3"/><rect x="184" y="70" width="22" height="22" rx="3"/><rect x="214" y="70" width="22" height="22" rx="3"/><rect x="254" y="70" width="22" height="22" rx="3"/><rect x="284" y="70" width="22" height="22" rx="3"/><rect x="324" y="70" width="22" height="22" rx="3"/></g>
+        <rect x="14" y="105" width="150" height="24" fill="#fff" stroke="#BDBDBD"/><text x="22" y="122" font-family="Arial" font-size="13" fill="#222">Liberation Sans ▾</text>
+        <rect x="170" y="105" width="44" height="24" fill="#fff" stroke="#BDBDBD"/><text x="178" y="122" font-family="Arial" font-size="13" fill="#222">10 ▾</text>
+        <g font-family="Arial" font-size="14" font-weight="700" fill="#222"><text x="228" y="122">N</text><text x="252" y="122" font-style="italic" font-weight="400">I</text><text x="272" y="122" text-decoration="underline" font-weight="400">S</text></g>
+        <g fill="#D5DBE3"><rect x="300" y="106" width="22" height="22" rx="3"/><rect x="330" y="106" width="22" height="22" rx="3"/><rect x="360" y="106" width="22" height="22" rx="3"/><rect x="400" y="106" width="22" height="22" rx="3"/><rect x="430" y="106" width="22" height="22" rx="3"/><rect x="470" y="106" width="22" height="22" rx="3"/></g>
+        <rect y="134" width="1000" height="36" fill="#fff"/><line x1="0" y1="170" x2="1000" y2="170" stroke="#C8C8C8"/>
+        <rect x="8" y="140" width="100" height="24" fill="#fff" stroke="#BDBDBD"/><text x="16" y="157" font-family="Arial" font-size="14" fill="#222">A3</text>
+        <text x="120" y="158" font-family="Arial" font-size="14" font-style="italic" fill="#444">fx   Σ   =</text>
+        <rect x="200" y="140" width="790" height="24" fill="#fff" stroke="#BDBDBD"/><text x="210" y="157" font-family="Arial" font-size="14" fill="#222">Pastel</text>
+        <rect y="176" width="1000" height="24" fill="#F0F0F0"/>
+        <g font-family="Arial" font-size="12" fill="#444" text-anchor="middle"><text x="125" y="193">A</text><text x="285" y="193">B</text><text x="400" y="193">C</text><text x="500" y="193">D</text><text x="600" y="193">E</text><text x="700" y="193">F</text><text x="800" y="193">G</text><text x="905" y="193">H</text></g>
+        <rect x="44" y="176" width="160" height="24" fill="#C9D7EA"/><text x="125" y="193" font-family="Arial" font-size="12" font-weight="700" fill="#1B3F6E" text-anchor="middle">A</text>
+        <g stroke="#D9D9D9"><path d="M44 176v290M204 176v290M364 176v290M444 176v290M554 176v290M654 176v290M754 176v290M854 176v290M0 228h1000M0 256h1000M0 284h1000M0 312h1000M0 340h1000M0 368h1000M0 396h1000M0 424h1000M0 452h1000"/></g>
+        <rect y="200" width="44" height="266" fill="#F0F0F0"/>
+        <g font-family="Arial" font-size="12" fill="#444" text-anchor="middle"><text x="22" y="219">1</text><text x="22" y="247">2</text><text x="22" y="303">4</text><text x="22" y="331">5</text><text x="22" y="359">6</text><text x="22" y="387">7</text><text x="22" y="415">8</text><text x="22" y="443">9</text></g>
+        <rect y="256" width="44" height="28" fill="#C9D7EA"/><text x="22" y="275" font-family="Arial" font-size="12" font-weight="700" fill="#1B3F6E" text-anchor="middle">3</text>
+        <g font-family="Arial" font-size="14" fill="#222"><text x="52" y="219" font-weight="700">Produto</text><text x="212" y="219" font-weight="700">Categoria</text><text x="436" y="219" font-weight="700" text-anchor="end">Preço</text><text x="546" y="219" font-weight="700" text-anchor="end">Estoque</text>
+          <text x="52" y="247">Coxinha</text><text x="212" y="247">Salgado</text><text x="436" y="247" text-anchor="end">4,50</text><text x="546" y="247" text-anchor="end">30</text>
+          <text x="52" y="275">Pastel</text><text x="212" y="275">Salgado</text><text x="436" y="275" text-anchor="end">5,00</text><text x="546" y="275" text-anchor="end">25</text>
+          <text x="52" y="303">Pão de queijo</text><text x="212" y="303">Salgado</text><text x="436" y="303" text-anchor="end">3,00</text><text x="546" y="303" text-anchor="end">35</text></g>
+        <rect x="44" y="256" width="160" height="28" fill="none" stroke="#2A6099" stroke-width="3"/><rect x="199" y="279" width="8" height="8" fill="#2A6099"/>
+        <rect y="466" width="1000" height="32" fill="#EFEFEF"/><line x1="0" y1="466" x2="1000" y2="466" stroke="#C8C8C8"/>
+        <text x="14" y="487" font-family="Arial" font-size="13" fill="#666">◀ ▶</text><text x="58" y="488" font-family="Arial" font-size="18" font-weight="700" fill="#444">+</text>
+        <rect x="80" y="466" width="100" height="28" fill="#fff" stroke="#BDBDBD"/><text x="130" y="486" font-family="Arial" font-size="13" font-weight="700" text-anchor="middle" fill="#222">Produtos</text><text x="225" y="486" font-family="Arial" font-size="13" text-anchor="middle" fill="#444">Vendas</text>
+        <rect y="498" width="1000" height="62" fill="#F4F4F4"/><line x1="0" y1="498" x2="1000" y2="498" stroke="#C8C8C8"/>
+        <text x="14" y="520" font-family="Arial" font-size="13" fill="#333">Planilha 1 de 2</text><text x="480" y="520" font-family="Arial" font-size="13" fill="#333">Média: ; Soma: 0</text><text x="986" y="520" font-family="Arial" font-size="13" text-anchor="end" fill="#333">100%</text>
+      </svg>
+    </div>
+    <div class="out explain" id="winOut" aria-live="polite">Clique nos números vermelhos sobre a janela.</div>
+  </div>
+
+  <h3>Abrindo o Calc</h3>
+  <div class="cols">
+    <div class="stepbox"><div class="sbt">No Windows</div><ol class="steps"><li>Clique no botão Iniciar.</li><li>Digite <b>Calc</b> e escolha <b>LibreOffice Calc</b>.</li><li>Ou abra o <b>LibreOffice</b> e clique em <b>Planilha do Calc</b> na Central de Início.</li></ol></div>
+    <div class="stepbox"><div class="sbt">No Linux (laboratório)</div><ol class="steps"><li>Abra o menu de aplicativos.</li><li>Procure em <b>Escritório</b> por <b>LibreOffice Calc</b>.</li><li>Se já estiver num documento do LibreOffice: <b>Arquivo › Novo › Planilha</b>.</li></ol></div>
+  </div>
+  <p>A janela abre com uma planilha vazia chamada <b>Sem título 1</b>. Ela só vira um arquivo de verdade quando você salva.</p>
+
+  <h3>Digitar, confirmar e corrigir</h3>
+  <p>Escrever numa planilha é sempre o mesmo ciclo: <b>escolher a célula → digitar → confirmar</b>. Enquanto você digita, o texto aparece ao mesmo tempo na célula e na linha de entrada.</p>
+  <div class="scroll-x"><table class="t">
+    <tr><th>Situação</th><th>O que fazer</th></tr>
+    <tr><td>Terminei de digitar</td><td><kbd>Enter</kbd> (confirma e desce) ou <kbd>Tab</kbd> (confirma e vai para a direita)</td></tr>
+    <tr><td>Comecei a digitar na célula errada</td><td><kbd>Esc</kbd>: cancela e a célula volta ao que era</td></tr>
+    <tr><td>Quero trocar todo o conteúdo</td><td>selecione a célula e digite por cima</td></tr>
+    <tr><td>Quero corrigir só uma letra</td><td><kbd>F2</kbd> ou duplo clique na célula, ou clique na linha de entrada</td></tr>
+    <tr><td>Quero apagar o conteúdo</td><td><kbd>Delete</kbd> apaga na hora; <kbd>Backspace</kbd> apaga e deixa a célula em edição</td></tr>
+    <tr><td>Apaguei o que não devia</td><td><kbd>Ctrl</kbd> + <kbd>Z</kbd> desfaz (pode repetir várias vezes); <kbd>Ctrl</kbd> + <kbd>Y</kbd> refaz</td></tr>
+  </table></div>
+  <div class="tip"><p>Um texto mais longo que a coluna “invade” a célula vizinha se ela estiver vazia. Isso é só aparência: o texto continua inteiro numa célula só. Se a vizinha tiver algo, o texto aparece cortado (mas também continua inteiro).</p></div>
+
+  <h3>Barras sumiram? Interface diferente?</h3>
+  <p>O LibreOffice deixa trocar a aparência da janela. Esta apostila usa a interface padrão, com menus e barras de ferramentas.</p>
+  <div class="stepbox"><div class="sbt">Voltar à interface desta apostila</div><ol class="steps"><li>Abra <b>Exibir › Interface do usuário</b>.</li><li>Escolha <b>Barras de ferramentas padrão</b> e clique em <b>Aplicar a todos</b>.</li><li>Se uma barra sumiu: <b>Exibir › Barras de ferramentas</b> e marque <b>Padrão</b> e <b>Formatação</b>.</li><li>Se a linha de entrada sumiu: <b>Exibir › Linha de entrada</b>.</li></ol></div>
+  <p>O <b>zoom</b> fica no canto direito da barra de status. Ele aumenta só o que você vê na tela, não muda o tamanho da impressão: use à vontade se estiver longe do monitor.</p>
+
+  <h3>Arquivo e planilha</h3>
+  <div class="cols">
+    <div class="card"><div class="eyebrow">Arquivo (.ods)</div><p style="font-size:19px;margin:6px 0"><b>É o documento inteiro</b>, como um fichário.</p><p style="margin:0">Exemplo: <code>Cantina.ods</code></p></div>
+    <div class="card dark"><div class="eyebrow" style="color:#8FCB98">Planilha</div><p style="font-size:19px;margin:6px 0;color:#fff"><b>É cada aba</b> dentro do arquivo, como as folhas do fichário.</p><p style="margin:0">Exemplo: Produtos, Vendas, Estoque</p></div>
+  </div>
+  <div class="tip"><p>Cada planilha tem <b>1.048.576 linhas</b>
+ e <b>16.384 colunas</b> (de A até XFD) a partir do LibreOffice 7.4. Versões mais antigas param na coluna AMJ. Ninguém usa tudo, mas espaço não falta.</p></div>
+
+  <h3>Quando precisar de ajuda</h3>
+  <div class="cols">
+    <div class="card"><b>Pare o mouse sobre um botão.</b><p style="margin:6px 0 0">Em um ou dois segundos aparece o nome do botão. É o jeito mais rápido de descobrir para que ele serve.</p></div>
+    <div class="card"><b>Tecla F1.</b><p style="margin:6px 0 0">Abre a Ajuda do LibreOffice, com busca por assunto. Também em <b>Ajuda › Ajuda do LibreOffice</b>.</p></div>
+    <div class="card"><b>Menu do botão direito.</b><p style="margin:6px 0 0">Clique com o botão direito em qualquer coisa (célula, letra, número, aba): aparecem os comandos que fazem sentido ali.</p></div>
+  </div>
+
+  <h3>Salvando pela primeira vez</h3>
+  <div class="stepbox"><div class="sbt">Salvar o arquivo da cantina</div><ol class="steps"><li><b>Arquivo › Salvar como</b> (ou <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>).</li><li>Escolha a pasta: a sua pasta de aluno, um pendrive ou a nuvem. Evite a pasta Downloads ou a Área de trabalho de um computador compartilhado.</li><li>Em <b>Nome</b>, digite <b>Cantina</b>.</li><li>Em <b>Tipo</b>, deixe <b>Planilha ODF (.ods)</b>.</li><li>Clique em <b>Salvar</b>. A barra de título passa a mostrar <b>Cantina.ods</b>.</li></ol><p class="stnote">Daí em diante, basta Ctrl + S para salvar de novo no mesmo arquivo.</p></div>
+  <div class="key"><p>Use <b>Salvar como</b> quando quiser um arquivo <b>novo</b> (outro nome, outro lugar, outro formato). Use <b>Salvar</b> (<kbd>Ctrl</kbd> + <kbd>S</kbd>) para guardar as mudanças no <b>mesmo</b> arquivo.</p></div>
+
+  <h3>Navegar sem se perder</h3>
+  <p>Clique em cada cartão para ver o que a tecla faz. Tente lembrar antes de virar!</p>
+  <div class="flash" id="flash"></div>
+  <div class="tip"><p>O mais importante é o <kbd>Ctrl</kbd> + <kbd>Z</kbd>: errar não tem custo, é só desfazer.</p></div>
+
+  <h3>Mão na massa</h3>
+  <div class="card">
+    <ol>
+      <li>Abra o LibreOffice Calc (ou, no LibreOffice, <b>Arquivo › Novo › Planilha</b>).</li>
+      <li>Renomeie a Planilha1 para <b>Produtos</b> (botão direito na aba › Renomear planilha).</li>
+      <li>Crie uma segunda planilha chamada <b>Vendas</b> (botão <b>+</b> ao lado das abas).</li>
+      <li>Clique em C5 e confira o endereço na caixa de nome.</li>
+      <li>Use <kbd>Ctrl</kbd> + <kbd>↓</kbd> numa coluna vazia e descubra a última linha.</li>
+      <li>Salve como <b>Cantina.ods</b> na sua pasta (mantenha o formato ODF).</li>
+    </ol>
+    <p style="margin:0"><b>Desafio:</b> sem tocar no mouse, vá de A1 até J20, volte para A1 e troque de planilha. Quem consegue com menos teclas?</p>
+  </div>
+<h3>Erros comuns</h3><div class="errs"><div class="err"><p class="e1">✘ Chamar o arquivo de “planilha”.</p><p class="e2">✔ O arquivo é o documento (.ods); planilha é cada aba. O vocabulário certo ajuda a achar os menus.</p></div><div class="err"><p class="e1">✘ Digitar sem olhar onde está a célula ativa e escrever por cima de um dado.</p><p class="e2">✔ Olhe a caixa de nome antes de digitar. Errou? Ctrl + Z.</p></div><div class="err"><p class="e1">✘ Fechar sem salvar ou salvar sem saber onde.</p><p class="e2">✔ Salve logo no começo, numa pasta sua, e use Ctrl + S a cada passo.</p></div><div class="err"><p class="e1">✘ Se perder no fim da planilha depois de um Ctrl + seta.</p><p class="e2">✔ Ctrl + Home volta para A1 de qualquer lugar.</p></div></div><h3>Outro exemplo: o boletim da turma</h3><div class="altbox"><p>O mesmo jeito de organizar serve para qualquer controle. Um professor pode ter o arquivo <b>Turma_1A.ods</b> com uma aba por bimestre:</p><div class="scroll-x"><table class="t"><tr><th>Aba</th><th>O que guarda</th></tr><tr><td>1º bimestre</td><td>notas da primeira etapa</td></tr><tr><td>2º bimestre</td><td>notas da segunda etapa</td></tr><tr><td>Frequência</td><td>presenças por aula</td></tr></table></div><p style='margin:0'>Um arquivo, várias planilhas: como o fichário com várias folhas.</p></div><details class="diff"><summary>E se no meu computador estiver diferente?</summary><p><b>Usa Excel em casa?</b> A ideia é a mesma, mas os nomes mudam: o arquivo se chama pasta de trabalho (.xlsx) e os comandos ficam numa faixa de opções, em guias. O Calc abre e salva arquivos .xlsx.</p><p><b>Usa Google Planilhas?</b> Células, linhas, colunas e abas funcionam igual. Os menus têm outros nomes, e o arquivo fica na nuvem.</p><p><b>A planilha termina na coluna AMJ?</b> Seu LibreOffice é anterior à versão 7.4. Para este curso, não faz diferença. Veja a versão em Ajuda › Sobre o LibreOffice.</p></details><div class="canbox"><div class="sbt">Antes de seguir, você deve saber…</div><ul class="check"><li><label><input type="checkbox" data-can="a11-0"><span>Abrir o Calc e reconhecer a barra de menus, as barras de ferramentas, a caixa de nome, a linha de entrada, as abas e a barra de status.</span></label></li><li><label><input type="checkbox" data-can="a11-1"><span>Explicar a diferença entre arquivo e planilha.</span></label></li><li><label><input type="checkbox" data-can="a11-2"><span>Digitar, confirmar com Enter ou Tab, cancelar com Esc e editar com F2.</span></label></li><li><label><input type="checkbox" data-can="a11-3"><span>Ir até A1 com Ctrl + Home e até o fim de um bloco com Ctrl + setas.</span></label></li><li><label><input type="checkbox" data-can="a11-4"><span>Renomear, criar e trocar de planilha.</span></label></li><li><label><input type="checkbox" data-can="a11-5"><span>Salvar como Cantina.ods numa pasta sua.</span></label></li></ul></div>
+  <div class="quiz" data-quiz="a11"></div>
+</section>
+
+<!-- ===================== 1.2 ===================== -->
+<section class="cap" id="a12">
+  <div class="eyebrow">Aula 1.2</div>
+  <h2 class="t">Células e intervalos</h2>
+  <p class="q"><b>Pergunta da aula:</b> como dizer ao Calc exatamente qual dado eu quero?</p>
+  <div class="goals"><div><b>VOCÊ VAI</b>ler e escrever endereços</div><div><b>VOCÊ VAI</b>selecionar intervalos</div><div><b>VOCÊ VAI</b>arrumar linhas, colunas e abas</div></div>
+
+  <h3>Todo dado tem um endereço</h3>
+  <p class="lead">O endereço é <b>a letra da coluna + o número da linha</b>: <code>B3</code> é a coluna B, linha 3. Primeiro a letra, depois o número. Como na batalha naval.</p>
+  <div class="widget">
+    <div class="wt">Batalha naval: clique na célula pedida</div>
+    <div class="row" style="margin-bottom:10px"><span>Clique em: <b id="tgt" style="font-size:22px;color:var(--red)">C4</b></span><span id="hits" class="pill num">Acertos: 0</span><button class="btn ghost" id="newTgt">Outro endereço</button></div>
+    <div class="sheet click" id="addrSheet"></div>
+    <div class="out" id="addrOut" aria-live="polite">A caixa de nome mostra o endereço da célula em que você clicou.</div>
+  </div>
+
+  <h3>Depois do Z vem o AA</h3>
+  <p>As colunas seguem o alfabeto: A, B, C… até Z. Depois vêm AA, AB, AC… AZ, BA, BB… e assim por diante. <code>AB300</code> é a coluna AB, linha 300. Do mesmo jeito que contamos 9, 10, 11: quando as letras acabam, começa uma nova “casa”.</p>
+  <div class="tip"><p>Use a <b>caixa de nome</b> como atalho: clique nela, digite um endereço (por exemplo <code>J20</code>) e tecle <kbd>Enter</kbd>. O cursor vai direto para lá. Digitando um intervalo (<code>B2:D5</code>), o Calc já seleciona o bloco.</p></div>
+
+  <h3>Intervalo: vários endereços de uma vez</h3>
+  <p><code>A1:C4</code> se lê “de A1 <b>até</b> C4”. Os dois-pontos significam <b>até</b>. É um bloco de 3 colunas × 4 linhas = 12 células.</p>
+  <div class="widget">
+    <div class="wt">Arraste o mouse (ou o dedo) para selecionar um intervalo</div>
+    <div class="sheet" id="rngSheet"></div>
+    <div class="out" id="rngOut" aria-live="polite">Clique numa célula e arraste até outra.</div>
+  </div>
+  <div class="scroll-x"><table class="t">
+    <tr><th>Para selecionar…</th><th>Faça assim</th></tr>
+    <tr><td>Um bloco</td><td>arraste com o mouse, ou <kbd>Shift</kbd> + setas</td></tr>
+    <tr><td>Células separadas</td><td><kbd>Ctrl</kbd> + clique em cada uma</td></tr>
+    <tr><td>Uma coluna inteira</td><td>clique na letra da coluna</td></tr>
+    <tr><td>Uma linha inteira</td><td>clique no número da linha</td></tr>
+  </table></div>
+
+  <h3>Mais jeitos de selecionar</h3>
+  <div class="scroll-x"><table class="t">
+    <tr><th>Atalho ou ação</th><th>O que seleciona</th></tr>
+    <tr><td><kbd>Ctrl</kbd> + <kbd>A</kbd></td><td>a planilha inteira (ou o clique no quadradinho acima do 1 e à esquerda do A)</td></tr>
+    <tr><td><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + setas</td><td>do ponto atual até o fim do bloco de dados: ótimo para listas longas</td></tr>
+    <tr><td><kbd>Shift</kbd> + clique</td><td>do ponto atual até a célula clicada</td></tr>
+    <tr><td>Clique numa letra e arraste</td><td>várias colunas inteiras</td></tr>
+  </table></div>
+  <p>Uma coluna inteira também tem endereço: <code>A:A</code> é toda a coluna A; <code>3:3</code> é toda a linha 3. Você vai usar isso nas fórmulas do M2.</p>
+
+  <h3>Arrumando linhas, colunas e planilhas</h3>
+  <div class="scroll-x"><table class="t">
+    <tr><th>Para…</th><th>Faça assim</th></tr>
+    <tr><td>Inserir linha ou coluna</td><td>botão direito no número ou na letra › <b>Inserir linhas acima</b> / <b>Inserir colunas antes</b></td></tr>
+    <tr><td>Excluir linha ou coluna</td><td>botão direito › <b>Excluir linhas</b> / <b>Excluir colunas</b></td></tr>
+    <tr><td>Ajustar a largura</td><td>duplo clique na divisa entre as letras das colunas</td></tr>
+    <tr><td>Ocultar uma coluna</td><td>botão direito na letra › <b>Ocultar colunas</b></td></tr>
+    <tr><td>Renomear planilha</td><td>botão direito na aba › <b>Renomear planilha</b></td></tr>
+    <tr><td>Mover ou copiar planilha</td><td>arraste a aba (segurando <kbd>Ctrl</kbd>, copia)</td></tr>
+    <tr><td>Colorir a aba</td><td>botão direito na aba › <b>Cor da aba</b></td></tr>
+  </table></div>
+  <div class="warn"><p><b>Excluir</b> uma linha apaga a linha e todos os dados dela;
+ <b>limpar</b> com <kbd>Delete</kbd> só apaga o conteúdo e a linha fica vazia. Errou? <kbd>Ctrl</kbd> + <kbd>Z</kbd>.</p></div>
+
+  <h3>Trabalhando com as abas</h3>
+  <div class="scroll-x"><table class="t">
+    <tr><th>Para…</th><th>Faça assim</th></tr>
+    <tr><td>Criar uma planilha no fim</td><td>botão <b>+</b> ao lado das abas</td></tr>
+    <tr><td>Criar numa posição escolhida</td><td><b>Planilha › Inserir planilha</b>: escolha antes ou depois da atual e o nome</td></tr>
+    <tr><td>Duplicar uma planilha</td><td>arraste a aba segurando <kbd>Ctrl</kbd> (a cópia ganha o nome Produtos_2: renomeie)</td></tr>
+    <tr><td>Excluir uma planilha</td><td>botão direito na aba › <b>Excluir planilha</b> (confira antes: some com todos os dados dela)</td></tr>
+    <tr><td>Trocar de planilha pelo teclado</td><td><kbd>Ctrl</kbd> + <kbd>Page Down</kbd> / <kbd>Page Up</kbd></td></tr>
+  </table></div>
+  <div class="tip"><p>Bons nomes de aba são curtos e dizem o que há nela: <b>Produtos</b>, <b>Vendas</b>, <b>Out-2026</b>. Evite deixar “Planilha1” e “Planilha2”.</p></div>
+
+  <h3>Copiar, colar e localizar</h3>
+  <div class="scroll-x"><table class="t">
+    <tr><th>Atalho</th><th>O que faz</th></tr>
+    <tr><td><kbd>Ctrl</kbd> + <kbd>C</kbd> / <kbd>Ctrl</kbd> + <kbd>X</kbd> / <kbd>Ctrl</kbd> + <kbd>V</kbd></td><td>copiar / recortar / colar. A área copiada fica com uma borda tracejada até você teclar <kbd>Esc</kbd></td></tr>
+    <tr><td><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>V</kbd></td><td><b>Colar especial</b>: colar só o texto, só os números ou só a formatação. Útil para trazer dados da internet sem a aparência do site</td></tr>
+    <tr><td><kbd>Ctrl</kbd> + <kbd>H</kbd></td><td><b>Localizar e substituir</b>: acha um produto numa lista longa ou troca “Refri” por “Refrigerante” de uma vez</td></tr>
+    <tr><td><kbd>Ctrl</kbd> + <kbd>F</kbd></td><td>barra de localizar rápida, no rodapé da janela</td></tr>
+  </table></div>
+
+  <h3>Passo a passo das tarefas mais usadas</h3>
+  <div class="cols">
+  <div class="stepbox"><div class="sbt">Inserir 3 linhas de uma vez</div><ol class="steps"><li>Selecione 3 linhas inteiras (clique no número da primeira e arraste até a terceira).</li><li>Botão direito sobre os números.</li><li><b>Inserir linhas acima</b>. Entram 3 linhas novas, vazias, acima da seleção.</li></ol></div><div class="stepbox"><div class="sbt">Ajustar a largura das colunas</div><ol class="steps"><li>Para uma coluna: duplo clique na divisa à direita da letra (largura ótima).</li><li>Para várias: selecione as letras e dê duplo clique numa das divisas.</li><li>Pelo menu: <b>Formatar › Colunas › Largura ótima</b>, ou <b>Largura</b> para digitar um valor.</li></ol></div>
+  <div class="stepbox"><div class="sbt">Reexibir uma coluna oculta</div><ol class="steps"><li>Repare que a letra pulou (por exemplo, A e C, sem B).</li><li>Selecione as colunas vizinhas (A até C).</li><li>Botão direito › <b>Mostrar colunas</b>.</li></ol></div><div class="stepbox"><div class="sbt">Mover dados de lugar</div><ol class="steps"><li>Selecione as células.</li><li><b>Recortar</b> (<kbd>Ctrl</kbd> + <kbd>X</kbd>), clique no destino e <b>Colar</b> (<kbd>Ctrl</kbd> + <kbd>V</kbd>).</li><li>Ou arraste pela borda da seleção; com <kbd>Ctrl</kbd> pressionado, copia em vez de mover.</li></ol></div>
+  </div>
+
+  <h3>Mão na massa</h3>
+  <div class="card"><ol>
+    <li>Na aba Produtos, digite em A1:D1: <b>Produto, Categoria, Preço, Estoque</b>.</li>
+    <li>Ajuste a largura das colunas com duplo clique na divisa.</li>
+    <li>Insira uma coluna antes da A e escreva <b>Código</b> em A1.</li>
+    <li>Selecione A1:E1 e confira o tamanho da seleção na barra de status.</li>
+    <li>Dê uma cor diferente a cada aba. Salve (<kbd>Ctrl</kbd> + <kbd>S</kbd>).</li>
+  </ol><p style="margin:0"><b>Pronto quando:</b> a linha 1 da aba Produtos tem os cinco títulos: Código, Produto, Categoria, Preço, Estoque.</p></div>
+<h3>Erros comuns</h3><div class="errs"><div class="err"><p class="e1">✘ Escrever o endereço ao contrário: 3B.</p><p class="e2">✔ Sempre a letra primeiro: B3.</p></div><div class="err"><p class="e1">✘ Escrever o intervalo com hífen ou ponto e vírgula: B2-D5.</p><p class="e2">✔ Intervalo usa dois-pontos: B2:D5.</p></div><div class="err"><p class="e1">✘ Excluir a linha quando queria só apagar o conteúdo.</p><p class="e2">✔ Para esvaziar, selecione e use Delete. Excluir remove a linha e puxa as de baixo para cima.</p></div><div class="err"><p class="e1">✘ Ocultar uma coluna e esquecer que ela existe.</p><p class="e2">✔ Fique atento às letras que pulam no cabeçalho; reexiba com Mostrar colunas.</p></div></div><h3>Outro exemplo: o mapa da sala</h3><div class="altbox"><p>Endereços servem para qualquer grade. Num mapa de carteiras, a coluna é a fileira e a linha é a posição:</p><div class="scroll-x"><table class="t"><tr><th></th><th>A</th><th>B</th><th>C</th></tr><tr><td>1</td><td>Ana</td><td>Bruno</td><td>Carla</td></tr><tr><td>2</td><td>Diego</td><td>Eva</td><td>Fábio</td></tr><tr><td>3</td><td>Gabi</td><td>(vazia)</td><td>Hugo</td></tr></table></div><p style='margin:0'>A carteira da Eva é <b>B2</b>. A fileira da frente inteira é <b>A1:C1</b>. A carteira vazia é <b>B3</b>.</p></div><details class="diff"><summary>E se no meu computador estiver diferente?</summary><p><b>O menu do botão direito mostra só Inserir ou Excluir?</b> Versões mais antigas abrem uma janela perguntando o que inserir: escolha Linha inteira ou Coluna inteira.</p><p><b>A barra de status não mostra o tamanho da seleção?</b> Clique com o botão direito na barra de status e marque a opção de exibir o tamanho da seleção.</p></details><div class="canbox"><div class="sbt">Antes de seguir, você deve saber…</div><ul class="check"><li><label><input type="checkbox" data-can="a12-0"><span>Ler e escrever endereços como B3 e AB300.</span></label></li><li><label><input type="checkbox" data-can="a12-1"><span>Escrever intervalos como A1:C4 e contar quantas células têm.</span></label></li><li><label><input type="checkbox" data-can="a12-2"><span>Selecionar blocos, células soltas (Ctrl), linhas e colunas inteiras.</span></label></li><li><label><input type="checkbox" data-can="a12-3"><span>Inserir, excluir, ocultar e reexibir linhas e colunas.</span></label></li><li><label><input type="checkbox" data-can="a12-4"><span>Ajustar a largura das colunas com duplo clique.</span></label></li></ul></div>
+  <div class="quiz" data-quiz="a12"></div>
+</section>
+
+<!-- ===================== 1.3 ===================== -->
+<section class="cap" id="a13">
+  <div class="eyebrow">Aula 1.3</div>
+  <h2 class="t">Tipos de dados</h2>
+  <p class="q"><b>Pergunta da aula:</b> por que a soma da cantina deu errado?</p>
+  <div class="goals"><div><b>VOCÊ VAI</b>distinguir texto, número e data</div><div><b>VOCÊ VAI</b>evitar erros de digitação</div><div><b>VOCÊ VAI</b>cadastrar os produtos</div></div>
+
+  <h3>A soma deu errado</h3>
+  <div class="cols">
+    <div class="sheet" style="max-width:360px">
+      <div class="bar"><span class="nb">B2:B4</span><span class="ic">fx Σ =</span><span class="fx">10</span></div>
+      <table><tr><th></th><th>A</th><th class="hl">B</th></tr>
+        <tr><th>1</th><td><b>Produto</b></td><td class="r"><b>Vendidos</b></td></tr>
+        <tr><th class="hl">2</th><td>Coxinha</td><td class="r sel" style="color:#1A5FB4">10</td></tr>
+        <tr><th class="hl">3</th><td>Suco</td><td class="r sel" style="color:#1A5FB4">5</td></tr>
+        <tr><th class="hl">4</th><td>Bolo</td><td class="sel"><b>7</b></td></tr></table>
+      <div class="status"><span>Planilha 1 de 2</span><b>Média: 7,5; Soma: 15</b></div>
+    </div>
+    <div><p class="lead">10 + 5 + 7 deveria dar <b>22</b>. O Calc mostra <b>15</b>. Por quê?</p>
+      <p>Repare no 7: ele está encostado à <b>esquerda</b>, e os outros números à direita. Com <b>Exibir › Realce de valores</b> (<kbd>Ctrl</kbd> + <kbd>F8</kbd>), números ficam <span style="color:#1A5FB4;font-weight:700">azuis</span> e o 7 fica preto.</p>
+      <div class="card dark" style="margin:0"><p style="margin:0">O 7 foi digitado como <b>texto</b>. Texto não entra na soma. <b>O tipo do dado importa tanto quanto o valor.</b></p></div></div>
+  </div>
+
+  <h3>Três tipos de dado</h3>
+  <div class="cols">
+    <div class="card"><span class="pill txt">TEXTO</span><p style="margin:10px 0 4px"><code>Coxinha</code> <code>512C</code> <code>(82) 3333-0000</code></p><p style="margin:0">Alinha à <b>esquerda</b>. Não entra em contas.</p></div>
+    <div class="card"><span class="pill num">NÚMERO</span><p style="margin:10px 0 4px"><code>4,50</code> <code>30</code> <code>25%</code></p><p style="margin:0">Alinha à <b>direita</b>. Entra em contas.</p></div>
+    <div class="card"><span class="pill dat">DATA E HORA</span><p style="margin:10px 0 4px"><code>15/10/2026</code> <code>10:30</code></p><p style="margin:0">Alinha à direita. É um número com cara de data.</p></div>
+  </div>
+
+  <div class="widget">
+    <div class="wt">Laboratório: o que o Calc vai fazer com o que você digitar?</div>
+    <div class="row"><input type="text" id="typeIn" placeholder="Ex.: 4,50 · 01234 · 1/5 · 3.50 · 15/10/2026" style="flex:1;min-width:220px" aria-label="Valor para testar"><button class="btn" id="typeBtn">Testar</button></div>
+    <div class="row" style="margin-top:8px;font-size:14px" id="typeEx"></div>
+    <div class="out" id="typeOut" aria-live="polite">Digite algo como você digitaria numa célula e clique em Testar.</div>
+  </div>
+
+  <h3>Como o Calc decide o tipo</h3>
+  <p>Você não escolhe o tipo: o Calc <b>reconhece</b> pelo jeito que você digita. Se o que você digitou parece um número no padrão brasileiro (vírgula decimal, ponto de milhar opcional, % ou R$), vira número. Se parece uma data ou hora, vira data. Qualquer outra coisa vira texto.</p>
+  <div class="stepbox"><div class="sbt">Conferir o tipo com o Realce de valores</div><ol class="steps"><li>Abra <b>Exibir › Realce de valores</b> (ou <kbd>Ctrl</kbd> + <kbd>F8</kbd>).</li><li>Olhe as cores: <span style='color:#1A5FB4;font-weight:700'>azul</span> = número (e data), preto = texto, <span style='color:#237A31;font-weight:700'>verde</span> = fórmula.</li><li>Um número em preto foi digitado como texto: corrija.</li><li>Desligue com o mesmo atalho. As cores não saem na impressão.</li></ol></div>
+  <figure class="shot"><svg aria-label="Coluna de estoque com o realce de valores ligado: os números em azul e o intruso 35 em preto, à esquerda" viewBox="0 0 496 318" style="width:100%;height:auto;max-width:620px">
+<rect x="0" y="0" width="496" height="318" fill="#FFFFFF"/>
+<rect x="0" y="6" width="496" height="36" fill="#FFFFFF" stroke="#C8C8C8" stroke-width="1"/>
+<rect x="0" y="6" width="96" height="36" fill="#FFFFFF" stroke="#C8C8C8" stroke-width="1"/>
+<text x="10" y="31" font-family="Arial, Helvetica, sans-serif" font-size="18" fill="#222222">E4</text>
+<text x="86" y="30" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#777777">▾</text>
+<text x="104" y="31" font-family="Arial, Helvetica, sans-serif" font-size="16" font-style="italic" fill="#555555">fx</text>
+<text x="128" y="31" font-family="Arial, Helvetica, sans-serif" font-size="18" fill="#555555">Σ</text>
+<text x="150" y="31" font-family="Arial, Helvetica, sans-serif" font-size="18" fill="#555555">=</text>
+<line x1="172" y1="10" x2="172" y2="38" stroke="#C8C8C8" stroke-width="1"/>
+<text x="182" y="31" font-family="Arial, Helvetica, sans-serif" font-size="18.0" fill="#222222">35</text>
+<rect x="0" y="50" width="496" height="30" fill="#F2F2F2"/>
+<rect x="0" y="80" width="46" height="238" fill="#F2F2F2"/>
+<text x="146.0" y="71" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#555555">B</text>
+<text x="306.0" y="71" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#555555">D</text>
+<rect x="366" y="50" width="130" height="30" fill="#C9D7EA"/>
+<text x="431.0" y="71" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#1B3F6E" font-weight="700">E</text>
+<text x="23.0" y="103.0" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#555555">1</text>
+<text x="23.0" y="137.0" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#555555">2</text>
+<text x="23.0" y="171.0" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#555555">3</text>
+<rect x="0" y="182" width="46" height="34" fill="#C9D7EA"/>
+<text x="23.0" y="205.0" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#1B3F6E">4</text>
+<text x="23.0" y="239.0" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#555555">5</text>
+<text x="23.0" y="273.0" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#555555">6</text>
+<text x="23.0" y="307.0" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#555555">7</text>
+<line x1="46" y1="50" x2="46" y2="318" stroke="#D4D4D4" stroke-width="1"/>
+<line x1="246" y1="50" x2="246" y2="318" stroke="#D4D4D4" stroke-width="1"/>
+<line x1="366" y1="50" x2="366" y2="318" stroke="#D4D4D4" stroke-width="1"/>
+<line x1="496" y1="50" x2="496" y2="318" stroke="#D4D4D4" stroke-width="1"/>
+<line x1="0" y1="80" x2="496" y2="80" stroke="#D4D4D4" stroke-width="1"/>
+<line x1="0" y1="114" x2="496" y2="114" stroke="#D4D4D4" stroke-width="1"/>
+<line x1="0" y1="148" x2="496" y2="148" stroke="#D4D4D4" stroke-width="1"/>
+<line x1="0" y1="182" x2="496" y2="182" stroke="#D4D4D4" stroke-width="1"/>
+<line x1="0" y1="216" x2="496" y2="216" stroke="#D4D4D4" stroke-width="1"/>
+<line x1="0" y1="250" x2="496" y2="250" stroke="#D4D4D4" stroke-width="1"/>
+<line x1="0" y1="284" x2="496" y2="284" stroke="#D4D4D4" stroke-width="1"/>
+<line x1="0" y1="318" x2="496" y2="318" stroke="#D4D4D4" stroke-width="1"/>
+<line x1="0" y1="50" x2="496" y2="50" stroke="#D4D4D4" stroke-width="1"/>
+<line x1="244" y1="50" x2="244" y2="318" stroke="#9A9A9A" stroke-width="1.5"/><line x1="248" y1="50" x2="248" y2="318" stroke="#9A9A9A" stroke-width="1.5"/>
+<text x="54" y="103.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="start" fill="#222222" font-weight="700">Produto</text>
+<text x="358" y="103.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="end" fill="#222222" font-weight="700">Preço</text>
+<text x="488" y="103.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="end" fill="#222222" font-weight="700">Estoque</text>
+<text x="54" y="137.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="start" fill="#222222">Coxinha</text>
+<text x="358" y="137.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="end" fill="#1A5FB4">4,50</text>
+<text x="488" y="137.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="end" fill="#1A5FB4">30</text>
+<text x="54" y="171.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="start" fill="#222222">Pastel</text>
+<text x="358" y="171.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="end" fill="#1A5FB4">5,00</text>
+<text x="488" y="171.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="end" fill="#1A5FB4">25</text>
+<text x="54" y="205.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="start" fill="#222222">Pão de queijo</text>
+<text x="358" y="205.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="end" fill="#1A5FB4">3,00</text>
+<text x="374" y="205.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="start" fill="#000000" font-weight="700">35</text>
+<text x="54" y="239.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="start" fill="#222222">Tapioca</text>
+<text x="358" y="239.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="end" fill="#1A5FB4">6,00</text>
+<text x="488" y="239.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="end" fill="#1A5FB4">12</text>
+<text x="54" y="273.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="start" fill="#222222">Bolo de pote</text>
+<text x="358" y="273.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="end" fill="#1A5FB4">4,00</text>
+<text x="488" y="273.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="end" fill="#1A5FB4">15</text>
+<text x="54" y="307.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="start" fill="#222222">Biscoito</text>
+<text x="358" y="307.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="end" fill="#1A5FB4">2,00</text>
+<text x="488" y="307.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="end" fill="#1A5FB4">45</text>
+<rect x="366" y="182" width="130" height="34" fill="none" stroke="#2A6099" stroke-width="3"/>
+<rect x="492" y="212" width="8" height="8" fill="#2A6099" stroke="#FFFFFF" stroke-width="1.5"/>
+<rect x="0.5" y="0.5" width="495" height="317" fill="none" stroke="#C8C8C8" stroke-width="1"/>
+</svg><figcaption>Com o Realce de valores, o intruso (35 guardado como texto) aparece em preto e à esquerda.</figcaption></figure>
+  <div class="stepbox"><div class="sbt">Corrigir uma coluna de números guardados como texto</div><ol class="steps"><li>Selecione a coluna com o problema (por exemplo, E2:E11).</li><li><b>Dados › Texto para colunas</b>.</li><li>Sem mudar nada na janela, clique em <b>OK</b>.</li><li>Os números passam para a direita e ficam azuis no Realce de valores.</li></ol><p class="stnote">Para uma célula só, é mais rápido digitar o valor de novo.</p></div>
+
+  <h3>Datas e horas são números com formato</h3>
+  <p>Por trás, uma data é a quantidade de dias contados a partir de 30/12/1899. <code>15/10/2026</code> é o número <b>46310</b>. Hora é fração do dia: <code>10:30</code> é 0,4375. Por isso dá para calcular prazos e idades (M4).</p>
+  <div class="widget">
+    <div class="wt">Conversor data ⇄ número</div>
+    <div class="row"><label>Data: <input type="date" id="dIn" value="2026-10-15" style="font:inherit;padding:7px 10px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink)"></label>
+      <span>⇄</span><label>Número: <input type="number" id="nIn" value="46310" style="width:130px"></label></div>
+    <div class="out" id="dOut"></div>
+  </div>
+  <div class="tip"><p>Digite sempre no padrão <b>dia/mês/ano</b>. <kbd>Ctrl</kbd> + <kbd>;</kbd> insere a data de hoje e <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>;</kbd>, a hora atual.</p></div>
+
+  <div class="scroll-x"><table class="t">
+    <tr><th>Você digita</th><th>O Calc entende</th></tr>
+    <tr><td><code>15/10/2026</code> ou <code>15/10/26</code></td><td>data 15/10/2026</td></tr>
+    <tr><td><code>15/10</code></td><td>15 de outubro do ano atual</td></tr>
+    <tr><td><code>15-10-2026</code></td><td>data (o hífen também vale)</td></tr>
+    <tr><td><code>10:30</code></td><td>hora: dez e meia</td></tr>
+    <tr><td><code>15/10/2026 10:30</code></td><td>data e hora na mesma célula</td></tr>
+    <tr><td><code>31/02/2026</code></td><td>texto: essa data não existe!</td></tr>
+  </table></div>
+
+  <h3>Pegadinhas de digitação</h3>
+  <div class="scroll-x"><table class="t">
+    <tr><th>Você digitou</th><th>A célula mostra</th><th>Faça assim</th></tr>
+    <tr><td><code>3.50</code></td><td>3.50 (texto, à esquerda)</td><td>3,50: no Brasil, decimal é vírgula</td></tr>
+    <tr><td><code>01234</code></td><td>1234</td><td>formate como Texto antes, ou digite <code>'01234</code></td></tr>
+    <tr><td><code>1/5</code></td><td>01/05/26 (uma data!)</td><td>0,2, se a ideia for a fração</td></tr>
+    <tr><td><code>2 kg</code></td><td>2 kg (texto)</td><td>só o 2; a unidade vai no título: Peso (kg)</td></tr>
+    <tr><td><code>7891234567890</code></td><td>7,89123E+012</td><td>formate como Texto: é código, não quantidade</td></tr>
+  </table></div>
+  <div class="key"><p>Antes de apertar <kbd>Enter</kbd>, pergunte: <b>isto é um número para fazer conta, um texto ou uma data?</b></p></div>
+
+  <h3>Negativos, porcentagens e números grandes</h3>
+  <div class="scroll-x"><table class="t">
+    <tr><th>Você digita</th><th>Guardado como</th><th>Observação</th></tr>
+    <tr><td><code>-5</code></td><td>−5</td><td>o sinal de menos vem antes do número, sem espaço</td></tr>
+    <tr><td><code>10%</code></td><td>0,1</td><td>o número já entra com o formato de porcentagem</td></tr>
+    <tr><td><code>R$ 4,50</code></td><td>4,5</td><td>o número já entra com o formato Moeda</td></tr>
+    <tr><td><code>1.500</code></td><td>1500</td><td>o ponto é aceito como separador de milhar</td></tr>
+    <tr><td><code>0 1/2</code></td><td>0,5</td><td>zero, espaço e a fração: é assim que se digita uma fração</td></tr>
+  </table></div>
+  <div class="key"><p><b>Número nunca é cortado.</b> Se a coluna for estreita demais para um número, o Calc mostra <code>###</code> em vez de exibir um valor pela metade. Não é erro: alargue a coluna (duplo clique na divisa) e o número aparece. Texto, ao contrário, é cortado ou invade a vizinha.</p></div>
+  <div class="tip"><p>O Calc guarda até 15 algarismos significativos. Por isso um código de 16 dígitos, como o número de um cartão, perde o final se for guardado como número: mais um motivo para guardar códigos como texto.</p></div>
+
+  <h3>Texto que se completa sozinho</h3>
+  <p>Ao digitar numa coluna que já tem textos, o Calc sugere o resto da palavra (é a <b>AutoEntrada</b>). Digitando <code>Sa</code> na coluna Categoria, ele propõe <code>Salgado</code>: tecle <kbd>Enter</kbd> para aceitar ou continue digitando para ignorar. Se ela atrapalhar, desligue em <b>Ferramentas › AutoEntrada</b>.</p>
+  <div class="warn"><p>A <b>AutoCorreção</b> também mexe no que você digita: pode trocar a primeira letra por maiúscula ou transformar <code>1/2</code> em ½. Se algo mudar sozinho, use <kbd>Ctrl</kbd> + <kbd>Z</kbd> logo em seguida para desfazer só a correção.</p></div>
+
+  <h3>Por que isso importa tanto?</h3>
+  <p>No M2 a planilha vai começar a fazer contas sozinha: valor do estoque, total vendido, média de preços. Toda conta depende de os números serem números. Um único preço digitado como <code>3.50</code> deixa o total errado, e a planilha <b>não avisa</b>: o resultado parece normal. Conferir os tipos agora é o que torna confiáveis todas as contas que vêm depois.</p>
+
+  <h3>Os dados da cantina</h3>
+  <div class="scroll-x"><table class="t" id="prodTable"></table></div>
+  <div class="card"><ol>
+    <li>Digite os 10 produtos a partir da linha 2. Use <kbd>Tab</kbd> para ir à direita e <kbd>Enter</kbd> para começar a linha seguinte.</li>
+    <li>Preço com vírgula: 4,50. Código com P maiúsculo: P01.</li>
+    <li>Ligue o Realce de valores (<kbd>Ctrl</kbd> + <kbd>F8</kbd>) e corrija o que ficar preto na coluna de números.</li>
+    <li>Selecione E2:E11 e leia a barra de status.</li>
+  </ol><p style="margin:0"><b>Pronto quando:</b> a barra de status mostra <b>Soma: 300</b> no estoque.</p></div>
+<h3>Erros comuns</h3><div class="errs"><div class="err"><p class="e1">✘ Usar ponto como decimal: 3.50.</p><p class="e2">✔ No Calc em português, o decimal é vírgula: 3,50.</p></div><div class="err"><p class="e1">✘ Digitar a unidade junto: 2 kg, 30 un.</p><p class="e2">✔ Só o número na célula; a unidade vai no título: Peso (kg).</p></div><div class="err"><p class="e1">✘ Perder o zero de códigos: 01234 vira 1234.</p><p class="e2">✔ Digite '01234 ou formate a coluna como Texto antes.</p></div><div class="err"><p class="e1">✘ Digitar um espaço antes do número.</p><p class="e2">✔ O espaço pode transformar o número em texto. Confira com Ctrl + F8.</p></div><div class="err"><p class="e1">✘ Escrever a data no padrão americano: 10/15/2026.</p><p class="e2">✔ No Brasil é dia/mês/ano. 10/15/2026 não existe e vira texto.</p></div><div class="err"><p class="e1">✘ Formatar a célula como número depois de digitar texto.</p><p class="e2">✔ O formato não converte o que já está guardado: digite de novo ou use Texto para colunas.</p></div></div><h3>Outro exemplo: a ficha dos alunos</h3><div class="altbox"><p>Escolher o tipo certo vale para qualquer cadastro. Veja como cada informação deve ser guardada:</p><div class="scroll-x"><table class="t"><tr><th>Informação</th><th>Exemplo</th><th>Tipo</th><th>Por quê</th></tr><tr><td>Matrícula</td><td>'2026010045</td><td>Texto</td><td>é código, não se soma</td></tr><tr><td>Nome</td><td>Ana Lima</td><td>Texto</td><td>palavra</td></tr><tr><td>Telefone</td><td>(82) 99999-0000</td><td>Texto</td><td>não se faz conta com telefone</td></tr><tr><td>CEP</td><td>'57000-000</td><td>Texto</td><td>tem zero e hífen</td></tr><tr><td>Nota</td><td>8,5</td><td>Número</td><td>vai entrar na média</td></tr><tr><td>Nascimento</td><td>12/03/2010</td><td>Data</td><td>permite calcular a idade</td></tr></table></div><p style='margin:0'>Regra prática: <b>só é número o que faz sentido somar ou comparar</b>.</p></div><details class="diff"><summary>E se no meu computador estiver diferente?</summary><p><b>Os números com vírgula viram texto e os com ponto viram número?</b> O computador está configurado em inglês. Ajuste em Ferramentas › Opções › Configurações de idioma › Idiomas › Configuração de localidade: Português (Brasil). Chame o professor se não tiver permissão.</p><p><b>No Excel, o número guardado como texto tem um triângulo verde.</b> No Calc não há triângulo: use o Realce de valores (Ctrl + F8).</p></details><div class="canbox"><div class="sbt">Antes de seguir, você deve saber…</div><ul class="check"><li><label><input type="checkbox" data-can="a13-0"><span>Distinguir texto, número e data pelo alinhamento e pelo Realce de valores.</span></label></li><li><label><input type="checkbox" data-can="a13-1"><span>Digitar preços com vírgula, datas em dia/mês/ano e códigos com apóstrofo.</span></label></li><li><label><input type="checkbox" data-can="a13-2"><span>Explicar por que um número digitado como texto não entra na soma.</span></label></li><li><label><input type="checkbox" data-can="a13-3"><span>Corrigir uma coluna com Dados › Texto para colunas.</span></label></li><li><label><input type="checkbox" data-can="a13-4"><span>Conferir a soma do estoque (300) na barra de status.</span></label></li></ul></div>
+  <div class="quiz" data-quiz="a13"></div>
+</section>
+
+<!-- ===================== 1.4 ===================== -->
+<section class="cap" id="a14">
+  <div class="eyebrow">Aula 1.4</div>
+  <h2 class="t">Formatação</h2>
+  <p class="q"><b>Pergunta da aula:</b> como fazer a tabela ser entendida em 5 segundos?</p>
+  <div class="goals"><div><b>VOCÊ VAI</b>formatar fonte, bordas e cores</div><div><b>VOCÊ VAI</b>aplicar moeda, % e data</div><div><b>VOCÊ VAI</b>usar o Clonar formatação</div></div>
+
+  <h3>Formatar é comunicar</h3>
+  <div class="widget">
+    <div class="wt">Antes e depois</div>
+    <div class="row"><button class="btn" id="fmtToggle">Aplicar formatação</button><span style="font-size:15px;color:var(--muted)">Mesmos dados, aparência diferente.</span></div>
+    <div class="scroll-x" style="margin-top:12px"><table id="fmtDemo" style="border-collapse:collapse;font:15px Arial;background:#fff;color:#222;min-width:420px"></table></div>
+  </div>
+
+  <h3>Onde ficam os recursos</h3>
+  <div class="cols">
+    <div class="card"><b style="color:var(--green)">Clonar formatação (pincel)</b><p style="margin:6px 0 0">Copia só a aparência de uma célula para outra. Duplo clique no pincel: aplica em várias.</p></div>
+    <div class="card"><b style="color:var(--green)">Fonte</b><p style="margin:6px 0 0">Fonte, tamanho, <b>N</b>egrito, <i>I</i>tálico, <u>S</u>ublinhado, cor da letra, cor de fundo e bordas.</p></div>
+    <div class="card"><b style="color:var(--green)">Alinhamento</b><p style="margin:6px 0 0">Esquerda, centro, direita, Quebrar texto e Mesclar e centralizar células.</p></div>
+    <div class="card"><b style="color:var(--green)">Número</b><p style="margin:6px 0 0">Moeda (R$), Porcentagem (%), casas decimais, data.</p></div>
+  </div>
+  <div class="key"><p><kbd>Ctrl</kbd> + <kbd>1</kbd> abre <b>Formatar células</b>
+, com todas as opções: Números, Fonte, Efeitos de fonte, Alinhamento, Bordas, Plano de fundo e Proteção de célula.</p></div>
+
+<figure class="shot"><svg aria-label="Barras de ferramentas do Calc com quatro grupos numerados: Clonar formatação, Fonte, Alinhamento e Número" viewBox="0 0 1600 300" style="width:100%;height:auto;max-width:900px">
+<rect x="0" y="0" width="1600" height="300" fill="#F4F4F4" stroke="#C8C8C8" stroke-width="1"/>
+<text x="16" y="30" font-family="Arial, Helvetica, sans-serif" font-size="17" fill="#666666">Barra Padrão</text><text x="16" y="146" font-family="Arial, Helvetica, sans-serif" font-size="17" fill="#666666">Barra Formatação</text>
+<line x1="0" y1="112" x2="1600" y2="112" stroke="#D6D6D6"/>
+<rect x="170" y="44" width="34" height="34" rx="4" fill="#DDE2E8"/>
+<rect x="216" y="44" width="34" height="34" rx="4" fill="#DDE2E8"/>
+<rect x="262" y="44" width="34" height="34" rx="4" fill="#DDE2E8"/>
+<rect x="308" y="44" width="34" height="34" rx="4" fill="#DDE2E8"/>
+<rect x="370" y="44" width="34" height="34" rx="4" fill="#DDE2E8"/>
+<rect x="416" y="44" width="34" height="34" rx="4" fill="#DDE2E8"/>
+<rect x="462" y="44" width="34" height="34" rx="4" fill="#DDE2E8"/>
+<rect x="508" y="44" width="34" height="34" rx="4" fill="#DDE2E8"/>
+<rect x="570" y="44" width="34" height="34" rx="4" fill="#DDE2E8"/>
+<rect x="610" y="40" width="220" height="44" rx="4" fill="#E3EDF8" stroke="#2A6099" stroke-width="1"/><text x="720.0" y="68.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="middle" fill="#222222" font-weight="700">Clonar formatação</text>
+<rect x="866" y="44" width="34" height="34" rx="4" fill="#DDE2E8"/>
+<rect x="912" y="44" width="34" height="34" rx="4" fill="#DDE2E8"/>
+<rect x="958" y="44" width="34" height="34" rx="4" fill="#DDE2E8"/>
+<rect x="1004" y="44" width="34" height="34" rx="4" fill="#DDE2E8"/>
+<rect x="1050" y="44" width="34" height="34" rx="4" fill="#DDE2E8"/>
+<rect x="160" y="162" width="590" height="126" fill="#FAFAFA" stroke="#D6D6D6" stroke-width="1"/>
+<text x="455.0" y="278" font-family="Arial, Helvetica, sans-serif" font-size="19" text-anchor="middle" fill="#555555">Fonte</text>
+<rect x="770" y="162" width="470" height="126" fill="#FAFAFA" stroke="#D6D6D6" stroke-width="1"/>
+<text x="1005.0" y="278" font-family="Arial, Helvetica, sans-serif" font-size="19" text-anchor="middle" fill="#555555">Alinhamento</text>
+<rect x="1260" y="162" width="330" height="126" fill="#FAFAFA" stroke="#D6D6D6" stroke-width="1"/>
+<text x="1425.0" y="278" font-family="Arial, Helvetica, sans-serif" font-size="19" text-anchor="middle" fill="#555555">Número</text>
+<rect x="176" y="174" width="220" height="40" rx="4" fill="#FFFFFF" stroke="#BDBDBD" stroke-width="1"/><text x="286.0" y="200.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="middle" fill="#222222">Liberation Sans  ▾</text>
+<rect x="404" y="174" width="70" height="40" rx="4" fill="#FFFFFF" stroke="#BDBDBD" stroke-width="1"/><text x="439.0" y="200.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="middle" fill="#222222">10 ▾</text>
+<rect x="484" y="174" width="46" height="40" rx="4" fill="#FFFFFF" stroke="#BDBDBD" stroke-width="1"/><text x="507.0" y="201.92" font-family="Arial, Helvetica, sans-serif" font-size="22" text-anchor="middle" fill="#222222" font-weight="700">N</text>
+<rect x="536" y="174" width="46" height="40" rx="4" fill="#FFFFFF" stroke="#BDBDBD" stroke-width="1"/><text x="559.0" y="201.92" font-family="Arial, Helvetica, sans-serif" font-size="22" text-anchor="middle" fill="#222222">I</text>
+<rect x="588" y="174" width="46" height="40" rx="4" fill="#FFFFFF" stroke="#BDBDBD" stroke-width="1"/><text x="611.0" y="201.92" font-family="Arial, Helvetica, sans-serif" font-size="22" text-anchor="middle" fill="#222222">S</text>
+<rect x="176" y="220" width="130" height="40" rx="4" fill="#FFFFFF" stroke="#BDBDBD" stroke-width="1"/><text x="241.0" y="245.4" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#222222">Cor da fonte</text>
+<rect x="312" y="220" width="150" height="40" rx="4" fill="#FFF2CC" stroke="#BDBDBD" stroke-width="1"/><text x="387.0" y="245.4" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#222222">Cor de fundo</text>
+<rect x="468" y="220" width="110" height="40" rx="4" fill="#FFFFFF" stroke="#BDBDBD" stroke-width="1"/><text x="523.0" y="245.4" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#222222">Bordas</text>
+<rect x="786" y="174" width="64" height="40" rx="4" fill="#FFFFFF" stroke="#BDBDBD" stroke-width="1"/><text x="818.0" y="199.4" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#222222">Esq.</text>
+<rect x="856" y="174" width="70" height="40" rx="4" fill="#FFFFFF" stroke="#BDBDBD" stroke-width="1"/><text x="891.0" y="199.4" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#222222">Centro</text>
+<rect x="932" y="174" width="64" height="40" rx="4" fill="#FFFFFF" stroke="#BDBDBD" stroke-width="1"/><text x="964.0" y="199.4" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#222222">Dir.</text>
+<rect x="1004" y="174" width="220" height="40" rx="4" fill="#E3EDF8" stroke="#BDBDBD" stroke-width="1"/><text x="1114.0" y="200.12" font-family="Arial, Helvetica, sans-serif" font-size="17" text-anchor="middle" fill="#222222" font-weight="700">Quebrar texto</text>
+<rect x="786" y="220" width="438" height="40" rx="4" fill="#FFFFFF" stroke="#BDBDBD" stroke-width="1"/><text x="1005.0" y="245.76" font-family="Arial, Helvetica, sans-serif" font-size="16" text-anchor="middle" fill="#222222">Mesclar e centralizar células</text>
+<rect x="1276" y="174" width="70" height="40" rx="4" fill="#FFFFFF" stroke="#BDBDBD" stroke-width="1"/><text x="1311.0" y="200.84" font-family="Arial, Helvetica, sans-serif" font-size="19" text-anchor="middle" fill="#222222" font-weight="700">R$</text>
+<rect x="1352" y="174" width="60" height="40" rx="4" fill="#FFFFFF" stroke="#BDBDBD" stroke-width="1"/><text x="1382.0" y="200.84" font-family="Arial, Helvetica, sans-serif" font-size="19" text-anchor="middle" fill="#222222" font-weight="700">%</text>
+<rect x="1418" y="174" width="70" height="40" rx="4" fill="#FFFFFF" stroke="#BDBDBD" stroke-width="1"/><text x="1453.0" y="200.12" font-family="Arial, Helvetica, sans-serif" font-size="17" text-anchor="middle" fill="#222222">0,0</text>
+<rect x="1494" y="174" width="84" height="40" rx="4" fill="#FFFFFF" stroke="#BDBDBD" stroke-width="1"/><text x="1536.0" y="199.76" font-family="Arial, Helvetica, sans-serif" font-size="16" text-anchor="middle" fill="#222222">Data</text>
+<rect x="1276" y="220" width="146" height="40" rx="4" fill="#FFFFFF" stroke="#BDBDBD" stroke-width="1"/><text x="1349.0" y="245.4" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#222222">+ decimal</text>
+<rect x="1430" y="220" width="148" height="40" rx="4" fill="#FFFFFF" stroke="#BDBDBD" stroke-width="1"/><text x="1504.0" y="245.4" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#222222">− decimal</text>
+<circle cx="842" cy="42" r="17" fill="#C8191E"/><text x="842" y="49" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="700" text-anchor="middle" fill="#FFFFFF">1</text>
+<circle cx="750" cy="170" r="17" fill="#C8191E"/><text x="750" y="177" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="700" text-anchor="middle" fill="#FFFFFF">2</text>
+<circle cx="1240" cy="170" r="17" fill="#C8191E"/><text x="1240" y="177" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="700" text-anchor="middle" fill="#FFFFFF">3</text>
+<circle cx="1586" cy="170" r="17" fill="#C8191E"/><text x="1586" y="177" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="700" text-anchor="middle" fill="#FFFFFF">4</text>
+</svg><figcaption>As barras Padrão e Formatação, com os quatro grupos de recursos numerados.</figcaption></figure>
+  <h3>Mesa de formatação</h3>
+  <p>Experimente aqui antes de fazer no Calc. Clique numa célula (segure <kbd>Ctrl</kbd> para escolher várias, ou use os botões de seleção rápida) e aplique os recursos da barra. O quadro “Desafio” confere quando a tabela ficar como o modelo da cantina.</p>
+  <div class="widget mesa" id="mesa">
+    <div class="wt">Simulador: formate a tabela</div>
+    <div class="row" style="margin-bottom:8px;font-size:14px">Selecionar:
+      <button class="btn ghost" style="padding:3px 10px" data-sel="head">Cabeçalho</button>
+      <button class="btn ghost" style="padding:3px 10px" data-sel="col2">Preços</button>
+      <button class="btn ghost" style="padding:3px 10px" data-sel="col3">Estoque</button>
+      <button class="btn ghost" style="padding:3px 10px" data-sel="col4">Participação</button>
+      <button class="btn ghost" style="padding:3px 10px" data-sel="all">Tabela toda</button></div>
+    <div class="tb" role="toolbar" aria-label="Barra de formatação simulada">
+      <button data-a="b" title="Negrito (Ctrl+B)"><b>N</b></button><button data-a="i" title="Itálico (Ctrl+I)"><i>I</i></button><button data-a="u" title="Sublinhado (Ctrl+U)"><u>S</u></button>
+      <label>Tam. <select data-a="size"><option>10</option><option selected>11</option><option>12</option><option>14</option><option>18</option></select></label>
+      <span class="sep"></span>
+      <label>Cor da fonte <select data-a="color"><option value="">Automática</option><option value="#FFFFFF">Branca</option><option value="#237A31">Verde</option><option value="#C8191E">Vermelha</option><option value="#1A5FB4">Azul</option></select></label>
+      <label>Cor de fundo <select data-a="fill"><option value="">Nenhuma</option><option value="#163D1F">Verde-escuro</option><option value="#237A31">Verde</option><option value="#E3F1E5">Verde-claro</option><option value="#FFF2CC">Amarelo</option><option value="#EEEEEE">Cinza</option></select></label>
+      <label>Bordas <select data-a="border"><option value="">Sem bordas</option><option value="all">Todas</option><option value="out">Contorno</option><option value="bottom">Inferior grossa</option></select></label>
+      <span class="sep"></span>
+      <button data-a="al" data-v="left" title="Alinhar à esquerda">⯇≡</button><button data-a="al" data-v="center" title="Centralizar">≡</button><button data-a="al" data-v="right" title="Alinhar à direita">≡⯈</button>
+      <button data-a="wrap" title="Quebrar texto automaticamente">↵ Quebrar</button><button data-a="rot" title="Girar o texto 90°">⟲ 90°</button>
+      <span class="sep"></span>
+      <button data-a="fmt" data-v="moeda" title="Formatar como moeda">R$</button><button data-a="fmt" data-v="pct" title="Formatar como porcentagem">%</button><button data-a="fmt" data-v="geral" title="Formato padrão">Geral</button>
+      <button data-a="dec" data-v="1" title="Adicionar casa decimal">+,0</button><button data-a="dec" data-v="-1" title="Excluir casa decimal">−,0</button>
+      <span class="sep"></span>
+      <label>Estilo <select data-a="style"><option value="">Padrão</option><option value="bom">Bom</option><option value="neutro">Neutro</option><option value="ruim">Ruim</option><option value="titulo">Título 1</option></select></label>
+      <button data-a="clear" title="Limpar formatação direta (Ctrl+M)">⌫ Limpar</button>
+    </div>
+    <div class="fxl"><b id="mesaAddr">A1</b><span style="color:#555">linha de entrada:</span><span id="mesaVal" style="font-family:var(--mono)"></span></div>
+    <div class="grid"><table class="m" id="mesaT"></table></div>
+    <div class="cols" style="margin-top:10px">
+      <div class="out" style="margin:0"><b>Desafio: deixe a tabela pronta</b><ul class="goal" id="mesaGoal" style="padding-left:20px;margin:6px 0 0"></ul></div>
+      <div class="out" style="margin:0" id="mesaTip" aria-live="polite">Clique numa célula para começar.</div>
+    </div>
+  </div>
+
+  <h3>O formato muda a aparência, não o valor</h3>
+  <div class="widget">
+    <div class="wt">Simulador de formatos</div>
+    <div class="row">
+      <label>Valor guardado <input type="text" id="fvIn" value="4,5" style="width:140px"></label>
+      <label>Formato <select id="ffSel">
+        <option value="geral">Geral</option><option value="moeda" selected>Moeda (R$)</option><option value="num2">Número, 2 casas</option><option value="mil">Número com separador de milhar</option>
+        <option value="pct">Porcentagem</option><option value="pct1">Porcentagem, 1 casa</option><option value="data">Data abreviada</option><option value="datal">Data completa</option><option value="hora">Hora</option><option value="cient">Científico</option></select></label>
+    </div>
+    <div class="out" id="fOut"></div>
+  </div>
+  <div class="scroll-x"><table class="t">
+    <tr><th>Valor na célula</th><th>Formato</th><th>Aparece como</th></tr>
+    <tr><td>4,5</td><td>Moeda</td><td>R$ 4,50</td></tr>
+    <tr><td>0,25</td><td>Porcentagem</td><td>25%</td></tr>
+    <tr><td>1234,5</td><td>Número com separador de milhar</td><td>1.234,50</td></tr>
+    <tr><td>46310</td><td>Data completa</td><td>quinta-feira, 15 de outubro de 2026</td></tr>
+  </table></div>
+  <div class="warn"><p><b>Formatar não é arredondar.</b> Se o valor é 2,456 e o formato mostra 2,5, as contas continuam usando 2,456.</p></div>
+
+  <h3>Formatar células, aba por aba</h3>
+  <figure class="shot"><svg aria-label="Janela Formatar células na aba Números com a categoria Moeda selecionada e a visualização R$ 4,50" viewBox="0 0 900 600" style="width:100%;height:auto;max-width:760px">
+<rect x="0" y="0" width="900" height="600" fill="#F7F7F7" stroke="#9E9E9E" stroke-width="1.5"/>
+<rect x="0" y="0" width="900" height="44" fill="#E6E6E6"/><text x="450.0" y="29" font-family="Arial, Helvetica, sans-serif" font-size="19" text-anchor="middle" fill="#222222">Formatar células</text><text x="874" y="30" font-family="Arial, Helvetica, sans-serif" font-size="22" fill="#555555">×</text>
+<rect x="14" y="56" width="84.80000000000001" height="36" fill="#FFFFFF" stroke="#BDBDBD"/>
+<text x="56.400000000000006" y="80" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#222222" font-weight="700">Números</text>
+<text x="136.8" y="80" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#222222">Fonte</text>
+<text x="255.0" y="80" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#222222">Efeitos de fonte</text>
+<text x="398.40000000000003" y="80" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#222222">Alinhamento</text>
+<text x="499.8" y="80" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#222222">Bordas</text>
+<text x="613.8" y="80" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#222222">Plano de fundo</text>
+<text x="778.2" y="80" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#222222">Proteção de célula</text>
+<line x1="14" y1="92" x2="886" y2="92" stroke="#BDBDBD"/>
+<text x="30" y="124" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="700" fill="#333333">Categoria</text>
+<rect x="30" y="134" width="210" height="300" fill="#FFFFFF" stroke="#BDBDBD"/>
+<text x="42" y="159" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#222222">Todos</text>
+<text x="42" y="185" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#222222">Definido pelo usuário</text>
+<text x="42" y="211" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#222222">Número</text>
+<text x="42" y="237" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#222222">Porcentagem</text>
+<rect x="32" y="244" width="206" height="26" fill="#2A6099"/>
+<text x="42" y="263" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#FFFFFF">Moeda</text>
+<text x="42" y="289" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#222222">Data</text>
+<text x="42" y="315" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#222222">Hora</text>
+<text x="42" y="341" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#222222">Científico</text>
+<text x="42" y="367" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#222222">Fração</text>
+<text x="42" y="393" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#222222">Valor lógico</text>
+<text x="42" y="419" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#222222">Texto</text>
+<text x="262" y="124" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="700" fill="#333333">Formato</text>
+<rect x="262" y="134" width="300" height="140" fill="#FFFFFF" stroke="#BDBDBD"/>
+<text x="274" y="160" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#222222">R$ 1.234</text>
+<rect x="264" y="170" width="296" height="28" fill="#C9D7EA"/>
+<text x="274" y="190" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#222222">R$ 1.234,57</text>
+<text x="274" y="220" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#222222">-R$ 1.234,57</text>
+<text x="274" y="250" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#222222">R$ 1.234,--</text>
+<text x="585" y="124" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="700" fill="#333333">Idioma</text><rect x="585" y="134" width="290" height="32" fill="#FFFFFF" stroke="#BDBDBD"/><text x="596" y="156" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#222222">Português (Brasil)  ▾</text>
+<rect x="585" y="186" width="290" height="88" fill="#FFFFFF" stroke="#BDBDBD"/><text x="730" y="242" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="700" text-anchor="middle" fill="#222222">R$ 4,50</text>
+<text x="262" y="314" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="700" fill="#333333">Opções</text>
+<text x="262" y="346" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#333333">Casas decimais:</text><rect x="402" y="328" width="60" height="28" fill="#FFFFFF" stroke="#BDBDBD"/><text x="416" y="348" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#222222">2</text>
+<text x="262" y="384" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#333333">Zeros à esquerda:</text><rect x="402" y="366" width="60" height="28" fill="#FFFFFF" stroke="#BDBDBD"/><text x="416" y="386" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#222222">1</text>
+<rect x="592" y="332" width="16" height="16" fill="#FFFFFF" stroke="#777777" stroke-width="1.5"/>
+<text x="616" y="346" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#222222">Negativos em vermelho</text>
+<rect x="592" y="370" width="16" height="16" fill="#FFFFFF" stroke="#777777" stroke-width="1.5"/>
+<path d="M595 378 L599 382 L605 373" fill="none" stroke="#2A6099" stroke-width="2.5"/>
+<text x="616" y="384" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#222222">Separador de milhares</text>
+<text x="30" y="470" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="700" fill="#333333">Código do formato</text><rect x="30" y="480" width="845" height="32" fill="#FFFFFF" stroke="#BDBDBD"/><text x="42" y="502" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#555555">[$R$-416] #.##0,00;[$R$-416] -#.##0,00</text>
+<rect x="650" y="548" width="110" height="36" rx="4" fill="#2A6099" stroke="#2A6099" stroke-width="1"/><text x="705.0" y="572.12" font-family="Arial, Helvetica, sans-serif" font-size="17" text-anchor="middle" fill="#FFFFFF" font-weight="700">OK</text>
+<rect x="772" y="548" width="110" height="36" rx="4" fill="#FFFFFF" stroke="#BDBDBD" stroke-width="1"/><text x="827.0" y="572.12" font-family="Arial, Helvetica, sans-serif" font-size="17" text-anchor="middle" fill="#222222">Cancelar</text>
+<rect x="18" y="548" width="90" height="36" rx="4" fill="#FFFFFF" stroke="#BDBDBD" stroke-width="1"/><text x="63.0" y="572.12" font-family="Arial, Helvetica, sans-serif" font-size="17" text-anchor="middle" fill="#222222">Ajuda</text>
+</svg><figcaption>Formatar células (Ctrl + 1), aba Números, com a categoria Moeda escolhida.</figcaption></figure>
+  <div class="scroll-x"><table class="t">
+    <tr><th>Aba</th><th>O que você ajusta</th></tr>
+    <tr><td><b>Números</b></td><td>categoria (Moeda, Porcentagem, Data…), casas decimais, separador de milhares, negativos em vermelho, zeros à esquerda</td></tr>
+    <tr><td><b>Fonte</b></td><td>família (Liberation Sans, Arial…), estilo (negrito, itálico) e tamanho</td></tr>
+    <tr><td><b>Efeitos de fonte</b></td><td>cor da fonte, sublinhado, tachado, sombra</td></tr>
+    <tr><td><b>Alinhamento</b></td><td>horizontal e vertical, recuo, orientação do texto (girar), quebrar texto automaticamente, reduzir para caber na célula</td></tr>
+    <tr><td><b>Bordas</b></td><td>quais linhas (contorno, todas, só embaixo), estilo da linha, espessura, cor e sombra</td></tr>
+    <tr><td><b>Plano de fundo</b></td><td>cor de fundo da célula</td></tr>
+    <tr><td><b>Proteção de célula</b></td><td>bloquear células (usado no M6, junto com a proteção da planilha)</td></tr>
+  </table></div>
+
+  <h3>As categorias de número</h3>
+  <div class="cat">
+    <div class="h">Categoria</div><div class="h">Para que serve</div><div class="h">Exemplo</div>
+    <div><b>Geral</b></div><div>o padrão: mostra o número como foi digitado</div><div>4,5</div>
+    <div><b>Número</b></div><div>casas decimais fixas e separador de milhar</div><div>1.234,50</div>
+    <div><b>Porcentagem</b></div><div>multiplica por 100 só para mostrar</div><div>12,5%</div>
+    <div><b>Moeda</b></div><div>valores em dinheiro, com R$</div><div>R$ 4,50</div>
+    <div><b>Data</b></div><div>vários jeitos de mostrar a mesma data</div><div>15/10/2026</div>
+    <div><b>Hora</b></div><div>horas, minutos e segundos</div><div>10:30</div>
+    <div><b>Científico</b></div><div>números enormes ou minúsculos</div><div>7,89E+12</div>
+    <div><b>Fração</b></div><div>mostra frações em vez de decimais</div><div>1/4</div>
+    <div><b>Texto</b></div><div>guarda como texto o que for digitado depois</div><div>01234</div>
+  </div>
+
+  <h3>Casas decimais na prática</h3>
+  <div class="widget">
+    <div class="wt">Botões Adicionar e Excluir casa decimal</div>
+    <div class="row"><button class="btn ghost" id="decMinus">−,0 Excluir casa</button><span class="decdemo" id="decCell">3,14159</span><button class="btn ghost" id="decPlus">+,0 Adicionar casa</button></div>
+    <div class="out" id="decOut"></div>
+  </div>
+
+  <h3>Bordas sem mistério</h3>
+  <div class="stepbox"><div class="sbt">Bordas finas em toda a tabela</div><ol class="steps"><li>Selecione a tabela (A1:E11).</li><li>Clique na setinha do botão <b>Bordas</b> da barra Formatação.</li><li>Escolha o ícone de <b>todas as bordas</b> (a grade completa).</li></ol><p class="stnote">Para mais controle: Ctrl + 1 › Bordas. Em Disposição das linhas, escolha um modelo pronto ou clique nas linhas do desenho; depois escolha Estilo, Espessura e Cor.</p></div>
+  <div class="tip"><p>As linhas cinzas da grade <b>não saem na impressão</b>. Se você quer linhas no papel ou no PDF, use bordas.</p></div>
+
+  <h3>Estilos de célula: formatação pronta</h3>
+  <p>Em vez de escolher fonte, cor e fundo a cada vez, você pode aplicar um <b>estilo</b>: um pacote de formatação com nome. No menu <b>Estilos</b> há <b>Bom</b> (verde), <b>Neutro</b> (amarelo), <b>Ruim</b> (vermelho), <b>Título 1</b>, <b>Nota</b> e outros. O painel completo abre com <kbd>F11</kbd>.</p>
+  <p>Vantagem: se um dia você mudar o estilo Ruim, todas as células com esse estilo mudam juntas. No M3, a formatação condicional vai aplicar esses estilos sozinha.</p>
+
+  <h3>Quebrar texto em vez de espremer</h3>
+  <div class="widget">
+    <div class="wt">Título comprido no cabeçalho</div>
+    <div class="row"><label><input type="checkbox" id="wrapCk"> Quebrar texto automaticamente</label></div>
+    <div class="sheet" style="max-width:420px;margin-top:10px"><table><tr><th></th><th>D</th><th>E</th><th>F</th><th>G</th></tr>
+      <tr><th>1</th><td class="r"><b>Preço</b></td><td class="r"><b>Estoque</b></td><td id="wrapCell" style="max-width:90px;overflow:hidden"><b>Valor em estoque</b></td><td><b>Categoria</b></td></tr>
+      <tr><th>2</th><td class="r">4,50</td><td class="r">30</td><td class="r">135,00</td><td>Salgado</td></tr></table></div>
+  </div>
+  <div class="tip"><p><b>Mesclar e centralizar células</b> junta células: fica bom no título acima da tabela, mas atrapalha classificar, filtrar e copiar (M4). Nunca mescle dentro da tabela.</p></div>
+
+<figure class="shot"><svg aria-label="Título cortado pela coluna vizinha" viewBox="0 0 486 216" style="width:100%;height:auto;max-width:520px">
+<rect x="0" y="0" width="486" height="216" fill="#FFFFFF"/>
+<rect x="0" y="6" width="486" height="36" fill="#FFFFFF" stroke="#C8C8C8" stroke-width="1"/>
+<rect x="0" y="6" width="96" height="36" fill="#FFFFFF" stroke="#C8C8C8" stroke-width="1"/>
+<text x="10" y="31" font-family="Arial, Helvetica, sans-serif" font-size="18" fill="#222222">F1</text>
+<text x="86" y="30" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#777777">▾</text>
+<text x="104" y="31" font-family="Arial, Helvetica, sans-serif" font-size="16" font-style="italic" fill="#555555">fx</text>
+<text x="128" y="31" font-family="Arial, Helvetica, sans-serif" font-size="18" fill="#555555">Σ</text>
+<text x="150" y="31" font-family="Arial, Helvetica, sans-serif" font-size="18" fill="#555555">=</text>
+<line x1="172" y1="10" x2="172" y2="38" stroke="#C8C8C8" stroke-width="1"/>
+<text x="182" y="31" font-family="Arial, Helvetica, sans-serif" font-size="18.0" fill="#222222">Valor em estoque</text>
+<rect x="0" y="50" width="486" height="30" fill="#F2F2F2"/>
+<rect x="0" y="80" width="46" height="136" fill="#F2F2F2"/>
+<text x="96.0" y="71" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#555555">D</text>
+<text x="196.0" y="71" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#555555">E</text>
+<rect x="246" y="50" width="110" height="30" fill="#C9D7EA"/>
+<text x="301.0" y="71" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#1B3F6E" font-weight="700">F</text>
+<text x="421.0" y="71" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#555555">G</text>
+<rect x="0" y="80" width="46" height="34" fill="#C9D7EA"/>
+<text x="23.0" y="103.0" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#1B3F6E">1</text>
+<text x="23.0" y="137.0" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#555555">2</text>
+<text x="23.0" y="171.0" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#555555">3</text>
+<text x="23.0" y="205.0" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#555555">4</text>
+<line x1="46" y1="50" x2="46" y2="216" stroke="#D4D4D4" stroke-width="1"/>
+<line x1="146" y1="50" x2="146" y2="216" stroke="#D4D4D4" stroke-width="1"/>
+<line x1="246" y1="50" x2="246" y2="216" stroke="#D4D4D4" stroke-width="1"/>
+<line x1="356" y1="50" x2="356" y2="216" stroke="#D4D4D4" stroke-width="1"/>
+<line x1="486" y1="50" x2="486" y2="216" stroke="#D4D4D4" stroke-width="1"/>
+<line x1="0" y1="80" x2="486" y2="80" stroke="#D4D4D4" stroke-width="1"/>
+<line x1="0" y1="114" x2="486" y2="114" stroke="#D4D4D4" stroke-width="1"/>
+<line x1="0" y1="148" x2="486" y2="148" stroke="#D4D4D4" stroke-width="1"/>
+<line x1="0" y1="182" x2="486" y2="182" stroke="#D4D4D4" stroke-width="1"/>
+<line x1="0" y1="216" x2="486" y2="216" stroke="#D4D4D4" stroke-width="1"/>
+<line x1="0" y1="50" x2="486" y2="50" stroke="#D4D4D4" stroke-width="1"/>
+<text x="138" y="103.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="end" fill="#222222" font-weight="700">Preço</text>
+<text x="238" y="103.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="end" fill="#222222" font-weight="700">Estoque</text>
+<text x="254" y="103.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="start" fill="#222222" font-weight="700">Valor em es</text>
+<text x="364" y="103.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="start" fill="#222222" font-weight="700">Categoria</text>
+<text x="138" y="137.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="end" fill="#222222">4,50</text>
+<text x="238" y="137.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="end" fill="#222222">30</text>
+<text x="348" y="137.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="end" fill="#222222">135,00</text>
+<text x="364" y="137.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="start" fill="#222222">Salgado</text>
+<text x="138" y="171.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="end" fill="#222222">5,00</text>
+<text x="238" y="171.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="end" fill="#222222">25</text>
+<text x="348" y="171.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="end" fill="#222222">125,00</text>
+<text x="364" y="171.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="start" fill="#222222">Salgado</text>
+<text x="138" y="205.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="end" fill="#222222">3,00</text>
+<text x="238" y="205.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="end" fill="#222222">35</text>
+<text x="348" y="205.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="end" fill="#222222">105,00</text>
+<text x="364" y="205.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="start" fill="#222222">Salgado</text>
+<rect x="246" y="80" width="110" height="34" fill="none" stroke="#2A6099" stroke-width="3"/>
+<rect x="352" y="110" width="8" height="8" fill="#2A6099" stroke="#FFFFFF" stroke-width="1.5"/>
+<rect x="0.5" y="0.5" width="485" height="215" fill="none" stroke="#C8C8C8" stroke-width="1"/>
+</svg><figcaption>Sem quebra: o título é cortado pela coluna vizinha.</figcaption></figure><figure class="shot"><svg aria-label="Título com quebra de texto em duas linhas" viewBox="0 0 486 238" style="width:100%;height:auto;max-width:520px">
+<rect x="0" y="0" width="486" height="238" fill="#FFFFFF"/>
+<rect x="0" y="6" width="486" height="36" fill="#FFFFFF" stroke="#C8C8C8" stroke-width="1"/>
+<rect x="0" y="6" width="96" height="36" fill="#FFFFFF" stroke="#C8C8C8" stroke-width="1"/>
+<text x="10" y="31" font-family="Arial, Helvetica, sans-serif" font-size="18" fill="#222222">F1</text>
+<text x="86" y="30" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#777777">▾</text>
+<text x="104" y="31" font-family="Arial, Helvetica, sans-serif" font-size="16" font-style="italic" fill="#555555">fx</text>
+<text x="128" y="31" font-family="Arial, Helvetica, sans-serif" font-size="18" fill="#555555">Σ</text>
+<text x="150" y="31" font-family="Arial, Helvetica, sans-serif" font-size="18" fill="#555555">=</text>
+<line x1="172" y1="10" x2="172" y2="38" stroke="#C8C8C8" stroke-width="1"/>
+<text x="182" y="31" font-family="Arial, Helvetica, sans-serif" font-size="18.0" fill="#222222">Valor em estoque</text>
+<rect x="0" y="50" width="486" height="30" fill="#F2F2F2"/>
+<rect x="0" y="80" width="46" height="158" fill="#F2F2F2"/>
+<text x="96.0" y="71" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#555555">D</text>
+<text x="196.0" y="71" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#555555">E</text>
+<rect x="246" y="50" width="110" height="30" fill="#C9D7EA"/>
+<text x="301.0" y="71" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#1B3F6E" font-weight="700">F</text>
+<text x="421.0" y="71" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#555555">G</text>
+<rect x="0" y="80" width="46" height="56" fill="#C9D7EA"/>
+<text x="23.0" y="114.0" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#1B3F6E">1</text>
+<text x="23.0" y="159.0" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#555555">2</text>
+<text x="23.0" y="193.0" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#555555">3</text>
+<text x="23.0" y="227.0" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#555555">4</text>
+<line x1="46" y1="50" x2="46" y2="238" stroke="#D4D4D4" stroke-width="1"/>
+<line x1="146" y1="50" x2="146" y2="238" stroke="#D4D4D4" stroke-width="1"/>
+<line x1="246" y1="50" x2="246" y2="238" stroke="#D4D4D4" stroke-width="1"/>
+<line x1="356" y1="50" x2="356" y2="238" stroke="#D4D4D4" stroke-width="1"/>
+<line x1="486" y1="50" x2="486" y2="238" stroke="#D4D4D4" stroke-width="1"/>
+<line x1="0" y1="80" x2="486" y2="80" stroke="#D4D4D4" stroke-width="1"/>
+<line x1="0" y1="136" x2="486" y2="136" stroke="#D4D4D4" stroke-width="1"/>
+<line x1="0" y1="170" x2="486" y2="170" stroke="#D4D4D4" stroke-width="1"/>
+<line x1="0" y1="204" x2="486" y2="204" stroke="#D4D4D4" stroke-width="1"/>
+<line x1="0" y1="238" x2="486" y2="238" stroke="#D4D4D4" stroke-width="1"/>
+<line x1="0" y1="50" x2="486" y2="50" stroke="#D4D4D4" stroke-width="1"/>
+<text x="138" y="114.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="end" fill="#222222" font-weight="700">Preço</text>
+<text x="238" y="114.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="end" fill="#222222" font-weight="700">Estoque</text>
+<text x="301.0" y="103.2" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="middle" fill="#222222" font-weight="700">Valor em</text>
+<text x="301.0" y="125.7" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="middle" fill="#222222" font-weight="700">estoque</text>
+<text x="364" y="114.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="start" fill="#222222" font-weight="700">Categoria</text>
+<text x="138" y="159.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="end" fill="#222222">4,50</text>
+<text x="238" y="159.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="end" fill="#222222">30</text>
+<text x="348" y="159.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="end" fill="#222222">135,00</text>
+<text x="364" y="159.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="start" fill="#222222">Salgado</text>
+<text x="138" y="193.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="end" fill="#222222">5,00</text>
+<text x="238" y="193.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="end" fill="#222222">25</text>
+<text x="348" y="193.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="end" fill="#222222">125,00</text>
+<text x="364" y="193.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="start" fill="#222222">Salgado</text>
+<text x="138" y="227.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="end" fill="#222222">3,00</text>
+<text x="238" y="227.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="end" fill="#222222">35</text>
+<text x="348" y="227.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="end" fill="#222222">105,00</text>
+<text x="364" y="227.48" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="start" fill="#222222">Salgado</text>
+<rect x="246" y="80" width="110" height="56" fill="none" stroke="#2A6099" stroke-width="3"/>
+<rect x="352" y="132" width="8" height="8" fill="#2A6099" stroke="#FFFFFF" stroke-width="1.5"/>
+<rect x="0.5" y="0.5" width="485" height="237" fill="none" stroke="#C8C8C8" stroke-width="1"/>
+</svg><figcaption>Com Quebrar texto: o título ocupa duas linhas, sem mesclar.</figcaption></figure>
+  <h3>Alinhamento completo</h3>
+  <div class="scroll-x"><table class="t">
+    <tr><th>Recurso</th><th>Onde</th><th>Quando usar</th></tr>
+    <tr><td>Esquerda, centro, direita</td><td>botões da barra Formatação</td><td>títulos e códigos centralizados; números sempre à direita</td></tr>
+    <tr><td>Vertical (topo, meio, base)</td><td>Ctrl + 1 › Alinhamento</td><td>quando a linha é alta (cabeçalho com quebra)</td></tr>
+    <tr><td>Recuo</td><td>Ctrl + 1 › Alinhamento</td><td>afastar o texto da borda, como subitens</td></tr>
+    <tr><td>Orientação do texto</td><td>Ctrl + 1 › Alinhamento (girar em graus)</td><td>títulos de colunas estreitas</td></tr>
+    <tr><td>Quebrar texto automaticamente</td><td>botão ou Ctrl + 1 › Alinhamento</td><td>títulos longos no cabeçalho</td></tr>
+    <tr><td>Reduzir para caber na célula</td><td>Ctrl + 1 › Alinhamento</td><td>quando não dá para alargar a coluna (a letra diminui)</td></tr>
+    <tr><td>Mesclar e centralizar células</td><td>botão da barra Formatação</td><td>só no título acima da tabela</td></tr>
+  </table></div>
+  <div class="key"><p><b>Regras de bom uso:</b> uma família de fonte só; negrito para títulos; cor só no cabeçalho ou para destacar; números à direita e com o mesmo número de casas; bordas finas; nada de mesclar dentro da tabela.</p></div>
+
+  <h3>Clonar formatação (o pincel)</h3>
+  <div class="stepbox"><div class="sbt">Copiar a aparência do cabeçalho para outra tabela</div><ol class="steps"><li>Clique numa célula já formatada (o modelo).</li><li>Clique no pincel <b>Clonar formatação</b> na barra Padrão. O cursor vira um balde/pincel.</li><li>Clique (ou arraste) sobre as células que devem ficar iguais.</li><li>Para aplicar em vários lugares, dê <b>duplo clique</b> no pincel; <kbd>Esc</kbd> encerra.</li></ol><p class="stnote">Só a aparência é copiada; o conteúdo das células de destino não muda.</p></div>
+
+  <h3>Mão na massa</h3>
+  <div class="card"><ol>
+    <li>Cabeçalho A1:E1 em negrito, fundo verde e letra branca.</li>
+    <li>Preço (D2:D11) no formato <b>Moeda</b>.</li>
+    <li>Bordas finas em toda a tabela A1:E11.</li>
+    <li>Centralize as colunas Código e Estoque.</li>
+    <li>Use o Clonar formatação para levar o estilo do cabeçalho à aba Vendas.</li>
+  </ol><p style="margin:0"><b>Pronto quando:</b> os preços aparecem como R$ 4,50 e o cabeçalho se destaca. Teste: mostre a tabela a um colega por 5 segundos e pergunte qual é o produto mais caro.</p></div>
+  <div class="tip"><p>Errou a formatação? <b>Formatar › Limpar formatação direta</b> (<kbd>Ctrl</kbd> + <kbd>M</kbd>) tira a formatação e mantém o valor.</p></div>
+<h3>Erros comuns</h3><div class="errs"><div class="err"><p class="e1">✘ Centralizar colunas de números “para ficar bonito”.</p><p class="e2">✔ Números à direita: assim as casas decimais ficam alinhadas e o tipo fica visível.</p></div><div class="err"><p class="e1">✘ Usar muitas cores e fontes.</p><p class="e2">✔ Uma fonte, uma cor de destaque. Se tudo chama atenção, nada chama.</p></div><div class="err"><p class="e1">✘ Mesclar células dentro da tabela.</p><p class="e2">✔ Mescle só o título acima dela; dentro, use Quebrar texto.</p></div><div class="err"><p class="e1">✘ Aplicar % depois de digitar 10.</p><p class="e2">✔ A célula guardava 10 e mostra 1000%. Digite 10% direto, ou 0,1 e depois formate.</p></div><div class="err"><p class="e1">✘ Achar que o formato arredonda a conta.</p><p class="e2">✔ O formato muda só a aparência. Para arredondar o valor, use a função ARRED (M2).</p></div><div class="err"><p class="e1">✘ Confiar nas linhas de grade para imprimir.</p><p class="e2">✔ A grade não sai no papel: use bordas.</p></div></div><h3>Outro exemplo: o boletim formatado</h3><div class="altbox"><p>As mesmas regras deixam qualquer tabela legível em segundos:</p><div class="scroll-x"><table class="t"><tr><th>Aluno</th><th>Nota 1</th><th>Nota 2</th><th>Média</th><th>Situação</th></tr><tr><td>Ana</td><td>8,0</td><td>9,0</td><td>8,5</td><td><span style='background:#C6EFCE;color:#006100;padding:2px 8px'>Aprovada</span></td></tr><tr><td>Bruno</td><td>5,0</td><td>6,0</td><td>5,5</td><td><span style='background:#FFC7CE;color:#9C0006;padding:2px 8px'>Recuperação</span></td></tr></table></div><p style='margin:0'>Notas com 1 casa decimal e à direita, cabeçalho destacado e o estilo Bom ou Ruim na situação.</p></div><details class="diff"><summary>E se no meu computador estiver diferente?</summary><p><b>Não acho o botão Quebrar texto?</b> Ele pode estar escondido no fim da barra Formatação (setinha »). O caminho pelo menu sempre funciona: Ctrl + 1 › Alinhamento.</p><p><b>No Excel, a janela é diferente.</b> Lá também é Ctrl + 1, mas as abas se chamam Número, Alinhamento, Fonte, Borda, Preenchimento e Proteção.</p><p><b>O R$ aparece como $ ou €?</b> A localidade do sistema não é Brasil. Em Ctrl + 1 › Números › Moeda, escolha R$ Português (Brasil) no formato.</p></details><div class="canbox"><div class="sbt">Antes de seguir, você deve saber…</div><ul class="check"><li><label><input type="checkbox" data-can="a14-0"><span>Aplicar negrito, fonte, tamanho, cor da letra e cor de fundo.</span></label></li><li><label><input type="checkbox" data-can="a14-1"><span>Pôr bordas na tabela e saber que a grade não é impressa.</span></label></li><li><label><input type="checkbox" data-can="a14-2"><span>Formatar Moeda, Porcentagem e Data e ajustar as casas decimais.</span></label></li><li><label><input type="checkbox" data-can="a14-3"><span>Explicar por que o formato não muda o valor guardado.</span></label></li><li><label><input type="checkbox" data-can="a14-4"><span>Alinhar, quebrar texto e girar texto; mesclar só o título.</span></label></li><li><label><input type="checkbox" data-can="a14-5"><span>Usar o Clonar formatação, os estilos de célula e o Limpar formatação direta.</span></label></li></ul></div>
+  <div class="quiz" data-quiz="a14"></div>
+</section>
+
+<!-- ===================== 1.5 ===================== -->
+<section class="cap" id="a15">
+  <div class="eyebrow">Aula 1.5</div>
+  <h2 class="t">Produtividade e impressão</h2>
+  <p class="q"><b>Pergunta da aula:</b> como trabalhar mais rápido e entregar a planilha pronta?</p>
+  <div class="goals"><div><b>VOCÊ VAI</b>preencher sequências com a alça</div><div><b>VOCÊ VAI</b>congelar o cabeçalho</div><div><b>VOCÊ VAI</b>salvar em .ods e .pdf e imprimir</div></div>
+
+  <h3>A alça de preenchimento</h3>
+  <p>É o quadradinho no canto inferior direito da célula selecionada. Arraste-o e o Calc <b>continua o padrão</b>.</p>
+  <div class="widget">
+    <div class="wt">Simulador da alça: escolha o que digitar e arraste</div>
+    <div class="row"><select id="fillSel" aria-label="Valor inicial">
+      <option value="num">1 e 2 (as duas selecionadas)</option><option value="seg">seg</option><option value="jan">jan</option><option value="cod">P01</option>
+      <option value="data">15/10/2026</option><option value="util">15/10/2026 com Preencher série › Dia da semana</option><option value="txt">Coxinha</option></select>
+      <label>Arrastar até a linha <input type="range" id="fillN" min="2" max="10" value="8" aria-label="Quantidade de linhas"></label><b id="fillNv">8</b></div>
+    <div class="sheet" style="max-width:320px;margin-top:12px" id="fillSheet"></div>
+    <div class="out" id="fillOut"></div>
+  </div>
+  <div class="tip"><p>Segurar <kbd>Ctrl</kbd> enquanto arrasta copia o mesmo valor
+ em vez de continuar a sequência. Para escolher o tipo de série, use <b>Planilha › Preencher células › Preencher série</b>.</p></div>
+
+  <h3>Mais truques da alça</h3>
+  <div class="scroll-x"><table class="t">
+    <tr><th>Ação</th><th>Resultado</th></tr>
+    <tr><td>Duplo clique na alça</td><td>preenche para baixo até onde a coluna vizinha tem dados</td></tr>
+    <tr><td>Arrastar com <kbd>Ctrl</kbd></td><td>copia o valor em vez de continuar a sequência (ou o contrário, para números soltos)</td></tr>
+    <tr><td>Selecionar 2 e 4 e arrastar</td><td>continua de 2 em 2: 6, 8, 10…</td></tr>
+    <tr><td>Arrastar para cima ou para a esquerda</td><td>a sequência anda para trás</td></tr>
+  </table></div>
+  <figure class="shot"><svg aria-label="Janela Preencher série com direção Abaixo, tipo Data e unidade de tempo Dia da semana" viewBox="0 0 640 560" style="width:100%;height:auto;max-width:560px">
+<rect x="0" y="0" width="640" height="560" fill="#F7F7F7" stroke="#9E9E9E" stroke-width="1.5"/>
+<rect x="0" y="0" width="640" height="44" fill="#E6E6E6"/><text x="320.0" y="29" font-family="Arial, Helvetica, sans-serif" font-size="19" text-anchor="middle" fill="#222222">Preencher série</text><text x="614" y="30" font-family="Arial, Helvetica, sans-serif" font-size="22" fill="#555555">×</text>
+<text x="24" y="80" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="700" fill="#333333">Direção</text>
+<circle cx="40" cy="110" r="8" fill="#FFFFFF" stroke="#777777" stroke-width="1.5"/>
+<circle cx="40" cy="110" r="4.5" fill="#2A6099"/>
+<text x="56" y="116" font-family="Arial, Helvetica, sans-serif" font-size="17" fill="#222222" font-weight="700">Abaixo</text>
+<circle cx="40" cy="142" r="8" fill="#FFFFFF" stroke="#777777" stroke-width="1.5"/>
+<text x="56" y="148" font-family="Arial, Helvetica, sans-serif" font-size="17" fill="#222222">Direita</text>
+<circle cx="40" cy="174" r="8" fill="#FFFFFF" stroke="#777777" stroke-width="1.5"/>
+<text x="56" y="180" font-family="Arial, Helvetica, sans-serif" font-size="17" fill="#222222">Acima</text>
+<circle cx="40" cy="206" r="8" fill="#FFFFFF" stroke="#777777" stroke-width="1.5"/>
+<text x="56" y="212" font-family="Arial, Helvetica, sans-serif" font-size="17" fill="#222222">Esquerda</text>
+<text x="330" y="80" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="700" fill="#333333">Tipo de série</text>
+<circle cx="346" cy="110" r="8" fill="#FFFFFF" stroke="#777777" stroke-width="1.5"/>
+<text x="362" y="116" font-family="Arial, Helvetica, sans-serif" font-size="17" fill="#222222">Linear</text>
+<circle cx="346" cy="142" r="8" fill="#FFFFFF" stroke="#777777" stroke-width="1.5"/>
+<text x="362" y="148" font-family="Arial, Helvetica, sans-serif" font-size="17" fill="#222222">Crescimento</text>
+<circle cx="346" cy="174" r="8" fill="#FFFFFF" stroke="#777777" stroke-width="1.5"/>
+<circle cx="346" cy="174" r="4.5" fill="#2A6099"/>
+<text x="362" y="180" font-family="Arial, Helvetica, sans-serif" font-size="17" fill="#222222" font-weight="700">Data</text>
+<circle cx="346" cy="206" r="8" fill="#FFFFFF" stroke="#777777" stroke-width="1.5"/>
+<text x="362" y="212" font-family="Arial, Helvetica, sans-serif" font-size="17" fill="#222222">Preenchimento automático</text>
+<text x="24" y="260" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="700" fill="#333333">Unidade de tempo</text>
+<rect x="20" y="276" width="280" height="148" fill="#E3EDF8" stroke="#2A6099" stroke-width="2"/>
+<circle cx="40" cy="300" r="8" fill="#FFFFFF" stroke="#777777" stroke-width="1.5"/>
+<text x="56" y="306" font-family="Arial, Helvetica, sans-serif" font-size="17" fill="#222222">Dia</text>
+<circle cx="40" cy="332" r="8" fill="#FFFFFF" stroke="#777777" stroke-width="1.5"/>
+<circle cx="40" cy="332" r="4.5" fill="#2A6099"/>
+<text x="56" y="338" font-family="Arial, Helvetica, sans-serif" font-size="17" fill="#222222" font-weight="700">Dia da semana</text>
+<circle cx="40" cy="364" r="8" fill="#FFFFFF" stroke="#777777" stroke-width="1.5"/>
+<text x="56" y="370" font-family="Arial, Helvetica, sans-serif" font-size="17" fill="#222222">Mês</text>
+<circle cx="40" cy="396" r="8" fill="#FFFFFF" stroke="#777777" stroke-width="1.5"/>
+<text x="56" y="402" font-family="Arial, Helvetica, sans-serif" font-size="17" fill="#222222">Ano</text>
+<text x="330" y="306" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#333333">Valor inicial:</text><rect x="450" y="286" width="170" height="30" fill="#FFFFFF" stroke="#BDBDBD"/><text x="460" y="307" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#222222">15/10/2026</text>
+<text x="330" y="352" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#333333">Valor final:</text><rect x="450" y="332" width="170" height="30" fill="#FFFFFF" stroke="#BDBDBD"/><text x="460" y="353" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#222222"></text>
+<text x="330" y="398" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#333333">Incremento:</text><rect x="450" y="378" width="170" height="30" fill="#FFFFFF" stroke="#BDBDBD"/><text x="460" y="399" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#222222">1</text>
+<rect x="390" y="508" width="110" height="36" rx="4" fill="#2A6099" stroke="#2A6099" stroke-width="1"/><text x="445.0" y="532.12" font-family="Arial, Helvetica, sans-serif" font-size="17" text-anchor="middle" fill="#FFFFFF" font-weight="700">OK</text>
+<rect x="512" y="508" width="110" height="36" rx="4" fill="#FFFFFF" stroke="#BDBDBD" stroke-width="1"/><text x="567.0" y="532.12" font-family="Arial, Helvetica, sans-serif" font-size="17" text-anchor="middle" fill="#222222">Cancelar</text>
+<rect x="18" y="508" width="90" height="36" rx="4" fill="#FFFFFF" stroke="#BDBDBD" stroke-width="1"/><text x="63.0" y="532.12" font-family="Arial, Helvetica, sans-serif" font-size="17" text-anchor="middle" fill="#222222">Ajuda</text>
+</svg><figcaption>Planilha › Preencher células › Preencher série: tipo Data, unidade Dia da semana.</figcaption></figure>
+  <div class="stepbox"><div class="sbt">Calendário só com dias úteis</div><ol class="steps"><li>Digite a primeira data (15/10/2026) na primeira célula.</li><li>Selecione da primeira célula até onde a lista deve ir.</li><li><b>Planilha › Preencher células › Preencher série</b>.</li><li>Em <b>Tipo de série</b>, marque <b>Data</b>; em <b>Unidade de tempo</b>, <b>Dia da semana</b>.</li><li><b>OK</b>: depois da sexta vem a segunda.</li></ol><p class="stnote">Na mesma janela, o Incremento muda o passo: 7 dá uma data por semana; o Valor final define onde parar.</p></div>
+  <div class="tip"><p>Quer que a alça conheça uma lista sua, como as turmas <code>1A, 1B, 2A, 2B</code>? Cadastre em <b>Ferramentas › Opções › LibreOffice Calc › Listas de classificação › Novo</b>.</p></div>
+
+  <h3>Congelar: o cabeçalho fica no lugar</h3>
+  <div class="widget">
+    <div class="wt">Role a lista e compare</div>
+    <div class="row"><label><input type="checkbox" id="frzCk"> Exibir › Congelar células › Congelar primeira linha</label></div>
+    <div class="freeze" id="frz" style="margin-top:10px"></div>
+  </div>
+  <div class="scroll-x"><table class="t">
+    <tr><th>Opção em Exibir › Congelar células</th><th>O que trava</th></tr>
+    <tr><td>Congelar primeira linha</td><td>só a linha 1 (o cabeçalho)</td></tr>
+    <tr><td>Congelar primeira coluna</td><td>só a coluna A (por exemplo, os nomes)</td></tr>
+    <tr><td>Congelar linhas e colunas</td><td>tudo acima e à esquerda da célula selecionada. Para travar a linha 1 e a coluna A, selecione B2 antes</td></tr>
+  </table></div>
+  <p>Para desfazer, abra o mesmo menu e desmarque. O congelamento não aparece na impressão; para repetir o cabeçalho em cada página impressa, veja “Linhas a repetir”, mais abaixo.</p>
+
+  <h3>Salvar do jeito certo</h3>
+  <div class="cols">
+    <div class="card"><b style="font-size:22px;color:var(--green)">Ctrl + S</b><p style="margin:4px 0 0">Salve cedo e sempre. Arquivo não salvo não existe.</p></div>
+    <div class="card"><b style="font-size:22px;color:var(--green)">.ods</b><p style="margin:4px 0 0">O arquivo editável, para continuar trabalhando.</p></div>
+    <div class="card"><b style="font-size:22px;color:var(--green)">.pdf</b><p style="margin:4px 0 0">A versão para enviar ou imprimir: <b>Arquivo › Exportar como PDF</b>.</p></div>
+  </div>
+  <div class="cols"><div class="warn"><p><b>Evite:</b> Planilha1 final FINAL2.ods</p></div><div class="tip"><p><b>Prefira:</b> cantina_produtos_2026-10.ods</p></div></div>
+  <p>Para enviar a quem usa Excel: <b>Arquivo › Salvar como</b> no tipo <b>.xlsx</b>. O Calc pergunta se quer manter o formato: escolha usar o formato Excel só nesse caso.</p>
+
+  <h3>Não perca o trabalho</h3>
+  <p>O LibreOffice guarda cópias de segurança de tempos em tempos (<b>AutoRecuperação</b>). Se o computador desligar, ao abrir de novo ele oferece recuperar o arquivo. Confira em <b>Ferramentas › Opções › Carregar/Salvar › Geral</b>: marque <b>Salvar informações de AutoRecuperação a cada</b> e escolha 5 minutos.</p>
+  <div class="warn"><p>A AutoRecuperação é um socorro, não substitui o <kbd>Ctrl</kbd> + <kbd>S</kbd>. Em computador de laboratório, salve também uma cópia no pendrive, no e-mail ou na nuvem antes de sair.</p></div>
+
+  <h3>Exportar como PDF</h3>
+  <figure class="shot"><svg aria-label="Janela Opções do PDF na aba Geral com o intervalo Tudo marcado e o botão Exportar" viewBox="0 0 900 540" style="width:100%;height:auto;max-width:720px">
+<rect x="0" y="0" width="900" height="540" fill="#F7F7F7" stroke="#9E9E9E" stroke-width="1.5"/>
+<rect x="0" y="0" width="900" height="44" fill="#E6E6E6"/><text x="450.0" y="29" font-family="Arial, Helvetica, sans-serif" font-size="19" text-anchor="middle" fill="#222222">Opções do PDF</text><text x="874" y="30" font-family="Arial, Helvetica, sans-serif" font-size="22" fill="#555555">×</text>
+<rect x="14" y="56" width="68.0" height="36" fill="#FFFFFF" stroke="#BDBDBD"/>
+<text x="48.0" y="80" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#222222" font-weight="700">Geral</text>
+<text x="183.0" y="80" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#222222">Visualização inicial</text>
+<text x="381.0" y="80" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#222222">Interface do usuário</text>
+<text x="528.6" y="80" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#222222">Vínculos</text>
+<text x="630.0" y="80" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#222222">Segurança</text>
+<text x="781.8000000000001" y="80" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle" fill="#222222">Assinaturas digitais</text>
+<line x1="14" y1="92" x2="886" y2="92" stroke="#BDBDBD"/>
+<text x="30" y="130" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#333333">Intervalo</text>
+<rect x="24" y="142" width="390" height="170" fill="#E3EDF8" stroke="#2A6099" stroke-width="2"/>
+<circle cx="46" cy="172" r="8" fill="#FFFFFF" stroke="#777777" stroke-width="1.5"/>
+<circle cx="46" cy="172" r="4.5" fill="#2A6099"/>
+<text x="62" y="178" font-family="Arial, Helvetica, sans-serif" font-size="17" fill="#222222" font-weight="700">Tudo</text>
+<circle cx="46" cy="218" r="8" fill="#FFFFFF" stroke="#777777" stroke-width="1.5"/>
+<text x="62" y="224" font-family="Arial, Helvetica, sans-serif" font-size="17" fill="#222222">Páginas:</text>
+<circle cx="46" cy="264" r="8" fill="#FFFFFF" stroke="#777777" stroke-width="1.5"/>
+<text x="62" y="270" font-family="Arial, Helvetica, sans-serif" font-size="17" fill="#222222">Seleção/Planilha(s) selecionada(s)</text>
+<text x="450" y="130" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#333333">Imagens</text>
+<circle cx="470" cy="172" r="8" fill="#FFFFFF" stroke="#777777" stroke-width="1.5"/>
+<text x="486" y="178" font-family="Arial, Helvetica, sans-serif" font-size="17" fill="#222222">Compressão sem perdas</text>
+<circle cx="470" cy="218" r="8" fill="#FFFFFF" stroke="#777777" stroke-width="1.5"/>
+<circle cx="470" cy="218" r="4.5" fill="#2A6099"/>
+<text x="486" y="224" font-family="Arial, Helvetica, sans-serif" font-size="17" fill="#222222" font-weight="700">Compressão JPEG</text>
+<text x="450" y="290" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#333333">Geral</text>
+<rect x="462" y="316" width="16" height="16" fill="#FFFFFF" stroke="#777777" stroke-width="1.5"/>
+<text x="486" y="330" font-family="Arial, Helvetica, sans-serif" font-size="17" fill="#222222">PDF híbrido (incorporar arquivo ODF)</text>
+<rect x="462" y="354" width="16" height="16" fill="#FFFFFF" stroke="#777777" stroke-width="1.5"/>
+<text x="486" y="368" font-family="Arial, Helvetica, sans-serif" font-size="17" fill="#222222">Exportar comentários</text>
+<rect x="630" y="488" width="130" height="36" rx="4" fill="#2A6099" stroke="#2A6099" stroke-width="1"/><text x="695.0" y="512.12" font-family="Arial, Helvetica, sans-serif" font-size="17" text-anchor="middle" fill="#FFFFFF" font-weight="700">Exportar</text>
+<rect x="772" y="488" width="110" height="36" rx="4" fill="#FFFFFF" stroke="#BDBDBD" stroke-width="1"/><text x="827.0" y="512.12" font-family="Arial, Helvetica, sans-serif" font-size="17" text-anchor="middle" fill="#222222">Cancelar</text>
+<rect x="18" y="488" width="90" height="36" rx="4" fill="#FFFFFF" stroke="#BDBDBD" stroke-width="1"/><text x="63.0" y="512.12" font-family="Arial, Helvetica, sans-serif" font-size="17" text-anchor="middle" fill="#222222">Ajuda</text>
+</svg><figcaption>Arquivo › Exportar como › Exportar como PDF: a aba Geral com o Intervalo.</figcaption></figure>
+  <div class="stepbox"><div class="sbt">Gerar o Cantina.pdf</div><ol class="steps"><li>Configure a página primeiro (próximo tópico): o PDF sai exatamente como sairia no papel.</li><li><b>Arquivo › Exportar como › Exportar como PDF</b>.</li><li>Em <b>Intervalo</b>, escolha <b>Tudo</b> ou <b>Seleção/Planilha(s) selecionada(s)</b>.</li><li>Clique em <b>Exportar</b>, escolha a pasta e o nome e clique em <b>Salvar</b>.</li><li>Abra o PDF e confira. O .ods continua aberto e intacto.</li></ol><p class="stnote">O botão PDF da barra Padrão exporta direto, sem a janela de opções.</p></div>
+
+  <h3>Antes de imprimir, configure a página</h3>
+  <div class="scroll-x"><table class="t">
+    <tr><th>Onde</th><th>Para quê</th></tr>
+    <tr><td><b>Formatar › Estilo de página › Página</b></td><td>papel, orientação (retrato ou paisagem) e margens</td></tr>
+    <tr><td><b>Formatar › Estilo de página › Planilha › Escala</b></td><td>ajustar a impressão a 1 página</td></tr>
+    <tr><td><b>Cabeçalho</b> e <b>Rodapé</b></td><td>título da tabela e número da página</td></tr>
+    <tr><td><b>Arquivo › Visualizar impressão</b> (<kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>O</kbd>)</td><td>conferir antes de imprimir</td></tr>
+    <tr><td><b>Formatar › Intervalos de impressão › Definir</b></td><td>imprimir só uma parte selecionada</td></tr>
+  </table></div>
+
+<figure class="shot"><svg aria-label="Janela Estilo de página na aba Planilha, com a escala ajustada a uma página e as abas Página, Planilha e Cabeçalho numeradas" viewBox="0 0 1000 600" style="width:100%;height:auto;max-width:800px">
+<rect x="0" y="0" width="1000" height="600" fill="#F7F7F7" stroke="#9E9E9E" stroke-width="1.5"/>
+<rect x="0" y="0" width="1000" height="44" fill="#E6E6E6"/><text x="500.0" y="29" font-family="Arial, Helvetica, sans-serif" font-size="19" text-anchor="middle" fill="#222222">Estilo de página: Padrão</text><text x="974" y="30" font-family="Arial, Helvetica, sans-serif" font-size="22" fill="#555555">×</text>
+<text x="76.28" y="80" font-family="Arial, Helvetica, sans-serif" font-size="16" text-anchor="middle" fill="#222222">Organizador</text>
+<text x="182.44" y="80" font-family="Arial, Helvetica, sans-serif" font-size="16" text-anchor="middle" fill="#222222">Página</text>
+<text x="266.2" y="80" font-family="Arial, Helvetica, sans-serif" font-size="16" text-anchor="middle" fill="#222222">Bordas</text>
+<text x="385.79999999999995" y="80" font-family="Arial, Helvetica, sans-serif" font-size="16" text-anchor="middle" fill="#222222">Plano de fundo</text>
+<text x="518.84" y="80" font-family="Arial, Helvetica, sans-serif" font-size="16" text-anchor="middle" fill="#222222">Cabeçalho</text>
+<text x="616.04" y="80" font-family="Arial, Helvetica, sans-serif" font-size="16" text-anchor="middle" fill="#222222">Rodapé</text>
+<rect x="659.92" y="56" width="97.68" height="36" fill="#FFFFFF" stroke="#BDBDBD"/>
+<text x="708.76" y="80" font-family="Arial, Helvetica, sans-serif" font-size="16" text-anchor="middle" fill="#222222" font-weight="700">Planilha</text>
+<line x1="14" y1="92" x2="986" y2="92" stroke="#BDBDBD"/>
+<circle cx="182.44" cy="52" r="15" fill="#C8191E"/><text x="182.44" y="59" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="700" text-anchor="middle" fill="#FFFFFF">1</text>
+<circle cx="518.84" cy="52" r="15" fill="#C8191E"/><text x="518.84" y="59" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="700" text-anchor="middle" fill="#FFFFFF">3</text>
+<circle cx="708.76" cy="52" r="15" fill="#C8191E"/><text x="708.76" y="59" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="700" text-anchor="middle" fill="#FFFFFF">2</text>
+<text x="30" y="132" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#333333">Ordem das páginas</text>
+<circle cx="50" cy="166" r="8" fill="#FFFFFF" stroke="#777777" stroke-width="1.5"/>
+<circle cx="50" cy="166" r="4.5" fill="#2A6099"/>
+<text x="66" y="172" font-family="Arial, Helvetica, sans-serif" font-size="17" fill="#222222" font-weight="700">De cima para baixo, depois para a direita</text>
+<circle cx="50" cy="200" r="8" fill="#FFFFFF" stroke="#777777" stroke-width="1.5"/>
+<text x="66" y="206" font-family="Arial, Helvetica, sans-serif" font-size="17" fill="#222222">Da esquerda para a direita, depois para baixo</text>
+<text x="560" y="132" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#333333">Imprimir</text>
+<rect x="572" y="158" width="16" height="16" fill="#FFFFFF" stroke="#777777" stroke-width="1.5"/>
+<text x="596" y="172" font-family="Arial, Helvetica, sans-serif" font-size="17" fill="#222222">Cabeçalhos de linhas e colunas</text>
+<rect x="572" y="192" width="16" height="16" fill="#FFFFFF" stroke="#777777" stroke-width="1.5"/>
+<text x="596" y="206" font-family="Arial, Helvetica, sans-serif" font-size="17" fill="#222222">Grade</text>
+<rect x="572" y="226" width="16" height="16" fill="#FFFFFF" stroke="#777777" stroke-width="1.5"/>
+<text x="596" y="240" font-family="Arial, Helvetica, sans-serif" font-size="17" fill="#222222">Comentários</text>
+<rect x="572" y="260" width="16" height="16" fill="#FFFFFF" stroke="#777777" stroke-width="1.5"/>
+<path d="M575 268 L579 272 L585 263" fill="none" stroke="#2A6099" stroke-width="2.5"/>
+<text x="596" y="274" font-family="Arial, Helvetica, sans-serif" font-size="17" fill="#222222">Gráficos</text>
+<text x="30" y="350" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#333333">Escala</text>
+<rect x="24" y="364" width="950" height="150" fill="#E3EDF8" stroke="#2A6099" stroke-width="2"/>
+<text x="46" y="402" font-family="Arial, Helvetica, sans-serif" font-size="17" fill="#333333">Modo de escala:</text><rect x="196" y="382" width="560" height="32" fill="#FFFFFF" stroke="#BDBDBD"/><text x="208" y="404" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700" fill="#222222">Ajustar intervalo(s) de impressão ao número de páginas  ▾</text>
+<text x="46" y="458" font-family="Arial, Helvetica, sans-serif" font-size="17" fill="#333333">Número de páginas:</text><rect x="226" y="438" width="70" height="32" fill="#FFFFFF" stroke="#BDBDBD"/><text x="244" y="460" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="700" fill="#222222">1</text>
+<rect x="620" y="548" width="110" height="36" rx="4" fill="#FFFFFF" stroke="#BDBDBD" stroke-width="1"/><text x="675.0" y="572.12" font-family="Arial, Helvetica, sans-serif" font-size="17" text-anchor="middle" fill="#222222">Redefinir</text>
+<rect x="750" y="548" width="110" height="36" rx="4" fill="#2A6099" stroke="#2A6099" stroke-width="1"/><text x="805.0" y="572.12" font-family="Arial, Helvetica, sans-serif" font-size="17" text-anchor="middle" fill="#FFFFFF" font-weight="700">OK</text>
+<rect x="872" y="548" width="110" height="36" rx="4" fill="#FFFFFF" stroke="#BDBDBD" stroke-width="1"/><text x="927.0" y="572.12" font-family="Arial, Helvetica, sans-serif" font-size="17" text-anchor="middle" fill="#222222">Cancelar</text>
+<rect x="18" y="548" width="90" height="36" rx="4" fill="#FFFFFF" stroke="#BDBDBD" stroke-width="1"/><text x="63.0" y="572.12" font-family="Arial, Helvetica, sans-serif" font-size="17" text-anchor="middle" fill="#222222">Ajuda</text>
+</svg><figcaption>Formatar › Estilo de página, aba Planilha: Escala ajustada a 1 página.</figcaption></figure>
+  <div class="stepbox"><div class="sbt">A aba Produtos em uma página, com título e número de página</div><ol class="steps"><li><b>Formatar › Estilo de página</b>.</li><li>Aba <b>Página</b>: papel A4 e orientação (retrato para tabelas estreitas, paisagem para largas).</li><li>Aba <b>Planilha</b> › <b>Escala</b>: modo <b>Ajustar intervalo(s) de impressão ao número de páginas</b>, 1 página.</li><li>Aba <b>Cabeçalho</b>: clique em <b>Editar</b> e escreva o título, por exemplo “Cantina · Produtos”.</li><li>Aba <b>Rodapé</b>: deixe o número da página (Página 1).</li><li><b>OK</b> e confira em <b>Arquivo › Visualizar impressão</b> (<kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>O</kbd>).</li></ol></div>
+  <h3>Listas longas: repetir o cabeçalho em cada página</h3>
+  <p>Uma lista de vendas com 200 linhas ocupa várias páginas, e só a primeira teria o cabeçalho. Para repetir a linha 1 em todas:</p>
+  <div class="stepbox"><div class="sbt">Linhas a repetir</div><ol class="steps"><li><b>Formatar › Intervalos de impressão › Editar</b>.</li><li>Em <b>Linhas a repetir</b>, escolha <b>- definido pelo usuário -</b> e digite <code>$1</code>.</li><li><b>OK</b> e confira na visualização.</li></ol></div>
+  <div class="tip"><p>Para imprimir só uma parte (por exemplo, A1:E11 sem as anotações ao lado), selecione o intervalo e use <b>Formatar › Intervalos de impressão › Definir</b>. Para voltar a imprimir tudo: <b>Formatar › Intervalos de impressão › Limpar</b>.</p></div>
+
+  <h3>Mão na massa</h3>
+  <div class="card"><ol>
+    <li>Na aba Vendas, monte o cabeçalho: Data, Produto, Qtde, Valor.</li>
+    <li>Digite 15/10/2026 em A2 e arraste a alça até A11.</li>
+    <li>Congele a primeira linha nas abas Produtos e Vendas.</li>
+    <li>Na aba Produtos, ajuste a impressão para uma página.</li>
+    <li>Salve Cantina.ods (<kbd>Ctrl</kbd> + <kbd>S</kbd>) e exporte também Cantina.pdf.</li>
+  </ol><p style="margin:0"><b>Pronto quando:</b> você tem Cantina.ods e Cantina.pdf, e o PDF cabe em uma página.</p></div>
+<h3>Erros comuns</h3><div class="errs"><div class="err"><p class="e1">✘ Imprimir ou exportar sem visualizar antes.</p><p class="e2">✔ Ctrl + Shift + O mostra páginas a mais e colunas cortadas antes de gastar papel.</p></div><div class="err"><p class="e1">✘ O PDF sai com uma coluna sozinha numa segunda página.</p><p class="e2">✔ Ajuste a Escala para 1 página de largura ou mude para paisagem.</p></div><div class="err"><p class="e1">✘ Congelar a linha errada.</p><p class="e2">✔ Para travar o cabeçalho, use Congelar primeira linha; Congelar linhas e colunas depende da célula selecionada.</p></div><div class="err"><p class="e1">✘ Entregar só o PDF e perder o arquivo editável.</p><p class="e2">✔ O PDF é para ler e imprimir. Guarde sempre o .ods.</p></div><div class="err"><p class="e1">✘ Arrastar a alça de uma data e ganhar sábados e domingos.</p><p class="e2">✔ Para dias úteis, use Preencher série › Dia da semana.</p></div></div><h3>Outro exemplo: o calendário de provas</h3><div class="altbox"><p>Os recursos desta aula montam em minutos o calendário de um bimestre:</p><div class="scroll-x"><table class="t"><tr><th>Data</th><th>Dia</th><th>Atividade</th></tr><tr><td>15/10/2026</td><td>qui</td><td>Revisão M1</td></tr><tr><td>16/10/2026</td><td>sex</td><td>Prova M1</td></tr><tr><td>19/10/2026</td><td>seg</td><td>Início M2</td></tr></table></div><p style='margin:0'>As datas vêm do Preencher série (dias úteis); os dias, da alça a partir de qui; a linha 1 fica congelada; e o calendário sai em PDF em uma página para o mural.</p></div><details class="diff"><summary>E se no meu computador estiver diferente?</summary><p><b>O menu Planilha não tem Preencher células?</b> Em versões mais antigas o caminho é Planilha › Preencher células › Série, ou Editar › Preencher › Séries.</p><p><b>Exportar como PDF fica direto no menu Arquivo?</b> Depende da versão: em algumas, é Arquivo › Exportar como PDF; em outras, Arquivo › Exportar como › Exportar como PDF.</p><p><b>Seu colega usa Excel?</b> Envie em .xlsx (Arquivo › Salvar como › tipo Excel 2007-365) e escolha Usar formato Excel quando o Calc perguntar. Guarde o seu .ods também.</p></details><div class="canbox"><div class="sbt">Antes de seguir, você deve saber…</div><ul class="check"><li><label><input type="checkbox" data-can="a15-0"><span>Preencher sequências com a alça e com Preencher série (inclusive só dias úteis).</span></label></li><li><label><input type="checkbox" data-can="a15-1"><span>Congelar e descongelar a primeira linha.</span></label></li><li><label><input type="checkbox" data-can="a15-2"><span>Salvar em .ods com um bom nome e exportar em PDF.</span></label></li><li><label><input type="checkbox" data-can="a15-3"><span>Configurar a página: orientação, escala de 1 página, cabeçalho e rodapé.</span></label></li><li><label><input type="checkbox" data-can="a15-4"><span>Repetir o cabeçalho em todas as páginas e definir um intervalo de impressão.</span></label></li></ul></div>
+  <div class="quiz" data-quiz="a15"></div>
+</section>
+
+<!-- ===================== FIXAÇÃO ===================== -->
+<section class="cap" id="fixacao">
+  <div class="eyebrow">Fim do módulo</div>
+  <h2 class="t">Exercícios de fixação</h2>
+  <p class="lead">25 questões sobre todo o M1, de tipos diferentes. Responda todas e veja sua nota; cada resposta traz um comentário.</p>
+  <div class="row" style="margin:8px 0 4px"><button class="btn ghost" id="fixReset">Recomeçar os exercícios</button></div>
+  <div class="quiz" id="fixQuiz" data-quiz="fix"></div>
+  <div class="score" id="fixScore"><span class="lbl2">Exercícios de fixação</span><span class="big" id="fixPts">0 / 25</span><div class="meter"><i id="fixBar"></i></div><span id="fixMsg">Responda as questões acima.</span></div>
+
+  <h3>Desafio prático (no Calc)</h3>
+  <div class="card">
+    <p>Monte do zero, num arquivo novo, a planilha <b>Biblioteca.ods</b> e marque cada item quando concluir:</p>
+    <ul class="check" id="pract"></ul>
+    <div class="out" id="practOut"></div>
+  </div>
+</section>
+
+<!-- ===================== RESUMO ===================== -->
+<section class="cap" id="resumo">
+  <div class="eyebrow">Para consultar</div>
+  <h2 class="t">Atalhos e glossário</h2>
+  <div class="cols">
+    <div class="card"><b>Atalhos do M1</b>
+      <table class="t" style="font-size:15px"><tr><td><kbd>Ctrl</kbd>+<kbd>Home</kbd></td><td>ir para A1</td></tr><tr><td><kbd>Ctrl</kbd>+setas</td><td>fim do bloco</td></tr><tr><td><kbd>F2</kbd></td><td>editar a célula</td></tr><tr><td><kbd>Ctrl</kbd>+<kbd>Z</kbd></td><td>desfazer</td></tr><tr><td><kbd>Ctrl</kbd>+<kbd>S</kbd></td><td>salvar</td></tr><tr><td><kbd>Ctrl</kbd>+<kbd>1</kbd></td><td>formatar células</td></tr><tr><td><kbd>Ctrl</kbd>+<kbd>F8</kbd></td><td>realce de valores</td></tr><tr><td><kbd>Ctrl</kbd>+<kbd>M</kbd></td><td>limpar formatação direta</td></tr><tr><td><kbd>Ctrl</kbd>+<kbd>;</kbd></td><td>data de hoje</td></tr><tr><td><kbd>Ctrl</kbd>+<kbd>PgDn</kbd></td><td>próxima planilha</td></tr><tr><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>O</kbd></td><td>visualizar impressão</td></tr></table></div>
+    <div class="card"><b>Glossário</b>
+      <p><b>Arquivo:</b> o documento inteiro (.ods). <b>Planilha:</b> cada aba do arquivo. <b>Célula:</b> o encontro de uma coluna com uma linha. <b>Endereço:</b> letra + número (B3). <b>Intervalo:</b> bloco de células (A1:C4). <b>Caixa de nome:</b> mostra o endereço da célula ativa. <b>Linha de entrada:</b> mostra o conteúdo real da célula. <b>Alça de preenchimento:</b> quadradinho do canto que continua sequências. <b>Formato:</b> a aparência do valor, que não muda o valor guardado. <b>Realce de valores:</b> pinta números de azul, textos de preto e fórmulas de verde.</p></div>
+  </div>
+  <div class="card dark"><p style="margin:0;font-size:18px"><b>Próximo: M2 · Fórmulas e funções.</b> Os dados estão no lugar. Agora a planilha vai calcular sozinha. Pergunta para o M2: quanto vale todo o estoque da cantina?</p></div>
+</section>
+</main>
+</div>
+<footer>Apostila do Módulo 1 · Curso de LibreOffice Calc · Instituto Federal de Alagoas · Prof. Christiano Rossini Martins Costa</footer>
+
+<script>
+(function(){
+"use strict";
+const $ = s => document.querySelector(s), $$ = s => Array.from(document.querySelectorAll(s));
+const store = { get(k){ try{ return JSON.parse(localStorage.getItem("apM1:"+k)); }catch(e){ return null; } },
+                set(k,v){ try{ localStorage.setItem("apM1:"+k, JSON.stringify(v)); }catch(e){} } };
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fmtBR = (v, d=2) => v.toLocaleString("pt-BR",{minimumFractionDigits:d,maximumFractionDigits:d});
+
+/* ---------- tema, menu, progresso ---------- */
+const root = document.documentElement;
+const savedTheme = store.get("theme"); if(savedTheme) root.setAttribute("data-theme", savedTheme);
+$("#themeBtn").onclick = () => { const dark = getComputedStyle(root).getPropertyValue("--bg").trim() === "#111613";
+  const t = dark ? "light" : "dark"; root.setAttribute("data-theme", t); store.set("theme", t); };
+$("#menuBtn").onclick = () => $("#toc").classList.toggle("open");
+$$("#toc a").forEach(a => a.addEventListener("click", () => $("#toc").classList.remove("open")));
+const secs = $$("section.cap");
+function onScroll(){
+  const h = document.documentElement; const p = h.scrollTop/(h.scrollHeight-h.clientHeight)*100; $("#prog").style.width = p+"%";
+  let cur = secs[0].id; secs.forEach(s => { if(s.getBoundingClientRect().top < 120) cur = s.id; });
+  $$("#toc a").forEach(a => a.classList.toggle("on", a.getAttribute("href") === "#"+cur));
+}
+addEventListener("scroll", onScroll, {passive:true}); onScroll();
+
+/* ---------- janela: hotspots ---------- */
+const parts = [
+  {x:0,y:34,w:740,h:30,t:"Barra de menus",d:"Todos os comandos do Calc, organizados por assunto: Arquivo, Editar, Exibir, Inserir, Formatar, Estilos, Planilha, Dados, Ferramentas, Janela e Ajuda."},
+  {x:0,y:64,w:500,h:70,t:"Barras de ferramentas",d:"Os comandos mais usados em botões. A de cima é a Padrão (abrir, salvar, PDF, desfazer). A de baixo é a Formatação (fonte, negrito, alinhamento, R$, %). Se sumirem: Exibir › Barras de ferramentas."},
+  {x:6,y:138,w:106,h:28,t:"Caixa de nome",d:"Mostra o endereço da célula ativa (aqui, A3). Também serve para ir direto a uma célula: digite um endereço, como J20, e tecle Enter."},
+  {x:196,y:138,w:796,h:28,t:"Linha de entrada",d:"Mostra o conteúdo real da célula. Se a célula mostra R$ 4,50, aqui você vê 4,5. Mais tarde, no M2, é aqui que aparecem as fórmulas."},
+  {x:44,y:256,w:160,h:28,t:"Célula ativa",d:"A célula com a borda grossa é onde a digitação vai entrar. As letras das colunas e os números das linhas dela ficam destacados nos cabeçalhos."},
+  {x:52,y:466,w:200,h:30,t:"Abas das planilhas",d:"Cada aba é uma planilha do arquivo. O botão + cria uma nova; o botão direito na aba renomeia, colore, move ou exclui."},
+  {x:420,y:500,w:580,h:30,t:"Barra de status",d:"Mostra somas e médias rápidas do que está selecionado e o zoom. Ótima para conferir valores sem fórmula."}
+];
+const win = $("#win");
+parts.forEach((p,i) => {
+  const b = document.createElement("button"); b.className = "hot"; b.setAttribute("aria-label", p.t);
+  b.style.left = (p.x/10)+"%"; b.style.top = (p.y/5.6)+"%"; b.style.width = (p.w/10)+"%"; b.style.height = (p.h/5.6)+"%";
+  b.innerHTML = "<span>"+(i+1)+"</span>";
+  b.onclick = () => { $$(".hot").forEach(h=>h.classList.remove("on")); b.classList.add("on");
+    $("#winOut").innerHTML = "<b>"+(i+1)+". "+p.t+":</b> "+p.d; };
+  win.appendChild(b);
+});
+
+/* ---------- flashcards ---------- */
+const keys = [["Setas","move uma célula na direção da seta"],["Enter / Tab","confirma e desce / confirma e vai para a direita"],["Ctrl + setas","salta até o fim do bloco de dados"],["Ctrl + Home","volta para a célula A1"],["F2","edita a célula sem apagar o que já está lá"],["Esc","cancela a digitação"],["Ctrl + Z","desfaz a última ação"],["Ctrl + Page Down","vai para a próxima planilha (Page Up volta)"],["Ctrl + roda do mouse","aproxima ou afasta (zoom)"]];
+$("#flash").innerHTML = keys.map(k => `<button aria-pressed="false"><span class="f"><kbd>${esc(k[0])}</kbd><br><small style="color:var(--muted)">o que faz?</small></span><span class="b"><b>${esc(k[0])}</b><br>${esc(k[1])}</span></button>`).join("");
+$$("#flash button").forEach(b => b.onclick = () => { b.classList.toggle("flip"); b.setAttribute("aria-pressed", b.classList.contains("flip")); });
+
+/* ---------- planilhas simuladas ---------- */
+const COLS = "ABCDEF", ROWS = 6;
+function gridHTML(cols, rows){
+  let h = '<div class="bar"><span class="nb">A1</span><span class="ic">fx Σ =</span><span class="fx"></span></div><table><tr><th></th>'+[...cols].map(c=>`<th data-c="${c}">${c}</th>`).join("")+"</tr>";
+  for(let r=1;r<=rows;r++){ h += `<tr><th data-r="${r}">${r}</th>`+[...cols].map(c=>`<td data-a="${c}${r}"></td>`).join("")+"</tr>"; }
+  return h+'</table><div class="status"><span>Planilha 1 de 1</span><span class="st"></span></div>';
+}
+function hl(sheet, c1, r1, c2, r2){
+  sheet.querySelectorAll("th").forEach(t => t.classList.remove("hl"));
+  for(let c=Math.min(c1,c2); c<=Math.max(c1,c2); c++) sheet.querySelector(`th[data-c="${COLS[c]}"]`).classList.add("hl");
+  for(let r=Math.min(r1,r2); r<=Math.max(r1,r2); r++) sheet.querySelector(`th[data-r="${r}"]`).classList.add("hl");
+}
+// endereço
+const as = $("#addrSheet"); as.innerHTML = gridHTML(COLS, ROWS);
+let target = "C4", hits = store.get("hits") || 0; $("#hits").textContent = "Acertos: "+hits;
+function newTarget(){ let t; do{ t = COLS[Math.floor(Math.random()*COLS.length)] + (1+Math.floor(Math.random()*ROWS)); }while(t===target); target=t; $("#tgt").textContent=t; }
+$("#newTgt").onclick = newTarget;
+as.querySelectorAll("td").forEach(td => td.onclick = () => {
+  const a = td.dataset.a; as.querySelectorAll("td").forEach(x=>x.classList.remove("act","hit"));
+  td.classList.add("act"); as.querySelector(".nb").textContent = a; hl(as, COLS.indexOf(a[0]), +a.slice(1), COLS.indexOf(a[0]), +a.slice(1));
+  if(a === target){ td.classList.add("hit"); hits++; store.set("hits",hits); $("#hits").textContent = "Acertos: "+hits;
+    $("#addrOut").innerHTML = `✔ Isso! <b>${a}</b> é a coluna <b>${a[0]}</b>, linha <b>${a.slice(1)}</b>. Um novo endereço foi sorteado.`; newTarget(); }
+  else $("#addrOut").innerHTML = `Você clicou em <b>${a}</b> (coluna ${a[0]}, linha ${a.slice(1)}). Procure <b>${target}</b>: primeiro a coluna <b>${target[0]}</b>, depois a linha <b>${target.slice(1)}</b>.`;
+});
+// intervalo
+const rs = $("#rngSheet"); rs.innerHTML = gridHTML(COLS, ROWS);
+let start = null, dragging = false;
+function cellOf(el){ const td = el && el.closest && el.closest("td[data-a]"); return td ? [COLS.indexOf(td.dataset.a[0]), +td.dataset.a.slice(1)] : null; }
+function paint(a, b){
+  rs.querySelectorAll("td").forEach(td => { const [c,r] = cellOf(td);
+    td.classList.toggle("sel", c>=Math.min(a[0],b[0]) && c<=Math.max(a[0],b[0]) && r>=Math.min(a[1],b[1]) && r<=Math.max(a[1],b[1])); });
+  hl(rs, a[0], a[1], b[0], b[1]);
+  const c1 = COLS[Math.min(a[0],b[0])]+Math.min(a[1],b[1]), c2 = COLS[Math.max(a[0],b[0])]+Math.max(a[1],b[1]);
+  const nc = Math.abs(a[0]-b[0])+1, nr = Math.abs(a[1]-b[1])+1, ref = c1===c2 ? c1 : c1+":"+c2;
+  rs.querySelector(".nb").textContent = ref;
+  rs.querySelector(".st").textContent = `Selecionadas ${nr} linha(s), ${nc} coluna(s)`;
+  $("#rngOut").innerHTML = c1===c2 ? `Uma célula: <b>${c1}</b>.` : `Intervalo <b>${ref}</b>: de ${c1} <b>até</b> ${c2}. São ${nc} coluna(s) × ${nr} linha(s) = <b>${nc*nr} células</b>.`;
+}
+rs.addEventListener("pointerdown", e => { const c = cellOf(e.target); if(!c) return; start = c; dragging = true; paint(c,c); e.preventDefault(); });
+rs.addEventListener("pointermove", e => { if(!dragging) return; const el = document.elementFromPoint(e.clientX, e.clientY); const c = cellOf(el); if(c) paint(start, c); });
+addEventListener("pointerup", () => dragging = false);
+paint([0,1],[2,4]);
+
+/* ---------- tipos: laboratório ---------- */
+function classify(raw){
+  const s = raw.trim();
+  if(!s) return null;
+  if(s.startsWith("'")) return {t:"txt", show:s.slice(1), al:"l", why:"O apóstrofo no início obriga o Calc a guardar como <b>texto</b>. Útil para códigos como '01234."};
+  if(/^-?\d{1,3}(\.\d{3})+(,\d+)?$/.test(s) || /^-?\d+(,\d+)?$/.test(s)){
+    const v = parseFloat(s.replace(/\./g,"").replace(",","."));
+    if(/^\d{12,}$/.test(s)) return {t:"num", show:v.toExponential(5).replace(".",",").replace(/e\+?(\d+)/, (m,d)=>"E+"+d.padStart(3,"0")), al:"r", why:"Um número enorme vira notação científica. Se for código de barras, formate como <b>Texto</b>: não é quantidade."};
+    if(/^0\d+$/.test(s)) return {t:"num", show:String(v), al:"r", why:"Virou o número <b>"+v+"</b>: o zero à esquerda some. Se for um código, digite com apóstrofo: '"+esc(s)+"."};
+    return {t:"num", show:s, al:"r", why:"É um <b>número</b>: vai para a direita e entra em contas."};
+  }
+  if(/^-?\d+(,\d+)?\s?%$/.test(s)) return {t:"num", show:s.replace(/\s/,""), al:"r", why:"Porcentagem é <b>número</b>: "+esc(s)+" é guardado como "+fmtBR(parseFloat(s.replace(",","."))/100, 4).replace(/0+$/,"").replace(/,$/,"")+"."};
+  if(/^R\$\s?\d+(,\d+)?$/i.test(s)) return {t:"num", show:s, al:"r", why:"O Calc reconhece o R$ e guarda o <b>número</b> já com o formato Moeda."};
+  let m = s.match(/^(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))?$/);
+  if(m){ const d=+m[1], mo=+m[2]; if(d>=1&&d<=31&&mo>=1&&mo<=12){ const y = m[3] ? (m[3].length===2? "20"+m[3] : m[3]) : String(new Date().getFullYear());
+      const show = String(d).padStart(2,"0")+"/"+String(mo).padStart(2,"0")+"/"+(m[3]? y : y.slice(2));
+      const dt = new Date(Date.UTC(+y, mo-1, d)), serial = Math.round((dt - Date.UTC(1899,11,30))/864e5);
+      return {t:"dat", show: m[3]? show : String(d).padStart(2,"0")+"/"+String(mo).padStart(2,"0")+"/"+y.slice(2), al:"r",
+        why:"Virou uma <b>data</b> (por trás, o número "+serial+")."+(m[3]?"":" Sem o ano, o Calc usa o ano atual.")+( !m[3] && d<=12 ? " Se você queria uma fração, digite 0,2 ou 0 1/5." : "")}; } }
+  if(/^\d{1,2}:\d{2}(:\d{2})?$/.test(s)) return {t:"dat", show:s, al:"r", why:"Virou uma <b>hora</b>: por trás, uma fração do dia."};
+  if(/^-?\d+\.\d+$/.test(s)) return {t:"txt", show:s, al:"l", why:"No Calc em português, o decimal é <b>vírgula</b>. Com ponto, "+esc(s)+" fica como <b>texto</b> e não entra na soma. Digite "+esc(s.replace(".",","))+"."};
+  if(/^\d+(,\d+)?\s?[a-zA-Z]+$/.test(s)) return {t:"txt", show:s, al:"l", why:"Com a unidade junto, vira <b>texto</b>. Digite só o número e ponha a unidade no título: Peso (kg)."};
+  return {t:"txt", show:s, al:"l", why:"É <b>texto</b>: vai para a esquerda e não entra em contas."};
+}
+const typeEx = ["4,50","01234","1/5","3.50","15/10/2026","2 kg","25%","7891234567890","'01234","10:30","Coxinha"];
+$("#typeEx").innerHTML = "Experimente: " + typeEx.map(x=>`<button class="btn ghost" style="padding:3px 10px" data-x="${esc(x)}">${esc(x)}</button>`).join(" ");
+function runType(){
+  const r = classify($("#typeIn").value);
+  if(!r){ $("#typeOut").textContent = "Digite algum valor primeiro."; return; }
+  const lab = {txt:["TEXTO","txt"], num:["NÚMERO","num"], dat:["DATA/HORA","dat"]}[r.t];
+  $("#typeOut").innerHTML = `A célula mostra <span class="cellbox" style="text-align:${r.al==="r"?"right":"left"}">${esc(r.show)}</span> <span class="pill ${lab[1]}">${lab[0]}</span><br><span style="display:block;margin-top:8px">${r.why}</span>`;
+}
+$("#typeBtn").onclick = runType; $("#typeIn").addEventListener("keydown", e => { if(e.key==="Enter") runType(); });
+$$("#typeEx button").forEach(b => b.onclick = () => { $("#typeIn").value = b.dataset.x; runType(); });
+
+/* ---------- conversor de datas ---------- */
+const EPOCH = Date.UTC(1899,11,30);
+function fromDate(){ const v = $("#dIn").value; if(!v) return; const [y,m,d] = v.split("-").map(Number); const n = Math.round((Date.UTC(y,m-1,d)-EPOCH)/864e5); $("#nIn").value = n; showD(n); }
+function fromNum(){ const n = Math.floor(+$("#nIn").value); if(!isFinite(n)) return; const dt = new Date(EPOCH + n*864e5); $("#dIn").value = dt.toISOString().slice(0,10); showD(n); }
+function showD(n){ const dt = new Date(EPOCH + n*864e5);
+  const longo = dt.toLocaleDateString("pt-BR",{weekday:"long",day:"numeric",month:"long",year:"numeric",timeZone:"UTC"});
+  $("#dOut").innerHTML = `O número <b>${n}</b> com formato de data aparece como <b>${dt.toLocaleDateString("pt-BR",{timeZone:"UTC"})}</b> (${longo}). Somar 30 a ele dá a data 30 dias depois.`; }
+$("#dIn").onchange = fromDate; $("#nIn").oninput = fromNum; fromDate();
+
+/* ---------- tabela dos produtos ---------- */
+const PRODS = [["P01","Coxinha","Salgado",4.5,30],["P02","Pastel","Salgado",5,25],["P03","Pão de queijo","Salgado",3,35],["P04","Tapioca","Salgado",6,12],["P05","Bolo de pote","Doce",4,15],["P06","Biscoito","Doce",2,45],["P07","Suco natural","Bebida",3.5,40],["P08","Água","Bebida",2.5,50],["P09","Refrigerante","Bebida",5.5,20],["P10","Achocolatado","Bebida",3.5,28]];
+$("#prodTable").innerHTML = "<tr><th>Código</th><th>Produto</th><th>Categoria</th><th>Preço</th><th>Estoque</th></tr>" + PRODS.map(p=>`<tr><td>${p[0]}</td><td>${p[1]}</td><td>${p[2]}</td><td style="text-align:right">${fmtBR(p[3])}</td><td style="text-align:right">${p[4]}</td></tr>`).join("");
+
+/* ---------- antes e depois ---------- */
+let fmtOn = false;
+function drawFmt(){
+  const rows = PRODS.slice(0,6);
+  const th = s => fmtOn ? `style="background:#237A31;color:#fff;font-weight:700;padding:7px 12px;border:1px solid #C8C8C8;text-align:${s}"` : `style="padding:5px 8px;border:1px solid #E1E1E1;font-weight:400;text-align:left"`;
+  let h = `<tr><th ${th("left")}>Produto</th><th ${th("left")}>Categoria</th><th ${th("right")}>Preço</th><th ${th("center")}>Estoque</th></tr>`;
+  rows.forEach((p,i) => { const bg = fmtOn && i%2 ? "background:#E3F1E5;" : ""; const td = a => `style="${bg}padding:${fmtOn?"7px 12px":"5px 8px"};border:1px solid ${fmtOn?"#C8C8C8":"#E1E1E1"};text-align:${a}"`;
+    h += `<tr><td ${td("left")}>${p[1]}</td><td ${td("left")}>${p[2]}</td><td ${td("right")}>${fmtOn ? "R$ "+fmtBR(p[3]) : String(p[3]).replace(".",",")}</td><td ${td(fmtOn?"center":"right")}>${p[4]}</td></tr>`; });
+  $("#fmtDemo").innerHTML = h; $("#fmtToggle").textContent = fmtOn ? "Remover formatação" : "Aplicar formatação";
+}
+$("#fmtToggle").onclick = () => { fmtOn = !fmtOn; drawFmt(); }; drawFmt();
+
+/* ---------- simulador de formatos ---------- */
+function parseBR(s){ s = String(s).trim().replace(/\s/g,""); if(/^-?\d{1,3}(\.\d{3})+(,\d+)?$/.test(s)) s = s.replace(/\./g,""); s = s.replace(",","."); const v = parseFloat(s); return isFinite(v) && /^-?[\d.]+$/.test(s) ? v : NaN; }
+function showFmt(){
+  const v = parseBR($("#fvIn").value), f = $("#ffSel").value; let out;
+  if(isNaN(v)){ $("#fOut").innerHTML = "Digite um número com vírgula decimal, como 4,5 ou 0,25 ou 46310."; return; }
+  const dt = new Date(EPOCH + Math.floor(v)*864e5), frac = v - Math.floor(v);
+  switch(f){
+    case "geral": out = String(v).replace(".",","); break;
+    case "moeda": out = (v<0?"-":"")+"R$ "+fmtBR(Math.abs(v)); break;
+    case "num2": out = v.toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2,useGrouping:false}); break;
+    case "mil": out = fmtBR(v); break;
+    case "pct": out = Math.round(v*100).toLocaleString("pt-BR")+"%"; break;
+    case "pct1": out = fmtBR(v*100,1)+"%"; break;
+    case "data": out = dt.toLocaleDateString("pt-BR",{timeZone:"UTC"}); break;
+    case "datal": out = dt.toLocaleDateString("pt-BR",{weekday:"long",day:"numeric",month:"long",year:"numeric",timeZone:"UTC"}); break;
+    case "hora": { const m = Math.round(frac*1440); out = String(Math.floor(m/60)%24).padStart(2,"0")+":"+String(m%60).padStart(2,"0"); break; }
+    case "cient": out = v.toExponential(2).replace(".",",").replace(/e\+?(-?)(\d+)/,(x,s,d)=>"E"+(s||"+")+d.padStart(2,"0")); break;
+  }
+  const extra = {pct:" O formato % multiplica por 100 só na hora de mostrar: 0,25 vira 25%. Se a célula guardasse 25, mostraria 2500%!",
+    data:" Datas são números: o valor guardado é a quantidade de dias desde 30/12/1899.", datal:" Datas são números: o valor guardado é a quantidade de dias desde 30/12/1899.",
+    hora:" A hora é a parte fracionária: 0,5 é meio-dia.", num2:" Repare: o formato arredonda só a aparência."}[f] || "";
+  $("#fOut").innerHTML = `A célula mostra <span class="cellbox" style="text-align:right">${esc(out)}</span> e a linha de entrada continua <span class="cellbox" style="font-family:var(--mono);font-size:14px">${esc(String(v).replace(".",","))}</span><br><span style="display:block;margin-top:8px">O valor guardado não mudou.${extra}</span>`;
+}
+$("#fvIn").oninput = showFmt; $("#ffSel").onchange = showFmt; showFmt();
+
+/* ---------- quebrar texto ---------- */
+$("#wrapCk").onchange = e => { const c = $("#wrapCell"); c.style.whiteSpace = e.target.checked ? "normal" : "nowrap"; c.style.textAlign = e.target.checked ? "center" : "left"; };
+
+/* ---------- alça ---------- */
+function series(kind, n){
+  const out = [];
+  const dias = ["seg","ter","qua","qui","sex","sáb","dom"], meses = ["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"];
+  const base = Date.UTC(2026,9,15);
+  if(kind==="util"){ let d = base; while(out.length<n){ const w = new Date(d).getUTCDay(); if(w!==0&&w!==6) out.push(new Date(d).toLocaleDateString("pt-BR",{timeZone:"UTC"})); d += 864e5; } return out; }
+  for(let i=0;i<n;i++){
+    if(kind==="num") out.push(String(i+1)); else if(kind==="seg") out.push(dias[i%7]); else if(kind==="jan") out.push(meses[i%12]);
+    else if(kind==="cod") out.push("P"+String(i+1).padStart(2,"0")); else if(kind==="data") out.push(new Date(base+i*864e5).toLocaleDateString("pt-BR",{timeZone:"UTC"}));
+    else out.push("Coxinha");
+  }
+  return out;
+}
+const fillMsg = {num:"Com 1 e 2 selecionados, o Calc entende o passo (+1) e continua: 3, 4, 5…", seg:"Dias da semana são uma lista conhecida: seg, ter, qua…", jan:"Meses também: jan, fev, mar…",
+  cod:"Texto que termina em número: o número aumenta (P02, P03…).", data:"Datas avançam de um em um dia. Repare que sábado e domingo aparecem.",
+  util:"Com Planilha › Preencher células › Preencher série › Data › Dia da semana, o Calc pula sábado e domingo: depois de 16/10 (sexta) vem 19/10 (segunda).",
+  txt:"Texto sem número no fim é só copiado: Coxinha, Coxinha…"};
+function drawFill(){
+  const n = +$("#fillN").value; $("#fillNv").textContent = n; const k = $("#fillSel").value; const s = series(k, n);
+  let h = '<div class="bar"><span class="nb">A1:A'+n+'</span><span class="ic">fx Σ =</span><span class="fx">'+esc(s[0])+'</span></div><table><tr><th></th><th class="hl">A</th></tr>';
+  s.forEach((v,i) => { const typed = i===0 || (k==="num" && i===1); h += `<tr><th class="hl">${i+1}</th><td class="${/^\d|^\d\d\//.test(v)?"r":""} sel" style="${typed?"font-weight:700":"color:#2A6099"}">${esc(v)}</td></tr>`; });
+  $("#fillSheet").innerHTML = h + "</table>";
+  $("#fillOut").innerHTML = `<b>Em negrito:</b> o que você digitou. <span style="color:#2A6099"><b>Em azul:</b></span> o que a alça preencheu.<br>${fillMsg[k]}`;
+}
+$("#fillSel").onchange = drawFill; $("#fillN").oninput = drawFill; drawFill();
+
+/* ---------- congelar ---------- */
+let fr = "<table><thead><tr><th>Data</th><th>Produto</th><th>Qtde</th><th>Valor</th></tr></thead><tbody>";
+for(let i=0;i<40;i++){ const p = PRODS[(i*7)%10], q = 1+(i*3)%4; fr += `<tr><td>${new Date(Date.UTC(2026,9,1+Math.floor(i/2))).toLocaleDateString("pt-BR",{timeZone:"UTC"})}</td><td>${p[1]}</td><td style="text-align:right">${q}</td><td style="text-align:right">R$ ${fmtBR(p[3]*q)}</td></tr>`; }
+$("#frz").innerHTML = fr + "</tbody></table>";
+$("#frzCk").onchange = e => $("#frz").classList.toggle("on", e.target.checked);
+
+/* ---------- quizzes ---------- */
+const Q = {
+ a11:[
+  {t:"mc",q:"Onde aparece o endereço da célula ativa?",o:["Linha de entrada","Caixa de nome","Barra de status","Barra de menus"],a:1,e:"A caixa de nome, à esquerda da linha de entrada, mostra o endereço (por exemplo, A3)."},
+  {t:"mc",q:"O arquivo Cantina.ods tem as abas Produtos e Vendas. Cada aba é…",o:["um arquivo","uma planilha","uma célula"],a:1,e:"O arquivo é o fichário; cada aba é uma folha: uma planilha."},
+  {t:"mc",q:"Qual atalho volta direto para a célula A1?",o:["Home","Esc","Ctrl + Home","Ctrl + Z"],a:2,e:"Ctrl + Home leva ao início da planilha, a célula A1."}],
+ a12:[
+  {t:"in",q:"Quantas células há no intervalo A1:C4?",a:["12"],e:"3 colunas (A, B, C) × 4 linhas = 12 células."},
+  {t:"in",q:"Escreva o intervalo que vai de B2 até D5.",a:["B2:D5"],norm:"up",e:"Os dois-pontos significam até: B2:D5."},
+  {t:"mc",q:"Para selecionar células separadas, que não são vizinhas, você segura…",o:["Shift","Ctrl","Alt"],a:1,e:"Shift seleciona um bloco contínuo; Ctrl adiciona células soltas."}],
+ a13:[
+  {t:"mc",q:"Na soma da cantina, o 7 ficou encostado à esquerda. O que aconteceu?",o:["O número é pequeno","Foi digitado como texto","A coluna está estreita"],a:1,e:"Números ficam à direita. À esquerda, o 7 é texto e não entra na soma."},
+  {t:"mc",q:"Como digitar o preço três reais e cinquenta centavos?",o:["3.50","R$3.50","3,50","3 reais e 50"],a:2,e:"No Brasil, o decimal é vírgula: 3,50. Com ponto, vira texto."},
+  {t:"mc",q:"Você digitou 1/5 querendo a fração um quinto. O que o Calc faz?",o:["Mostra 0,2","Transforma numa data","Mostra 1/5 como texto"],a:1,e:"1/5 vira a data 01/05. Para a fração, digite 0,2."}],
+ a14:[
+  {t:"mc",q:"Você aplicou Moeda numa célula com 4,5. O que a linha de entrada mostra?",o:["R$ 4,50","4,5","4,50"],a:1,e:"O formato muda só a aparência; o valor guardado continua 4,5."},
+  {t:"mc",q:"Qual atalho abre a janela Formatar células?",o:["Ctrl + F","Ctrl + 1","Ctrl + P"],a:1,e:"Ctrl + 1 abre todas as opções de formatação."},
+  {t:"mc",q:"Um título longo no cabeçalho está cortado. A melhor solução é…",o:["Mesclar com a célula vizinha","Quebrar texto","Diminuir a fonte para 6"],a:1,e:"Quebrar texto deixa o título em duas linhas na mesma célula, sem mesclar."}],
+ a15:[
+  {t:"mc",q:"Arrastando a alça a partir de P01, o que aparece abaixo?",o:["P01, P01, P01…","P02, P03, P04…","nada"],a:1,e:"Texto que termina em número: o número aumenta."},
+  {t:"mc",q:"Como gerar o PDF da planilha no Calc?",o:["Arquivo › Salvar","Arquivo › Exportar como PDF","Editar › Copiar"],a:1,e:"Arquivo › Exportar como PDF (ou o botão PDF da barra Padrão)."},
+  {t:"mc",q:"Onde ajustar a impressão para caber em 1 página?",o:["Exibir › Zoom","Formatar › Estilo de página › Planilha › Escala","Arquivo › Imprimir › Cópias"],a:1,e:"No Estilo de página, aba Planilha, em Escala."}],
+ fix:[
+  {t:"mc",q:"Qual é a diferença entre arquivo e planilha?",o:["São a mesma coisa","O arquivo é o documento (.ods); a planilha é cada aba dentro dele","A planilha é o documento; o arquivo é cada aba","O arquivo só existe depois de impresso"],a:1,e:"Arquivo = fichário inteiro (.ods). Planilha = cada folha (aba)."},
+  {t:"in",q:"Qual o endereço da célula na coluna D, linha 7?",a:["D7"],norm:"up",e:"Letra da coluna + número da linha: D7."},
+  {t:"in",q:"Quantas células há no intervalo B2:C6?",a:["10"],e:"2 colunas (B, C) × 5 linhas (2 a 6) = 10."},
+  {t:"tf",q:"Excluir uma linha e apertar Delete numa linha têm o mesmo efeito.",a:false,e:"Falso. Excluir remove a linha inteira; Delete só limpa o conteúdo e a linha fica vazia."},
+  {t:"match",q:"Associe cada parte da janela à sua função.",pairs:[["Caixa de nome","mostra o endereço da célula ativa"],["Linha de entrada","mostra o conteúdo real da célula"],["Barra de status","mostra somas rápidas e o zoom"],["Abas","separam as planilhas do arquivo"]],e:"Caixa de nome: onde estou. Linha de entrada: o que há aqui. Barra de status: conta rápida. Abas: as planilhas."},
+  {t:"mc",q:"Qual tecla edita a célula sem apagar o que já está nela?",o:["Enter","F2","Delete","Esc"],a:1,e:"F2 entra no modo de edição mantendo o conteúdo."},
+  {t:"cls",q:"Classifique cada valor como o Calc em português o guarda.",items:[["Coxinha","Texto"],["4,50","Número"],["15/10/2026","Data"],["3.50","Texto"],["25%","Número"],["(82) 3333-0000","Texto"]],opts:["Texto","Número","Data"],e:"3.50 com ponto é texto no Calc em português. Telefone também é texto: não se soma."},
+  {t:"mc",q:"Você quer guardar o código 01234 sem perder o zero. O que fazer?",o:["Digitar 01234 normalmente","Digitar '01234 (com apóstrofo)","Digitar 1234 e torcer","Usar negrito"],a:1,e:"O apóstrofo (ou o formato Texto antes de digitar) mantém o zero à esquerda."},
+  {t:"tf",q:"Por trás, 15/10/2026 é um número (46310).",a:true,e:"Verdadeiro. Datas são números de dias desde 30/12/1899, com formato de data."},
+  {t:"mc",q:"Qual recurso mostra os números em azul e os textos em preto?",o:["Exibir › Realce de valores (Ctrl + F8)","Formatar › Células","Ferramentas › Ortografia"],a:0,e:"O Realce de valores ajuda a achar números digitados como texto."},
+  {t:"in",q:"Uma célula guarda 0,25 e está no formato Porcentagem. O que ela mostra?",a:["25%","25 %"],norm:"sp",e:"O formato % multiplica por 100 ao mostrar: 25%."},
+  {t:"mc",q:"Você digitou 10 numa célula e depois aplicou %. O que aparece?",o:["10%","1000%","0,1%"],a:1,e:"A célula guardava 10; o % multiplica por 100: 1000%. Digite sempre com o símbolo: 10%."},
+  {t:"tf",q:"Formatar 2,456 para mostrar 1 casa decimal faz as contas usarem 2,5.",a:false,e:"Falso. O formato muda só a aparência; as contas usam 2,456."},
+  {t:"mc",q:"Para copiar só a aparência de uma célula para outra, use…",o:["Copiar e colar","Clonar formatação (pincel)","Mesclar células"],a:1,e:"O pincel copia formato, não conteúdo."},
+  {t:"mc",q:"Por que evitar mesclar células dentro da tabela?",o:["Fica feio","Atrapalha classificar, filtrar e copiar","Apaga os dados"],a:1,e:"Mesclar só no título acima da tabela."},
+  {t:"order",q:"Coloque em ordem os passos para gerar o PDF da aba Produtos em 1 página.",steps:["Formatar › Estilo de página › Planilha › Escala: 1 página","Arquivo › Visualizar impressão para conferir","Arquivo › Exportar como PDF","Escolher a pasta e o nome e salvar"],e:"Primeiro configure e confira; depois exporte."},
+  {t:"mc",q:"Você digitou seg numa célula e arrastou a alça. O que aparece abaixo?",o:["seg, seg, seg…","ter, qua, qui…","1, 2, 3…"],a:1,e:"Dias da semana são uma lista conhecida pelo Calc."},
+  {t:"mc",q:"Qual caminho preenche só dias úteis a partir de uma data?",o:["Arrastar a alça normalmente","Planilha › Preencher células › Preencher série › Dia da semana","Formatar › Células › Data"],a:1,e:"Preencher série com a unidade Dia da semana pula sábado e domingo."},
+  {t:"mc",q:"Para o cabeçalho continuar visível ao rolar uma lista longa:",o:["Exibir › Congelar células › Congelar primeira linha","Formatar › Mesclar","Arquivo › Salvar"],a:0,e:"Congelar mantém a linha 1 no lugar enquanto o resto rola."},
+  {t:"mc",q:"Qual é o melhor nome de arquivo?",o:["Planilha1 final FINAL2.ods","cantina_produtos_2026-10.ods","novo arquivo.ods"],a:1,e:"Diga o que é e de quando é, sem espaços nem a palavra final."}
+ ]
+};
+
+
+Q.a11.push(
+  {t:"mc",q:"Você começou a digitar na célula errada. Como cancelar antes de confirmar?",o:["Enter","Esc","Tab","Delete"],a:1,e:"Esc cancela a digitação e a célula volta ao que era."},
+  {t:"mc",q:"Qual a diferença entre Salvar e Salvar como?",o:["Nenhuma","Salvar como cria um arquivo novo (outro nome, lugar ou formato); Salvar guarda no mesmo arquivo","Salvar como só serve para PDF"],a:1,e:"Ctrl + S guarda no mesmo arquivo; Salvar como cria outro."},
+  {t:"mc",q:"A barra de ferramentas Formatação sumiu. Onde fazê-la voltar?",o:["Exibir › Barras de ferramentas","Formatar › Células","Ferramentas › Opções"],a:0,e:"Exibir › Barras de ferramentas › Formatação."});
+Q.a12.push(
+  {t:"mc",q:"Que coluna vem logo depois da Z?",o:["Z1","AA","ZA","A2"],a:1,e:"Depois do Z vêm AA, AB, AC…"},
+  {t:"mc",q:"Você selecionou 3 linhas e escolheu Inserir linhas acima. Quantas linhas entram?",o:["1","3","Nenhuma"],a:1,e:"O Calc insere tantas linhas quantas estiverem selecionadas."},
+  {t:"mc",q:"As letras do cabeçalho pulam de A para C. O que aconteceu?",o:["A coluna B foi excluída","A coluna B está oculta","O Calc não tem coluna B"],a:1,e:"Selecione A até C e use botão direito › Mostrar colunas."});
+Q.a13.push(
+  {t:"mc",q:"No Realce de valores, um número aparece em preto. O que isso indica?",o:["É uma fórmula","Está guardado como texto","Está formatado como moeda"],a:1,e:"Números ficam azuis; preto é texto."},
+  {t:"mc",q:"Qual recurso converte uma coluna de números-texto em números de verdade?",o:["Formatar › Células › Número","Dados › Texto para colunas › OK","Exibir › Realce de valores"],a:1,e:"Aplicar formato não converte o que já está guardado; Texto para colunas converte."},
+  {t:"mc",q:"Como guardar a matrícula 0045 sem perder os zeros?",o:["Digitar 0045","Digitar '0045","Digitar 45 e formatar como moeda"],a:1,e:"O apóstrofo faz o Calc guardar como texto."});
+Q.a14.push(
+  {t:"mc",q:"As linhas cinzas da grade aparecem na impressão?",o:["Sim, sempre","Não: para linhas no papel, use bordas","Só no PDF"],a:1,e:"A grade é só da tela; bordas são impressas."},
+  {t:"mc",q:"Uma célula mostra 3,14 e você clica duas vezes em Adicionar casa decimal. O que aparece?",o:["3,14","3,1416","3,1400 se o valor guardado for 3,14159"],a:1,e:"O valor guardado é 3,14159: com 4 casas, aparece 3,1416. O valor nunca mudou."},
+  {t:"mc",q:"Qual a vantagem de usar estilos de célula (Bom, Ruim, Título 1)?",o:["Deixam o arquivo menor","Mudar o estilo atualiza todas as células que o usam","Só funcionam no Excel"],a:1,e:"O estilo é um pacote de formatação com nome."});
+Q.a15.push(
+  {t:"mc",q:"Para preencher uma coluna até onde a coluna vizinha tem dados, você…",o:["arrasta a alça até o fim","dá duplo clique na alça","usa Ctrl + Z"],a:1,e:"O duplo clique na alça para onde a vizinha termina."},
+  {t:"mc",q:"Uma lista longa ocupa 4 páginas. Como repetir o cabeçalho em todas?",o:["Congelar primeira linha","Formatar › Intervalos de impressão › Editar › Linhas a repetir","Copiar o cabeçalho manualmente"],a:1,e:"Congelar vale só para a tela; Linhas a repetir vale para a impressão."},
+  {t:"mc",q:"A AutoRecuperação substitui o Ctrl + S?",o:["Sim","Não: é só um socorro se o computador desligar"],a:1,e:"Salve sempre; a AutoRecuperação é a rede de segurança."});
+Q.fix.push(
+  {t:"mc",q:"Para ir direto à célula J20 sem rolar a planilha:",o:["digite J20 na caixa de nome e tecle Enter","digite J20 na linha de entrada","use Ctrl + J"],a:0,e:"A caixa de nome também é um atalho de navegação."},
+  {t:"mc",q:"Para travar a linha 1 e a coluna A ao mesmo tempo, selecione…",o:["A1","B2","A2"],a:1,e:"Congelar linhas e colunas trava tudo acima e à esquerda da célula selecionada: B2."},
+  {t:"mc",q:"Em Formatar células, qual aba tem Quebrar texto automaticamente e a orientação do texto?",o:["Números","Alinhamento","Bordas"],a:1,e:"Alinhamento cuida da posição, da quebra e do giro do texto."},
+  {t:"tf",q:"Formatar como Número uma célula que guarda o texto '35 transforma o valor em número.",a:false,e:"Falso. O formato não converte o que já está guardado; digite de novo ou use Dados › Texto para colunas."},
+  {t:"mc",q:"Qual atalho tira toda a formatação de uma célula sem apagar o valor?",o:["Delete","Ctrl + M (Limpar formatação direta)","Ctrl + Z"],a:1,e:"Formatar › Limpar formatação direta, Ctrl + M."});
+
+function shuffle(a){ a = a.slice(); for(let i=a.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]] = [a[j],a[i]]; } return a; }
+const results = {};
+function mark(qid, idx, ok){ results[qid] = results[qid] || {}; results[qid][idx] = ok; store.set("res", results); updateScores(qid); }
+function fb(box, ok, txt){ box.className = "fb show " + (ok ? "ok" : "no"); box.innerHTML = (ok ? "✔ Certo! " : "✘ Não foi dessa vez. ") + txt; }
+
+function renderQuiz(el){
+  const qid = el.dataset.quiz, list = Q[qid]; if(!list) return;
+  el.innerHTML = `<h4>${qid==="fix" ? "Questões" : "Confira o que aprendeu"}</h4>`;
+  list.forEach((it, i) => {
+    const d = document.createElement("div"); d.className = "qi";
+    d.innerHTML = `<div class="st"><span class="num">${i+1}.</span>${esc(it.q)}</div><div class="body"></div><div class="fb" aria-live="polite"></div>`;
+    const body = d.querySelector(".body"), box = d.querySelector(".fb");
+    if(it.t==="mc" || it.t==="tf"){
+      const opts = it.t==="tf" ? ["Verdadeiro","Falso"] : it.o;
+      body.innerHTML = '<div class="opts">'+opts.map((o,k)=>`<button data-k="${k}">${esc(o)}</button>`).join("")+"</div>";
+      const right = it.t==="tf" ? (it.a ? 0 : 1) : it.a;
+      body.querySelectorAll("button").forEach(b => b.onclick = () => {
+        const k = +b.dataset.k, ok = k===right;
+        body.querySelectorAll("button").forEach(x => { x.disabled = true; if(+x.dataset.k===right) x.classList.add("right"); });
+        if(!ok) b.classList.add("wrong"); fb(box, ok, it.e); mark(qid, i, ok);
+      });
+    } else if(it.t==="in"){
+      body.innerHTML = `<div class="row"><input type="text" aria-label="Resposta" style="width:180px"><button class="btn">Conferir</button></div>`;
+      const inp = body.querySelector("input"), btn = body.querySelector("button");
+      const go = () => { let v = inp.value.trim(); if(!v) return; if(it.norm==="up") v = v.toUpperCase().replace(/\s/g,""); if(it.norm==="sp") v = v.replace(/\s/g,"");
+        const ok = it.a.map(x => it.norm==="up" ? x.toUpperCase() : (it.norm==="sp" ? x.replace(/\s/g,"") : x)).includes(v);
+        inp.disabled = btn.disabled = true; inp.style.borderColor = ok ? "var(--ok)" : "var(--bad)";
+        fb(box, ok, (ok?"":"Resposta: <b>"+esc(it.a[0])+"</b>. ") + it.e); mark(qid, i, ok); };
+      btn.onclick = go; inp.addEventListener("keydown", e => { if(e.key==="Enter") go(); });
+    } else if(it.t==="match"){
+      const rights = it.pairs.map(p=>p[1]), opts = shuffle(rights);
+      body.innerHTML = '<div class="match">'+it.pairs.map((p,k)=>`<b>${esc(p[0])}</b><select data-k="${k}" aria-label="${esc(p[0])}"><option value="">escolha…</option>${opts.map(o=>`<option>${esc(o)}</option>`).join("")}</select>`).join("")+'</div><div class="row" style="margin-top:10px"><button class="btn">Conferir</button></div>';
+      body.querySelector(".btn").onclick = () => { const sels = body.querySelectorAll("select"); if([...sels].some(s=>!s.value)) { box.className="fb show no"; box.textContent="Associe todos os itens antes de conferir."; return; }
+        let n = 0; sels.forEach(s => { const ok = s.value === rights[+s.dataset.k]; n += ok; s.style.borderColor = ok ? "var(--ok)" : "var(--bad)"; s.disabled = true; });
+        const ok = n === rights.length; body.querySelector(".btn").disabled = true; fb(box, ok, `${n} de ${rights.length} associações certas. ` + it.e); mark(qid, i, ok); };
+    } else if(it.t==="cls"){
+      body.innerHTML = '<div class="match">'+it.items.map((p,k)=>`<code style="justify-self:start">${esc(p[0])}</code><select data-k="${k}" aria-label="${esc(p[0])}"><option value="">escolha…</option>${it.opts.map(o=>`<option>${o}</option>`).join("")}</select>`).join("")+'</div><div class="row" style="margin-top:10px"><button class="btn">Conferir</button></div>';
+      body.querySelector(".btn").onclick = () => { const sels = body.querySelectorAll("select"); if([...sels].some(s=>!s.value)) { box.className="fb show no"; box.textContent="Classifique todos os valores antes de conferir."; return; }
+        let n = 0; sels.forEach(s => { const ok = s.value === it.items[+s.dataset.k][1]; n += ok; s.style.borderColor = ok ? "var(--ok)" : "var(--bad)"; s.disabled = true; });
+        const ok = n === it.items.length; body.querySelector(".btn").disabled = true; fb(box, ok, `${n} de ${it.items.length} certos. ` + it.e); mark(qid, i, ok); };
+    } else if(it.t==="order"){
+      let cur = shuffle(it.steps); if(cur.join()===it.steps.join()) cur = cur.reverse();
+      const draw = () => { body.querySelector("ol").innerHTML = cur.map((s,k)=>`<li><span>${esc(s)}</span><button data-k="${k}" data-d="-1" aria-label="Subir">↑</button><button data-k="${k}" data-d="1" aria-label="Descer">↓</button></li>`).join("");
+        body.querySelectorAll("ol button").forEach(b => b.onclick = () => { const k = +b.dataset.k, j = k + +b.dataset.d; if(j<0||j>=cur.length) return; [cur[k],cur[j]] = [cur[j],cur[k]]; draw(); }); };
+      body.innerHTML = '<ol class="order"></ol><div class="row" style="margin-top:10px"><button class="btn">Conferir ordem</button></div>'; draw();
+      body.querySelector(".btn").onclick = () => { const ok = cur.join("|")===it.steps.join("|");
+        body.querySelectorAll("button").forEach(b=>b.disabled=true); fb(box, ok, (ok?"":"Ordem certa: "+it.steps.map((s,k)=>(k+1)+") "+esc(s)).join(" · ")+". ") + it.e); mark(qid, i, ok); };
+    }
+    el.appendChild(d);
+  });
+  if(qid !== "fix"){ const s = document.createElement("div"); s.className = "qscore"; s.style.cssText = "margin-top:10px;font-weight:700;color:var(--green)"; el.appendChild(s); }
+}
+function updateScores(qid){
+  const r = results[qid] || {}, n = Q[qid].length, ok = Object.values(r).filter(Boolean).length, done = Object.keys(r).length;
+  if(qid === "fix"){
+    $("#fixPts").textContent = ok+" / "+n; $("#fixBar").style.width = (ok/n*100)+"%";
+    $("#fixMsg").textContent = done < n ? `Respondidas: ${done} de ${n}.` : (ok>=n*0.9 ? "Excelente! Você domina o M1." : ok>=n*0.7 ? "Muito bom! Revise as questões erradas." : ok>=n*0.5 ? "Bom começo. Releia as aulas das questões que errou." : "Vale reler o módulo e tentar de novo.");
+  } else { const s = document.querySelector(`[data-quiz="${qid}"] .qscore`); if(s) s.textContent = done ? `Acertos: ${ok} de ${n}` : ""; }
+  const link = document.querySelector(`#toc a[href="#${qid==="fix"?"fixacao":qid}"]`); if(link) link.classList.toggle("complete", done===n);
+}
+$$("[data-quiz]").forEach(renderQuiz);
+Object.keys(Q).forEach(updateScores);
+$("#fixReset").onclick = () => { delete results.fix; store.set("res", results); renderQuiz($("#fixQuiz")); updateScores("fix"); };
+
+
+/* ---------- casas decimais ---------- */
+let decN = 5; const decV = 3.14159;
+function drawDec(){ $("#decCell").textContent = decV.toLocaleString("pt-BR",{minimumFractionDigits:decN,maximumFractionDigits:decN});
+  $("#decOut").innerHTML = `Mostrando <b>${decN}</b> casa(s) decimal(is). O valor guardado continua <code>3,14159</code>: o arredondamento é só da aparência.` + (decN===0 ? " Com zero casas, aparece 3." : ""); }
+$("#decMinus").onclick = () => { if(decN>0){ decN--; drawDec(); } };
+$("#decPlus").onclick = () => { if(decN<8){ decN++; drawDec(); } };
+drawDec();
+
+/* ---------- mesa de formatação ---------- */
+const MD = [["Produto","Categoria","Preço","Estoque","Participação"],["Coxinha","Salgado",4.5,30,0.127],["Pastel","Salgado",5,25,0.118],["Tapioca","Salgado",6,12,0.068],["Água","Bebida",2.5,50,0.118]];
+const MC = "ABCDE"; let mst = {}, msel = new Set(["0,0"]);
+const key = (r,c) => r+","+c;
+function cst(k){ return mst[k] || (mst[k] = {}); }
+function shown(r,c){ const v = MD[r][c], f = cst(key(r,c));
+  if(typeof v !== "number") return v;
+  const t = f.fmt || "geral";
+  if(t==="moeda") return "R$ "+v.toLocaleString("pt-BR",{minimumFractionDigits:f.dec ?? 2,maximumFractionDigits:f.dec ?? 2});
+  if(t==="pct") return (v*100).toLocaleString("pt-BR",{minimumFractionDigits:f.dec ?? 0,maximumFractionDigits:f.dec ?? 0})+"%";
+  if(f.dec != null) return v.toLocaleString("pt-BR",{minimumFractionDigits:f.dec,maximumFractionDigits:f.dec});
+  return String(v).replace(".",","); }
+const STY = {bom:{bg:"#C6EFCE",fg:"#006100"}, neutro:{bg:"#FFEB9C",fg:"#9C5700"}, ruim:{bg:"#FFC7CE",fg:"#9C0006"}, titulo:{fg:"#163D1F",b:true,size:14}};
+function drawMesa(){
+  let h = "<tr><th></th>"+[...MC].map(c=>`<th>${c}</th>`).join("")+"</tr>";
+  MD.forEach((row,r) => { h += `<tr><th>${r+1}</th>`; row.forEach((v,c) => { const f = cst(key(r,c)), st = STY[f.style] || {};
+    const css = [];
+    if(f.b || st.b) css.push("font-weight:700"); if(f.i) css.push("font-style:italic"); if(f.u) css.push("text-decoration:underline");
+    css.push("font-size:"+((f.size || st.size || 11)*1.35)+"px");
+    const fg = f.color || st.fg; if(fg) css.push("color:"+fg); const bg = f.fill || st.bg; if(bg) css.push("background:"+bg);
+    const al = f.al || (typeof v === "number" ? "right" : "left"); css.push("text-align:"+al);
+    if(f.wrap){ css.push("white-space:normal;max-width:96px"); } else css.push("white-space:nowrap");
+    if(f.border==="all") css.push("border:1.5px solid #333"); 
+    let inner = esc(shown(r,c)); if(f.rot) inner = `<span style="display:inline-block;writing-mode:vertical-rl;transform:rotate(180deg)">${inner}</span>`;
+    h += `<td data-k="${key(r,c)}" class="${msel.has(key(r,c))?"sel":""}" style="${css.join(";")}">${inner}</td>`; }); h += "</tr>"; });
+  $("#mesaT").innerHTML = h;
+  // contorno / inferior grossa: aplicados por célula conforme posição no grupo
+  $$("#mesaT td").forEach(td => { const f = cst(td.dataset.k); if(f.out) td.style.cssText += ";"+f.out; if(f.border==="bottom") td.style.borderBottom = "3px solid #333"; });
+  $$("#mesaT td").forEach(td => td.onclick = e => { const k = td.dataset.k;
+    if(e.ctrlKey || e.metaKey){ msel.has(k) ? msel.delete(k) : msel.add(k); } else { msel = new Set([k]); }
+    upd(); });
+  const [r0,c0] = [...msel][0] ? [...msel][0].split(",").map(Number) : [0,0];
+  $("#mesaAddr").textContent = msel.size>1 ? msel.size+" células" : MC[c0]+(r0+1);
+  $("#mesaVal").textContent = String(MD[r0][c0]).replace(".",",");
+  goals();
+}
+function upd(){ drawMesa(); }
+function apply(a, v){
+  const ks = [...msel]; if(!ks.length) return;
+  if(a==="clear"){ ks.forEach(k => delete mst[k]); tip("Limpar formatação direta (Ctrl + M): a aparência volta ao padrão e o valor fica."); return upd(); }
+  if(a==="border" && v==="out"){ const rs = ks.map(k=>+k.split(",")[0]), cs = ks.map(k=>+k.split(",")[1]);
+    const r1=Math.min(...rs), r2=Math.max(...rs), c1=Math.min(...cs), c2=Math.max(...cs);
+    ks.forEach(k => { const [r,c] = k.split(",").map(Number), f = cst(k); f.border = "out";
+      f.out = (r===r1?"border-top:2px solid #333;":"")+(r===r2?"border-bottom:2px solid #333;":"")+(c===c1?"border-left:2px solid #333;":"")+(c===c2?"border-right:2px solid #333;":""); });
+    tip("Contorno: só a borda de fora do bloco selecionado."); return upd(); }
+  const toggles = {b:"Negrito (Ctrl + B)",i:"Itálico (Ctrl + I)",u:"Sublinhado (Ctrl + U)",wrap:"Quebrar texto automaticamente",rot:"Orientação do texto: 90°"};
+  if(toggles[a]){ const on = !ks.every(k => cst(k)[a]); ks.forEach(k => cst(k)[a] = on); tip(toggles[a]+(on?" ligado.":" desligado.")); return upd(); }
+  ks.forEach(k => { const f = cst(k);
+    if(a==="size") f.size = +v; else if(a==="color") f.color = v; else if(a==="fill") f.fill = v;
+    else if(a==="border"){ f.border = v; delete f.out; } else if(a==="al") f.al = v; else if(a==="style") f.style = v;
+    else if(a==="fmt"){ f.fmt = v; delete f.dec; } else if(a==="dec"){ const [r,c] = k.split(",").map(Number); const val = MD[r][c];
+      const cur = f.dec ?? (f.fmt==="moeda" ? 2 : f.fmt==="pct" ? 0 : (typeof val==="number" ? ((String(val).split(".")[1]||"").length) : 0)); f.dec = Math.max(0, Math.min(6, cur + +v)); } });
+  const msgs = {size:"Tamanho da fonte alterado.", color:"Cor da fonte aplicada.", fill:"Cor de fundo aplicada.", border: v==="all"?"Todas as bordas: uma grade completa.":v==="bottom"?"Borda inferior grossa: boa para separar o cabeçalho.":"Bordas removidas.",
+    al:"Alinhamento: "+({left:"esquerda",center:"centro",right:"direita"}[v]||"")+".", style:"Estilo de célula aplicado: um pacote de formatação pronto.",
+    fmt: v==="moeda"?"Moeda: o valor guardado não muda; olhe a linha de entrada.":v==="pct"?"Porcentagem: 0,127 aparece como 13%.":"Geral: o número aparece como foi digitado.", dec: (+v>0?"Mais":"Menos")+" uma casa decimal na aparência."};
+  tip(msgs[a] || ""); upd();
+}
+function tip(t){ $("#mesaTip").textContent = t; }
+$$("#mesa .tb button").forEach(b => b.onclick = () => apply(b.dataset.a, b.dataset.v));
+$$("#mesa .tb select").forEach(sl => sl.onchange = () => { apply(sl.dataset.a, sl.value); if(sl.dataset.a !== "size") sl.selectedIndex = 0; });
+$$("#mesa [data-sel]").forEach(b => b.onclick = () => { const t = b.dataset.sel; msel = new Set();
+  MD.forEach((row,r) => row.forEach((v,c) => { if(t==="all" || (t==="head" && r===0) || (t.startsWith("col") && r>0 && c===+t.slice(3))) msel.add(key(r,c)); })); upd(); });
+function goals(){
+  const head = [0,1,2,3,4].map(c=>cst(key(0,c))), body = (c) => [1,2,3,4].map(r=>cst(key(r,c)));
+  const all = MD.flatMap((row,r)=>row.map((v,c)=>cst(key(r,c))));
+  const G = [
+    ["Cabeçalho em negrito", head.every(f=>f.b || f.style==="titulo")],
+    ["Cabeçalho com fundo escuro e letra branca", head.every(f=>(f.fill==="#163D1F"||f.fill==="#237A31") && f.color==="#FFFFFF")],
+    ["Cabeçalho centralizado", head.every(f=>f.al==="center")],
+    ["Preços em Moeda", body(2).every(f=>f.fmt==="moeda")],
+    ["Participação em %, com 1 casa", body(4).every(f=>f.fmt==="pct" && f.dec===1)],
+    ["Estoque da Tapioca (12) com o estilo Ruim", cst(key(3,3)).style==="ruim"],
+    ["Bordas em toda a tabela", all.every(f=>f.border==="all")],
+  ];
+  $("#mesaGoal").innerHTML = G.map(g=>`<li class="${g[1]?"ok":"no"}">${g[0]}</li>`).join("");
+  if(G.every(g=>g[1])) tip("✔ Tabela pronta! Agora faça o mesmo no Calc, na aba Produtos.");
+}
+drawMesa();
+
+/* ---------- checklists "você deve saber" ---------- */
+const canSt = store.get("can") || {};
+$$("[data-can]").forEach(ck => { ck.checked = !!canSt[ck.dataset.can]; ck.onchange = () => { canSt[ck.dataset.can] = ck.checked; store.set("can", canSt); }; });
+
+/* ---------- desafio prático ---------- */
+const pract = ["Criei o arquivo Biblioteca.ods com as abas Livros e Empréstimos.","Na aba Livros, digitei os títulos: Código, Título, Autor, Ano, Exemplares.","Cadastrei 8 livros com códigos L01 a L08 usando a alça de preenchimento.","Os anos e os exemplares ficaram à direita (são números; conferi com Ctrl + F8).","Formatei o cabeçalho (negrito, fundo colorido, letra branca) e pus bordas na tabela.","Na aba Empréstimos, criei datas de 15/10/2026 a 23/10/2026 só com dias úteis (Preencher série).","Congelei a primeira linha nas duas abas.","Ajustei a aba Livros para 1 página e exportei Biblioteca.pdf."];
+const pst = store.get("pract") || [];
+$("#pract").innerHTML = pract.map((t,i)=>`<li><label><input type="checkbox" data-i="${i}" ${pst[i]?"checked":""}><span>${esc(t)}</span></label></li>`).join("");
+function practCount(){ const cks = $$("#pract input"), n = cks.filter(c=>c.checked).length; store.set("pract", cks.map(c=>c.checked));
+  $("#practOut").innerHTML = n===cks.length ? "✔ <b>Desafio completo!</b> Mostre o Biblioteca.ods e o PDF ao professor." : `Itens concluídos: <b>${n} de ${cks.length}</b>.`; }
+$$("#pract input").forEach(c => c.onchange = practCount); practCount();
+})();
+</script>
+</body>
+</html>

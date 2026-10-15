@@ -70,7 +70,7 @@ const MENU = [
                 { titulo: "Módulo 01 · Exercícios", tipo: "ODS", link: "ibasica/planilhas/exercicios/m1_exercicios.ods" },                
               ]},
               { nome: "Apostilas", itens: [
-                { titulo: "Apostila de Planilhas", tipo: "HTML", link: "" }
+                { titulo: "Módulo 01 · Primeiros Passos", tipo: "HTML", link: "ibasica/planilhas/apostilas/apostila_M1_LibreOffice_Calc.html" }
               ]}
             ]
           },
@@ -87,7 +87,7 @@ const MENU = [
                 { titulo: "Módulo 02 · Exercícios", tipo: "ODS", link: "" },                
               ]},
               { nome: "Apostilas", itens: [
-                { titulo: "Apostila de Planilhas", tipo: "HTML", link: "" }
+                { titulo: "Módulo 02 · Fórmulas e Funções", tipo: "HTML", link: "ibasica/planilhas/apostilas/apostila_M2_LibreOffice_Calc.html" }
               ]}
             ]
           },
@@ -104,7 +104,7 @@ const MENU = [
                 { titulo: "Módulo 03 · Exercícios", tipo: "ODS", link: "ibasica/planilhas/exercicios/m3_exercicios.ods" },
               ]},
               { nome: "Apostilas", itens: [
-                { titulo: "Apostila de Planilhas", tipo: "HTML", link: "" }
+                { titulo: "Módulo 03 · Lógica e Decisões", tipo: "HTML", link: "ibasica/planilhas/apostilas/apostila_M3_LibreOffice_Calc.html" }
               ]}
             ]
           },
@@ -206,6 +206,44 @@ const MENU = [
             id: "gerencia-memoria",
             titulo: "Gerência de Memória",
             descricao: "Gerência de memória, alocação e liberação de memória",
+            pastas: [
+              { 
+                nome: "Apresentações", 
+                itens: [ 
+              
+                ]
+              },
+              { 
+                nome: "Apostilas", 
+                itens: [ 
+                ]
+              },
+            ]
+          },
+
+          {
+            id: "sistemas-de-arquivos",
+            titulo: "Sistema de Arquivos",
+            descricao: "Sistemas de arquivos, gerência de arquivos e diretórios.",
+            pastas: [
+              { 
+                nome: "Apresentações", 
+                itens: [ 
+              
+                ]
+              },
+              { 
+                nome: "Apostilas", 
+                itens: [ 
+                ]
+              },
+            ]
+          },
+
+          {
+            id: "entrada-e-saida",
+            titulo: "Entrada e Saída",
+            descricao: "Gerência de dispositivos de entrada e saída",
             pastas: [
               { 
                 nome: "Apresentações", 
