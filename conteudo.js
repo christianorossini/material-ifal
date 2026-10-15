@@ -151,8 +151,11 @@ const MENU = [
                 nome: "Apresentações", 
                 itens: [ 
                   {titulo: "Aula 01 · Processos", tipo: "PPTX", link: "https://docs.google.com/presentation/d/1q4XupxbRHR1sbb8il-KVWXuR0pGMC0A8/edit?usp=sharing&ouid=111962110626612264587&rtpof=true&sd=true"},
+                  {titulo: "Aula 01 · Processos", tipo: "PDF", link: "so/apresentacoes/cap5-processos.pdf"},
                   {titulo: "Aula 02 · Threads", tipo: "PPTX", link: "https://docs.google.com/presentation/d/1MufNdLVFhQmRCAj9-merzqm9yjJcv6Sg/edit?usp=sharing&ouid=111962110626612264587&rtpof=true&sd=true"},
+                  {titulo: "Aula 02 · Threads", tipo: "PDF", link: "so/apresentacoes/cap6-threads.pdf"},
                   {titulo: "Aula 03 · Comunicação e Sincronização", tipo: "PPTX", link: "https://docs.google.com/presentation/d/15w59vwbGCV84-NUmpgpHNrs_hNVSa16n/edit?usp=sharing&ouid=111962110626612264587&rtpof=true&sd=true"},
+                  {titulo: "Aula 03 · Comunicação e Sincronização", tipo: "PDF", link: "so/apresentacoes/cap7-sincronizacao_comunicacao.pdf"},
                 ]
               },
              
