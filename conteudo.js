@@ -109,6 +109,23 @@ const MENU = [
             ]
           },
 
+          {
+            id: "organizar-buscar-dados",
+            titulo: "Organizar e Buscar Dados",
+            descricao: "Organização e busca de dados em planilhas.",
+            pastas: [
+              { nome: "Apresentações", itens: [                
+                { titulo: "Módulo 04 · Organizar e buscar dados", tipo: "PDF", link: "ibasica/planilhas/slides/m4_organizar_buscar_dados_calc.pdf" },
+              ]},
+              { nome: "Exercícios", itens: [                
+                { titulo: "Módulo 04 · Exercícios", tipo: "ODS", link: "ibasica/planilhas/exercicios/m4_exercicios.ods" },
+              ]},
+              { nome: "Apostilas", itens: [
+                { titulo: "Módulo 04 · Organizar e buscar dados", tipo: "HTML", link: "ibasica/planilhas/apostilas/apostila_M4_LibreOffice_Calc.html" }
+              ]}
+            ]
+          },
+
         ]
       },
       
