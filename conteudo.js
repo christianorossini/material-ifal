@@ -189,8 +189,11 @@ const MENU = [
                 nome: "Práticas de laboratório", 
                 itens: [ 
                   { titulo: "Prática 01 · Processos", descricao: "Práticas com o simulador SOSIM", tipo: "PDF", link: "https://drive.google.com/file/d/1N_3tBp_kyQu8btklR6AzyLbO-kyuPiOi/view?usp=sharing"},
+                  { titulo: "Prática 01 · Processos - Respostas", descricao: "Respostas e revisão do tema.", tipo: "HTML", link: "so/lab/lab-processos-respostas.html"},
                   { titulo: "Prática 02 · Threads", descricao: "Práticas com Threads", tipo: "HTML", link: "so/lab/lab-threads.html" },
+                  { titulo: "Prática 02 · Threads - Respostas", descricao: "Respostas e revisão do tema.", tipo: "HTML", link: "so/lab/lab-threads-respostas.html"},
                   { titulo: "Prática 03 · Comunicação e Sincronização", descricao: "Práticas com comunicação e sincronização", tipo: "HTML", link: "so/lab/lab-sincronizacao.html" },
+                  { titulo: "Prática 03 · Comunicação e Sincronização - Respostas", descricao: "Respostas e revisão do tema.", tipo: "HTML", link: "so/lab/lab-sincronizacao-respostas.html"},
                 ]
               },
               
