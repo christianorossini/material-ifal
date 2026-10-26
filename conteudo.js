@@ -127,12 +127,12 @@ const MENU = [
           },
 
           {
-            id: "planilhas-outros",
-            titulo: "Outros",
-            descricao: "",
+            id: "planilhas-outros-materiais",
+            titulo: "Outros Materiais",
+            descricao: "Outros Materiais",
             pastas: [
               { nome: "Trabalhos", itens: [                
-                { titulo: "Módulo 04 · Organizar e buscar dados", tipo: "PDF", link: "ibasica/planilhas/slides/m4_organizar_buscar_dados_calc.pdf" },
+                { titulo: "Trabalho - Resolvendo problemas com planilhas", tipo: "HTML", link: "ibasica/planilhas/outros/trabalho_M1_M2_M3.html" },
               ]},              
             ]
           },
