@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Avaliação em Trio · Calc</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+html{color-scheme:light}
+body{margin:0}
+img{max-width:100%}
+
+/* Layout: coluna única de leitura; passos como linhas de planilha numeradas, temas em grade de "células". */
+:root{
+  --bg:#f3f6f2; --surface:#ffffff; --fg:#1b2a20; --muted:#5b6b60; --line:#d5ded6;
+  --accent:#1f7a43; --accent-ink:#ffffff; --cell:#fff8d6; --cell-line:#e8d98a; --warn:#a4400f;
+  --f-display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#111814; --surface:#18221c; --fg:#e4ece6; --muted:#9aaba0; --line:#2b3a31;
+  --accent:#4cc27c; --accent-ink:#0c1a11; --cell:#2e2a14; --cell-line:#5a5124; --warn:#f0965f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111814; --surface:#18221c; --fg:#e4ece6; --muted:#9aaba0; --line:#2b3a31;
+  --accent:#4cc27c; --accent-ink:#0c1a11; --cell:#2e2a14; --cell-line:#5a5124; --warn:#f0965f; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font:400 1.05rem/1.6 var(--f-body)}
+.wrap{max-width:860px;margin:0 auto;padding-block:40px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:40px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:clamp(2rem,6vw,3.1rem);font-weight:800;letter-spacing:-.02em}
+h2{font-size:1.45rem;font-weight:800}
+h3{font-size:1.08rem;font-weight:600}
+p{margin:0}
+.eyebrow{font:500 .78rem/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+header{display:grid;gap:14px}
+header .lead{color:var(--muted);max-width:62ch}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--surface)}
+.facts div{padding:12px 14px;border-right:1px solid var(--line);display:grid;gap:2px;min-width:0}
+.facts div:last-child{border-right:0}
+.facts span{font:500 .72rem/1.2 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.facts b{font-family:var(--f-display);font-size:1.15rem}
+.cta{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:var(--accent-ink);text-decoration:none;font-weight:700;padding:12px 18px;border-radius:6px;border:0;font:700 1rem var(--f-body);cursor:pointer}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:transparent;color:var(--accent);border:1.5px solid var(--accent)}
+.btn[aria-disabled="true"]{opacity:.55;cursor:not-allowed}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.steps{display:grid;gap:0;border:1px solid var(--line);border-radius:6px;background:var(--surface);overflow:hidden}
+.step{display:grid;grid-template-columns:52px 1fr;border-top:1px solid var(--line)}
+.step:first-child{border-top:0}
+.rn{font:500 .9rem var(--f-mono);color:var(--muted);background:var(--bg);border-right:1px solid var(--line);display:flex;justify-content:center;padding-top:20px}
+.sc{padding:18px 20px 20px;display:grid;gap:10px;min-width:0}
+ul{margin:0;padding-left:1.2em;display:grid;gap:6px}
+li::marker{color:var(--accent)}
+code,.file{font-family:var(--f-mono);font-size:.88em;background:var(--cell);border:1px solid var(--cell-line);padding:1px 6px;border-radius:3px;overflow-wrap:anywhere}
+.warn{color:var(--warn);font-weight:700}
+.filebox{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.filebox .file{font-size:1rem;padding:6px 10px}
+.copy{font:700 .85rem var(--f-body);background:transparent;color:var(--accent);border:1.5px solid var(--accent);border-radius:4px;padding:5px 10px;cursor:pointer}
+.themes{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.t{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px;display:grid;gap:8px;align-content:start;min-width:0}
+.t .n{font:500 .75rem var(--f-mono);color:var(--accent);letter-spacing:.06em}
+.t p{color:var(--muted);font-size:.95rem;line-height:1.5}
+.t a{font-weight:700;color:var(--accent);font-size:.95rem}
+.t .pend{font-size:.85rem;color:var(--muted);font-style:italic}
+section{display:grid;gap:16px}
+.note{border-left:3px solid var(--warn);padding:4px 0 4px 14px;display:grid;gap:6px}
+footer{color:var(--muted);font-size:.9rem;border-top:1px solid var(--line);padding-top:16px}
+@media (max-width:480px){.step{grid-template-columns:38px 1fr}.sc{padding:16px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">IFAL · Informática Aplicada · LibreOffice Calc</div>
+    <h1>Avaliação em trio</h1>
+    <p class="lead">Cada trio escolhe um negócio de bairro, analisa um mês de dados na planilha e, no fim, sugere melhorias para o dono. São 10 problemas, do Módulo 1 – Primeiros passos ao Módulo 3 – Lógica e decisões.</p>
+    <div class="facts">
+      <div><span>Valor</span><b>10,0 pontos</b></div>
+      <div><span>Grupo</span><b>3 integrantes</b></div>
+      <div><span>Escolha do tema até</span><b data-cfg="prazoEscolha"></b></div>
+      <div><span>Entrega até</span><b data-cfg="prazoEntrega"></b></div>
+    </div>
+    <div class="cta">
+      <a class="btn" id="btnEscolha" target="_blank" rel="noopener">Abrir a planilha de escolha</a>
+    </div>
+  </header>
+
+  <section aria-labelledby="passo">
+    <h2 id="passo">Passo a passo</h2>
+    <div class="steps">
+      <div class="step"><div class="rn">1</div><div class="sc">
+        <h3>Formem o trio</h3>
+        <p>O trabalho é feito em grupos de 3 integrantes. Escolham um nome para o grupo.</p>
+      </div></div>
+
+      <div class="step"><div class="rn">2</div><div class="sc">
+        <h3>Escolham o tema na planilha de escolha</h3>
+        <ul>
+          <li>Leiam os resumos dos temas logo abaixo nesta página.</li>
+          <li>Abram a planilha de escolha e procurem um tema cuja coluna <b>Nome do grupo</b> ainda esteja vazia.</li>
+          <li>Na linha desse tema, escrevam o nome do grupo e o nome completo dos três integrantes nas células amarelas.</li>
+          <li><b>Cada tema fica com apenas 1 grupo.</b> O primeiro grupo a registrar fica com o tema.</li>
+          <li>Apenas um integrante faz o registro, e cada grupo registra um único tema.</li>
+          <li><span class="warn">É proibido apagar ou alterar o registro de outro grupo.</span> A planilha guarda o histórico de quem editou cada célula.</li>
+          <li>Se o tema desejado já estiver ocupado, escolham outro que esteja livre.</li>
+          <li>O trio que não escolher até o prazo receberá um tema definido pelo professor.</li>
+        </ul>
+      </div></div>
+
+      <div class="step"><div class="rn">3</div><div class="sc">
+        <h3>Baixem a planilha do tema</h3>
+        <ul>
+          <li>Na planilha de escolha (ou no cartão do tema, abaixo), cliquem no link da planilha do tema de vocês.</li>
+          <li>No Google Drive, cliquem em <b>Baixar</b> para salvar o arquivo <code>.ods</code> no computador.</li>
+          <li>Trabalhem somente no arquivo do tema registrado. Um trabalho com outro tema não será corrigido.</li>
+        </ul>
+      </div></div>
+
+      <div class="step"><div class="rn">4</div><div class="sc">
+        <h3>Resolvam os 10 problemas</h3>
+        <ul>
+          <li>Usem o <b>LibreOffice Calc</b>, versão 26.2 ou mais recente. Não resolvam no Google Planilhas.</li>
+          <li>A aba <b>Enunciado</b> traz a história, os 10 problemas (1,0 ponto cada), as dicas e o critério de pontuação.</li>
+          <li>Usem fórmulas e funções. Valores digitados à mão no lugar de fórmulas valem zero.</li>
+          <li>Resultado certo obtido de outro jeito, sem o recurso pedido, vale no máximo metade do problema.</li>
+          <li>Na aba <b>Sugestões</b>, escrevam o nome do grupo e os nomes dos três integrantes.</li>
+        </ul>
+      </div></div>
+
+      <div class="step"><div class="rn">5</div><div class="sc">
+        <h3>Salvem e entreguem no Classroom</h3>
+        <p>Salvem no formato <code>.ods</code> com o número do tema e o primeiro nome de cada integrante:</p>
+        <div class="filebox"><span class="file" id="fname">TemaXX_Nome1_Nome2_Nome3.ods</span><button class="copy" id="copyBtn" type="button">Copiar modelo</button></div>
+        <p style="color:var(--muted)">Exemplo: <code>Tema03_Ana_Bruno_Carla.ods</code></p>
+        <ul>
+          <li>Apenas um integrante anexa o arquivo na atividade do Classroom e clica em <b>Entregar</b>.</li>
+          <li>Os outros dois clicam em <b>Marcar como concluída</b>.</li>
+        </ul>
+      </div></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="temas">
+    <h2 id="temas">Os 10 temas</h2>
+    <p style="color:var(--muted)">Todos os temas têm o mesmo nível de dificuldade e cobram o mesmo conteúdo. Escolham o negócio que o trio achar mais interessante.</p>
+    <div class="themes" id="themes"></div>
+  </section>
+
+  <section aria-labelledby="imp">
+    <h2 id="imp">Importante</h2>
+    <div class="note">
+      <p>Os três integrantes devem participar, porque qualquer um poderá ser chamado para explicar o trabalho.</p>
+      <p>Trabalhos iguais ou muito parecidos entre grupos diferentes terão a nota zerada.</p>
+      <p>Dúvidas: usem os comentários particulares da atividade no Classroom ou falem com o professor em sala.</p>
+    </div>
+  </section>
+
+  <footer>Prof. Christiano Rossini · IFAL Campus Maceió</footer>
+</div>
+
+<script>
+const CONFIG={
+  prazoEscolha:"[DATA]",
+  prazoEntrega:"[DATA]",
+  linkEscolha:"",
+  temas:[
+    ["Açaí da Praia","Dona Rita vende açaí em copos Pequeno, Médio e Grande, com adicionais e entrega em casa. Calculem o valor dos pedidos de novembro, descubram o que mais vende e o melhor dia e vejam se os clientes estão satisfeitos.",""],
+    ["Cine Maré","Seu Antônio tem um cinema de bairro com sessões Comum, 3D e VIP, além de pipoca e estacionamento. Calculem o valor dos ingressos, descubram que sessão vende mais e o melhor dia e vejam se o público está gostando.",""],
+    ["Lava-Jato Brilho Total","Seu Carlos oferece lavagens Simples, Completa e Premium, itens extras e o serviço leva e traz. Calculem o valor das lavagens, descubram o que mais sai e o dia mais movimentado e vejam se os clientes estão satisfeitos.",""],
+    ["Pet Shop Patinhas","Dona Lúcia dá banho em cães de porte Pequeno, Médio e Grande, com serviços extras e táxi dog. Calculem o valor dos atendimentos, descubram o porte mais comum e o melhor dia e vejam se os tutores estão satisfeitos.",""],
+    ["Academia Corpo em Movimento","O Professor Marcos vende diárias de Musculação, Funcional e Dança, além de água e personal trainer. Calculem o valor das diárias, descubram a modalidade mais procurada e o dia mais cheio e vejam se os alunos estão gostando.",""],
+    ["Food Truck Burguer da Esquina","Seu Paulo vende lanches Simples, Duplo e Especial, com adicionais e combo de batata e refrigerante. Calculem o valor dos lanches, descubram o que mais sai e o melhor dia e vejam se os clientes estão gostando.",""],
+    ["Barbearia Navalha de Ouro","Seu Raimundo oferece Corte, Barba e Corte + barba, vende produtos e atende em casa. Calculem o valor dos atendimentos, descubram o serviço mais pedido e o melhor dia e vejam se os clientes estão satisfeitos.",""],
+    ["Bicicletaria Pedal Certo","Dona Sônia faz Regulagem, Revisão e Revisão completa, troca peças e entrega a bicicleta lavada. Calculem o valor dos consertos, descubram o serviço mais pedido e o melhor dia e vejam se os ciclistas estão satisfeitos.",""],
+    ["Conecta Celulares","Seu Rafael faz limpeza e troca de bateria e de tela, vende películas e garantia estendida. Calculem o valor dos consertos, descubram o conserto mais comum e o melhor dia e vejam se os clientes estão satisfeitos.",""],
+    ["Confeitaria Doce Encanto","Dona Fátima faz bolos por encomenda em três tamanhos, com recheios extras e decoração especial. Calculem o valor das encomendas, descubram o tamanho que mais sai e o melhor dia e vejam se os clientes estão gostando.",""]
+  ]
+};
+document.querySelectorAll("[data-cfg]").forEach(el=>el.textContent=CONFIG[el.dataset.cfg]);
+function setLink(id,url){const a=document.getElementById(id);if(url){a.href=url}else{a.removeAttribute("href");a.setAttribute("aria-disabled","true");a.title="Link ainda não disponível";a.textContent+=" (em breve)"}}
+setLink("btnEscolha",CONFIG.linkEscolha);
+const box=document.getElementById("themes");
+CONFIG.temas.forEach(([nome,res,link],i)=>{
+  const n=String(i+1).padStart(2,"0");
+  const d=document.createElement("article");d.className="t";
+  d.innerHTML=`<div class="n">TEMA ${n}</div><h3></h3><p></p>`;
+  d.querySelector("h3").textContent=nome;d.querySelector("p").textContent=res;
+  if(link){const a=document.createElement("a");a.href=link;a.target="_blank";a.rel="noopener";a.textContent="Baixar a planilha do tema";d.appendChild(a)}
+  else{const s=document.createElement("span");s.className="pend";s.textContent="Link da planilha em breve";d.appendChild(s)}
+  box.appendChild(d);
+});
+document.getElementById("copyBtn").addEventListener("click",e=>{
+  const t=document.getElementById("fname").textContent,b=e.currentTarget;
+  const done=()=>{b.textContent="Copiado";setTimeout(()=>b.textContent="Copiar modelo",1500)};
+  const sel=()=>{const r=document.createRange();r.selectNodeContents(document.getElementById("fname"));const s=getSelection();s.removeAllRanges();s.addRange(r)};
+  try{navigator.clipboard.writeText(t).then(done,sel)}catch(_){sel()}
+});
+</script>
+
+</body>
+</html>

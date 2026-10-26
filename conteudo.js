@@ -126,6 +126,17 @@ const MENU = [
             ]
           },
 
+          {
+            id: "planilhas-outros",
+            titulo: "Outros",
+            descricao: "",
+            pastas: [
+              { nome: "Trabalhos", itens: [                
+                { titulo: "Módulo 04 · Organizar e buscar dados", tipo: "PDF", link: "ibasica/planilhas/slides/m4_organizar_buscar_dados_calc.pdf" },
+              ]},              
+            ]
+          },
+
         ]
       },
       
