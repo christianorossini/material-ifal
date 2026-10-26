@@ -66,6 +66,7 @@ code,.file{font-family:var(--f-mono);font-size:.88em;background:var(--cell);bord
 .t a{font-weight:700;color:var(--accent);font-size:.95rem}
 .t .pend{font-size:.85rem;color:var(--muted);font-style:italic}
 section{display:grid;gap:16px}
+.turmas{display:grid;gap:10px}.tl{color:var(--muted)}
 .note{border-left:3px solid var(--warn);padding:4px 0 4px 14px;display:grid;gap:6px}
 footer{color:var(--muted);font-size:.9rem;border-top:1px solid var(--line);padding-top:16px}
 @media (max-width:480px){.step{grid-template-columns:38px 1fr}.sc{padding:16px}}
@@ -85,8 +86,9 @@ footer{color:var(--muted);font-size:.9rem;border-top:1px solid var(--line);paddi
       <div><span>Escolha do tema até</span><b data-cfg="prazoEscolha"></b></div>
       <div><span>Entrega até</span><b data-cfg="prazoEntrega"></b></div>
     </div>
-    <div class="cta">
-      <a class="btn" id="btnEscolha" target="_blank" rel="noopener">Abrir a planilha de escolha</a>
+    <div class="turmas">
+      <p class="tl">Planilha de escolha: cliquem na planilha da <b>sua turma</b>.</p>
+      <div class="cta" id="turmas"></div>
     </div>
   </header>
 
@@ -95,16 +97,17 @@ footer{color:var(--muted);font-size:.9rem;border-top:1px solid var(--line);paddi
     <div class="steps">
       <div class="step"><div class="rn">1</div><div class="sc">
         <h3>Formem o trio</h3>
-        <p>O trabalho é feito em grupos de 3 integrantes. Escolham um nome para o grupo.</p>
+        <p>O trabalho é feito em grupos de 3 integrantes da mesma turma.</p>
       </div></div>
 
       <div class="step"><div class="rn">2</div><div class="sc">
         <h3>Escolham o tema na planilha de escolha</h3>
         <ul>
           <li>Leiam os resumos dos temas logo abaixo nesta página.</li>
-          <li>Abram a planilha de escolha e procurem um tema cuja coluna <b>Nome do grupo</b> ainda esteja vazia.</li>
-          <li>Na linha desse tema, escrevam o nome do grupo e o nome completo dos três integrantes nas células amarelas.</li>
-          <li><b>Cada tema fica com apenas 1 grupo.</b> O primeiro grupo a registrar fica com o tema.</li>
+          <li>Abram a planilha de escolha <b>da sua turma</b> (211C, 711C ou 712C), pelos botões no topo desta página.</li>
+          <li>Procurem um tema cujas colunas de integrantes ainda estejam vazias.</li>
+          <li>Na linha desse tema, escrevam o nome completo dos três integrantes nas células amarelas.</li>
+          <li><b>Em cada turma, cada tema fica com apenas 1 grupo.</b> O primeiro grupo a registrar fica com o tema.</li>
           <li>Apenas um integrante faz o registro, e cada grupo registra um único tema.</li>
           <li><span class="warn">É proibido apagar ou alterar o registro de outro grupo.</span> A planilha guarda o histórico de quem editou cada célula.</li>
           <li>Se o tema desejado já estiver ocupado, escolham outro que esteja livre.</li>
@@ -115,7 +118,7 @@ footer{color:var(--muted);font-size:.9rem;border-top:1px solid var(--line);paddi
       <div class="step"><div class="rn">3</div><div class="sc">
         <h3>Baixem a planilha do tema</h3>
         <ul>
-          <li>Na planilha de escolha (ou no cartão do tema, abaixo), cliquem no link da planilha do tema de vocês.</li>
+          <li>Na planilha de escolha da sua turma, cliquem no link da coluna <b>Link da planilha do tema</b>, na linha do tema de vocês.</li>
           <li>No Google Drive, cliquem em <b>Baixar</b> para salvar o arquivo <code>.ods</code> no computador.</li>
           <li>Trabalhem somente no arquivo do tema registrado. Um trabalho com outro tema não será corrigido.</li>
         </ul>
@@ -128,7 +131,6 @@ footer{color:var(--muted);font-size:.9rem;border-top:1px solid var(--line);paddi
           <li>A aba <b>Enunciado</b> traz a história, os 10 problemas (1,0 ponto cada), as dicas e o critério de pontuação.</li>
           <li>Usem fórmulas e funções. Valores digitados à mão no lugar de fórmulas valem zero.</li>
           <li>Resultado certo obtido de outro jeito, sem o recurso pedido, vale no máximo metade do problema.</li>
-          <li>Na aba <b>Sugestões</b>, escrevam o nome do grupo e os nomes dos três integrantes.</li>
         </ul>
       </div></div>
 
@@ -147,17 +149,8 @@ footer{color:var(--muted);font-size:.9rem;border-top:1px solid var(--line);paddi
 
   <section aria-labelledby="temas">
     <h2 id="temas">Os 10 temas</h2>
-    <p style="color:var(--muted)">Todos os temas têm o mesmo nível de dificuldade e cobram o mesmo conteúdo. Escolham o negócio que o trio achar mais interessante.</p>
+    <p style="color:var(--muted)">Todos os temas têm o mesmo nível de dificuldade e cobram o mesmo conteúdo. Escolham o negócio que o trio achar mais interessante. Os links para baixar cada tema estão na planilha de escolha da sua turma.</p>
     <div class="themes" id="themes"></div>
-  </section>
-
-  <section aria-labelledby="imp">
-    <h2 id="imp">Importante</h2>
-    <div class="note">
-      <p>Os três integrantes devem participar, porque qualquer um poderá ser chamado para explicar o trabalho.</p>
-      <p>Trabalhos iguais ou muito parecidos entre grupos diferentes terão a nota zerada.</p>
-      <p>Dúvidas: usem os comentários particulares da atividade no Classroom ou falem com o professor em sala.</p>
-    </div>
   </section>
 
   <footer>Prof. Christiano Rossini · IFAL Campus Maceió</footer>
@@ -165,33 +158,36 @@ footer{color:var(--muted);font-size:.9rem;border-top:1px solid var(--line);paddi
 
 <script>
 const CONFIG={
-  prazoEscolha:"[DATA]",
-  prazoEntrega:"[DATA]",
-  linkEscolha:"",
+  prazoEscolha:"30/10/2026",
+  prazoEntrega:"13/11/2026",
+  turmas:[
+    ["211C",""],
+    ["711C",""],
+    ["712C",""]
+  ],
   temas:[
-    ["Açaí da Praia","Dona Rita vende açaí em copos Pequeno, Médio e Grande, com adicionais e entrega em casa. Calculem o valor dos pedidos de novembro, descubram o que mais vende e o melhor dia e vejam se os clientes estão satisfeitos.",""],
-    ["Cine Maré","Seu Antônio tem um cinema de bairro com sessões Comum, 3D e VIP, além de pipoca e estacionamento. Calculem o valor dos ingressos, descubram que sessão vende mais e o melhor dia e vejam se o público está gostando.",""],
-    ["Lava-Jato Brilho Total","Seu Carlos oferece lavagens Simples, Completa e Premium, itens extras e o serviço leva e traz. Calculem o valor das lavagens, descubram o que mais sai e o dia mais movimentado e vejam se os clientes estão satisfeitos.",""],
-    ["Pet Shop Patinhas","Dona Lúcia dá banho em cães de porte Pequeno, Médio e Grande, com serviços extras e táxi dog. Calculem o valor dos atendimentos, descubram o porte mais comum e o melhor dia e vejam se os tutores estão satisfeitos.",""],
-    ["Academia Corpo em Movimento","O Professor Marcos vende diárias de Musculação, Funcional e Dança, além de água e personal trainer. Calculem o valor das diárias, descubram a modalidade mais procurada e o dia mais cheio e vejam se os alunos estão gostando.",""],
-    ["Food Truck Burguer da Esquina","Seu Paulo vende lanches Simples, Duplo e Especial, com adicionais e combo de batata e refrigerante. Calculem o valor dos lanches, descubram o que mais sai e o melhor dia e vejam se os clientes estão gostando.",""],
-    ["Barbearia Navalha de Ouro","Seu Raimundo oferece Corte, Barba e Corte + barba, vende produtos e atende em casa. Calculem o valor dos atendimentos, descubram o serviço mais pedido e o melhor dia e vejam se os clientes estão satisfeitos.",""],
-    ["Bicicletaria Pedal Certo","Dona Sônia faz Regulagem, Revisão e Revisão completa, troca peças e entrega a bicicleta lavada. Calculem o valor dos consertos, descubram o serviço mais pedido e o melhor dia e vejam se os ciclistas estão satisfeitos.",""],
-    ["Conecta Celulares","Seu Rafael faz limpeza e troca de bateria e de tela, vende películas e garantia estendida. Calculem o valor dos consertos, descubram o conserto mais comum e o melhor dia e vejam se os clientes estão satisfeitos.",""],
-    ["Confeitaria Doce Encanto","Dona Fátima faz bolos por encomenda em três tamanhos, com recheios extras e decoração especial. Calculem o valor das encomendas, descubram o tamanho que mais sai e o melhor dia e vejam se os clientes estão gostando.",""]
+    ["Açaí da Praia","Dona Rita vende açaí em copos Pequeno, Médio e Grande, com adicionais e entrega em casa. Calculem o valor dos pedidos de novembro, descubram o que mais vende e o melhor dia e vejam se os clientes estão satisfeitos."],
+    ["Cine Maré","Seu Antônio tem um cinema de bairro com sessões Comum, 3D e VIP, além de pipoca e estacionamento. Calculem o valor dos ingressos, descubram que sessão vende mais e o melhor dia e vejam se o público está gostando."],
+    ["Lava-Jato Brilho Total","Seu Carlos oferece lavagens Simples, Completa e Premium, itens extras e o serviço leva e traz. Calculem o valor das lavagens, descubram o que mais sai e o dia mais movimentado e vejam se os clientes estão satisfeitos."],
+    ["Pet Shop Patinhas","Dona Lúcia dá banho em cães de porte Pequeno, Médio e Grande, com serviços extras e táxi dog. Calculem o valor dos atendimentos, descubram o porte mais comum e o melhor dia e vejam se os tutores estão satisfeitos."],
+    ["Academia Corpo em Movimento","O Professor Marcos vende diárias de Musculação, Funcional e Dança, além de água e personal trainer. Calculem o valor das diárias, descubram a modalidade mais procurada e o dia mais cheio e vejam se os alunos estão gostando."],
+    ["Food Truck Burguer da Esquina","Seu Paulo vende lanches Simples, Duplo e Especial, com adicionais e combo de batata e refrigerante. Calculem o valor dos lanches, descubram o que mais sai e o melhor dia e vejam se os clientes estão gostando."],
+    ["Barbearia Navalha de Ouro","Seu Raimundo oferece Corte, Barba e Corte + barba, vende produtos e atende em casa. Calculem o valor dos atendimentos, descubram o serviço mais pedido e o melhor dia e vejam se os clientes estão satisfeitos."],
+    ["Bicicletaria Pedal Certo","Dona Sônia faz Regulagem, Revisão e Revisão completa, troca peças e entrega a bicicleta lavada. Calculem o valor dos consertos, descubram o serviço mais pedido e o melhor dia e vejam se os ciclistas estão satisfeitos."],
+    ["Conecta Celulares","Seu Rafael faz limpeza e troca de bateria e de tela, vende películas e garantia estendida. Calculem o valor dos consertos, descubram o conserto mais comum e o melhor dia e vejam se os clientes estão satisfeitos."],
+    ["Confeitaria Doce Encanto","Dona Fátima faz bolos por encomenda em três tamanhos, com recheios extras e decoração especial. Calculem o valor das encomendas, descubram o tamanho que mais sai e o melhor dia e vejam se os clientes estão gostando."]
   ]
 };
 document.querySelectorAll("[data-cfg]").forEach(el=>el.textContent=CONFIG[el.dataset.cfg]);
-function setLink(id,url){const a=document.getElementById(id);if(url){a.href=url}else{a.removeAttribute("href");a.setAttribute("aria-disabled","true");a.title="Link ainda não disponível";a.textContent+=" (em breve)"}}
-setLink("btnEscolha",CONFIG.linkEscolha);
+const tb=document.getElementById("turmas");
+CONFIG.turmas.forEach(([t,url])=>{const a=document.createElement("a");a.className="btn";a.target="_blank";a.rel="noopener";a.textContent="Turma "+t;
+  if(url){a.href=url}else{a.setAttribute("aria-disabled","true");a.title="Link ainda não disponível";a.textContent+=" (em breve)"}tb.appendChild(a)});
 const box=document.getElementById("themes");
-CONFIG.temas.forEach(([nome,res,link],i)=>{
+CONFIG.temas.forEach(([nome,res],i)=>{
   const n=String(i+1).padStart(2,"0");
   const d=document.createElement("article");d.className="t";
   d.innerHTML=`<div class="n">TEMA ${n}</div><h3></h3><p></p>`;
   d.querySelector("h3").textContent=nome;d.querySelector("p").textContent=res;
-  if(link){const a=document.createElement("a");a.href=link;a.target="_blank";a.rel="noopener";a.textContent="Baixar a planilha do tema";d.appendChild(a)}
-  else{const s=document.createElement("span");s.className="pend";s.textContent="Link da planilha em breve";d.appendChild(s)}
   box.appendChild(d);
 });
 document.getElementById("copyBtn").addEventListener("click",e=>{
