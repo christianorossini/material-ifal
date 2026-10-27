@@ -1,0 +1,1002 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apostila de Gerência do Processador</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --bg:#F2F4EE; --surface:#FBFCF8; --surface-2:#E8EDE2; --ink:#17231A; --ink-2:#4A5A4C; --line:#D3DCCB;
+  --accent:#2E6B1E; --accent-ink:#FFFFFF; --accent-soft:#DDEBD3;
+  --run:#2E6B1E; --run-soft:#DDEBD3;
+  --ready:#9A6200; --ready-soft:#FBEBC8;
+  --wait:#2F5C99; --wait-soft:#DCE6F4;
+  --neutral:#646E61; --neutral-soft:#E4E7E1;
+  --ok:#1F7A3A; --ok-soft:#D9F0DF; --bad:#B3261E; --bad-soft:#F8DEDB;
+  --display:"Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body:"Literata", Georgia, "Times New Roman", serif;
+  --mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0F1510; --surface:#172019; --surface-2:#1F2A21; --ink:#E4EBE0; --ink-2:#A6B3A4; --line:#2F3D31;
+    --accent:#7CC25B; --accent-ink:#0F1510; --accent-soft:#233A1C;
+    --run:#7CC25B; --run-soft:#1F3519; --ready:#E9B04A; --ready-soft:#3A2E14;
+    --wait:#8DB3EA; --wait-soft:#1B2A40; --neutral:#9AA397; --neutral-soft:#262C25;
+    --ok:#6FD08C; --ok-soft:#173222; --bad:#FF8A80; --bad-soft:#3D1B18;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0F1510; --surface:#172019; --surface-2:#1F2A21; --ink:#E4EBE0; --ink-2:#A6B3A4; --line:#2F3D31;
+  --accent:#7CC25B; --accent-ink:#0F1510; --accent-soft:#233A1C;
+  --run:#7CC25B; --run-soft:#1F3519; --ready:#E9B04A; --ready-soft:#3A2E14;
+  --wait:#8DB3EA; --wait-soft:#1B2A40; --neutral:#9AA397; --neutral-soft:#262C25;
+  --ok:#6FD08C; --ok-soft:#173222; --bad:#FF8A80; --bad-soft:#3D1B18;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto} *{transition:none!important; animation:none!important}}
+body{background:var(--bg); color:var(--ink); font-family:var(--body); font-size:17px; line-height:1.65; padding-inline:20px; padding-block:0 64px}
+h1,h2,h3,h4{font-family:var(--display); line-height:1.15; text-wrap:balance; margin:0}
+p{margin:0}
+a{color:var(--accent)}
+code,.mono{font-family:var(--mono); font-size:.88em}
+button{font:inherit; cursor:pointer}
+:focus-visible{outline:3px solid var(--accent); outline-offset:2px; border-radius:4px}
+
+/* header */
+.top{max-width:1160px; margin:0 auto; padding-block:48px 36px; border-bottom:2px solid var(--ink); display:grid; gap:18px}
+.eyebrow{font-family:var(--display); font-size:13px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--accent)}
+.top h1{font-size:clamp(48px, 9vw, 104px); font-weight:800; letter-spacing:-.03em}
+.top h1 span{color:var(--accent)}
+.lede{font-size:20px; max-width:62ch; color:var(--ink-2)}
+.meta{display:flex; flex-wrap:wrap; gap:8px 24px; font-family:var(--display); font-size:14px; color:var(--ink-2)}
+.meta b{color:var(--ink)}
+
+/* layout */
+.layout{max-width:1160px; margin:0 auto; display:grid; grid-template-columns:230px minmax(0,1fr); gap:56px; padding-top:40px}
+nav.toc{position:sticky; top:calc(env(safe-area-inset-top, 0px) + 20px); align-self:start; font-family:var(--display); font-size:14px}
+nav.toc p{font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-2); margin-bottom:10px}
+nav.toc ol{list-style:none; margin:0; padding:0; display:grid; gap:2px; border-left:2px solid var(--line)}
+nav.toc a{display:grid; grid-template-columns:38px 1fr; padding:6px 10px; margin-left:-2px; border-left:2px solid transparent; color:var(--ink-2); text-decoration:none; line-height:1.3}
+nav.toc a span{font-variant-numeric:tabular-nums; color:var(--ink-2); font-weight:600}
+nav.toc a:hover{color:var(--ink)}
+nav.toc a.on{border-left-color:var(--accent); color:var(--ink); font-weight:600}
+nav.toc a.on span{color:var(--accent)}
+main{min-width:0; display:grid; gap:72px}
+@media (max-width:900px){
+  .layout{grid-template-columns:minmax(0,1fr); gap:28px; padding-top:24px}
+  nav.toc{position:static}
+  nav.toc ol{display:flex; overflow-x:auto; border-left:none; gap:6px; padding-bottom:6px}
+  nav.toc a{display:block; white-space:nowrap; border:1px solid var(--line); border-radius:999px; padding:6px 12px; margin:0; background:var(--surface)}
+  nav.toc a span{margin-right:6px}
+  nav.toc a.on{border-color:var(--accent)}
+}
+
+/* sections */
+.sec{display:grid; gap:20px; scroll-margin-top:24px}
+.sec > *{max-width:68ch}
+.sec > .wide{max-width:none}
+.sec-head{display:grid; gap:6px; padding-bottom:6px}
+.num{font-family:var(--display); font-weight:800; font-size:15px; color:var(--accent); letter-spacing:.06em}
+.sec h2{font-size:clamp(28px, 4vw, 38px); font-weight:700; letter-spacing:-.01em}
+.sec h3{font-size:21px; font-weight:700; margin-top:10px}
+.sec ul,.sec ol{margin:0; padding-left:1.3em; display:grid; gap:6px}
+dfn{font-style:normal; font-weight:600; background:linear-gradient(transparent 62%, var(--accent-soft) 62%)}
+.def{border:2px solid var(--ink); background:var(--surface); padding:18px 22px; display:grid; gap:6px}
+.def .lbl{font-family:var(--display); font-size:12px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--accent)}
+.def p{font-size:19px}
+.note{background:var(--surface-2); padding:14px 18px; border-radius:6px; font-size:16px; display:grid; gap:6px}
+.note .lbl{font-family:var(--display); font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-2)}
+pre.term{font-family:var(--mono); font-size:14px; line-height:1.55; background:#101A12; color:#D6E8CB; padding:14px 18px; border-radius:6px; overflow-x:auto; margin:0}
+pre.term .c{color:#8FA88A}
+
+/* lab widgets */
+.lab{border:1px solid var(--line); background:var(--surface); border-radius:10px; padding:20px; display:grid; gap:16px}
+.lab-head{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap}
+.tag{font-family:var(--display); font-size:11px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; background:var(--accent); color:var(--accent-ink); padding:3px 8px; border-radius:3px}
+.lab-head h4{font-size:18px; font-weight:700}
+.lab-hint{font-size:15px; color:var(--ink-2)}
+.btns{display:flex; flex-wrap:wrap; gap:8px}
+.btn{font-family:var(--display); font-size:14px; font-weight:600; border:1.5px solid var(--ink); background:var(--surface); color:var(--ink); padding:8px 14px; border-radius:6px; transition:background .15s, transform .1s}
+.btn:hover{background:var(--surface-2)}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--ink); color:var(--bg)}
+.btn.primary:hover{background:var(--accent); border-color:var(--accent); color:var(--accent-ink)}
+.btn.ghost{border-color:var(--line); color:var(--ink-2)}
+.btn[disabled]{opacity:.45; cursor:not-allowed}
+.msg{font-family:var(--display); font-size:15px; padding:10px 14px; border-radius:6px; background:var(--surface-2); color:var(--ink)}
+.msg.ok{background:var(--ok-soft); color:var(--ok)}
+.msg.bad{background:var(--bad-soft); color:var(--bad)}
+.chip{display:inline-block; font-family:var(--display); font-size:13px; font-weight:700; padding:2px 9px; border-radius:999px}
+.st-execucao{background:var(--run-soft); color:var(--run)}
+.st-pronto{background:var(--ready-soft); color:var(--ready)}
+.st-espera{background:var(--wait-soft); color:var(--wait)}
+.st-criacao,.st-terminado{background:var(--neutral-soft); color:var(--neutral)}
+.scroll{overflow-x:auto}
+</style>
+<style>
+/* 5.1 */
+.procs{display:grid; grid-template-columns:repeat(auto-fill, minmax(190px, 1fr)); gap:10px; min-height:84px}
+.proc{border:1px solid var(--line); border-left:5px solid var(--run); padding:10px 12px; background:var(--bg); display:grid; gap:2px; animation:pop .25s ease-out}
+.proc b{font-family:var(--display); font-size:15px}
+.proc span{font-family:var(--mono); font-size:12.5px; color:var(--ink-2)}
+.proc.pronto{border-left-color:var(--ready)} .proc.espera{border-left-color:var(--wait)}
+.empty{font-family:var(--display); font-size:14px; color:var(--ink-2); align-self:center}
+@keyframes pop{from{opacity:.2; transform:translateY(6px)} to{opacity:1; transform:none}}
+.prog{display:flex; align-items:center; gap:12px; flex-wrap:wrap}
+.file{font-family:var(--mono); font-size:14px; border:1.5px dashed var(--ink-2); padding:8px 12px; border-radius:6px}
+
+/* 5.2 diagram */
+.fig{margin:0; display:grid; gap:8px}
+.fig figcaption{font-family:var(--display); font-size:13px; color:var(--ink-2)}
+.fig svg{width:100%; height:auto; max-width:640px}
+.fig svg text{font-family:var(--display)} .fig svg text:not([fill]){fill:var(--ink)}
+.part{cursor:pointer}
+.part rect{transition:stroke-width .15s}
+.part:hover rect,.part:focus rect{stroke-width:4}
+
+/* 5.2.1 context switch */
+.cs{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px}
+@media (max-width:620px){.cs{grid-template-columns:minmax(0,1fr)}}
+.box{border:1.5px solid var(--line); border-radius:8px; padding:12px; background:var(--bg); display:grid; gap:8px; transition:border-color .2s, box-shadow .2s}
+.box h5{font-family:var(--display); font-size:14px; margin:0; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:8px}
+.box.cpu{border-color:var(--ink); background:var(--surface-2)}
+.box.flash{border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft)}
+.regs{display:grid; grid-template-columns:auto 1fr; gap:3px 12px; font-family:var(--mono); font-size:13.5px; font-variant-numeric:tabular-nums}
+.regs dt{color:var(--ink-2)} .regs dd{margin:0; text-align:right}
+.steps{display:flex; gap:6px; flex-wrap:wrap}
+.steps i{font-style:normal; font-family:var(--display); font-size:12px; font-weight:700; padding:3px 8px; border-radius:999px; background:var(--surface-2); color:var(--ink-2)}
+.steps i.on{background:var(--accent); color:var(--accent-ink)}
+
+/* 5.2.2 table */
+table.t{border-collapse:collapse; width:100%; font-size:15.5px}
+.t th{font-family:var(--display); text-align:left; font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-2); border-bottom:2px solid var(--ink); padding:8px 10px}
+.t td{border-bottom:1px solid var(--line); padding:10px; vertical-align:top}
+.t td:first-child{font-family:var(--display); font-weight:700; white-space:nowrap}
+
+/* 5.2.4 PCB */
+.pcbwrap{display:grid; grid-template-columns:minmax(0,300px) minmax(0,1fr); gap:20px; align-items:start}
+@media (max-width:620px){.pcbwrap{grid-template-columns:minmax(0,1fr)}}
+.pcb{list-style:none; margin:0; padding:0; border:2px solid var(--ink); border-radius:6px; overflow:hidden; font-family:var(--display); font-size:15px}
+.pcb li{padding:9px 14px; border-top:1px solid var(--line); transition:background .2s, color .2s}
+.pcb li.hd{background:var(--ink); color:var(--bg); font-family:var(--mono); font-size:14px; border-top:none}
+.pcb li.hit[data-part="hw"]{background:var(--wait-soft); color:var(--wait); font-weight:700}
+.pcb li.hit[data-part="sw"]{background:var(--run-soft); color:var(--run); font-weight:700}
+.pcb li.hit[data-part="ea"]{background:var(--ready-soft); color:var(--ready); font-weight:700}
+.pcb li.hit[data-part="ctl"]{background:var(--neutral-soft); color:var(--ink); font-weight:700}
+.btn.sel{background:var(--ink); color:var(--bg)}
+
+/* 5.3 cards */
+.states{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px}
+@media (max-width:700px){.states{grid-template-columns:minmax(0,1fr)}}
+.state{border-radius:8px; padding:16px; display:grid; gap:6px; align-content:start}
+.state h4{font-size:22px}
+.state small{font-family:var(--mono); font-size:12.5px; opacity:.85}
+.state p{font-size:15.5px}
+.state .an{font-size:14px; font-style:italic; border-top:1px solid currentColor; padding-top:8px; opacity:.9}
+.state.x{background:var(--run-soft); color:var(--run)} .state.x p{color:var(--ink)}
+.state.p{background:var(--ready-soft); color:var(--ready)} .state.p p{color:var(--ink)}
+.state.e{background:var(--wait-soft); color:var(--wait)} .state.e p{color:var(--ink)}
+
+/* 5.4 state machine */
+.smwrap{display:grid; grid-template-columns:minmax(0,1.6fr) minmax(0,1fr); gap:20px; align-items:start}
+@media (max-width:760px){.smwrap{grid-template-columns:minmax(0,1fr)}}
+.sm svg{width:100%; height:auto}
+.sm text{font-family:var(--display); fill:var(--ink); font-size:15px; font-weight:600}
+.sm .elbl{font-size:14px; font-weight:800; fill:var(--ink-2)}
+.node rect{fill:var(--surface); stroke:var(--line); stroke-width:2; transition:all .25s}
+.node.cur rect{stroke-width:3.5}
+.node.cur.n-criacao rect,.node.cur.n-terminado rect{fill:var(--neutral-soft); stroke:var(--neutral)}
+.node.cur.n-pronto rect{fill:var(--ready-soft); stroke:var(--ready)}
+.node.cur.n-execucao rect{fill:var(--run-soft); stroke:var(--run)}
+.node.cur.n-espera rect{fill:var(--wait-soft); stroke:var(--wait)}
+.edge{fill:none; stroke:var(--ink-2); stroke-width:2; opacity:.55; transition:all .25s}
+.edge.active{stroke:var(--accent); stroke-width:4; opacity:1}
+.mk{fill:var(--ink-2)} .mk-on{fill:var(--accent)}
+.pcbmini{font-family:var(--mono); font-size:13.5px; background:var(--bg); border:1.5px solid var(--line); border-radius:8px; padding:12px; display:grid; gap:4px}
+.log{list-style:none; margin:0; padding:0; font-family:var(--display); font-size:13.5px; display:grid; gap:4px; max-height:190px; overflow-y:auto}
+.log li{padding:5px 8px; background:var(--bg); border-radius:4px}
+.evbtns{display:grid; grid-template-columns:repeat(auto-fill, minmax(210px, 1fr)); gap:8px}
+.evbtns .btn{text-align:left}
+</style><style>
+/* 5.5 */
+.twocol{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:12px}
+@media (max-width:620px){.twocol{grid-template-columns:minmax(0,1fr)}}
+.card{border:1px solid var(--line); border-radius:8px; padding:16px; background:var(--surface); display:grid; gap:8px; align-content:start}
+.card h4{font-size:18px}
+.card p,.card li{font-size:15.5px}
+/* 5.6 bars */
+.bars{display:grid; gap:12px}
+.barrow{display:grid; grid-template-columns:110px minmax(0,1fr); gap:12px; align-items:center; font-family:var(--display); font-weight:700; font-size:14px}
+.bar{display:flex; height:30px; border-radius:5px; overflow:hidden}
+.bar i{display:block; height:100%}
+.bar .u{background:var(--run)} .bar .io{background:var(--wait); opacity:.45}
+.legend{display:flex; gap:18px; flex-wrap:wrap; font-family:var(--display); font-size:13px; color:var(--ink-2)}
+.legend span::before{content:""; display:inline-block; width:12px; height:12px; border-radius:3px; margin-right:6px; vertical-align:-1px; background:var(--run)}
+.legend span.io::before{background:var(--wait); opacity:.45}
+.cls{list-style:none; margin:0; padding:0; display:grid; gap:8px}
+.cls li{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:10px; align-items:center; padding:10px 12px; border:1px solid var(--line); border-radius:8px; background:var(--bg)}
+.cls li.ok{border-color:var(--ok); background:var(--ok-soft)}
+.cls li.bad{border-color:var(--bad); background:var(--bad-soft)}
+.cls .cfb{grid-column:1 / -1; font-size:14.5px}
+.cls .btn{padding:6px 10px; font-size:13px}
+/* 5.7 terminal */
+.termbox{background:#101A12; color:#D6E8CB; font-family:var(--mono); font-size:14px; border-radius:8px; padding:14px 16px; min-height:170px; display:grid; align-content:start; gap:2px; overflow-x:auto}
+.termbox .c{color:#8FA88A}
+.termbox .busy{color:#E9B04A}
+.cursor{display:inline-block; width:8px; height:15px; background:#D6E8CB; vertical-align:-2px; animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.flow{display:flex; align-items:center; gap:8px; flex-wrap:wrap; font-family:var(--display); font-size:14px}
+.flow b{border:1.5px solid var(--line); background:var(--surface); padding:6px 10px; border-radius:6px; font-weight:600}
+.flow b.p{background:var(--ink); color:var(--bg); border-color:var(--ink)}
+.flow em{font-style:normal; color:var(--ink-2)}
+/* 5.8 */
+.three{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px}
+@media (max-width:760px){.three{grid-template-columns:minmax(0,1fr)}}
+.card ol{padding-left:1.2em; display:grid; gap:4px}
+/* 5.9 tree */
+.tree ul{list-style:none; margin:0; padding-left:28px; position:relative; display:grid; gap:8px}
+.tree > ul{padding-left:0}
+.tree ul ul::before{content:""; position:absolute; left:10px; top:-8px; bottom:18px; border-left:2px solid var(--line)}
+.tree ul ul > li{position:relative}
+.tree ul ul > li::before{content:""; position:absolute; left:-18px; top:20px; width:16px; border-top:2px solid var(--line)}
+.tnode{display:inline-flex; align-items:center; gap:10px; border:1.5px solid var(--line); background:var(--bg); border-radius:8px; padding:6px 8px 6px 12px; font-family:var(--display); font-size:14px; transition:opacity .3s, transform .3s}
+.tnode b{font-size:15px}
+.tnode .rel{color:var(--ink-2); font-weight:500}
+.tnode button{border:1px solid var(--bad); color:var(--bad); background:transparent; border-radius:5px; font-family:var(--display); font-size:12px; font-weight:700; padding:3px 7px}
+.tnode.root{border-color:var(--run); background:var(--run-soft)}
+.tnode.ind{border-style:dashed}
+.gone{opacity:0; transform:scale(.9)}
+.treegrid{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,220px); gap:20px; align-items:start}
+@media (max-width:620px){.treegrid{grid-template-columns:minmax(0,1fr)}}
+/* threads figure */
+.thr{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:14px}
+@media (max-width:700px){.thr{grid-template-columns:minmax(0,1fr)}}
+.pbox{border:2px solid var(--line); border-radius:10px; padding:12px; display:grid; gap:6px; background:var(--surface)}
+.pbox.mt{border-color:var(--accent)}
+.pbox h5{font-family:var(--display); font-size:15px; margin:0}
+.seg{font-family:var(--display); font-size:13px; font-weight:600; padding:7px 9px; border-radius:6px; text-align:center}
+.seg.sw{background:var(--run-soft); color:var(--run)} .seg.hw{background:var(--wait-soft); color:var(--wait)} .seg.ea{background:var(--ready-soft); color:var(--ready)}
+.pair{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:8px}
+.trio{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:6px}
+.col{display:grid; gap:6px; align-content:start}
+.col small{font-family:var(--display); font-size:12px; font-weight:700; color:var(--ink-2); text-align:center}
+/* 5.10 */
+.svc{display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:8px; list-style:none; margin:0; padding:0}
+.svc li{border:1px solid var(--line); border-radius:8px; padding:10px 12px; background:var(--surface); font-family:var(--display); font-size:14.5px; font-weight:600; display:grid; gap:2px}
+.svc li span{font-family:var(--body); font-weight:400; font-size:13.5px; color:var(--ink-2)}
+/* 5.11 */
+.sig{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:16px; align-items:start}
+@media (max-width:700px){.sig{grid-template-columns:minmax(0,1fr)}}
+.opts{display:grid; gap:6px}
+.opt{display:flex; gap:10px; align-items:flex-start; padding:9px 11px; border:1.5px solid var(--line); border-radius:8px; background:var(--bg); cursor:pointer; font-size:15px}
+.opt:has(input:checked){border-color:var(--accent); background:var(--accent-soft)}
+.opt input{margin-top:5px; accent-color:var(--accent)}
+.opt code{font-weight:600}
+.switch{display:flex; gap:10px; align-items:center; font-family:var(--display); font-size:14.5px}
+.switch input{width:18px; height:18px; accent-color:var(--accent)}
+.path{display:flex; align-items:center; gap:6px; flex-wrap:wrap; font-family:var(--display); font-size:13.5px}
+.path b{padding:5px 9px; border-radius:6px; background:var(--surface-2); font-weight:600}
+.path b.hl{background:var(--accent); color:var(--accent-ink)}
+/* exercises */
+.ex-tabs{display:flex; gap:8px; flex-wrap:wrap}
+.oq{list-style:none; margin:0; padding:0; display:grid; gap:10px; counter-reset:q}
+.oq > li{counter-increment:q; border:1px solid var(--line); border-radius:8px; background:var(--surface); padding:14px 16px 14px 56px; position:relative; display:grid; gap:8px}
+.oq > li::before{content:counter(q); position:absolute; left:14px; top:12px; width:30px; height:30px; border-radius:50%; background:var(--ink); color:var(--bg); font-family:var(--display); font-weight:700; font-size:14px; display:grid; place-items:center}
+.oq p{font-size:16.5px}
+details summary{cursor:pointer; font-family:var(--display); font-size:13.5px; font-weight:600; color:var(--accent); width:fit-content}
+details[open] summary{margin-bottom:6px}
+details .ans{font-size:15px; color:var(--ink-2); display:grid; gap:4px}
+.score{position:sticky; top:calc(env(safe-area-inset-top, 0px) + 8px); z-index:2; display:flex; align-items:center; gap:14px; flex-wrap:wrap; background:var(--ink); color:var(--bg); padding:10px 16px; border-radius:8px; font-family:var(--display); font-size:14.5px}
+.score b{font-size:18px; font-variant-numeric:tabular-nums}
+.meter{flex:1; min-width:120px; height:8px; background:rgba(128,128,128,.35); border-radius:99px; overflow:hidden; display:flex}
+.meter i{display:block; height:100%; transition:width .3s}
+.meter .g{background:#6FD08C} .meter .r{background:#FF8A80}
+.score .btn{border-color:var(--bg); color:var(--bg); background:transparent; padding:5px 10px; font-size:13px}
+.qz{list-style:none; margin:0; padding:0; display:grid; gap:14px; counter-reset:c}
+.qz > li{counter-increment:c; border:1px solid var(--line); border-radius:10px; background:var(--surface); padding:16px; display:grid; gap:10px}
+.qz .qh{display:flex; gap:10px; align-items:baseline}
+.qz .qh::before{content:counter(c, decimal-leading-zero); font-family:var(--display); font-weight:800; color:var(--accent); font-size:14px; font-variant-numeric:tabular-nums}
+.qz .qh p{font-size:16.5px}
+.qz .alts{display:grid; gap:6px}
+.alt{display:grid; grid-template-columns:28px minmax(0,1fr); gap:8px; align-items:start; text-align:left; border:1.5px solid var(--line); background:var(--bg); color:var(--ink); border-radius:8px; padding:9px 12px; font-family:var(--body); font-size:15.5px; line-height:1.45}
+.alt:hover:not([disabled]){border-color:var(--ink)}
+.alt .k{font-family:var(--display); font-weight:700; font-size:13px; width:24px; height:24px; border-radius:50%; border:1.5px solid currentColor; display:grid; place-items:center; color:var(--ink-2)}
+.alt[disabled]{cursor:default}
+.alt.right{border-color:var(--ok); background:var(--ok-soft)} .alt.right .k{background:var(--ok); color:var(--surface); border-color:var(--ok)}
+.alt.wrong{border-color:var(--bad); background:var(--bad-soft)} .alt.wrong .k{background:var(--bad); color:var(--surface); border-color:var(--bad)}
+.fb{font-size:15px; padding:10px 12px; border-radius:6px}
+.fb.ok{background:var(--ok-soft)} .fb.bad{background:var(--bad-soft)}
+.fb b{font-family:var(--display)}
+.fb.ok b{color:var(--ok)} .fb.bad b{color:var(--bad)}
+.final{border:2px solid var(--ink); border-radius:10px; padding:18px; display:grid; gap:6px; background:var(--surface)}
+.final h4{font-size:22px}
+footer.end{max-width:1160px; margin:64px auto 0; padding-top:18px; border-top:1px solid var(--line); font-family:var(--display); font-size:13px; color:var(--ink-2)}
+body{margin:0}
+[hidden]{display:none!important}
+@media print{
+  :root{--bg:#FFFFFF; --surface:#FFFFFF}
+  body{font-size:11.5pt; padding-inline:0}
+  nav.toc,.btns,.evbtns,.score,#sm-log,#sm-msg,.lab-hint,.lab .msg,.final,.cursor{display:none!important}
+  .lab.hide-print{display:none!important}
+  .layout{grid-template-columns:minmax(0,1fr); gap:0; padding-top:16px}
+  main{gap:28px}
+  .top{padding-block:0 18px}
+  .sec{break-before:page}
+  #s1{break-before:auto}
+  .lab,.card,.def,.note,.win,figure,table,.oq > li,.qz > li,.states,.thr{break-inside:avoid}
+  pre.term{white-space:pre-wrap}
+  details summary{display:none}
+  .alt{padding:4px 10px}
+  .gab li{break-inside:avoid}
+  footer.end{margin-top:24px}
+}
+.gab{display:none}
+@media print{.gab{display:grid; gap:10px; break-before:page}}
+</style>
+</head><body>
+<style>
+/* ---- v2: quadros "No Windows" e componentes comuns ---- */
+.win{border:1.5px solid var(--wait); border-radius:8px; background:var(--surface); padding:16px 18px; display:grid; gap:10px}
+.win .lbl{font-family:var(--display); font-size:12px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--wait)}
+.win h4{font-size:17px}
+.win p,.win li{font-size:15.5px}
+.win ol,.win ul{margin:0; padding-left:1.3em; display:grid; gap:4px}
+.win kbd,.sec kbd{font-family:var(--mono); font-size:.82em; border:1px solid var(--line); border-bottom-width:2px; border-radius:4px; padding:0 5px; background:var(--bg)}
+.path2{font-family:var(--display); font-size:.92em; font-weight:600}
+pre.term.ps{background:#0F1A2B; color:#DCE6F4}
+pre.term.ps .c{color:#8DA2C0}
+.sub{font-family:var(--display); font-size:13px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-2)}
+.fig.big svg{max-width:760px}
+.sec > *, .lab > *{min-width:0}
+.seg2{display:flex; gap:8px; flex-wrap:wrap}
+.t.small td{font-size:14.5px}
+.three{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px}
+@media (max-width:760px){.three{grid-template-columns:minmax(0,1fr)}}
+/* linhas de tempo geradas por script */
+.tl{display:grid; gap:8px}
+.tlrow{display:grid; grid-template-columns:96px minmax(0,1fr) 72px; gap:10px; align-items:center; font-family:var(--display); font-size:13.5px; font-weight:700}
+.tlrow .track{display:flex; height:28px; border-radius:5px; overflow:hidden; background:var(--bg); border:1px solid var(--line)}
+.tlrow .track i{display:grid; place-items:center; height:100%; font-style:normal; font-size:11px; font-weight:700; overflow:hidden; white-space:nowrap}
+.tlrow .end{font-variant-numeric:tabular-nums; text-align:right; color:var(--ink-2); font-weight:600; font-size:12.5px; white-space:nowrap}
+.k-run{background:var(--run); color:var(--accent-ink)}
+.k-wait{background:var(--wait-soft); color:var(--wait)}
+.k-ready{background:var(--ready-soft); color:var(--ready)}
+.k-spin{background:var(--bad-soft); color:var(--bad)}
+.k-b{background:var(--wait); color:var(--surface)}
+.k-c{background:var(--ready); color:var(--surface)}
+.k-idle{background:transparent; color:var(--ink-2)}
+.tlleg{display:flex; gap:16px; flex-wrap:wrap; font-family:var(--display); font-size:13px; color:var(--ink-2)}
+.tlleg span{display:inline-flex; align-items:center; gap:6px}
+.tlleg i{display:inline-block; width:12px; height:12px; border-radius:3px}
+.axis{display:grid; grid-template-columns:96px minmax(0,1fr) 72px; gap:10px; font-family:var(--display); font-size:11.5px; color:var(--ink-2)}
+.axis div{display:flex; justify-content:space-between}
+</style>
+<style>
+.sec > *, .lab > *{min-width:0} pre.term{max-width:100%} select.sel{max-width:100%; min-width:0}
+.rc-grid{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:10px}
+@media (max-width:640px){.rc-grid{grid-template-columns:minmax(0,1fr)}}
+.code{font-family:var(--mono); font-size:13.5px; line-height:1.7; background:#101A12; color:#D6E8CB; border-radius:8px; padding:10px 12px}
+.code div{padding:0 6px; border-radius:4px}
+.code div.done{color:#6E8A68; text-decoration:line-through}
+.code div.next{background:#2E4A26; color:#F4F7F1}
+.mem{border:2px solid var(--ready); background:var(--ready-soft); border-radius:8px; padding:10px 12px; display:grid; gap:4px; align-content:center; text-align:center}
+.mem b{font-family:var(--mono); font-size:30px}
+.mem span{font-family:var(--display); font-size:12.5px; font-weight:700; color:var(--ink-2)}
+.regline{font-family:var(--mono); font-size:13px; color:var(--ink-2)}
+/* semáforo */
+.semrow{display:flex; gap:12px; flex-wrap:wrap; align-items:stretch}
+.semval{min-width:120px; border:2px solid var(--wait); background:var(--wait-soft); border-radius:8px; padding:10px; text-align:center; display:grid; gap:2px}
+.semval b{font-family:var(--mono); font-size:32px}
+.semval span,.queue span.lbl{font-family:var(--display); font-size:12.5px; font-weight:700; color:var(--ink-2)}
+.queue{flex:1; min-width:200px; border:1.5px dashed var(--line); border-radius:8px; padding:10px; display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+.pcard{display:grid; gap:6px; border:2px solid var(--line); border-radius:8px; padding:10px; background:var(--bg); min-width:150px; flex:1}
+.pcard b{font-family:var(--display); font-size:15px}
+.pcard small{font-family:var(--display); font-size:12.5px; font-weight:700}
+.pcard.fora small{color:var(--ink-2)} .pcard.rc{border-color:var(--run); background:var(--run-soft)} .pcard.rc small{color:var(--run)}
+.pcard.esp{border-color:var(--wait); background:var(--wait-soft)} .pcard.esp small{color:var(--wait)}
+.pcard .btns .btn{padding:5px 10px; font-size:13px}
+/* buffer */
+.buf{display:flex; gap:8px; flex-wrap:wrap}
+.slot{width:56px; height:56px; border-radius:8px; border:2px solid var(--ready); background:var(--surface); display:grid; place-items:center; font-family:var(--mono); font-size:14px; transition:background .2s}
+.slot.full{background:var(--ready); color:var(--surface)}
+.actor{font-family:var(--display); font-size:14px; font-weight:700; padding:6px 10px; border-radius:6px; background:var(--run-soft); color:var(--run)}
+.actor.blocked{background:var(--bad-soft); color:var(--bad)}
+/* filósofos */
+.phil{display:grid; grid-template-columns:repeat(5, minmax(0,1fr)); gap:8px}
+@media (max-width:640px){.phil{grid-template-columns:repeat(2, minmax(0,1fr))}}
+.ph{border:2px solid var(--line); border-radius:10px; padding:10px; display:grid; gap:4px; text-align:center; background:var(--bg)}
+.ph b{font-family:var(--display); font-size:16px}
+.ph small{font-family:var(--display); font-size:12.5px; font-weight:700}
+.ph.pensa small{color:var(--ink-2)} .ph.fome{border-color:var(--ready); background:var(--ready-soft)} .ph.fome small{color:var(--ready)}
+.ph.come{border-color:var(--run); background:var(--run-soft)} .ph.come small{color:var(--run)}
+.ph.trav{border-color:var(--bad); background:var(--bad-soft)} .ph.trav small{color:var(--bad)}
+.ph .forks{font-family:var(--mono); font-size:12.5px; color:var(--ink-2)}
+select.sel{font:inherit; font-family:var(--display); font-size:14px; padding:7px 10px; border:1.5px solid var(--ink); border-radius:6px; background:var(--surface); color:var(--ink)}
+/* mensagens */
+.msgs{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr); gap:10px; align-items:start}
+@media (max-width:640px){.msgs{grid-template-columns:minmax(0,1fr)}}
+.mbox{border:1.5px solid var(--line); border-radius:8px; padding:10px; min-height:110px; display:grid; gap:6px; align-content:start; background:var(--bg)}
+.mbox h5{font-family:var(--display); font-size:13.5px; margin:0}
+.env{font-family:var(--mono); font-size:12.5px; background:var(--ready-soft); border:1px solid var(--ready); border-radius:5px; padding:3px 8px; width:fit-content}
+/* deadlock */
+.dl svg{width:100%; max-width:520px; height:auto}
+.dl text{font-family:var(--display); font-weight:700; fill:var(--ink)}
+.dlwrap{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:16px; align-items:start}
+@media (max-width:700px){.dlwrap{grid-template-columns:minmax(0,1fr)}}
+.dlbtns{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:6px}
+.dlbtns .btn{font-size:13px; padding:7px 8px}
+</style>
+
+<style>
+/* ---- simulador de escalonamento ---- */
+.sim-ctl{display:flex; flex-wrap:wrap; gap:8px; align-items:center}
+.sim-ctl .clock{font-family:var(--mono); font-weight:700; font-size:16px; color:var(--accent); margin-left:auto}
+.sim-ctl label{font-family:var(--display); font-size:14px; color:var(--ink-2); display:inline-flex; align-items:center; gap:6px}
+.sim-ctl input[type=range]{accent-color:var(--accent); width:110px}
+.btn.sel{background:var(--ink); color:var(--bg)}
+.sim-body{display:grid; grid-template-columns:200px minmax(0,1fr); gap:16px; align-items:start}
+@media (max-width:700px){.sim-body{grid-template-columns:minmax(0,1fr)}}
+.sim-left{display:grid; gap:10px}
+.sbox{border:1.5px dashed var(--line); border-radius:8px; padding:8px 10px; display:grid; gap:6px; background:var(--bg)}
+.sbox.cpu{border:2px solid var(--run); background:var(--surface)}
+.sbox .lb{font-family:var(--display); font-size:11.5px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-2)}
+.qrow{display:flex; flex-wrap:wrap; gap:5px; align-items:center; min-height:30px}
+.qrow .ql{font-family:var(--mono); font-size:11.5px; color:var(--ink-2); min-width:52px}
+.pc{display:inline-flex; align-items:center; gap:4px; font-family:var(--mono); font-size:13px; font-weight:700; color:#fff; padding:3px 8px; border-radius:6px; white-space:nowrap}
+.pc small{font-size:10.5px; opacity:.9}
+.pc.big{font-size:17px; padding:6px 12px}
+.pc.first{outline:2.5px solid var(--ready); outline-offset:1px}
+.pc.idle{background:var(--neutral-soft); color:var(--neutral)}
+.qm{display:flex; gap:3px; height:7px}.qm i{flex:1; border-radius:2px; background:var(--line)}.qm i.u{background:var(--ready)}
+.gt{display:grid; gap:2px 0; align-items:center; font-family:var(--mono); font-size:11px}
+.gt .gl{font-weight:700; font-size:12.5px; padding-right:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.gt .gx{color:var(--ink-2); height:15px}
+.gc{height:22px; background:var(--neutral-soft); border-right:1px solid var(--surface); position:relative}
+.gc.fut{background:transparent; border-bottom:1px dotted var(--line)}
+.gc.exec{color:#fff; display:flex; align-items:center; justify-content:center; font-size:10.5px; font-weight:700}
+.gc.pronto{background:var(--ready-soft)}
+.gc.espera{background:var(--wait-soft)}
+.gc.now{box-shadow:inset 0 0 0 2px var(--ready)}
+.gc.dl::after{content:""; position:absolute; right:-2px; top:-3px; bottom:-3px; width:3px; background:var(--bad)}
+.mt{border-collapse:collapse; width:100%; font-family:var(--mono); font-size:13px}
+.mt th{font-family:var(--display); font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-2); text-align:right; padding:4px 6px; border-bottom:1px solid var(--line)}
+.mt td{text-align:right; padding:4px 6px; border-bottom:1px solid var(--line); font-variant-numeric:tabular-nums}
+.mt th:first-child,.mt td:first-child{text-align:left}
+.mt tr.avg td{font-weight:700; color:var(--accent); border-bottom:0}
+.mt td.miss{color:var(--bad); font-weight:700}
+.edit input{width:62px; font-family:var(--mono); font-size:13px; padding:5px; border:1px solid var(--line); border-radius:5px; background:var(--bg); color:var(--ink)}
+.cmp td:first-child{font-family:var(--display)}
+@media print{.sim-ctl,.lab .leg,#lab,nav.toc a[href="#lab"]{display:none!important}.layout{display:block!important}main{display:block!important}main > .sec{margin-bottom:28px}footer.end{position:static!important;break-inside:avoid}.lab .sim-body{grid-template-columns:170px minmax(0,1fr)}}
+</style>
+<header class="top">
+  <p class="eyebrow">Sistemas Operacionais · IFAL Campus Maceió · Material de referência</p>
+  <h1>Gerência do Processador<span>.</span></h1>
+  <p class="lede">Com vários processos prontos e uma única UCP, alguém precisa decidir quem executa, por quanto tempo e em que ordem. Leia, rode os simuladores passo a passo, veja as prioridades e a afinidade no Windows e, no fim, teste o que aprendeu.</p>
+  <div class="meta"><span>Base: <b>Machado &amp; Maia, <i>Arquitetura de Sistemas Operacionais</i>, cap. 8</b></span><span>Prof. Christiano Rossini</span><span>15 seções · 12 simuladores · exemplos no Windows · 34 exercícios</span></div>
+</header>
+
+<div class="layout">
+<nav class="toc" aria-label="Sumário">
+  <p>Sumário</p>
+  <ol>
+    <li><a href="#s1"><span>8.1</span>Introdução</a></li>
+    <li><a href="#s2"><span>8.2</span>Funções básicas</a></li>
+    <li><a href="#s3"><span>8.3</span>Critérios</a></li>
+    <li><a href="#s4"><span>8.4</span>Preempção</a></li>
+    <li><a href="#s5"><span>8.5</span>FIFO</a></li>
+    <li><a href="#s6"><span>8.6</span>SJF e SRT</a></li>
+    <li><a href="#s7"><span>8.7</span>Cooperativo</a></li>
+    <li><a href="#s8"><span>8.8</span>Circular</a></li>
+    <li><a href="#s9"><span>8.9</span>Prioridades</a></li>
+    <li><a href="#s10"><span>8.10</span>Circular com prioridades</a></li>
+    <li><a href="#s11"><span>8.11</span>Múltiplas filas</a></li>
+    <li><a href="#s12"><span>8.12</span>Com realimentação</a></li>
+    <li><a href="#s13"><span>8.13</span>Tempo compartilhado</a></li>
+    <li><a href="#s14"><span>8.14</span>Tempo real</a></li>
+    <li><a href="#s15"><span>8.15</span>Multiprocessadores</a></li>
+    <li><a href="#lab"><span>Lab</span>Monte o seu cenário</a></li>
+    <li><a href="#ex"><span>Ex.</span>Exercícios</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<section class="sec" id="s1">
+  <div class="sec-head"><span class="num">8.1</span><h2>Introdução</h2></div>
+  <p>Num sistema multiprogramável, vários processos ficam prontos ao mesmo tempo disputando o processador. Como só um deles pode executar por vez em cada UCP, o sistema operacional precisa de critérios para decidir <b>qual processo recebe a UCP</b>, quando tirá-la dele e quem vem depois.</p>
+  <div class="def"><span class="lbl">Ideia central</span><p>A <dfn>política de escalonamento</dfn> é o conjunto de critérios que o SO usa para escolher, entre os processos no estado de pronto, aquele que vai ocupar o processador.</p></div>
+  <p>Essa escolha é uma das tarefas mais importantes do sistema operacional. Ela afeta a velocidade percebida pelo usuário, a quantidade de trabalho concluída por hora e até a segurança de sistemas que controlam máquinas. Não existe uma política melhor em todos os casos: cada tipo de sistema privilegia objetivos diferentes, e por isso o capítulo apresenta várias.</p>
+  <p>O capítulo segue esta ordem: as rotinas que fazem o escalonamento (8.2), como medir uma política (8.3), a diferença entre tirar ou não a UCP de um processo (8.4), os algoritmos clássicos (8.5 a 8.12) e as políticas usadas em sistemas de tempo compartilhado, de tempo real e com vários processadores (8.13 a 8.15).</p>
+  <div class="note"><span class="lbl">Ligação com os capítulos anteriores</span><p>Os estados <span class="chip st-pronto">pronto</span>, <span class="chip st-execucao">execução</span> e <span class="chip st-espera">espera</span> do capítulo 5 são a base de tudo: o escalonador escolhe entre os prontos; um processo sai da execução quando termina, quando pede E/S (vai para espera) ou quando o SO o interrompe (volta para pronto). Em sistemas com threads (capítulo 6), quem é escalonado é o thread.</p></div>
+</section>
+
+<section class="sec" id="s2">
+  <div class="sec-head"><span class="num">8.2</span><h2>Funções básicas</h2></div>
+  <p>Duas rotinas do SO trabalham juntas toda vez que a UCP troca de dono:</p>
+  <div class="twocol wide">
+    <div class="card"><h4>Escalonador (scheduler)</h4><p>Implementa a política: olha a fila de prontos e <b>escolhe</b> o próximo processo. É ele que decide se o critério é ordem de chegada, menor tempo, prioridade e assim por diante.</p></div>
+    <div class="card"><h4>Dispatcher</h4><p><b>Executa</b> a decisão: faz a troca de contexto, salvando o contexto do processo que sai no seu PCB e carregando o do escolhido. O tempo gasto nisso é a <dfn>latência do dispatcher</dfn>.</p></div>
+  </div>
+  <figure class="fig wide">
+    <svg viewBox="0 0 760 170" role="img" aria-label="Fluxo: fila de prontos, escalonador escolhe, dispatcher troca o contexto e o processo passa a executar na UCP" style="width:100%; height:auto">
+      <rect x="10" y="40" width="160" height="90" rx="10" fill="var(--ready-soft)" stroke="var(--ready)" stroke-width="2"/>
+      <text x="90" y="80" text-anchor="middle" font-family="Archivo, Arial" font-size="17" font-weight="700" fill="var(--ink)">Fila de prontos</text>
+      <text x="90" y="104" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="14" fill="var(--ink-2)">A · B · C · D</text>
+      <rect x="215" y="40" width="160" height="90" rx="10" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/>
+      <text x="295" y="80" text-anchor="middle" font-family="Archivo, Arial" font-size="17" font-weight="700" fill="var(--ink)">Escalonador</text>
+      <text x="295" y="104" text-anchor="middle" font-family="Archivo, Arial" font-size="14" fill="var(--ink-2)">aplica a política</text>
+      <rect x="420" y="40" width="160" height="90" rx="10" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/>
+      <text x="500" y="80" text-anchor="middle" font-family="Archivo, Arial" font-size="17" font-weight="700" fill="var(--ink)">Dispatcher</text>
+      <text x="500" y="104" text-anchor="middle" font-family="Archivo, Arial" font-size="14" fill="var(--ink-2)">troca de contexto</text>
+      <rect x="625" y="40" width="125" height="90" rx="10" fill="var(--run-soft)" stroke="var(--run)" stroke-width="2.5"/>
+      <text x="687" y="92" text-anchor="middle" font-family="Archivo, Arial" font-size="20" font-weight="800" fill="var(--run)">UCP</text>
+      <g stroke="var(--ink-2)" stroke-width="2.5" fill="none"><path d="M172 85h38"/><path d="M377 85h38"/><path d="M582 85h38"/></g>
+      <g fill="var(--ink-2)"><path d="M210 79l10 6-10 6z"/><path d="M415 79l10 6-10 6z"/><path d="M620 79l10 6-10 6z"/></g>
+      <text x="380" y="160" text-anchor="middle" font-family="Archivo, Arial" font-size="14" fill="var(--ink-2)">escolhe quem (política)  →  coloca para executar (mecanismo)</text>
+    </svg>
+  </figure>
+  <p>Separar as duas funções é útil: o mecanismo de troca de contexto é sempre o mesmo, enquanto a política pode mudar. Durante o trabalho do dispatcher nenhum processo de usuário avança, por isso cada troca tem um custo, o <b>overhead</b> visto no laboratório do SOsim (atividade 4).</p>
+  <h3>Objetivos de uma política</h3>
+  <ul>
+    <li>manter o processador ocupado a maior parte do tempo;</li>
+    <li>concluir o maior número possível de processos por unidade de tempo (throughput);</li>
+    <li>privilegiar aplicações críticas;</li>
+    <li>dar a todos a chance de usar a UCP, sem que ninguém espere indefinidamente (evitar <dfn>starvation</dfn>);</li>
+    <li>oferecer tempos de resposta razoáveis aos usuários interativos.</li>
+  </ul>
+  <p>Esses objetivos entram em conflito. Um sistema em lote prefere throughput e UCP ocupada; um de tempo compartilhado, resposta rápida e justiça; um de tempo real, cumprir prazos com previsibilidade.</p>
+  <div class="win">
+    <span class="lbl">No Windows</span>
+    <h4>Onde ver o escalonamento acontecendo</h4>
+    <ol>
+      <li>Abra o Gerenciador de Tarefas (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Esc</kbd>) e vá à aba <span class="path2">Detalhes</span>.</li>
+      <li>Clique com o botão direito no cabeçalho da tabela › <span class="path2">Selecionar colunas</span> e marque <b>Prioridade base</b> e <b>Threads</b>.</li>
+      <li>Na aba <span class="path2">Desempenho › CPU</span>, o campo <b>Trocas de contexto</b> (em alguns idiomas, “Context switches”) mostra quantas trocas o dispatcher faz por segundo, normalmente milhares.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="sec" id="s3">
+  <div class="sec-head"><span class="num">8.3</span><h2>Critérios de escalonamento</h2></div>
+  <p>Para comparar políticas, usam-se medidas objetivas:</p>
+  <div class="scroll wide"><table class="t">
+    <tr><th>Critério</th><th>O que mede</th><th>Desejável</th></tr>
+    <tr><td><b>Utilização do processador</b></td><td>Percentual do tempo em que a UCP está ocupada.</td><td>alta</td></tr>
+    <tr><td><b>Throughput</b></td><td>Número de processos concluídos por unidade de tempo.</td><td>alto</td></tr>
+    <tr><td><b>Tempo de processador (de UCP)</b></td><td>Tempo que o processo passa executando. <b>Não depende</b> da política.</td><td>—</td></tr>
+    <tr><td><b>Tempo de espera</b></td><td>Tempo total que o processo passa na fila de prontos.</td><td>baixo</td></tr>
+    <tr><td><b>Turnaround</b></td><td>Da criação ao término: espera + UCP + E/S.</td><td>baixo</td></tr>
+    <tr><td><b>Tempo de resposta</b></td><td>Da chegada (ou de um pedido) até a primeira resposta, aqui medida como a primeira vez na UCP.</td><td>baixo</td></tr>
+  </table></div>
+  <div class="def"><span class="lbl">Para os cálculos</span><p>Turnaround = término − chegada. Espera = turnaround − tempo de UCP − tempo em E/S. Resposta = primeira execução − chegada. As médias somam os valores de cada processo e dividem pelo número de processos.</p></div>
+  <p>Uma política <b>não muda o trabalho</b> de cada processo, que é o seu tempo de UCP. O que ela muda é a ordem, e portanto <b>quanto cada um espera</b>. Por isso os algoritmos deste capítulo são comparados principalmente pela espera média, pelo turnaround médio e pelo tempo de resposta.</p>
+  <h3>Como ler os simuladores desta apostila</h3>
+  <p>Em todos os simuladores, o tempo é dividido em unidades. A linha <b>UCP</b> do diagrama de Gantt mostra quem executou em cada instante; as linhas de cada processo mostram o estado dele: <span class="chip st-execucao">executando</span>, <span class="chip st-pronto">pronto</span> ou <span class="chip st-espera">espera (E/S)</span>. Use <b>Passo</b> para avançar uma unidade e leia a mensagem que explica cada decisão; no fim aparece a tabela com espera, turnaround e resposta.</p>
+</section>
+
+<section class="sec" id="s4">
+  <div class="sec-head"><span class="num">8.4</span><h2>Escalonamentos não preemptivos e preemptivos</h2></div>
+  <div class="twocol wide">
+    <div class="card"><h4>Não preemptivo</h4><p>Quando o processo ganha a UCP, só a libera ao <b>terminar</b> ou ao <b>pedir uma E/S</b> (ou outro evento que o leve à espera). Nenhum evento externo o tira de lá. Simples e previsível, era típico dos primeiros sistemas em lote.</p></div>
+    <div class="card"><h4>Preemptivo</h4><p>O SO pode <b>interromper</b> o processo em execução e devolvê-lo ao estado de pronto, para dar a UCP a outro. Motivos: fim da fatia de tempo ou chegada de um processo mais prioritário.</p></div>
+  </div>
+  <p>A <dfn>preempção</dfn> permite tratar melhor os processos interativos e de tempo real e impede que um único processo monopolize a UCP. O preço é o overhead: mais trocas de contexto e uma implementação mais complexa.</p>
+  <div class="lab" data-sim='{"title":"Mesmos processos, com e sem preempção","alg":"FIFO","q":2,"procs":[{"id":"A","arr":0,"burst":6},{"id":"B","arr":1,"burst":2},{"id":"C","arr":2,"burst":2}],"variants":[{"label":"Não preemptivo (FIFO)","alg":"FIFO"},{"label":"Preemptivo (circular, fatia 2)","alg":"RR"}],"hint":"Compare quando B e C começam a executar nas duas versões."}'></div>
+</section>
+
+<section class="sec" id="s5">
+  <div class="sec-head"><span class="num">8.5</span><h2>Escalonamento FIFO</h2></div>
+  <p>No <dfn>FIFO</dfn> (<i>first-in-first-out</i>), também chamado FCFS (<i>first-come-first-served</i>), o processo que chega primeiro à fila de prontos é o primeiro a ser atendido. Ao ser escolhido, executa até terminar ou até pedir uma E/S; quando volta da espera, entra no <b>fim</b> da fila. É não preemptivo.</p>
+  <div class="twocol wide">
+    <div class="card"><h4>Vantagem</h4><p>Simples de implementar: basta uma fila.</p></div>
+    <div class="card"><h4>Problemas</h4><p>Impossível prever quando um processo vai executar; o tempo de espera depende da ordem de chegada. Processos curtos ou I/O-bound ficam presos atrás de CPU-bound longos.</p></div>
+  </div>
+  <div class="lab" data-sim='{"title":"A ordem de chegada muda a espera média","alg":"FIFO","procs":[{"id":"A","burst":10},{"id":"B","burst":4},{"id":"C","burst":3}],"variants":[{"label":"Ordem A, B, C","procs":[{"id":"A","burst":10},{"id":"B","burst":4},{"id":"C","burst":3}]},{"label":"Ordem C, B, A","procs":[{"id":"C","burst":3},{"id":"B","burst":4},{"id":"A","burst":10}]}],"hint":"Rode as duas ordens até o fim e compare a espera média: o tempo de UCP de cada processo é o mesmo."}'></div>
+  <p>Com o processo longo na frente, a espera média é 8; com os curtos na frente, cai para 3,3. Essa observação leva ao próximo algoritmo.</p>
+</section>
+
+<section class="sec" id="s6">
+  <div class="sec-head"><span class="num">8.6</span><h2>Escalonamento SJF</h2></div>
+  <p>No <dfn>SJF</dfn> (<i>shortest-job-first</i>), o escalonador escolhe o processo pronto com <b>menor tempo de processador</b> ainda por executar. Empates são resolvidos pela ordem de chegada. Na versão original, não é preemptivo: quem ganha a UCP vai até o fim.</p>
+  <div class="def"><span class="lbl">Por que funciona</span><p>Executar primeiro os mais curtos reduz a espera de todos os que vêm depois. Entre os algoritmos não preemptivos, o SJF é o que produz o <b>menor tempo médio de espera</b>.</p></div>
+  <p>O grande problema é prático: o SO <b>não sabe</b> quanto tempo de UCP um processo ainda vai usar. Em sistemas em lote, o usuário informava uma estimativa; em sistemas interativos, o SO pode estimar a próxima rajada pelo comportamento passado. Além disso, se processos curtos não param de chegar, os longos podem esperar indefinidamente (<b>starvation</b>).</p>
+  <h3>SJF preemptivo (SRT)</h3>
+  <p>Na versão preemptiva, chamada <dfn>SRT</dfn> (<i>shortest remaining time</i>), se chega um processo com tempo de UCP <b>menor que o restante</b> do processo em execução, este é interrompido e volta para a fila.</p>
+  <div class="lab" data-sim='{"title":"SJF e SRT com chegadas em instantes diferentes","alg":"SJF","procs":[{"id":"A","arr":0,"burst":7},{"id":"B","arr":2,"burst":4},{"id":"C","arr":4,"burst":1},{"id":"D","arr":5,"burst":4}],"variants":[{"label":"SJF (não preemptivo)","alg":"SJF"},{"label":"SRT (preemptivo)","alg":"SRT"}],"hint":"Na fila, o número ao lado do processo é o tempo de UCP restante. No SRT, observe t = 2: B (4) passa à frente de A (5 restantes)."}'></div>
+  <p>Espera média: 4,0 no SJF e 3,0 no SRT, com mais trocas de contexto.</p>
+</section>
+
+<section class="sec" id="s7">
+  <div class="sec-head"><span class="num">8.7</span><h2>Escalonamento cooperativo</h2></div>
+  <p>No <dfn>escalonamento cooperativo</dfn>, é o próprio processo que, de tempos em tempos, <b>libera voluntariamente</b> a UCP e volta para a fila de prontos, dando a vez a outro. O SO não interrompe ninguém: depende da colaboração de cada programa, que verifica periodicamente se há outros processos esperando.</p>
+  <p>Foi usado em sistemas como o Windows 3.x e as primeiras versões do Mac OS. O problema é evidente: um programa mal escrito, ou preso num laço, <b>nunca devolve</b> a UCP, e o sistema inteiro parece travado. Por isso os sistemas atuais usam escalonamento preemptivo.</p>
+  <div class="lab" data-sim='{"title":"Quando todos cooperam e quando um não coopera","alg":"COOP","procs":[{"id":"A","burst":6,"yieldEvery":2},{"id":"B","burst":6,"yieldEvery":2},{"id":"C","burst":6,"yieldEvery":2}],"variants":[{"label":"Todos cooperam","procs":[{"id":"A","burst":6,"yieldEvery":2},{"id":"B","burst":6,"yieldEvery":2},{"id":"C","burst":6,"yieldEvery":2}]},{"label":"B não coopera","procs":[{"id":"A","burst":6,"yieldEvery":2},{"id":"B","burst":14},{"id":"C","burst":6,"yieldEvery":2}]}],"hint":"Os processos cooperativos liberam a UCP a cada 2 unidades. Na segunda versão, B nunca libera."}'></div>
+</section>
+
+<section class="sec" id="s8">
+  <div class="sec-head"><span class="num">8.8</span><h2>Escalonamento circular</h2></div>
+  <p>O <dfn>escalonamento circular</dfn> (<i>round robin</i>) é um FIFO com limite de tempo. Cada processo recebe uma <dfn>fatia de tempo</dfn> (<i>time-slice</i> ou quantum). Se não terminar dentro dela, o relógio gera uma interrupção, ocorre a <b>preempção por tempo</b> e o processo vai para o <b>fim da fila</b> de prontos.</p>
+  <div class="def"><span class="lbl">Por que é tão usado</span><p>Nenhum processo monopoliza a UCP, e todos recebem atenção regularmente. É a base dos sistemas de tempo compartilhado.</p></div>
+  <div class="lab" data-sim='{"title":"Circular: ajuste a fatia de tempo","alg":"RR","q":2,"qctl":true,"procs":[{"id":"A","arr":0,"burst":5},{"id":"B","arr":1,"burst":3},{"id":"C","arr":2,"burst":1},{"id":"D","arr":3,"burst":2}],"hint":"A barrinha sob a UCP mostra quanto da fatia já foi usado. Convenção: quem chega no mesmo instante em que outro é preemptado entra na fila antes dele. Teste fatia 1, 2 e 6."}'></div>
+  <h3>O tamanho da fatia</h3>
+  <div class="twocol wide">
+    <div class="card"><h4>Fatia pequena</h4><p>Resposta rápida, mas muitas trocas de contexto: o overhead consome parte importante da UCP.</p></div>
+    <div class="card"><h4>Fatia grande</h4><p>Poucas trocas, mas cada processo espera mais pela vez; no limite, o circular vira um FIFO.</p></div>
+  </div>
+  <p>A fatia costuma ficar entre 10 e 100 milissegundos, muito maior que o tempo de uma troca de contexto. Uma conta simples mostra o porquê: se a troca custa 1 ms, a fração útil da UCP é fatia ÷ (fatia + 1). Com fatia de 1 ms, metade do tempo vai para o SO; com 99 ms, só 1%.</p>
+  <h3>CPU-bound e I/O-bound no circular</h3>
+  <p>Há uma injustiça no circular puro: o processo CPU-bound usa a fatia inteira, enquanto o I/O-bound usa um pedaço, vai para espera e, quando volta, entra no <b>fim</b> da fila. Uma saída é dar <b>prioridade maior</b> a quem retorna da E/S, ideia retomada nas seções 8.10 e 8.13.</p>
+  <div class="lab" data-sim='{"title":"Um CPU-bound e um I/O-bound","alg":"RR","q":4,"procs":[{"id":"CPU","burst":12,"prio":1},{"id":"ES","burst":4,"prio":2,"io":{"every":1,"dur":2}}],"variants":[{"label":"Circular (fatia 4)","alg":"RR"},{"label":"Prioridade maior para o I/O-bound","alg":"RRP"}],"hint":"ES executa 1 unidade e pede E/S de 2. Compare o turnaround médio: 16 no circular puro e 13 com prioridade para quem volta da E/S."}'></div>
+</section>
+
+<section class="sec" id="s9">
+  <div class="sec-head"><span class="num">8.9</span><h2>Escalonamento por prioridades</h2></div>
+  <p>No <dfn>escalonamento por prioridades</dfn>, cada processo tem um valor de prioridade, e o escalonador escolhe o pronto de <b>maior prioridade</b>; entre iguais, vale a ordem de chegada. A prioridade expressa a importância da tarefa.</p>
+  <div class="note"><span class="lbl">Convenção</span><p>Nesta apostila, <b>número maior = prioridade maior</b>, como no Windows. Em outros sistemas (e em muitos livros) é o contrário. Nos exercícios, a convenção sempre é informada.</p></div>
+  <div class="twocol wide">
+    <div class="card"><h4>Estática ou dinâmica</h4><p><b>Estática:</b> definida na criação, não muda. <b>Dinâmica:</b> o SO ajusta a prioridade conforme o comportamento do processo ou o tempo de espera.</p></div>
+    <div class="card"><h4>Preemptivo ou não</h4><p>Na versão preemptiva, um processo que fica pronto com prioridade maior que a do atual causa a <b>preempção por prioridade</b>: o atual volta para pronto.</p></div>
+  </div>
+  <div class="lab" data-sim='{"title":"Prioridades: não preemptivo e preemptivo","alg":"PRIO","procs":[{"id":"A","arr":0,"burst":5,"prio":1},{"id":"B","arr":1,"burst":3,"prio":3},{"id":"C","arr":2,"burst":2,"prio":2},{"id":"D","arr":3,"burst":2,"prio":4}],"variants":[{"label":"Não preemptivo","alg":"PRIO"},{"label":"Preemptivo","alg":"PRIOP"}],"hint":"Na fila, “p” indica a prioridade. No preemptivo, B interrompe A em t = 1 e D interrompe B em t = 3."}'></div>
+  <h3>Starvation e envelhecimento</h3>
+  <p>Se processos de prioridade alta não param de chegar, um processo de prioridade baixa pode <b>nunca</b> executar. A solução é o <dfn>envelhecimento</dfn> (<i>aging</i>): a prioridade de quem espera aumenta gradualmente com o tempo, até que ele seja escolhido.</p>
+  <div class="lab" data-sim='{"title":"Starvation e envelhecimento","alg":"PRIOP","procs":[{"id":"Baixa","arr":0,"burst":3,"prio":1},{"id":"H1","arr":0,"burst":3,"prio":5},{"id":"H2","arr":3,"burst":3,"prio":5},{"id":"H3","arr":6,"burst":3,"prio":5},{"id":"H4","arr":9,"burst":3,"prio":5},{"id":"H5","arr":12,"burst":3,"prio":5}],"variants":[{"label":"Sem envelhecimento","aging":0},{"label":"Com envelhecimento (+1 a cada 2 de espera)","aging":2}],"hint":"Sem envelhecimento, Baixa só executa quando acabam os processos de prioridade 5. Com envelhecimento, acompanhe na mensagem a prioridade de Baixa subindo."}'></div>
+  <div class="win">
+    <span class="lbl">No Windows</span>
+    <h4>Classes de prioridade de um processo</h4>
+    <p>O Windows agrupa as prioridades em classes: <b>Ociosa</b>, <b>Abaixo do normal</b>, <b>Normal</b>, <b>Acima do normal</b>, <b>Alta</b> e <b>Tempo real</b>. No Gerenciador de Tarefas, aba <span class="path2">Detalhes</span>, clique com o botão direito num processo › <span class="path2">Definir prioridade</span>. Pelo PowerShell:</p>
+    <pre class="term ps"><span class="c"># os processos de maior prioridade base</span>
+PS&gt; Get-Process | Sort-Object BasePriority -Descending | Select-Object -First 10 Name, Id, PriorityClass, BasePriority
+<span class="c"># abrir o Bloco de Notas com prioridade baixa e depois alterá-la</span>
+PS&gt; Start-Process notepad
+PS&gt; (Get-Process notepad).PriorityClass = 'BelowNormal'
+PS&gt; Get-Process notepad | Select-Object Name, PriorityClass, BasePriority</pre>
+    <p>A coluna <b>BasePriority</b> mostra o número (Normal = 8, Alta = 13). Evite a classe Tempo real: um processo nela pode deixar o resto do sistema sem UCP.</p>
+  </div>
+</section>
+
+<section class="sec" id="s10">
+  <div class="sec-head"><span class="num">8.10</span><h2>Escalonamento circular com prioridades</h2></div>
+  <p>Combina os dois anteriores: há uma fila de prontos para cada prioridade, o escalonador atende a fila de maior prioridade e, dentro dela, usa o <b>circular</b> com fatia de tempo. Existem dois motivos para preempção: <b>por tempo</b> (fim da fatia) e <b>por prioridade</b> (ficou pronto alguém mais prioritário).</p>
+  <p>É a base de muitos sistemas de tempo compartilhado, geralmente com <b>prioridades dinâmicas</b>: processos que voltam de E/S ganham prioridade, e os que consomem muita UCP perdem. Assim os I/O-bound e interativos são favorecidos.</p>
+  <div class="lab" data-sim='{"title":"Circular com prioridades","alg":"RRP","q":2,"qctl":true,"procs":[{"id":"A","arr":0,"burst":4,"prio":1},{"id":"B","arr":0,"burst":3,"prio":1},{"id":"C","arr":1,"burst":3,"prio":2},{"id":"D","arr":2,"burst":2,"prio":2}],"hint":"A fila aparece separada por prioridade. C chega em t = 1 com prioridade 2 e interrompe A; C e D se revezam pela fatia, e só depois A e B voltam."}'></div>
+</section>
+
+<section class="sec" id="s11">
+  <div class="sec-head"><span class="num">8.11</span><h2>Escalonamento por múltiplas filas</h2></div>
+  <p>Os processos têm necessidades diferentes: os do sistema precisam de atenção imediata, os interativos de resposta rápida, os em lote de throughput. No <dfn>escalonamento por múltiplas filas</dfn>, os processos são <b>classificados</b> e cada classe tem a sua fila de prontos, com <b>prioridade e algoritmo próprios</b>: por exemplo, circular para os interativos e FIFO para os em lote.</p>
+  <p>Uma fila só é atendida quando todas as de prioridade maior estão vazias; se chega um processo numa fila superior, há preempção. A limitação: a classificação é feita na criação e o processo <b>não muda de fila</b>, mesmo que mude de comportamento.</p>
+  <div class="lab" data-sim='{"title":"Sistema (FIFO) &gt; Interativo (circular, fatia 2) &gt; Lote (FIFO)","alg":"MQ","q":2,"procs":[{"id":"L1","arr":0,"burst":6,"cls":"lote"},{"id":"I1","arr":0,"burst":4,"cls":"int"},{"id":"I2","arr":1,"burst":3,"cls":"int"},{"id":"S1","arr":4,"burst":2,"cls":"sis"}],"hint":"L1 chegou primeiro, mas só executa quando as filas de sistema e interativa esvaziam. Em t = 4, S1 chega e passa à frente dos interativos."}'></div>
+</section>
+
+<section class="sec" id="s12">
+  <div class="sec-head"><span class="num">8.12</span><h2>Múltiplas filas com realimentação</h2></div>
+  <p>Aqui o processo <b>muda de fila</b> conforme o comportamento, sem precisar ser classificado antes. Há várias filas com prioridades decrescentes e fatias crescentes. Todo processo começa na fila mais alta, de menor fatia. Se usa a fatia inteira, <b>desce</b> uma fila; se libera a UCP antes (por exemplo, para fazer E/S), permanece onde está.</p>
+  <div class="def"><span class="lbl">Escalonamento adaptativo</span><p>O mecanismo se ajusta sozinho ao tipo de cada processo: os <b>I/O-bound</b> e interativos ficam nas filas altas, com prioridade e boa resposta; os <b>CPU-bound</b> descem para as filas baixas, onde recebem fatias maiores e trocam menos de contexto.</p></div>
+  <div class="lab" data-sim='{"title":"Filas com fatias 2, 4 e 8","alg":"MLFQ","levels":[2,4,8],"procs":[{"id":"X","arr":0,"burst":14},{"id":"Y","arr":0,"burst":5,"io":{"every":1,"dur":2}},{"id":"Z","arr":2,"burst":3,"io":{"every":1,"dur":3}}],"hint":"X é CPU-bound: usa a fatia de 2, desce para a fila 2, usa a de 4 e desce para a 3. Y e Z executam 1 unidade e pedem E/S, então continuam na fila 1."}'></div>
+  <p>É o mecanismo mais flexível do capítulo, e também o mais complexo: o SO precisa acompanhar o comportamento de cada processo, o que gera overhead.</p>
+</section>
+
+<section class="sec" id="s13">
+  <div class="sec-head"><span class="num">8.13</span><h2>Política em sistemas de tempo compartilhado</h2></div>
+  <p>Em tempo compartilhado, o objetivo é dividir a UCP de forma justa entre muitos usuários e responder rapidamente aos interativos. A política mais comum é o <b>circular com prioridades dinâmicas</b>: a prioridade sobe para quem acabou de sair de uma espera por E/S (é provável que seja interativo) e desce para quem gasta fatias inteiras.</p>
+  <p>Na prática, isso implementa as conclusões das seções anteriores: o I/O-bound executa logo que volta, usa pouco a UCP e libera; o CPU-bound continua avançando nas sobras, sem monopolizar.</p>
+  <div class="win">
+    <span class="lbl">No Windows</span>
+    <h4>Prioridades dinâmicas e o primeiro plano</h4>
+    <p>O Windows escalona <b>threads</b>, com 32 níveis de prioridade. Os níveis de 1 a 15 são variáveis: o sistema dá um acréscimo temporário ao thread que termina uma espera por E/S (teclado, disco) e pode dar fatias maiores à janela em primeiro plano. Os níveis de 16 a 31 são de tempo real e fixos.</p>
+    <p>Para ver a opção que favorece o primeiro plano: <span class="path2">Painel de Controle › Sistema › Configurações avançadas do sistema › Desempenho › Configurações › Avançado</span>, em <b>Agendamento do processador</b>: <b>Programas</b> (fatias menores, melhor resposta) ou <b>Serviços em segundo plano</b> (fatias maiores, típico de servidores).</p>
+  </div>
+</section>
+
+<section class="sec" id="s14">
+  <div class="sec-head"><span class="num">8.14</span><h2>Política em sistemas de tempo real</h2></div>
+  <p>Em sistemas de tempo real, como o controle de freios, de um marca-passo ou de uma linha de produção, a resposta precisa chegar <b>dentro de um prazo</b>: uma resposta certa fora do prazo é uma resposta errada. O que importa é a <b>previsibilidade</b>, não a justiça ou o throughput.</p>
+  <p>Por isso a política usa <b>prioridades estáticas</b>, de acordo com a importância de cada tarefa, e <b>preempção por prioridade imediata</b>, sem fatia de tempo: o processo de maior prioridade executa assim que fica pronto e só sai quando termina ou espera.</p>
+  <div class="lab" data-sim='{"title":"Uma tarefa crítica com prazo","alg":"RR","q":3,"procs":[{"id":"A","arr":0,"burst":6,"prio":1},{"id":"B","arr":0,"burst":6,"prio":1},{"id":"Freio","arr":3,"burst":2,"prio":9,"dl":6}],"variants":[{"label":"Circular (fatia 3)","alg":"RR"},{"label":"Prioridade preemptiva","alg":"PRIOP"}],"hint":"Freio chega em t = 3 e precisa terminar até t = 6 (traço vermelho). No circular, espera a vez e perde o prazo; com prioridade preemptiva, entra na hora."}'></div>
+</section>
+
+<section class="sec" id="s15">
+  <div class="sec-head"><span class="num">8.15</span><h2>Escalonamento com múltiplos processadores</h2></div>
+  <p>Com vários processadores, o escalonador decide também <b>onde</b> cada processo executa. Duas organizações:</p>
+  <div class="twocol wide">
+    <div class="card"><h4>Uma fila para cada processador</h4><p>Cada processador tem seus prontos. Simples, mas um processador pode ficar ocioso enquanto outro está sobrecarregado; é preciso <b>balanceamento de carga</b>, migrando processos entre as filas.</p></div>
+    <div class="card"><h4>Fila única</h4><p>Todos os processadores retiram processos da mesma fila. A carga se equilibra sozinha, mas o acesso à fila compartilhada precisa de exclusão mútua (capítulo 7).</p></div>
+  </div>
+  <p>Há ainda a <dfn>afinidade</dfn>: um processo que volta ao <b>mesmo processador</b> encontra parte dos seus dados na cache dele e executa mais rápido. Os sistemas tentam respeitar a afinidade sem desequilibrar a carga.</p>
+  <div class="win">
+    <span class="lbl">No Windows</span>
+    <h4>Afinidade e prioridade na prática</h4>
+    <p>No Gerenciador de Tarefas, aba <span class="path2">Detalhes</span>, botão direito › <span class="path2">Definir afinidade</span> escolhe em quais processadores lógicos o processo pode executar. A experiência abaixo prende dois laços infinitos no mesmo processador, com prioridades diferentes:</p>
+    <pre class="term">C:\&gt; start "baixa" /affinity 1 /low  powershell -NoExit -Command "while($true){}"
+C:\&gt; start "alta"  /affinity 1 /high powershell -NoExit -Command "while($true){}"</pre>
+    <p>Na aba <span class="path2">Detalhes</span>, a coluna <b>CPU</b> mostra o processo de prioridade alta com quase toda a fatia daquele processador e o de prioridade baixa perto de zero: preempção por prioridade acontecendo de verdade. Feche as duas janelas para encerrar.</p>
+  </div>
+</section>
+
+<section class="sec" id="lab">
+  <div class="sec-head"><span class="num">Laboratório</span><h2>Monte o seu cenário</h2></div>
+  <p>Edite os processos, escolha o algoritmo e simule. “Comparar todos” calcula as médias de cada algoritmo para os mesmos processos: um bom jeito de conferir os exercícios.</p>
+  <div class="lab wide" id="labbox">
+    <div class="lab-head"><span class="tag">Laboratório</span><h4>Simulador livre</h4></div>
+    <div class="sim-ctl"><label for="labAlg">Algoritmo <select class="sel" id="labAlg"></select></label><label for="labQ">Fatia <input class="edit" id="labQ" type="number" min="1" max="10" value="2" style="width:60px"></label><label for="labAging">Envelhecimento <input id="labAging" type="number" min="0" max="10" value="0" style="width:60px"></label></div>
+    <div class="scroll"><table class="mt edit" id="labTbl"></table></div>
+    <div class="btns"><button class="btn" id="labAdd" type="button">+ processo</button><button class="btn primary" id="labRun" type="button">Simular</button><button class="btn" id="labCmp" type="button">Comparar todos</button></div>
+    <div id="labOut"></div>
+    <div id="labSim" style="display:grid; gap:14px"></div>
+  </div>
+</section>
+
+<section class="sec" id="ex">
+  <div class="sec-head"><span class="num">Exercícios</span><h2>Exercícios de fixação</h2></div>
+  <p>Duas partes: <b>questões abertas</b>, baseadas nos exercícios do capítulo 8 do livro, para responder por escrito, e <b>questões fechadas</b> com correção imediata.</p>
+  <h3 id="ex-a">Parte A · Questões abertas</h3>
+  <p class="lab-hint">Responda no caderno antes de abrir o roteiro. O roteiro indica os pontos que a resposta deve cobrir e a seção onde revisar.</p>
+  <ol class="oq wide" id="oq"></ol>
+  <h3 id="ex-b">Parte B · Questões fechadas</h3>
+  <p class="lab-hint">Escolha uma alternativa: a correção e a explicação aparecem na hora. Cada questão aceita uma única tentativa. As alternativas mudam de ordem a cada vez que você refaz.</p>
+  <div class="score wide" id="qz-score"><span>Acertos <b id="qz-ok">0</b></span><span>Erros <b id="qz-bad">0</b></span><span>Respondidas <b id="qz-n">0</b>/<b id="qz-t">20</b></span><div class="meter"><i class="g" id="qz-mg" style="width:0%"></i><i class="r" id="qz-mr" style="width:0%"></i></div><button class="btn" id="qz-reset">Refazer</button></div>
+  <ol class="qz wide" id="qz"></ol>
+  <div class="final wide" id="qz-final" hidden><h4 id="qz-ft"></h4><p id="qz-fp"></p></div>
+</section>
+
+</main>
+</div>
+<footer class="end">Material de apoio da disciplina de Sistemas Operacionais. Conteúdo e sequência baseados em Machado, F. B.; Maia, L. P. <i>Arquitetura de Sistemas Operacionais</i>, capítulo 8 (Gerência do processador). As questões abertas são baseadas nos exercícios do capítulo.</footer>
+
+<script>
+/* ===== Motor de escalonamento (tempo discreto) ===== */
+const ALG_NAMES={FIFO:'FIFO',SJF:'SJF',SRT:'SRT (SJF preemptivo)',COOP:'Cooperativo',RR:'Circular',PRIO:'Prioridade (não preemptivo)',PRIOP:'Prioridade (preemptivo)',RRP:'Circular com prioridades',MQ:'Múltiplas filas',MLFQ:'Múltiplas filas com realimentação'};
+const CLS={sis:{n:'Sistema',p:3},int:{n:'Interativo',p:2},lote:{n:'Lote',p:1}};
+function simulate(procs,cfg){
+  const alg=cfg.alg,Q=cfg.q||2,aging=cfg.aging||0,levels=cfg.levels||[2,4,8];
+  let seqC=0;
+  const P=procs.map((p,i)=>({id:p.id,idx:i,arr:p.arr||0,burst:p.burst,prio:p.prio||0,cls:p.cls||'lote',io:p.io||null,yieldEvery:p.yieldEvery||0,dl:p.dl,
+    rem:p.burst,st:'novo',first:null,fin:null,ioLeft:0,cpuRun:0,yRun:0,qUsed:0,lvl:0,ep:p.prio||0,age:0,seq:0,wait:0,ioTime:0}));
+  const ready=[];
+  const enq=p=>{p.st='pronto';p.seq=++seqC;ready.push(p);};
+  const qmaxOf=p=>{if(!p)return 0;if(alg==='RR'||alg==='RRP')return Q;if(alg==='MLFQ')return levels[p.lvl];if(alg==='MQ'&&p.cls==='int')return Q;return 0;};
+  const key={
+    FIFO:p=>[p.seq],RR:p=>[p.seq],COOP:p=>[p.seq],
+    SJF:p=>[p.rem,p.seq],SRT:p=>[p.rem,p.seq],
+    PRIO:p=>[-p.ep,p.seq],PRIOP:p=>[-p.ep,p.seq],RRP:p=>[-p.ep,p.seq],
+    MQ:p=>[-CLS[p.cls].p,p.seq],MLFQ:p=>[p.lvl,p.seq]}[alg];
+  const cmp=(a,b)=>{const x=key(a),y=key(b);for(let i=0;i<x.length;i++){if(x[i]!==y[i])return x[i]-y[i];}return 0;};
+  const best=()=>ready.length?ready.slice().sort(cmp)[0]:null;
+  const frames=[];let run=null,last=null,pend=[],t=0,switches=0,idle=0;
+  const why=p=>{switch(alg){
+    case 'FIFO':case 'RR':case 'COOP':return ' (primeiro da fila)';
+    case 'SJF':return ` (menor tempo de UCP: ${p.rem})`;
+    case 'SRT':return ` (menor tempo restante: ${p.rem})`;
+    case 'PRIO':case 'PRIOP':case 'RRP':return ` (maior prioridade: ${p.ep})`;
+    case 'MQ':return ` (fila ${CLS[p.cls].n})`;
+    case 'MLFQ':return ` (fila ${p.lvl+1}, quantum ${levels[p.lvl]})`;}return '';};
+  while(t<400){
+    const ev=pend;pend=[];
+    P.filter(p=>p.st==='novo'&&p.arr===t).forEach(p=>{p.lvl=0;enq(p);ev.push(`${p.id} chega e entra na fila de prontos`);});
+    P.filter(p=>p.st==='espera'&&p.ioLeft<=0).forEach(p=>{enq(p);ev.push(`${p.id} termina a E/S e volta para pronto`);});
+    if(run){
+      let reason=null;const b=best();
+      if(alg==='RR'&&run.qUsed>=Q)reason='fim da fatia de tempo (preempção por tempo)';
+      if(alg==='SRT'&&b&&b.rem<run.rem)reason=`${b.id} tem tempo restante menor (${b.rem} < ${run.rem})`;
+      if(alg==='PRIOP'&&b&&b.ep>run.ep)reason=`${b.id} tem prioridade maior (${b.ep} > ${run.ep})`;
+      if(alg==='RRP'){if(b&&b.ep>run.ep)reason=`${b.id} tem prioridade maior (${b.ep} > ${run.ep})`;else if(run.qUsed>=Q)reason='fim da fatia de tempo';}
+      if(alg==='MQ'){if(b&&CLS[b.cls].p>CLS[run.cls].p)reason=`${b.id} está numa fila de prioridade maior (${CLS[b.cls].n})`;else if(run.cls==='int'&&run.qUsed>=Q)reason='fim da fatia de tempo';}
+      if(alg==='MLFQ'){if(b&&b.lvl<run.lvl)reason=`${b.id} está numa fila de prioridade maior (fila ${b.lvl+1})`;
+        else if(run.qUsed>=levels[run.lvl]){const o=run.lvl;run.lvl=Math.min(run.lvl+1,levels.length-1);reason=`usou toda a fatia${run.lvl>o?` e desce para a fila ${run.lvl+1}`:''}`;}}
+      if(alg==='COOP'&&run.yieldEvery&&run.yRun>=run.yieldEvery){reason='libera a UCP voluntariamente';run.yRun=0;}
+      if(reason){ev.push(`${run.id} sai da UCP: ${reason}`);run.qUsed=0;enq(run);run=null;}
+    }
+    if(!run){const p=best();
+      if(p){ready.splice(ready.indexOf(p),1);p.st='exec';p.qUsed=0;p.age=0;if(p.first==null)p.first=t;if(last&&last!==p)switches++;ev.push(`Escalonador escolhe ${p.id}${why(p)}`);run=p;last=p;}
+      else if(P.some(p=>p.st!=='fim'))ev.push('UCP ociosa: nenhum processo pronto');}
+    const done=P.every(p=>p.st==='fim');
+    frames.push({t,run:run?run.id:null,q:run?run.qUsed:0,qmax:qmaxOf(run),
+      ready:ready.slice().sort(cmp).map(p=>({id:p.id,rem:p.rem,ep:p.ep,lvl:p.lvl,cls:p.cls})),
+      io:P.filter(p=>p.st==='espera').map(p=>({id:p.id,left:p.ioLeft})),
+      fin:P.filter(p=>p.st==='fim').map(p=>p.id),ev:done?ev.concat(['Todos os processos terminaram']):ev,
+      rem:Object.fromEntries(P.map(p=>[p.id,p.rem])),ep:Object.fromEntries(P.map(p=>[p.id,p.ep])),lvl:Object.fromEntries(P.map(p=>[p.id,p.lvl]))});
+    if(done)break;
+    P.filter(p=>p.st==='espera').forEach(p=>{p.ioLeft--;p.ioTime++;});
+    if(run){run.rem--;run.qUsed++;run.cpuRun++;run.yRun++;
+      if(run.rem===0){run.st='fim';run.fin=t+1;pend.push(`${run.id} termina`);run=null;}
+      else if(run.io&&run.cpuRun>=run.io.every){run.cpuRun=0;run.st='espera';run.ioLeft=run.io.dur;pend.push(`${run.id} pede E/S e vai para espera`);run.qUsed=0;run=null;}
+    }else idle++;
+    ready.forEach(p=>{p.wait++;if(aging){p.age++;if(p.age>=aging){p.age=0;p.ep++;pend.push(`Envelhecimento: prioridade de ${p.id} sobe para ${p.ep}`);}}});
+    t++;
+  }
+  const T=frames.length-1;
+  const lanes=frames.slice(0,T).map(f=>{const o={};f.ready.forEach(r=>o[r.id]='pronto');f.io.forEach(r=>o[r.id]='espera');if(f.run)o[f.run]='exec';return o;});
+  const met=P.map(p=>({id:p.id,arr:p.arr,burst:p.burst,prio:p.prio,cls:p.cls,dl:p.dl,first:p.first,fin:p.fin,
+    tat:p.fin-p.arr,wait:p.fin-p.arr-p.burst-p.ioTime,resp:p.first-p.arr,miss:p.dl!=null&&p.fin>p.dl}));
+  const avg=k=>met.reduce((s,m)=>s+m[k],0)/met.length;
+  return {frames,lanes,T,met,switches,idle,avg:{wait:avg('wait'),tat:avg('tat'),resp:avg('resp')},
+    util:T?(T-idle)/T:0,thr:T?met.length/T:0};
+}
+if(typeof module!=='undefined')module.exports={simulate};
+
+/* ===== utilidades ===== */
+const PCOL=['#2F7D32','#2A5DA8','#B86A00','#8B3A8F','#B4362A','#1C8080','#5E6E12','#9A4A72'];
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+const el=(tag,attrs={},html='')=>{const e=document.createElement(tag);for(const k in attrs){if(k==='class')e.className=attrs[k];else e.setAttribute(k,attrs[k]);}if(html)e.innerHTML=html;return e;};
+const fmt=x=>(Math.round(x*100)/100).toLocaleString('pt-BR');
+const chip=(id,color,small,cls)=>`<span class="pc ${cls||''}" style="background:${color}">${id}${small!=null?` <small>${small}</small>`:''}</span>`;
+const SIMS=[];
+/* ===== simulador ===== */
+class Sim{
+  constructor(host,cfg,opt={}){this.host=host;this.base=cfg;this.vi=0;this.speed=900;this.timer=null;this.noHead=opt.noHead;this.build();this.compute();SIMS.push(this);}
+  cfg(){const v=(this.base.variants||[])[this.vi]||{};return Object.assign({},this.base,v,{q:this.qOverride||v.q||this.base.q});}
+  build(){const H=this.host;H.innerHTML='';
+    if(!this.noHead){H.appendChild(el('div',{class:'lab-head'},`<span class="tag">Simulador</span><h4>${this.base.title||ALG_NAMES[this.base.alg]}</h4>`));
+      if(this.base.hint)H.appendChild(el('p',{class:'lab-hint'},this.base.hint));}
+    const c=el('div',{class:'sim-ctl'});H.appendChild(c);
+    if(this.base.variants){const vb=el('div',{class:'btns'});this.base.variants.forEach((v,i)=>{const b=el('button',{type:'button',class:'btn'+(i===0?' sel':'')},v.label);
+      b.addEventListener('click',()=>{this.vi=i;$$('.btn',vb).forEach((x,j)=>x.classList.toggle('sel',j===i));this.compute();});vb.appendChild(b);});c.appendChild(vb);c.appendChild(el('span',{style:'flex-basis:100%;height:0'}));}
+    if(this.base.qctl){const id='q'+Math.random().toString(36).slice(2,7);const l=el('label',{for:id},`Fatia <input id="${id}" type="range" min="1" max="8" value="${this.base.q||2}"><b class="mono qv">${this.base.q||2}</b>`);c.appendChild(l);
+      $('input',l).addEventListener('input',e=>{this.qOverride=+e.target.value;$('.qv',l).textContent=e.target.value;this.compute();});}
+    c.insertAdjacentHTML('beforeend',`<button type="button" class="btn ghost" data-a="reset" title="Reiniciar" aria-label="Reiniciar">⏮</button><button type="button" class="btn ghost" data-a="back" title="Voltar um passo" aria-label="Voltar um passo">◀</button><button type="button" class="btn primary" data-a="play" style="min-width:118px">▶ Reproduzir</button><button type="button" class="btn ghost" data-a="step" title="Avançar um passo" aria-label="Avançar um passo">▶|</button><button type="button" class="btn ghost" data-a="end" title="Ir ao fim" aria-label="Ir ao fim">⏭</button><label>Velocidade <select class="sel" data-a="speed"><option value="1800">0,5×</option><option value="900" selected>1×</option><option value="450">2×</option><option value="220">4×</option></select></label><span class="clock"></span>`);
+    c.addEventListener('click',e=>{const b=e.target.closest('button[data-a]');if(!b)return;const a=b.dataset.a;if(a==='reset')this.reset();if(a==='back')this.back();if(a==='play')this.toggle();if(a==='step')this.step();if(a==='end')this.goEnd();});
+    $('select[data-a=speed]',c).addEventListener('change',e=>{this.speed=+e.target.value;if(this.timer){this.pause();this.play();}});
+    this.playBtn=$('button[data-a=play]',c);
+    const body=el('div',{class:'sim-body'});H.appendChild(body);
+    body.innerHTML=`<div class="sim-left"><div class="sbox cpu"><span class="lb">UCP</span><div class="cslot"></div><div class="qm"></div></div><div class="sbox"><span class="lb">Fila de prontos</span><div class="qs"></div></div><div class="sbox iob"><span class="lb">Espera (E/S)</span><div class="qrow ios"></div></div></div>
+      <div style="display:grid;gap:10px;min-width:0"><div class="scroll"><div class="gt"></div></div><p class="leg" style="font-size:12.5px;color:var(--ink-2);display:flex;gap:14px;flex-wrap:wrap;font-family:var(--display)"><span>■ <b style="color:var(--run)">executando</b></span><span><i style="display:inline-block;width:12px;height:10px;background:var(--ready-soft)"></i> pronto</span><span class="iol"><i style="display:inline-block;width:12px;height:10px;background:var(--wait-soft)"></i> espera (E/S)</span><span class="dlleg"><i style="display:inline-block;width:3px;height:10px;background:var(--bad)"></i> prazo</span></p><div class="scroll mets"></div></div>`;
+    H.appendChild(el('div',{class:'msg'}));}
+  compute(){this.pause();const c=this.cfg();this.c=c;this.color={};c.procs.forEach((p,i)=>this.color[p.id]=PCOL[i%PCOL.length]);
+    this.res=simulate(c.procs,c);this.max=this.res.T;this.hasIO=c.procs.some(p=>p.io);$('.iob',this.host).hidden=!this.hasIO;$('.iol',this.host).hidden=!this.hasIO;
+    $('.dlleg',this.host).hidden=!c.procs.some(p=>p.dl!=null);this.buildGantt();this.show(0);}
+  buildGantt(){const g=$('.gt',this.host),T=this.res.T,c=this.c;g.innerHTML='';g.style.gridTemplateColumns=`52px repeat(${T},minmax(14px,1fr))`;
+    const step=T<=24?1:T<=40?2:5;g.appendChild(el('div',{class:'gl'}));
+    for(let t=0;t<T;t++)g.appendChild(el('div',{class:'gx'},t%step===0?String(t):''));
+    const row=(label,col)=>{const l=el('div',{class:'gl'},label);if(col)l.style.color=col;g.appendChild(l);const cells=[];for(let t=0;t<T;t++){const d=el('div',{class:'gc fut'});g.appendChild(d);cells.push(d);}return cells;};
+    this.ucp=row('UCP');this.prow={};c.procs.forEach(p=>{this.prow[p.id]=row(p.id,this.color[p.id]);if(p.dl!=null&&p.dl>0&&p.dl-1<T)this.prow[p.id][p.dl-1].classList.add('dl');});}
+  show(k){this.k=k;const R=this.res,f=R.frames[Math.min(k,R.T)],c=this.c,col=this.color;
+    $('.clock',this.host).textContent=`t = ${k}`;
+    for(let t=0;t<R.T;t++){const L=R.lanes[t],cu=this.ucp[t],runId=Object.keys(L).find(id=>L[id]==='exec');
+      cu.className='gc'+(t<k?(runId?' exec':''):' fut')+(t===k?' now':'');cu.style.background=t<k&&runId?col[runId]:'';cu.textContent=t<k&&runId?runId.slice(0,2):'';
+      c.procs.forEach(p=>{const d=this.prow[p.id][t],st=t<k?(L[p.id]||''):'fut',dl=d.classList.contains('dl');d.className='gc'+(st?' '+st:'')+(dl?' dl':'');d.style.background=st==='exec'?col[p.id]:'';});}
+    $('.cslot',this.host).innerHTML=f.run?chip(f.run,col[f.run],null,'big'):'<span class="pc big idle">ociosa</span>';
+    const qm=$('.qm',this.host);qm.innerHTML=f.qmax?Array.from({length:f.qmax},(_,i)=>`<i class="${i<f.q?'u':''}"></i>`).join(''):'';qm.title=f.qmax?`fatia: ${f.q} de ${f.qmax} usada`:'';
+    const small=r=>{switch(c.alg){case 'SJF':case 'SRT':return String(r.rem);case 'PRIO':case 'PRIOP':case 'RRP':return 'p'+r.ep;default:return null;}};
+    let groups;
+    if(c.alg==='RRP'){const all=[...new Set(c.procs.map(p=>p.prio||0).concat(f.ready.map(r=>r.ep)))].sort((a,b)=>b-a);groups=all.map(p=>['prio '+p,f.ready.filter(r=>r.ep===p)]);}
+    else if(c.alg==='MQ')groups=[['sis','Sistema'],['int','Interat.'],['lote','Lote']].map(([k2,n])=>[n,f.ready.filter(r=>r.cls===k2)]);
+    else if(c.alg==='MLFQ')groups=(c.levels||[2,4,8]).map((q,i)=>[`fila ${i+1}·q${q}`,f.ready.filter(r=>r.lvl===i)]);
+    else groups=[[null,f.ready]];
+    let first=true;$('.qs',this.host).innerHTML=groups.map(([lab,list])=>{const ch=list.map(r=>{const fi=first;first=false;return chip(r.id,col[r.id],small(r),fi?'first':'');}).join('');
+      return `<div class="qrow">${lab?`<span class="ql">${lab}</span>`:''}${ch||'<span style="font-size:13px;color:var(--ink-2)">vazia</span>'}</div>`;}).join('');
+    if(this.hasIO)$('.ios',this.host).innerHTML=f.io.length?f.io.map(r=>chip(r.id,col[r.id],r.left>0?'faltam '+r.left:'pronto')).join(''):'<span style="font-size:13px;color:var(--ink-2)">ninguém</span>';
+    $('.msg',this.host).innerHTML=`<b>t = ${k}</b> · `+(f.ev.length?f.ev.join(' · '):(f.run?`${f.run} continua executando`:'—'));
+    this.mets(k);}
+  mets(k){const m=$('.mets',this.host),R=this.res,c=this.c,fin=R.frames[Math.min(k,R.T)].fin,done=k>=R.T;
+    const hasP=c.procs.some(p=>p.prio),hasC=c.alg==='MQ',hasD=c.procs.some(p=>p.dl!=null);
+    let s=`<table class="mt"><tr><th>Proc.</th><th>Cheg.</th><th>UCP</th>${hasP?'<th>Prior.</th>':''}${hasC?'<th>Fila</th>':''}<th>Início</th><th>Término</th><th>Espera</th><th>Turnar.</th><th>Resp.</th>${hasD?'<th>Prazo</th>':''}</tr>`;
+    R.met.forEach(x=>{const ok=fin.includes(x.id),v=y=>ok?y:'·',st=x.first!=null&&k>x.first;
+      s+=`<tr><td style="color:${this.color[x.id]};font-weight:700">${x.id}</td><td>${x.arr}</td><td>${x.burst}</td>${hasP?`<td>${x.prio}</td>`:''}${hasC?`<td>${CLS[x.cls].n}</td>`:''}<td>${st?x.first:'·'}</td><td>${v(x.fin)}</td><td>${v(x.wait)}</td><td>${v(x.tat)}</td><td>${st?x.resp:'·'}</td>${hasD?`<td class="${ok&&x.miss?'miss':''}">${x.dl!=null?(ok?(x.miss?'perdeu ('+x.dl+')':'ok ('+x.dl+')'):x.dl):'—'}</td>`:''}</tr>`;});
+    s+=`<tr class="avg"><td>Média</td><td></td><td></td>${'<td></td>'.repeat((hasP?1:0)+(hasC?1:0))}<td></td><td></td><td>${done?fmt(R.avg.wait):''}</td><td>${done?fmt(R.avg.tat):''}</td><td>${done?fmt(R.avg.resp):''}</td>${hasD?'<td></td>':''}</tr></table>`;
+    s+=`<p style="font-size:13px;color:var(--ink-2);margin-top:6px">Trocas de contexto: <b class="mono">${done?R.switches:'·'}</b> · utilização da UCP: <b class="mono">${done?fmt(R.util*100)+'%':'·'}</b> · throughput: <b class="mono">${done?fmt(R.thr):'·'}</b> proc./unidade</p>`;
+    m.innerHTML=s;}
+  play(){if(this.timer)return;if(this.k>=this.max)this.show(0);this.timer=setInterval(()=>{if(this.k>=this.max){this.pause();return;}this.show(this.k+1);},this.speed);this.playBtn.textContent='⏸ Pausar';}
+  pause(){clearInterval(this.timer);this.timer=null;if(this.playBtn)this.playBtn.textContent='▶ Reproduzir';}
+  toggle(){this.timer?this.pause():this.play();}
+  step(){this.pause();if(this.k<this.max)this.show(this.k+1);}
+  back(){this.pause();if(this.k>0)this.show(this.k-1);}
+  reset(){this.pause();this.show(0);}
+  goEnd(){this.pause();this.show(this.max);}
+  setBase(cfg){this.base=cfg;this.vi=0;this.qOverride=null;this.build();this.compute();}
+}
+$$('.lab[data-sim]').forEach(h=>{try{new Sim(h,JSON.parse(h.dataset.sim));}catch(err){h.textContent='Erro no simulador: '+err.message;}});
+/* ===== laboratório ===== */
+(function(){const ALGS=['FIFO','SJF','SRT','RR','PRIO','PRIOP','RRP','MLFQ'];const sel=$('#labAlg');ALGS.forEach(a=>sel.insertAdjacentHTML('beforeend',`<option value="${a}">${ALG_NAMES[a]}</option>`));sel.value='RR';
+  let procs=[{id:'A',arr:0,burst:5,prio:1},{id:'B',arr:1,burst:3,prio:3},{id:'C',arr:2,burst:1,prio:2},{id:'D',arr:3,burst:2,prio:4}];
+  const tbl=$('#labTbl');
+  const draw=()=>{tbl.innerHTML='<tr><th>Proc.</th><th>Chegada</th><th>Tempo de UCP</th><th>Prioridade</th><th></th></tr>'+procs.map((p,i)=>`<tr><td><input id="lid${i}" value="${p.id}" maxlength="4" aria-label="Nome"></td><td><input id="larr${i}" type="number" min="0" max="30" value="${p.arr}" aria-label="Chegada"></td><td><input id="lbu${i}" type="number" min="1" max="20" value="${p.burst}" aria-label="Tempo de UCP"></td><td><input id="lpr${i}" type="number" min="0" max="9" value="${p.prio}" aria-label="Prioridade"></td><td><button type="button" class="btn ghost" data-del="${i}" aria-label="Remover">✕</button></td></tr>`).join('');};
+  const read=()=>{procs=procs.map((p,i)=>({id:($('#lid'+i).value||('P'+(i+1))).trim().slice(0,4),arr:Math.max(0,+$('#larr'+i).value||0),burst:Math.max(1,Math.min(20,+$('#lbu'+i).value||1)),prio:+$('#lpr'+i).value||0}));
+    const seen={};procs.forEach((p,i)=>{if(seen[p.id])p.id=p.id+(i+1);seen[p.id]=1;});};
+  draw();const lab=new Sim($('#labSim'),{alg:'RR',q:2,procs:procs.slice()},{noHead:true});
+  const opts=()=>({q:Math.max(1,+$('#labQ').value||2),aging:Math.max(0,+$('#labAging').value||0)});
+  $('#labRun').addEventListener('click',()=>{read();draw();lab.setBase(Object.assign({alg:sel.value,procs:procs.slice()},opts()));});
+  tbl.addEventListener('click',e=>{const b=e.target.closest('[data-del]');if(!b)return;read();if(procs.length>1)procs.splice(+b.dataset.del,1);draw();});
+  $('#labAdd').addEventListener('click',()=>{read();if(procs.length<8)procs.push({id:'P'+(procs.length+1),arr:0,burst:3,prio:1});draw();});
+  $('#labCmp').addEventListener('click',()=>{read();draw();const o=opts();const rs=ALGS.map(a=>({a,r:simulate(procs,Object.assign({alg:a},o))}));const bw=Math.min(...rs.map(x=>x.r.avg.wait));
+    $('#labOut').innerHTML=`<div class="scroll"><table class="mt cmp"><tr><th>Algoritmo</th><th>Espera</th><th>Turnaround</th><th>Resposta</th><th>Trocas</th></tr>${rs.map(x=>`<tr${x.r.avg.wait===bw?' style="color:var(--accent);font-weight:700"':''}><td>${ALG_NAMES[x.a]}</td><td>${fmt(x.r.avg.wait)}</td><td>${fmt(x.r.avg.tat)}</td><td>${fmt(x.r.avg.resp)}</td><td>${x.r.switches}</td></tr>`).join('')}</table></div><p class="lab-hint">Médias com fatia ${o.q} e envelhecimento ${o.aging}. Em destaque, a menor espera média.</p>`;});
+})();
+window.addEventListener('beforeprint',()=>SIMS.forEach(s=>s.goEnd()));
+
+/* questões abertas */
+(function(){
+  const OQ=[
+    ['O que é política de escalonamento de um sistema operacional?','O conjunto de critérios que o SO usa para decidir qual processo pronto recebe a UCP e por quanto tempo. Ela define o comportamento do sistema e deve atender aos objetivos dele (lote, tempo compartilhado, tempo real).','s1','8.1'],
+    ['Quais as principais funções do escalonador e do dispatcher?','Escalonador: rotina do SO que aplica a política e escolhe o próximo processo da fila de prontos. Dispatcher: faz a troca de contexto, salvando o contexto de quem sai no PCB e carregando o do processo escolhido. O tempo gasto nisso é a latência do dispatcher.','s2','8.2'],
+    ['Quais os principais critérios utilizados em uma política de escalonamento?','Utilização do processador, throughput, tempo de processador (UCP), tempo de espera, turnaround e tempo de resposta. A política tenta maximizar os dois primeiros e reduzir espera, turnaround e resposta.','s3','8.3'],
+    ['Diferencie os tempos de processador, espera, turnaround e resposta.','Processador: tempo em que o processo executa (não depende da política). Espera: tempo total na fila de prontos. Turnaround: da criação até o término, somando UCP, espera e E/S. Resposta: da chegada (ou de uma requisição) até a primeira resposta, importante em sistemas interativos.','s3','8.3'],
+    ['Diferencie os escalonamentos preemptivos e não preemptivos.','Não preemptivo: o processo só deixa a UCP quando termina ou entra em espera voluntariamente. Preemptivo: o SO pode interromper o processo em execução (fim da fatia, chegada de um processo de maior prioridade) e devolvê-lo à fila de prontos. A preempção permite tempo compartilhado e tempo real, mas gera mais trocas de contexto.','s4','8.4'],
+    ['Qual a diferença entre os escalonamentos FIFO e circular?','FIFO: o primeiro da fila executa até terminar ou pedir E/S (não preemptivo). Circular: igual ao FIFO, mas cada processo recebe uma fatia de tempo; ao esgotá-la sofre preempção por tempo e volta ao fim da fila. O circular evita que um processo monopolize a UCP.','s8','8.5 e 8.8'],
+    ['Descreva o escalonamento SJF e o escalonamento por prioridades.','SJF: escolhe o processo com menor tempo de UCP previsto, o que minimiza a espera média; a versão preemptiva é o SRT. Prioridades: cada processo recebe uma prioridade e executa o de maior prioridade; pode ser preemptivo ou não, e corre o risco de starvation, tratado com envelhecimento.','s6','8.6 e 8.9'],
+    ['Qual a diferença entre preempção por tempo e preempção por prioridade?','Por tempo: o processo perde a UCP porque sua fatia de tempo terminou (circular). Por prioridade: perde a UCP porque um processo de prioridade maior ficou pronto (prioridade preemptiva).','s9','8.8 e 8.9'],
+    ['O que é um mecanismo de escalonamento adaptativo?','É aquele em que o SO ajusta dinamicamente prioridades ou filas conforme o comportamento do processo. Exemplo: múltiplas filas com realimentação, em que o processo que gasta toda a fatia desce de fila e o que faz E/S sobe ou permanece no alto.','s12','8.12 e 8.13'],
+    ['Que tipo de escalonamento as aplicações de tempo real exigem?','Escalonamento por prioridades preemptivo, sem fatia de tempo: o processo crítico de maior prioridade precisa assumir a UCP imediatamente para cumprir o prazo. A prioridade é estática, definida pela importância da tarefa.','s14','8.14'],
+    ['O escalonamento por múltiplas filas com realimentação favorece processos CPU-bound ou I/O-bound? Justifique.','Favorece os I/O-bound. Eles liberam a UCP antes de esgotar a fatia e por isso permanecem nas filas de maior prioridade. Os CPU-bound gastam a fatia inteira e descem para filas de prioridade menor (com fatias maiores).','s12','8.12'],
+    ['Considere que cinco processos sejam criados no instante 0, com os tempos de UCP e prioridades a seguir: P1 (10; 3), P2 (14; 4), P3 (5; 1), P4 (7; 2) e P5 (20; 5). Desenhe o diagrama de escalonamento e calcule o turnaround de cada processo, desconsiderando a troca de contexto, para: a) FIFO; b) SJF; c) prioridade (número menor indica prioridade maior); d) circular com fatia de 2 u.t.','a) FIFO: P1 0–10, P2 10–24, P3 24–29, P4 29–36, P5 36–56; turnaround 10, 24, 29, 36 e 56 (média 31). b) SJF: P3 0–5, P4 5–12, P1 12–22, P2 22–36, P5 36–56; turnaround P1 22, P2 36, P3 5, P4 12, P5 56 (média 26,2). c) Prioridade: mesma ordem do SJF neste caso (P3, P4, P1, P2, P5), com os mesmos tempos. d) Circular (fatia 2): P3 termina em 25, P4 em 34, P1 em 38, P2 em 48 e P5 em 56 (média 40,2). Confira no laboratório, invertendo as prioridades (no simulador, número maior é prioridade maior).','s5','8.5, 8.6, 8.8 e 8.9'],
+    ['Considere um sistema com escalonamento circular e fatia de tempo de 10 u.t. Há apenas três processos na fila de prontos, P1, P2 e P3, nesta ordem, com tempos de UCP de 18, 4 e 13 u.t., e nenhum faz E/S. Qual o estado de cada processo nos instantes: a) T = 8; b) T = 11; c) T = 33?','Sequência: P1 0–10, P2 10–14, P3 14–24, P1 24–32, P3 32–35. a) T = 8: P1 executando; P2 e P3 prontos. b) T = 11: P2 executando; P3 e P1 prontos. c) T = 33: P3 executando; P1 e P2 terminados.','s8','8.8'],
+    ['Como funciona o escalonamento em sistemas com múltiplos processadores? Explique a diferença entre a fila única e uma fila por processador, e o que é afinidade.','Fila única: qualquer processador livre retira o próximo processo, equilibrando a carga, mas um processo pode mudar de processador. Uma fila por processador: evita disputa pela fila, mas exige balanceamento de carga (migração). Afinidade: tendência de manter o processo no mesmo processador para aproveitar a cache.','s15','8.15']
+  ];
+  const ol=$('#oq');
+  OQ.forEach(([q,a,s,n])=>{ol.appendChild(el('li',{},`<p>${q}</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>${a} <a href="#${s}">Seç${n.includes(' ')?'ões':'ão'} ${n}</a>.</p></div></details>`));});
+})();
+
+/* questões fechadas */
+(function(){
+  const Q = [
+    {q:'A política de escalonamento é:', a:['o conjunto de critérios usados para decidir qual processo pronto recebe a UCP.','o programa que salva e carrega os contextos dos processos.','a fila de processos em espera por E/S.','o tempo total de execução de um processo.','a quantidade de memória reservada a cada processo.'], c:0, e:'A política é a regra; quem a aplica é o escalonador.'},
+    {q:'Qual a função do dispatcher?', a:['Fazer a troca de contexto, colocando na UCP o processo escolhido pelo escalonador.','Escolher o processo que vai executar.','Criar novos processos.','Calcular o turnaround médio.','Atender as interrupções de E/S.'], c:0, e:'O escalonador escolhe; o dispatcher salva o contexto de quem sai e carrega o de quem entra.'},
+    {q:'Throughput é:', a:['o número de processos concluídos por unidade de tempo.','o tempo que um processo passa na fila de prontos.','o percentual de tempo em que a UCP está ocupada.','o tempo até a primeira resposta.','o tempo de uma troca de contexto.'], c:0, e:'Quanto maior o throughput, mais trabalho o sistema conclui.'},
+    {q:'Qual tempo NÃO é alterado pela política de escalonamento?', a:['O tempo de processador (UCP) de cada processo.','O tempo de espera.','O turnaround.','O tempo de resposta.','O tempo médio de espera.'], c:0, e:'O trabalho do processo é o mesmo; a política só muda quanto ele espera.'},
+    {q:'Turnaround é o tempo:', a:['desde a criação do processo até o seu término.','que o processo passa executando na UCP.','que o processo passa na fila de prontos.','até a primeira execução do processo.','de uma fatia de tempo.'], c:0, e:'Soma espera, UCP e E/S.'},
+    {q:'Em um escalonamento não preemptivo:', a:['o processo só deixa a UCP quando termina ou entra em espera por vontade própria.','o SO interrompe o processo ao fim de cada fatia de tempo.','um processo de maior prioridade sempre interrompe o que está executando.','não existe fila de prontos.','só há um processo no sistema.'], c:0, e:'FIFO, SJF e cooperativo são exemplos.'},
+    {q:'Qual a principal desvantagem do FIFO?', a:['Um processo longo no início da fila faz todos os outros esperarem muito.','Ele causa muitas trocas de contexto.','Ele exige saber o tempo de UCP de cada processo.','Ele gera starvation de processos curtos para sempre.','Ele só funciona em multiprocessadores.'], c:0, e:'A espera média depende da ordem de chegada.'},
+    {q:'O escalonamento SJF escolhe:', a:['o processo com menor tempo de UCP previsto.','o processo que chegou primeiro.','o processo de maior prioridade.','o processo que está há mais tempo esperando E/S.','um processo aleatório.'], c:0, e:'Minimiza a espera média, mas exige estimar o tempo de UCP.'},
+    {q:'O SRT (shortest remaining time) é:', a:['a versão preemptiva do SJF.','a versão preemptiva do FIFO.','o mesmo que o circular.','um escalonamento de tempo real.','um tipo de múltiplas filas.'], c:0, e:'Um processo novo com tempo menor que o restante do atual toma a UCP.'},
+    {q:'No escalonamento cooperativo:', a:['o próprio processo libera a UCP voluntariamente.','o SO retira a UCP ao fim de cada fatia.','os processos são organizados por prioridade.','a UCP é dividida entre vários processadores.','o processo com menor tempo executa primeiro.'], c:0, e:'Se um processo não coopera, os outros ficam parados.'},
+    {q:'No escalonamento circular, quando a fatia de tempo termina:', a:['o processo sofre preempção e volta ao fim da fila de prontos.','o processo é eliminado.','o processo vai para o estado de espera.','o processo continua até terminar.','o processo ganha mais prioridade.'], c:0, e:'É a preempção por tempo.'},
+    {q:'No circular, uma fatia de tempo muito pequena:', a:['aumenta o número de trocas de contexto e o overhead.','transforma o circular em FIFO.','elimina as trocas de contexto.','faz os processos esperarem por E/S.','aumenta o tempo de UCP de cada processo.'], c:0, e:'Fatia muito grande, por outro lado, aproxima o circular do FIFO.'},
+    {q:'O circular favorece processos CPU-bound porque:', a:['eles usam a fatia inteira, enquanto os I/O-bound liberam a UCP antes e esperam a vez de novo.','eles sempre têm prioridade maior.','eles nunca sofrem preempção.','eles fazem mais E/S.','eles chegam antes.'], c:0, e:'Por isso surgiram o circular com prioridades e as múltiplas filas com realimentação.'},
+    {q:'Na preempção por prioridade:', a:['o processo perde a UCP quando um processo de maior prioridade fica pronto.','o processo perde a UCP ao fim da fatia de tempo.','o processo só sai da UCP quando termina.','todos os processos têm a mesma prioridade.','a prioridade é sorteada a cada troca.'], c:0, e:'É a base do escalonamento de tempo real.'},
+    {q:'O que é envelhecimento (aging)?', a:['Aumentar a prioridade de um processo conforme ele espera, evitando starvation.','Diminuir a fatia de tempo dos processos mais antigos.','Eliminar processos que estão há muito tempo no sistema.','Mover processos para o disco.','Reduzir a prioridade dos processos I/O-bound.'], c:0, e:'Assim, um processo de baixa prioridade acaba executando.'},
+    {q:'Prioridade dinâmica é aquela que:', a:['é alterada pelo SO durante a execução, conforme o comportamento do processo.','nunca muda depois que o processo é criado.','é definida pelo usuário a cada execução.','só existe em sistemas de tempo real.','depende apenas do tamanho do programa.'], c:0, e:'É comum aumentar a prioridade de quem volta de uma E/S.'},
+    {q:'No escalonamento por múltiplas filas (sem realimentação):', a:['cada processo é associado a uma fila conforme seu tipo e nela permanece.','os processos mudam de fila conforme o uso da fatia.','existe uma única fila FIFO.','todas as filas têm a mesma prioridade.','os processos escolhem a fila a cada execução.'], c:0, e:'Ex.: sistema, interativo e lote, cada fila com sua política.'},
+    {q:'Nas múltiplas filas com realimentação, um processo que esgota a fatia de tempo:', a:['desce para uma fila de menor prioridade, com fatia maior.','sobe para a fila de maior prioridade.','é eliminado.','fica bloqueado até o fim dos outros.','permanece sempre na mesma fila.'], c:0, e:'Assim o SO se adapta ao comportamento do processo.'},
+    {q:'Sistemas de tempo real costumam usar:', a:['escalonamento por prioridades preemptivo, sem fatia de tempo.','escalonamento FIFO não preemptivo.','escalonamento circular com fatia grande.','escalonamento cooperativo.','SJF sem preempção.'], c:0, e:'O processo crítico precisa assumir a UCP imediatamente para cumprir o prazo.'},
+    {q:'Em multiprocessadores, afinidade de processador significa:', a:['manter o processo no mesmo processador para aproveitar os dados na cache.','executar o processo em todos os processadores ao mesmo tempo.','dar prioridade máxima ao processo.','dividir a fatia de tempo entre os processadores.','impedir que o processo faça E/S.'], c:0, e:'No Windows, pode ser definida no Gerenciador de Tarefas ou com start /affinity.'}
+  ];
+  const ol = $('#qz'); const L = 'ABCDE'; let ok = 0, bad = 0;
+  $('#qz-t').textContent = Q.length;
+  function update(){
+    const n = ok + bad;
+    $('#qz-ok').textContent = ok; $('#qz-bad').textContent = bad; $('#qz-n').textContent = n;
+    $('#qz-mg').style.width = (ok / Q.length * 100) + '%'; $('#qz-mr').style.width = (bad / Q.length * 100) + '%';
+    const fin = $('#qz-final');
+    if(n === Q.length){
+      const pct = Math.round(ok / Q.length * 100);
+      $('#qz-ft').textContent = `Você acertou ${ok} de ${Q.length} (${pct}%).`;
+      $('#qz-fp').textContent = pct >= 80 ? 'Ótimo domínio do capítulo. Tente agora responder as questões abertas sem consultar o texto.' : pct >= 60 ? 'Bom resultado. Releia as explicações das questões que errou e as seções indicadas.' : 'Vale revisar o capítulo: releia as seções das questões erradas, use os simuladores e clique em Refazer.';
+      fin.hidden = false;
+    } else fin.hidden = true;
+  }
+  function build(){
+    ol.innerHTML = ''; ok = 0; bad = 0;
+    const shuf = n => { const r = [...Array(n).keys()]; for(let i = n - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [r[i], r[j]] = [r[j], r[i]]; } return r; };
+    const cur = Q.map(it => { const idx = shuf(it.a.length); return {...it, a: idx.map(i => it.a[i]), c: idx.indexOf(it.c)}; });
+    window.__Q = cur;
+    cur.forEach((it) => {
+      const li = el('li');
+      li.appendChild(el('div', {class:'qh'}, `<p>${it.q}</p>`));
+      const alts = el('div', {class:'alts'});
+      it.a.forEach((txt, j) => {
+        const b = el('button', {type:'button', class:'alt'}, `<span class="k">${L[j]}</span><span>${txt}</span>`);
+        b.addEventListener('click', () => {
+          const right = j === it.c;
+          $$('.alt', alts).forEach((x, k) => { x.disabled = true; if(k === it.c) x.classList.add('right'); });
+          if(!right) b.classList.add('wrong');
+          right ? ok++ : bad++;
+          li.appendChild(el('p', {class:'fb ' + (right ? 'ok' : 'bad'), role:'status'}, `<b>${right ? 'Correto!' : 'Incorreto.'}</b> ${right ? '' : 'A resposta certa é ' + L[it.c] + '. '}${it.e}`));
+          update();
+        });
+        alts.appendChild(b);
+      });
+      li.appendChild(alts); ol.appendChild(li);
+    });
+    update();
+  }
+  $('#qz-reset').addEventListener('click', () => { build(); $('#ex-b').scrollIntoView({behavior:'smooth'}); });
+  build();
+})();
+
+</script>
+</body></html>
