@@ -224,15 +224,24 @@ const MENU = [
             pastas: [
               { 
                 nome: "Apresentações", 
-                itens: [ 
-               
+                 itens: [ 
+                  {titulo: "Apresentação de Gerência de processador", tipo: "PDF", link: "so/apresentacoes/cap8-gerencia-processador.pdf"},                  
                 ]
               },
               { 
                 nome: "Apostilas", 
                 itens: [ 
+                  {titulo: "Gerência de processador", tipo: "HTML", link: "so/apostila-gerencia-processador.html"},
                 ]
               },
+
+               { 
+                nome: "Práticas de laboratório", 
+                itens: [ 
+                  { titulo: "Laboratório com Simulador SOsim", descricao: "Práticas com escalonamentos", tipo: "PDF", link: "https://drive.google.com/file/d/1fFoEKDJ4WTvCcITn8nc6UHTxLj8ycRwW/view?usp=sharing"},                  
+                ]
+              },
+
             ]
           },
         
