@@ -238,9 +238,41 @@ details.diff p{margin:8px 0}
 .mini td.n{text-align:right}
 .mini tr.hit td{background:#FFF2CC}
 code{overflow-wrap:anywhere}
+.widget select,.widget input[type=text]{max-width:100%}
 .qi .st,.out,.fb{overflow-wrap:anywhere}
 .lab-pre button,.quiz button{max-width:100%;white-space:normal;overflow-wrap:anywhere;text-align:left}
 .big-res{font:700 28px Arial;color:var(--green)}
+
+.pchip{display:inline-block;border-radius:999px;padding:3px 10px;margin:3px;font:600 14px Arial;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.fx{display:flex;gap:10px;flex-wrap:wrap;align-items:stretch}
+.fx>div{flex:1 1 200px;min-width:0}
+.stepc{border:2px solid var(--line);border-radius:14px;padding:12px 14px;background:var(--bg)}
+.stepc.on{border-color:var(--green);background:var(--ok-bg)}
+.stepc .n{font:800 13px Arial;color:var(--green);letter-spacing:1px}
+.stepc code{display:block;margin:6px 0}
+.vf{font:800 16px Arial}
+.vf.v{color:var(--ok)} .vf.f{color:var(--bad)}
+.band{display:flex;height:42px;border-radius:10px;overflow:hidden;border:1px solid var(--line);font:700 13px Arial}
+.band>div{display:flex;align-items:center;justify-content:center;color:#222;overflow:hidden;white-space:nowrap}
+.stair{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+.stair div{padding:6px 10px;border-radius:8px;background:var(--bg);border:1px solid var(--line)}
+.stair div.on{border-color:var(--green);background:var(--ok-bg);font-weight:700}
+.clf .it{border-top:1px solid var(--line);padding:10px 0}
+.clf .it:first-child{border-top:0}
+.clf .opts{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.clf .opts button{border:1px solid var(--green);background:transparent;color:var(--green);border-radius:999px;padding:5px 12px;font-weight:700;max-width:100%;white-space:normal}
+.clf .opts button.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+.clf .opts button.no{background:var(--bad);border-color:var(--bad);color:#fff}
+.clf .fbk{font-size:14px;margin-top:6px}
+.dlg{border:2px solid var(--line);border-radius:12px;background:var(--paper);padding:12px 14px;max-width:520px}
+.dlg .ttl{font-weight:700;margin-bottom:8px}
+.dlg .fld{display:inline-block;border:2px solid var(--blue);border-radius:6px;padding:2px 8px;margin:2px;background:var(--bg)}
+.flow{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.flow .nd{border:2px solid var(--line);border-radius:12px;padding:8px 12px;background:var(--bg);font-weight:700}
+.flow .nd.on{border-color:var(--green);background:var(--ok-bg)}
+.flow .nd.bad{border-color:var(--bad);background:var(--bad-bg)}
+.flow .ar{font-weight:800;color:var(--muted)}
+.refgrid td.lk{font:700 14px var(--mono)}
 </style>
 </head>
 <body>
@@ -266,8 +298,8 @@ code{overflow-wrap:anywhere}
   <h3>Como usar esta apostila</h3>
   <div class="cols">
     <div class="card"><b>1. Tenha o Cantina.ods aberto.</b><p style='margin:6px 0 0'>O M3 continua o arquivo do M2: a aba Produtos com preço, estoque, valor em estoque (F) e participação (I).</p></div>
-    <div class="card"><b>2. Teste nos simuladores.</b><p style='margin:6px 0 0'>Os blocos ▶ calculam como o Calc em português: comparações, SE, E, OU, CONT.SE, SOMASE e SEERRO. Mude os valores e veja a decisão mudar.</p></div>
-    <div class="card"><b>3. Confira no fim de cada aula.</b><p style='margin:6px 0 0'>Seis perguntas por aula; no fim do módulo, 25 exercícios de fixação com nota e um desafio prático.</p></div>
+    <div class="card"><b>2. Teste nos simuladores.</b><p style='margin:6px 0 0'>Os blocos ▶ calculam como o Calc em português: comparações, SE, E, OU, CONT.SE, SOMASE e SEERRO. Mude os valores e veja a decisão mudar. Os blocos de treino corrigem na hora.</p></div>
+    <div class="card"><b>3. Confira no fim de cada aula.</b><p style='margin:6px 0 0'>Seis a oito perguntas por aula; no fim do módulo, 25 exercícios de fixação com nota e um desafio prático.</p></div>
   </div>
   <h3>Os símbolos desta apostila</h3>
   <div class="cols"><div class="tip"><p><b>Dica:</b> um atalho ou jeito mais rápido.</p></div><div class="warn"><p><b>Atenção:</b> um erro comum que vale evitar.</p></div><div class="key"><p><b>Ideia-chave:</b> o que você precisa levar da aula.</p></div></div>
@@ -1039,6 +1071,25 @@ code{overflow-wrap:anywhere}
     <div class="row"><span>Condição 1</span><div class="tgl" id="tt1"><button data-v="1" class="on">V</button><button data-v="0">F</button></div>
     <span>Condição 2</span><div class="tgl" id="tt2"><button data-v="1" class="on">V</button><button data-v="0">F</button></div></div>
     <div class="cols" style="margin-top:10px"><div id="ttE"></div><div id="ttOU"></div></div><div class="out" id="ttOut"></div></div>
+  
+  <h3>Anatomia do E e do OU</h3>
+  <p>As duas funções têm a mesma estrutura. Só muda a <b>regra</b> que junta as respostas.</p>
+  <div class="card" style="text-align:center"><div style="font:700 22px var(--mono);overflow-x:auto;white-space:nowrap;padding:6px 0"><span>=</span><span style="color:#237A31;font-weight:700">E</span><span>(</span><span style="color:#1F5FBF;font-weight:700">E2&lt;20</span><span style="color:#6B7280;font-weight:700">;</span><span style="color:#C0392B;font-weight:700">C2=&quot;Salgado&quot;</span><span>)</span></div><div class="cols" style="text-align:left;margin-top:8px"><div><b style="color:#237A31">Nome da função</b>: E ou OU define a regra</div><div><b style="color:#1F5FBF">Condição 1</b>: uma comparação (V ou F)</div><div><b style="color:#6B7280">Ponto e vírgula</b>: separa as condições</div><div><b style="color:#C0392B">Condição 2</b>: e quantas mais forem precisas</div></div></div>
+  <div class="cols"><div class="card"><b>Lendo o E em voz alta</b><p style='margin:6px 0 0'><code>=E(E2&lt;20;C2="Salgado")</code>: o estoque é menor que 20 <b>E</b> o produto é salgado?</p></div><div class="card"><b>Lendo o OU em voz alta</b><p style='margin:6px 0 0'><code>=OU(E2&lt;20;D2&gt;5)</code>: o estoque é menor que 20 <b>OU</b> o preço é maior que R$ 5?</p></div></div>
+  <div class="tip"><p>Sozinhas, E e OU respondem sempre <b>VERDADEIRO</b> ou <b>FALSO</b>. Para mostrar um texto, como “Repor já”, elas vão dentro do SE, logo adiante.</p></div>
+
+  <h3>Proposições: a tabela-verdade com produtos de verdade</h3>
+  <p>Uma <b>proposição</b> é uma frase que só pode ser verdadeira ou falsa. Chame a primeira condição de <b>p</b> e a segunda de <b>q</b>:</p>
+  <div class="scroll-x"><table class="t"><tr><th></th><th>Frase</th><th>Na fórmula</th></tr><tr><td><b style='color:#1F5FBF'>p</b></td><td>O estoque é menor que 20.</td><td>E2&lt;20</td></tr><tr><td><b style='color:#C0392B'>q</b> (no E)</td><td>O produto é salgado.</td><td>C2="Salgado"</td></tr><tr><td><b style='color:#C0392B'>q</b> (no OU)</td><td>O preço é maior que R$ 5.</td><td>D2&gt;5</td></tr></table></div>
+  <p>Para cada produto, cada frase vale ou não vale. Os quatro produtos abaixo cobrem as quatro combinações possíveis, por isso a tabela-verdade tem quatro linhas:</p>
+  <div class="cols"><div class="card"><b>p E q</b><div class="scroll-x"><table class="t"><tr><th>Produto</th><th>p</th><th>q</th><th>p E q</th></tr><tr><td>Tapioca (12, Salgado)</td><td>V</td><td>V</td><td><b>V</b></td></tr><tr><td>Bolo de pote (15, Doce)</td><td>V</td><td>F</td><td>F</td></tr><tr><td>Coxinha (30, Salgado)</td><td>F</td><td>V</td><td>F</td></tr><tr><td>Suco natural (40, Bebida)</td><td>F</td><td>F</td><td>F</td></tr></table></div><p style='margin:6px 0 0'>Uma proposição falsa já derruba o E.</p></div><div class="card"><b>p OU q</b><div class="scroll-x"><table class="t"><tr><th>Produto</th><th>p</th><th>q</th><th>p OU q</th></tr><tr><td>Tapioca (12, R$ 6,00)</td><td>V</td><td>V</td><td>V</td></tr><tr><td>Bolo de pote (15, R$ 4,00)</td><td>V</td><td>F</td><td>V</td></tr><tr><td>Refrigerante (20, R$ 5,50)</td><td>F</td><td>V</td><td>V</td></tr><tr><td>Coxinha (30, R$ 4,50)</td><td>F</td><td>F</td><td><b>F</b></td></tr></table></div><p style='margin:6px 0 0'>Uma proposição verdadeira já basta para o OU.</p></div></div>
+  <div class="widget"><div class="wt">Simulador: teste as proposições em qualquer produto</div>
+    <div class="row"><label>Produto <select id="ppP"><option value="0">Coxinha</option><option value="1">Pastel</option><option value="2">Pão de queijo</option><option value="3">Tapioca</option><option value="4">Bolo de pote</option><option value="5">Biscoito</option><option value="6">Suco natural</option><option value="7">Água</option><option value="8">Refrigerante</option><option value="9">Achocolatado</option></select></label>
+    <div class="tgl" id="ppOp"><button data-v="E" class="on">E</button><button data-v="OU">OU</button></div></div>
+    <div class="fx" style="margin-top:10px"><div class="stepc" id="ppA"></div><div class="stepc" id="ppB"></div><div class="stepc" id="ppR"></div></div>
+    <div class="out" id="ppOut"></div></div>
+  <div class="warn"><p>Cuidado com o limite: o Refrigerante tem exatamente 20 unidades, e 20 não é menor que 20. Para ele, p é <b>falsa</b>.</p></div>
+
   <div class="key"><p>As tabelas-verdade são as mesmas da lógica na matemática. E é exigente: só dá V com V e V. OU é generoso: só dá F com F e F.</p></div>
 
   <h3>Uma pergunta, duas condições</h3>
@@ -1178,7 +1229,23 @@ code{overflow-wrap:anywhere}
 </svg><figcaption>Salgado estraga rápido: com estoque baixo, a reposição é urgente.</figcaption></figure>
   <p>Sozinhos, E e OU devolvem VERDADEIRO ou FALSO. Na prática, eles vão <b>dentro do SE</b>, no lugar do teste:</p>
   <p><code>=SE(E(E2&lt;$H$5;C2="Salgado");"Repor já";"")</code></p>
-  <div class="stepbox"><div class="sbt">Montar em duas etapas (menos erros de parênteses)</div><ol class="steps"><li>Numa coluna livre, escreva só o E: <code>=E(E2&lt;$H$5;C2="Salgado")</code>. Copie e confira os VERDADEIRO.</li><li>Quando estiver certo, edite (<kbd>F2</kbd>) e embrulhe com o SE: <code>=SE(</code> antes, <code>;"Repor já";"")</code> depois.</li><li>Confira: só a Tapioca mostra Repor já.</li></ol></div>
+  
+  <h3>Anatomia do SE com E</h3>
+  <p>Os três argumentos do SE continuam os mesmos da aula 3.2. A única mudança é que o <b>teste lógico</b> deixou de ser uma comparação simples e virou uma função E inteira:</p>
+  <div class="card" style="text-align:center"><div style="font:700 21px var(--mono);overflow-x:auto;white-space:nowrap;padding:6px 0">=<span style="color:#237A31">SE</span>(<span style="background:var(--blue-l);color:#1F5FBF;border-radius:6px;padding:0 6px">E(E2&lt;$H$5;C2="Salgado")</span>;<span style="color:#C0392B">"Repor já"</span>;<span style="color:#6B7280">""</span>)</div>
+  <div class="cols" style="text-align:left;margin-top:8px"><div><b style="color:#1F5FBF">Teste lógico</b>: o E faz a pergunta e responde V ou F</div><div><b style="color:#C0392B">Se verdadeiro</b>: Repor já</div><div><b style="color:#6B7280">Se falso</b>: célula vazia</div></div></div>
+  <div class="key"><p>Em português: <b>SE</b> o estoque for menor que o mínimo <b>E</b> o produto for salgado, <b>ENTÃO</b> Repor já, <b>SENÃO</b> deixe vazio. Os pontos e vírgulas de dentro do E separam condições; os de fora separam os argumentos do SE.</p></div>
+  <div class="widget"><div class="wt">Simulador: monte a fórmula em 3 passos</div>
+    <div class="row"><label>Produto <select id="p3P"><option value="0">Coxinha</option><option value="1">Pastel</option><option value="2">Pão de queijo</option><option value="3">Tapioca</option><option value="4">Bolo de pote</option><option value="5">Biscoito</option><option value="6">Suco natural</option><option value="7">Água</option><option value="8">Refrigerante</option><option value="9">Achocolatado</option></select></label>
+    <div class="tgl" id="p3Op"><button data-v="E" class="on">SE + E (Repor já)</button><button data-v="OU">SE + OU (Revisar)</button></div></div>
+    <div class="fx" style="margin-top:10px"><div class="stepc" id="p3s1"></div><div class="stepc" id="p3s2"></div><div class="stepc" id="p3s3"></div></div>
+    <div class="out" id="p3Out"></div></div>
+  <p>Monte sempre nessa ordem, usando colunas auxiliares: <b>1)</b> cada condição sozinha; <b>2)</b> as duas juntas com E (ou OU); <b>3)</b> o SE em volta. Cada passo mostra um resultado que dá para conferir. Quem erra um parêntese descobre em qual passo o erro apareceu. Quando o passo 3 funcionar, as colunas auxiliares podem ser apagadas.</p>
+  <h3>OU dentro do SE, linha por linha</h3>
+  <p><code>=SE(OU(E2&lt;$H$5;D2&gt;5);"Revisar";"OK")</code>. Leia da esquerda para a direita: cada condição, depois o OU, depois o SE.</p>
+  <div class="scroll-x"><table class="t"><tr><th>Produto</th><th>Estoque</th><th>Preço</th><th>E2&lt;20</th><th>D2&gt;5</th><th>OU</th><th>SE mostra</th></tr><tr><td>Tapioca</td><td>12</td><td>R$ 6,00</td><td>V</td><td>V</td><td>V</td><td><b>Revisar</b></td></tr><tr><td>Bolo de pote</td><td>15</td><td>R$ 4,00</td><td>V</td><td>F</td><td>V</td><td><b>Revisar</b></td></tr><tr><td>Refrigerante</td><td>20</td><td>R$ 5,50</td><td>F</td><td>V</td><td>V</td><td><b>Revisar</b></td></tr><tr><td>Coxinha</td><td>30</td><td>R$ 4,50</td><td>F</td><td>F</td><td>F</td><td>OK</td></tr></table></div>
+  <p>Três produtos vão para Revisar, cada um por um motivo: a Tapioca pelas duas condições, o Bolo de pote só pelo estoque e o Refrigerante só pelo preço.</p>
+
 
   <h3>NÃO: inverter a pergunta</h3>
   <figure class="shot"><svg aria-label="Coluna Onde guardar: Vitrine para o que não é bebida e Geladeira para as bebidas" viewBox="0 0 496 421" style="width:100%;height:auto;max-width:600px">
@@ -1401,6 +1468,20 @@ code{overflow-wrap:anywhere}
 <rect x="0.5" y="0.5" width="505" height="420" fill="none" stroke="#C8C8C8" stroke-width="1"/>
 </svg><figcaption>Testes na ordem errada: nenhum produto aparece como Repor, e não há aviso nenhum.</figcaption></figure>
 
+  
+  <h3>Três resultados são três faixas</h3>
+  <p>Quando a decisão tem três respostas, desenhe a linha antes de escrever a fórmula. Cada limite (H5 e H7) vira um teste; cada faixa vira um resultado. Lido em português, o SE aninhado é uma escada:</p>
+  <div class="widget"><div class="wt">Simulador: as faixas de estoque</div>
+    <div class="row"><label>Mínimo (H5) <input type="range" id="fxA" min="5" max="40" value="20" style="width:150px"> <b id="fxAv">20</b></label>
+    <label>Atenção (H7) <input type="range" id="fxB" min="10" max="55" value="35" style="width:150px"> <b id="fxBv">35</b></label>
+    <label>Produto <select id="fxP"><option value="0">Coxinha</option><option value="1">Pastel</option><option value="2">Pão de queijo</option><option value="3">Tapioca</option><option value="4">Bolo de pote</option><option value="5">Biscoito</option><option value="6">Suco natural</option><option value="7">Água</option><option value="8">Refrigerante</option><option value="9">Achocolatado</option></select></label></div>
+    <div class="band" id="fxBand" style="margin-top:10px"></div>
+    <div id="fxChips" style="margin-top:8px"></div>
+    <div class="stair" id="fxStair"></div>
+    <div class="out" id="fxOut"></div></div>
+  <div class="tip"><p>O segundo SE só é lido por quem não entrou na primeira faixa. Por isso o teste de 35 não precisa dizer “maior ou igual a 20”: quem chega até ele já não é menor que 20.</p></div>
+
+
   <h3>SES: vários testes, sem aninhar</h3>
   <figure class="shot"><svg aria-label="Coluna Situação com três resultados: Repor, Atenção e OK" viewBox="0 0 516 421" style="width:100%;height:auto;max-width:640px">
 <rect x="0" y="0" width="516" height="421" fill="#FFFFFF"/>
@@ -1501,11 +1582,17 @@ code{overflow-wrap:anywhere}
   <p>A função <b>SES</b> faz o mesmo sem um SE dentro do outro: <code>=SES(E2&lt;$H$5;"Repor";E2&lt;$H$7;"Atenção";VERDADEIRO;"OK")</code>. Leia em pares, <i>teste; resultado</i>. O primeiro teste verdadeiro decide; o <b>VERDADEIRO</b> no fim funciona como o “senão” e pega tudo que sobrou. Sem ele, um produto que não cumpre nenhum teste mostra <b>#N/D</b>.</p>
   <div class="widget"><div class="wt">Laboratório: três níveis de estoque</div><div class="lab" data-presets="[&quot;=SES(E2&lt;$H$5;\&quot;Repor\&quot;;E2&lt;$H$7;\&quot;Atenção\&quot;;VERDADEIRO;\&quot;OK\&quot;)&quot;, &quot;=SES(E5&lt;$H$5;\&quot;Repor\&quot;;E5&lt;$H$7;\&quot;Atenção\&quot;;VERDADEIRO;\&quot;OK\&quot;)&quot;, &quot;=SE(E3&lt;$H$5;\&quot;Repor\&quot;;SE(E3&lt;$H$7;\&quot;Atenção\&quot;;\&quot;OK\&quot;))&quot;, &quot;=SE(E5&lt;$H$7;\&quot;Atenção\&quot;;SE(E5&lt;$H$5;\&quot;Repor\&quot;;\&quot;OK\&quot;))&quot;, &quot;=SES(E4&lt;$H$5;\&quot;Repor\&quot;;E4&lt;$H$7;\&quot;Atenção\&quot;)&quot;]" data-start="=SES(E2&lt;$H$5;&quot;Repor&quot;;E2&lt;$H$7;&quot;Atenção&quot;;VERDADEIRO;&quot;OK&quot;)" data-at="L2" data-target="" data-sheet="cantina" data-rows="11" data-cols="A,B,C,D,E" data-extra="H"></div></div>
 
+  
+  <h3>Qual ferramenta usar?</h3>
+  <div class="scroll-x"><table class="t"><tr><th>Pista na pergunta</th><th>Use</th><th>Exemplo da cantina</th></tr><tr><td>tem <b>e</b>: tudo precisa valer</td><td><b>SE + E</b></td><td>=SE(E(E2&lt;20;C2="Salgado");"Repor já";"")</td></tr><tr><td>tem <b>ou</b>: basta uma valer</td><td><b>SE + OU</b></td><td>=SE(OU(E2&lt;20;D2&gt;5);"Revisar";"OK")</td></tr><tr><td>tem <b>não</b>: inverter a condição</td><td><b>NÃO</b> ou <b>&lt;&gt;</b></td><td>=SE(C2&lt;&gt;"Bebida";"Vitrine";"Geladeira")</td></tr><tr><td><b>três ou mais</b> respostas em faixas</td><td><b>SE aninhado</b> ou <b>SES</b></td><td>=SES(E2&lt;20;"Repor";E2&lt;35;"Atenção";VERDADEIRO;"OK")</td></tr></table></div>
+  <div class="widget"><div class="wt">Treino: qual ferramenta resolve?</div><div class="clf" id="clf33" data-items="[{&quot;q&quot;: &quot;Aprovado quem tem média 7 &lt;b&gt;e&lt;/b&gt; frequência de 75%.&quot;, &quot;o&quot;: [&quot;SE + E&quot;, &quot;SE + OU&quot;, &quot;NÃO ou &lt;&gt;&quot;, &quot;SES&quot;], &quot;a&quot;: 0, &quot;e&quot;: &quot;As duas condições precisam valer juntas.&quot;}, {&quot;q&quot;: &quot;Frete grátis para compras acima de R$ 100 &lt;b&gt;ou&lt;/b&gt; clientes VIP.&quot;, &quot;o&quot;: [&quot;SE + E&quot;, &quot;SE + OU&quot;, &quot;NÃO ou &lt;&gt;&quot;, &quot;SES&quot;], &quot;a&quot;: 1, &quot;e&quot;: &quot;Basta uma das condições.&quot;}, {&quot;q&quot;: &quot;Marcar todos os produtos que &lt;b&gt;não&lt;/b&gt; são doces.&quot;, &quot;o&quot;: [&quot;SE + E&quot;, &quot;SE + OU&quot;, &quot;NÃO ou &lt;&gt;&quot;, &quot;SES&quot;], &quot;a&quot;: 2, &quot;e&quot;: &quot;É a pergunta “é doce?” invertida: NÃO(C2=\&quot;Doce\&quot;) ou C2&lt;&gt;\&quot;Doce\&quot;.&quot;}, {&quot;q&quot;: &quot;Conceito A, B, C ou D conforme a nota.&quot;, &quot;o&quot;: [&quot;SE + E&quot;, &quot;SE + OU&quot;, &quot;NÃO ou &lt;&gt;&quot;, &quot;SES&quot;], &quot;a&quot;: 3, &quot;e&quot;: &quot;Quatro respostas em faixas: SES (ou SE aninhado).&quot;}, {&quot;q&quot;: &quot;Promoção para salgados com estoque acima de 40.&quot;, &quot;o&quot;: [&quot;SE + E&quot;, &quot;SE + OU&quot;, &quot;NÃO ou &lt;&gt;&quot;, &quot;SES&quot;], &quot;a&quot;: 0, &quot;e&quot;: &quot;Salgado E estoque acima de 40: as duas ao mesmo tempo.&quot;}]"></div><div class="out" id="clf33Out"></div></div>
+  <div class="key"><p>Antes de digitar, escreva a pergunta em português. As palavras <b>e</b>, <b>ou</b>, <b>não</b> e a quantidade de respostas indicam a função.</p></div>
+
   <h3>Mão na massa</h3><div class="card"><ol><li>Em H6, escreva <b>Estoque de atenção</b>; em H7, <b>35</b>.</li><li>Em L2: <code>=SES(E2&lt;$H$5;"Repor";E2&lt;$H$7;"Atenção";VERDADEIRO;"OK")</code>.</li><li>Copie até L11.</li><li>Conte quantos produtos há em cada situação.</li><li>Salve.</li></ol><p style="margin:0"><b>Pronto quando:</b> 2 Repor, 4 Atenção e 4 OK.</p><p style='margin:8px 0 0'><b>Desafio:</b> refaça a mesma coluna em M com SE aninhado e confira se as duas colunas batem linha por linha.</p></div>
   <h3>Erros comuns</h3><div class="errs"><div class="err"><p class="e1">✘ Usar E quando a regra diz “ou”.</p><p class="e2">✔ Releia: “as duas” é E; “pelo menos uma” é OU.</p></div><div class="err"><p class="e1">✘ Esquecer o último parêntese do SE aninhado.</p><p class="e2">✔ Conte: 2 SEs, 2 parênteses no final.</p></div><div class="err"><p class="e1">✘ Testar 35 antes de 20.</p><p class="e2">✔ Do mais restrito para o mais amplo; confira a Tapioca.</p></div><div class="err"><p class="e1">✘ Esquecer o VERDADEIRO no fim do SES.</p><p class="e2">✔ Sem ele, o que sobra mostra #N/D.</p></div><div class="err"><p class="e1">✘ Escrever E2&lt;20 E C2="Salgado".</p><p class="e2">✔ O E é uma função: E(E2&lt;20;C2="Salgado").</p></div></div>
   <h3>Outro exemplo: as faixas de nota</h3><div class="altbox"><p>Um boletim com três conceitos usa a mesma lógica:</p><div class="scroll-x"><table class="t"><tr><th>Média</th><th>Conceito</th><th>Fórmula (B2 = média)</th></tr><tr><td>7 ou mais</td><td>Aprovado</td><td>=SES(B2&gt;=7;"Aprovado";B2&gt;=5;"Recuperação";VERDADEIRO;"Reprovado")</td></tr><tr><td>de 5 a 6,9</td><td>Recuperação</td><td></td></tr><tr><td>abaixo de 5</td><td>Reprovado</td><td></td></tr></table></div><p style='margin:0'>Aqui os testes vão do maior para o menor (&gt;=7 antes de &gt;=5). A regra é a mesma: o teste mais restrito vem primeiro.</p></div>
   <details class="diff"><summary>E se no meu computador estiver diferente?</summary><p><b>SES dá #NOME??</b> SES existe a partir do LibreOffice 5.2. Confira em Ajuda › Sobre. Em versões anteriores, use o SE aninhado.</p><p><b>O Calc fechou o parêntese sozinho?</b> Ao teclar Enter com parênteses faltando, o Calc às vezes completa no fim. Pode dar certo, mas confira: ele não sabe onde você queria fechar.</p><p><b>NÃO aparece como NAO?</b> Escreva com til: NÃO. Sem o acento, o Calc mostra #NOME?.</p></details>
-  <div class="canbox"><div class="sbt">Antes de seguir, você deve saber…</div><ul class="check"><li><label><input type="checkbox" data-can="a3-0"><span>Combinar condições com E e OU e prever o resultado pela tabela-verdade.</span></label></li><li><label><input type="checkbox" data-can="a3-1"><span>Inverter uma condição com NÃO ou &lt;&gt;.</span></label></li><li><label><input type="checkbox" data-can="a3-2"><span>Colocar E e OU dentro do SE.</span></label></li><li><label><input type="checkbox" data-can="a3-3"><span>Escrever um SE aninhado com três caminhos e contar os parênteses.</span></label></li><li><label><input type="checkbox" data-can="a3-4"><span>Ordenar os testes do mais restrito para o mais amplo.</span></label></li><li><label><input type="checkbox" data-can="a3-5"><span>Usar SES com VERDADEIRO no fim.</span></label></li></ul></div>
+  <div class="canbox"><div class="sbt">Antes de seguir, você deve saber…</div><ul class="check"><li><label><input type="checkbox" data-can="a3-0"><span>Combinar condições com E e OU e prever o resultado pela tabela-verdade.</span></label></li><li><label><input type="checkbox" data-can="a3-1"><span>Ler cada condição como uma proposição (p, q) e montar o SE em 3 passos.</span></label></li><li><label><input type="checkbox" data-can="a3-2"><span>Escolher a ferramenta pela pista da pergunta (e, ou, não, faixas).</span></label></li><li><label><input type="checkbox" data-can="a3-3"><span>Inverter uma condição com NÃO ou &lt;&gt;.</span></label></li><li><label><input type="checkbox" data-can="a3-4"><span>Colocar E e OU dentro do SE.</span></label></li><li><label><input type="checkbox" data-can="a3-5"><span>Escrever um SE aninhado com três caminhos e contar os parênteses.</span></label></li><li><label><input type="checkbox" data-can="a3-6"><span>Ordenar os testes do mais restrito para o mais amplo.</span></label></li><li><label><input type="checkbox" data-can="a3-7"><span>Usar SES com VERDADEIRO no fim.</span></label></li></ul></div>
 <div class="quiz" data-quiz="a3"></div></section><section class="cap" id="a4"><div class="eyebrow">Aula 3.4</div><h2 class="t">Contar e somar com critério</h2><p class="q"><b>Pergunta da aula:</b> quantos produtos precisam de reposição e quanto vale cada categoria?</p><div class="goals"><div><b>VOCÊ VAI</b>contar com CONT.SE</div><div><b>VOCÊ VAI</b>somar e tirar médias com SOMASE e MÉDIASE</div><div><b>VOCÊ VAI</b>usar vários critérios com CONT.SES e SOMASES</div></div>
   <h3>Contar só o que interessa</h3>
   <p class="lead">Na aula 2.4, SOMA e MÉDIA usavam todas as linhas. Agora queremos só as linhas que atendem a uma condição: quantos produtos precisam de reposição? Quanto vale o estoque de bebidas?</p>
@@ -1716,6 +1803,18 @@ code{overflow-wrap:anywhere}
   <div class="card" style="text-align:center"><div style="font:700 22px var(--mono);overflow-x:auto;white-space:nowrap;padding:6px 0"><span>=SOMASE(</span><span style="color:#1F5FBF;font-weight:700">C2:C11</span><span>;</span><span style="color:#C0392B;font-weight:700">N2</span><span>;</span><span style="color:#7B3FA0;font-weight:700">F2:F11</span><span>)</span></div><div class="cols" style="text-align:left;margin-top:8px"><div><b style="color:#1F5FBF">Onde procurar</b>: a coluna da categoria</div><div><b style="color:#C0392B">Critério</b>: qual categoria</div><div><b style="color:#7B3FA0">O que somar</b>: os valores</div></div></div>
   <p>A SOMASE procura o critério na primeira coluna e soma, <b>da mesma linha</b>, os valores da terceira. Salgado: R$ 437,00; Doce: R$ 150,00; Bebida: R$ 473,00. Somadas, dão <b>R$ 1.060,00</b>, o total do M2. Essa conferência é o seu teste de segurança.</p>
   <p>A <b>MÉDIASE</b> tem os mesmos três argumentos: <code>=MÉDIASE(C2:C11;"Salgado";D2:D11)</code> dá o preço médio dos salgados: 4,625, mostrado como R$ 4,63.</p>
+  
+  <h3>Como o Calc percorre as linhas</h3>
+  <p>CONT.SE, SOMASE e MÉDIASE fazem o mesmo trabalho que você faria à mão: passam por cada linha, perguntam se ela atende ao critério e, quando atende, contam ou somam. Avance linha por linha e acompanhe:</p>
+  <div class="widget"><div class="wt">Simulador: o Calc percorrendo as linhas</div>
+    <div class="row"><label>Função <select id="lpF"><option>CONT.SE</option><option>SOMASE</option><option>MÉDIASE</option></select></label>
+    <label>Critério <select id="lpC"></select></label>
+    <button class="btn" id="lpNext">Próxima linha ▸</button><button class="btn ghost" id="lpAll">Até o fim</button><button class="btn ghost" id="lpReset">Recomeçar</button></div>
+    <div class="out" id="lpFormula" style="margin-top:8px"></div>
+    <div style="overflow-x:auto;margin-top:8px" id="lpTab"></div><div class="out" id="lpOut"></div></div>
+  <div class="key"><p><b>MÉDIASE</b> = SOMASE ÷ CONT.SE. A média dos salgados é (4,50 + 5,00 + 3,00 + 6,00) ÷ 4 = 4,625, mostrada como R$ 4,63. Dá o mesmo resultado que <code>=SOMASE(C2:C11;"Salgado";D2:D11)/CONT.SE(C2:C11;"Salgado")</code>: a MÉDIASE é só um atalho.</p></div>
+  <div class="warn"><p>No SOMASE, as duas colunas andam juntas, linha por linha: o critério é testado em C e o número é pego na mesma linha em F. Por isso os dois intervalos precisam ter o mesmo tamanho (C2:C11 e F2:F11).</p></div>
+
 
   <h3>Copiar SOMASE exige cifrão</h3>
   <div class="cols"><figure class="shot"><svg aria-label="SOMASE copiada sem cifrão: o intervalo desceu e o Salgado somou só R$ 177,00" viewBox="0 0 546 421" style="width:100%;height:auto;max-width:440px">
@@ -2182,13 +2281,26 @@ code{overflow-wrap:anywhere}
 <rect x="0.5" y="0.5" width="1005" height="215" fill="none" stroke="#C8C8C8" stroke-width="1"/>
 </svg><figcaption>MÁXIMOSES, MÍNIMOSES e MÉDIASES seguem o mesmo molde do SOMASES.</figcaption></figure>
   <p>Quem entendeu o SOMASES usa as outras sem explicação nova: <code>=MÁXIMOSES(D2:D11;C2:C11;"Bebida")</code> dá 5,50 (Refrigerante); <code>=MÍNIMOSES(D2:D11;C2:C11;"Salgado")</code> dá 3,00 (Pão de queijo); <code>=MÉDIASES(D2:D11;C2:C11;"Bebida";D2:D11;"&gt;3")</code> dá 4,17.</p>
+  
+  <h3>Anatomia das funções com vários critérios</h3>
+  <div class="card" style="text-align:center"><div style="font:700 22px var(--mono);overflow-x:auto;white-space:nowrap;padding:6px 0"><span>=CONT.SES(</span><span style="color:#1F5FBF;font-weight:700">C2:C11;&quot;Salgado&quot;</span><span>;</span><span style="color:#C0392B;font-weight:700">E2:E11;&quot;&lt;20&quot;</span><span>)</span></div><div class="cols" style="text-align:left;margin-top:8px"><div><b style="color:#1F5FBF">1º par</b>: intervalo; critério</div><div><b style="color:#C0392B">2º par</b>: intervalo; critério</div></div></div>
+  <p>Cada critério a mais é um novo <b>par</b> <i>intervalo; critério</i>. A linha só entra na conta se passar em <b>todos</b> os pares, como no E da aula 3.3. Resultado: 1 (só a Tapioca).</p>
+  <div class="scroll-x"><table class="t"><tr><th>Função</th><th>Primeiro argumento</th><th>Depois vêm</th><th>Exemplo</th></tr><tr><td><b>SOMASE</b></td><td>onde procurar</td><td>critério; <b>o que somar (por último)</b></td><td>=SOMASE(C2:C11;"Bebida";F2:F11)</td></tr><tr><td><b>SOMASES</b></td><td><b style='color:var(--bad)'>o que somar (primeiro)</b></td><td>pares intervalo; critério</td><td>=SOMASES(F2:F11;C2:C11;"Bebida";D2:D11;"&gt;3")</td></tr><tr><td><b>CONT.SES</b></td><td>1º intervalo</td><td>critério; outros pares</td><td>=CONT.SES(C2:C11;"Salgado";E2:E11;"&lt;20")</td></tr><tr><td><b>MÉDIASES</b>, <b>MÁXIMOSES</b>, <b>MÍNIMOSES</b></td><td>de onde tirar o resultado</td><td>pares intervalo; critério</td><td>=MÁXIMOSES(D2:D11;C2:C11;"Bebida")</td></tr></table></div>
+  <div class="tip"><p>Regra de bolso: nas funções terminadas em <b>-SES</b>, o intervalo do resultado vem sempre <b>primeiro</b>.</p></div>
+
   <div class="widget"><div class="wt">Laboratório: contar e somar com critério</div><div class="lab" data-presets="[&quot;=CONT.SE(E2:E11;\&quot;&lt;\&quot;&amp;$H$5)&quot;, &quot;=SOMASE(C2:C11;\&quot;Salgado\&quot;;F2:F11)&quot;, &quot;=MÉDIASE(C2:C11;\&quot;Salgado\&quot;;D2:D11)&quot;, &quot;=CONT.SES(C2:C11;\&quot;Salgado\&quot;;E2:E11;\&quot;&lt;\&quot;&amp;$H$5)&quot;, &quot;=SOMASES(F2:F11;C2:C11;\&quot;Bebida\&quot;;D2:D11;\&quot;&gt;3\&quot;)&quot;, &quot;=CONT.SE(E2:E11;\&quot;&lt;H5\&quot;)&quot;]" data-start="=SOMASE(C2:C11;&quot;Bebida&quot;;F2:F11)" data-at="O4" data-target="=SOMASE(C2:C11;&quot;Bebida&quot;;F2:F11)" data-sheet="cantina" data-rows="11" data-cols="A,B,C,D,E,F" data-extra="H"></div></div>
+
+  
+  <h3>Qual função responde a pergunta?</h3>
+  <div class="scroll-x"><table class="t"><tr><th>A pergunta</th><th>Função</th><th>Exemplo da cantina</th><th>Resultado</th></tr><tr><td><b>Quantos</b> produtos…?</td><td>CONT.SE</td><td>Quantos produtos estão para repor?</td><td>2</td></tr><tr><td><b>Quanto soma</b>…?</td><td>SOMASE</td><td>Quanto vale o estoque de bebidas?</td><td>R$ 473,00</td></tr><tr><td><b>Qual a média</b>…?</td><td>MÉDIASE</td><td>Qual o preço médio dos doces?</td><td>R$ 3,00</td></tr><tr><td>…com <b>dois ou mais</b> critérios?</td><td>CONT.SES · SOMASES · MÉDIASES</td><td>Quantos salgados estão em Atenção?</td><td>2</td></tr><tr><td><b>Maior ou menor</b> com critério?</td><td>MÁXIMOSES · MÍNIMOSES</td><td>Qual a bebida mais cara?</td><td>R$ 5,50</td></tr></table></div>
+  <div class="widget"><div class="wt">Treino: qual função responde?</div><div class="clf" id="clf34" data-items="[{&quot;q&quot;: &quot;Quanto vale o estoque de salgados?&quot;, &quot;o&quot;: [&quot;CONT.SE&quot;, &quot;SOMASE&quot;, &quot;MÉDIASE&quot;, &quot;CONT.SES&quot;, &quot;MÍNIMOSES&quot;], &quot;a&quot;: 1, &quot;e&quot;: &quot;“Quanto vale” é uma soma: SOMASE na coluna F, procurando Salgado em C. Resultado: R$ 437,00.&quot;}, {&quot;q&quot;: &quot;Quantas bebidas custam mais de R$ 3?&quot;, &quot;o&quot;: [&quot;CONT.SE&quot;, &quot;SOMASE&quot;, &quot;MÉDIASE&quot;, &quot;CONT.SES&quot;, &quot;MÍNIMOSES&quot;], &quot;a&quot;: 3, &quot;e&quot;: &quot;Dois critérios (Bebida e preço &gt; 3) numa contagem: CONT.SES. Resultado: 3.&quot;}, {&quot;q&quot;: &quot;Qual o doce mais barato?&quot;, &quot;o&quot;: [&quot;CONT.SE&quot;, &quot;SOMASE&quot;, &quot;MÉDIASE&quot;, &quot;CONT.SES&quot;, &quot;MÍNIMOSES&quot;], &quot;a&quot;: 4, &quot;e&quot;: &quot;Menor valor com critério: MÍNIMOSES. Resultado: R$ 2,00 (Biscoito).&quot;}, {&quot;q&quot;: &quot;Quantos produtos estão em Atenção?&quot;, &quot;o&quot;: [&quot;CONT.SE&quot;, &quot;SOMASE&quot;, &quot;MÉDIASE&quot;, &quot;CONT.SES&quot;, &quot;MÍNIMOSES&quot;], &quot;a&quot;: 0, &quot;e&quot;: &quot;Uma contagem com um critério: CONT.SE. Resultado: 4.&quot;}, {&quot;q&quot;: &quot;Qual o estoque médio das bebidas?&quot;, &quot;o&quot;: [&quot;CONT.SE&quot;, &quot;SOMASE&quot;, &quot;MÉDIASE&quot;, &quot;CONT.SES&quot;, &quot;MÍNIMOSES&quot;], &quot;a&quot;: 2, &quot;e&quot;: &quot;Média com um critério: MÉDIASE na coluna E. Resultado: 34,5.&quot;}]"></div><div class="out" id="clf34Out"></div></div>
+  <div class="key"><p>Antes da fórmula, a pergunta: <b>contar</b>, <b>somar</b> ou <b>fazer a média</b>? <b>De quais linhas</b>? A primeira resposta escolhe a função; a segunda vira o critério.</p></div>
 
   <h3>Mão na massa</h3><div class="card"><ol><li>Em N1:P1: <b>Categoria</b>, <b>Valor em estoque</b>, <b>Preço médio</b>. Em N2:N4: Salgado, Doce, Bebida.</li><li>Em O2: <code>=SOMASE($C$2:$C$11;N2;$F$2:$F$11)</code>; copie até O4.</li><li>Em P2: <code>=MÉDIASE($C$2:$C$11;N2;$D$2:$D$11)</code>; copie até P4.</li><li>Em N6: <b>Para repor</b>; em O6: <code>=CONT.SE(L2:L11;"Repor")</code>.</li><li>Some O2:O4 e confira.</li></ol><p style="margin:0"><b>Pronto quando:</b> Salgado R$ 437,00; Doce R$ 150,00; Bebida R$ 473,00; O6 mostra 2; a soma dá R$ 1.060,00.</p><p style='margin:8px 0 0'><b>Desafio:</b> descubra, com CONT.SES, quantos salgados estão em Atenção (resposta: 2, Coxinha e Pastel).</p></div>
   <h3>Erros comuns</h3><div class="errs"><div class="err"><p class="e1">✘ Copiar SOMASE sem $ nos intervalos.</p><p class="e2">✔ Trave onde procurar e o que somar; só o critério anda.</p></div><div class="err"><p class="e1">✘ Escrever "&lt;H5" no critério.</p><p class="e2">✔ Junte com &amp;: "&lt;"&amp;$H$5.</p></div><div class="err"><p class="e1">✘ Trocar a ordem no SOMASES.</p><p class="e2">✔ SOMASES começa pelo que somar; SOMASE termina nele.</p></div><div class="err"><p class="e1">✘ Intervalos de tamanhos diferentes.</p><p class="e2">✔ C2:C11 e F2:F11: mesmas linhas, do começo ao fim.</p></div><div class="err"><p class="e1">✘ Não conferir com o total.</p><p class="e2">✔ As categorias devem somar R$ 1.060,00.</p></div></div>
   <h3>Outro exemplo: a turma</h3><div class="altbox"><p>Numa lista de alunos com médias em B2:B31 e turno em C2:C31:</p><div class="scroll-x"><table class="t"><tr><th>Pergunta</th><th>Fórmula</th></tr><tr><td>Quantos aprovados?</td><td>=CONT.SE(B2:B31;"&gt;=6")</td></tr><tr><td>Quantos do turno da manhã?</td><td>=CONT.SE(C2:C31;"Manhã")</td></tr><tr><td>Média da manhã</td><td>=MÉDIASE(C2:C31;"Manhã";B2:B31)</td></tr><tr><td>Aprovados da manhã</td><td>=CONT.SES(B2:B31;"&gt;=6";C2:C31;"Manhã")</td></tr></table></div><p style='margin:0'>Com a média mínima em F1, o critério fica "&gt;="&amp;$F$1.</p></div>
   <details class="diff"><summary>E se no meu computador estiver diferente?</summary><p><b>CONT.SE com "P*" deu zero?</b> Os curingas estão desligados no seu arquivo. Ligue em Ferramentas › Opções › LibreOffice Calc › Calcular › Habilitar caracteres curinga nas fórmulas. Arquivos antigos podem usar expressões regulares no lugar: aí o critério seria "P.*".</p><p><b>MÁXIMOSES ou CONT.SES dá #NOME??</b> As funções -SES existem a partir do LibreOffice 5.2, como o SES.</p><p><b>CONT.SE(C2:C11;"salgado") contou diferente?</b> Depende da opção Diferenciar maiúsculas e minúsculas (aula 3.1). Escreva o critério igual à célula.</p></details>
-  <div class="canbox"><div class="sbt">Antes de seguir, você deve saber…</div><ul class="check"><li><label><input type="checkbox" data-can="a4-0"><span>Contar com CONT.SE.</span></label></li><li><label><input type="checkbox" data-can="a4-1"><span>Somar e tirar médias por categoria com SOMASE e MÉDIASE.</span></label></li><li><label><input type="checkbox" data-can="a4-2"><span>Travar os intervalos com $ antes de copiar.</span></label></li><li><label><input type="checkbox" data-can="a4-3"><span>Escrever critérios com operadores, curingas e &amp;.</span></label></li><li><label><input type="checkbox" data-can="a4-4"><span>Usar CONT.SES e SOMASES lembrando a ordem dos argumentos.</span></label></li><li><label><input type="checkbox" data-can="a4-5"><span>Conferir os totais por categoria com o total geral.</span></label></li></ul></div>
+  <div class="canbox"><div class="sbt">Antes de seguir, você deve saber…</div><ul class="check"><li><label><input type="checkbox" data-can="a4-0"><span>Contar com CONT.SE.</span></label></li><li><label><input type="checkbox" data-can="a4-1"><span>Explicar como o Calc percorre as linhas e por que MÉDIASE = SOMASE ÷ CONT.SE.</span></label></li><li><label><input type="checkbox" data-can="a4-2"><span>Escolher a função pela pergunta (contar, somar, média, maior, menor).</span></label></li><li><label><input type="checkbox" data-can="a4-3"><span>Somar e tirar médias por categoria com SOMASE e MÉDIASE.</span></label></li><li><label><input type="checkbox" data-can="a4-4"><span>Travar os intervalos com $ antes de copiar.</span></label></li><li><label><input type="checkbox" data-can="a4-5"><span>Escrever critérios com operadores, curingas e &amp;.</span></label></li><li><label><input type="checkbox" data-can="a4-6"><span>Usar CONT.SES e SOMASES lembrando a ordem dos argumentos.</span></label></li><li><label><input type="checkbox" data-can="a4-7"><span>Conferir os totais por categoria com o total geral.</span></label></li></ul></div>
 <div class="quiz" data-quiz="a4"></div></section><section class="cap" id="a5"><div class="eyebrow">Aula 3.5</div><h2 class="t">Formatação condicional</h2><p class="q"><b>Pergunta da aula:</b> como fazer a planilha avisar com cores?</p><div class="goals"><div><b>VOCÊ VAI</b>realçar células por regra</div><div><b>VOCÊ VAI</b>usar barras, escalas e ícones</div><div><b>VOCÊ VAI</b>destacar a linha inteira com fórmula</div></div>
   <h3>A cor chama o olho para o que importa</h3>
   <p class="lead">Na aula 1.4, formatar era comunicar. Agora a formatação <b>muda sozinha</b> quando os dados mudam: a planilha avisa com cores.</p>
@@ -2460,6 +2572,21 @@ code{overflow-wrap:anywhere}
   <h3>Condição: realçar por regra</h3>
   <div class="stepbox"><div class="sbt">Pintar as células com “Repor”</div><ol class="steps"><li>Selecione <b>L2:L11</b>.</li><li><b>Formatar › Condicional › Condição…</b></li><li>Na primeira linha, deixe <b>O valor da célula é</b> · <b>igual a</b> e digite <b>"Repor"</b> (com aspas).</li><li>Em <b>Aplicar estilo</b>, escolha <b>Ruim</b> (fundo vermelho claro).</li><li>Clique em <b>Adicionar</b> para uma segunda condição: igual a <b>"Atenção"</b>, estilo <b>Neutro</b>.</li><li>Clique em <b>OK</b>.</li></ol><p class="stnote">Os estilos Bom, Neutro e Ruim já vêm no Calc. Para outra cor, escolha <b>Novo estilo…</b> na própria lista e defina o fundo na aba Plano de fundo.</p></div>
   <div class="tip"><p>Mude H5 para 25: o Refrigerante passa a Repor e fica vermelho sozinho. É isso que diferencia a formatação condicional da manual: você formata a <b>regra</b>, não a célula.</p></div>
+  
+  <div class="cols"><div class="dlg"><div class="ttl">Formatação condicional para L2:L11</div><div style="background:var(--bg);border-radius:8px;padding:8px"><b>Condição 1</b><br><span class="fld">O valor da célula é ▾</span><span class="fld">igual a ▾</span><span class="fld" style="border-color:#C0392B">"Repor"</span><br>Aplicar estilo: <span class="fld" style="border-color:#C0392B;background:#FFC7CE;color:#9C0006">Ruim ▾</span></div><div style="display:flex;justify-content:space-between;margin-top:8px"><span class="fld" style="border-color:var(--line)">Adicionar</span><span class="fld" style="background:#1F5FBF;color:#fff">OK</span></div></div><p style="font-size:13px;color:var(--muted)">Desenho dos campos da janela; a aparência exata varia com a versão.</p><div class="card"><b>A regra é uma pergunta</b><p style='margin:6px 0 0'>Para cada célula de L2:L11, o Calc pergunta: <i>o valor desta célula é igual a "Repor"?</i> <b>Sim</b>: aplica o estilo. <b>Não</b>: deixa como está. É uma comparação, como na aula 3.1.</p></div></div>
+  <h3>O que a condição pode perguntar</h3>
+  <div class="scroll-x"><table class="t"><tr><th>Condição</th><th>Pergunta para cada célula</th><th>Exemplo da cantina</th></tr><tr><td>igual a</td><td>o valor é exatamente este?</td><td>Situação igual a "Repor"</td></tr><tr><td>menor que · maior que</td><td>o número passa do limite?</td><td>Estoque menor que 20</td></tr><tr><td>entre</td><td>o número está dentro da faixa?</td><td>Estoque entre 20 e 34</td></tr><tr><td>contém</td><td>o texto tem este pedaço?</td><td>Produto contém "suco"</td></tr><tr><td>acima da média · os 10 maiores</td><td>o valor está entre os de destaque?</td><td>Valor em estoque acima da média</td></tr><tr><td>duplicado</td><td>o valor aparece mais de uma vez?</td><td>Código repetido por engano</td></tr></table></div>
+  <div class="tip"><p>Os limites podem vir de uma célula: em vez de digitar 20, escreva <b>$H$5</b> no campo do valor. Mudou H5, a cor muda junto.</p></div>
+
+  <h3>Pintar à mão ou pintar por regra?</h3>
+  <p>Faça o teste: a Situação já muda sozinha quando o estoque muda (aula 3.2). E a cor?</p>
+  <div class="widget"><div class="wt">Simulador: à mão × por regra</div>
+    <div class="row"><label>Estoque da Coxinha <input type="range" id="mrE" min="0" max="50" value="30" style="width:180px"> <b id="mrEv">30</b></label></div>
+    <div class="fx" style="margin-top:10px"><div><b>Pintado à mão</b> (alguém pintou os Repor de hoje)<div id="mrA" style="overflow-x:auto;margin-top:6px"></div></div>
+    <div><b>Formatação condicional</b> (regra: igual a "Repor")<div id="mrB" style="overflow-x:auto;margin-top:6px"></div></div></div>
+    <div class="out" id="mrOut"></div></div>
+  <div class="key"><p>Cor pintada à mão é <b>decoração</b>: fica presa na célula. Cor por regra é <b>informação</b>: acompanha os dados.</p></div>
+
 
   <h3>Barras de dados e escalas de cor</h3>
   <p>Selecione E2:E11 e use <b>Formatar › Condicional › Barra de dados…</b>: cada célula ganha uma barra proporcional ao estoque. Para o valor em estoque (F2:F11), <b>Formatar › Condicional › Escala de cor…</b> pinta do claro (menor) ao escuro (maior). Esses dois tipos servem para <b>comparar</b>; para <b>alertar</b>, use a Condição.</p>
@@ -2645,6 +2772,15 @@ code{overflow-wrap:anywhere}
 </svg><figcaption>Com =$L2="Repor", todas as células da linha olham para a Situação.</figcaption></figure>
   <div class="stepbox"><div class="sbt">Destacar a linha inteira</div><ol class="steps"><li>Selecione <b>A2:L11</b> (comece pela linha 2).</li><li><b>Formatar › Condicional › Condição…</b></li><li>Troque <b>O valor da célula é</b> por <b>A fórmula é</b>.</li><li>Digite <code>$L2="Repor"</code>.</li><li>Em Aplicar estilo, escolha <b>Ruim</b> e clique em OK.</li></ol><p class="stnote">A fórmula é escrita para a primeira linha da seleção; o Calc ajusta para as demais, como se copiasse a fórmula.</p></div>
   <div class="key"><p>O $ trava a <b>coluna</b> L: as células A2, B2, C2… todas olham para L2, a Situação da sua linha. O 2 sem $ deixa a linha andar: na linha 5, a regra vira $L5. É a referência mista do M2 trabalhando.</p></div>
+  
+  <h3>Por que a regra da linha inteira precisa do $</h3>
+  <p>A regra “A fórmula é” é escrita para a <b>primeira célula</b> da seleção (A2). O Calc copia a regra para as outras células, como se arrastasse uma fórmula. Escolha uma célula e veja para onde a regra dela olha:</p>
+  <div class="widget"><div class="wt">Simulador: para onde cada célula olha?</div>
+    <div class="row"><div class="tgl" id="trvM"><button data-v="1" class="on">$L2="Repor"</button><button data-v="0">L2="Repor" (sem $)</button></div>
+    <label>Linha <select id="trvR"><option value="5">5 · Tapioca</option><option value="6">6 · Bolo de pote</option><option value="2">2 · Coxinha</option></select></label></div>
+    <div style="overflow-x:auto;margin-top:10px" id="trvTab"></div><div class="out" id="trvOut"></div></div>
+  <div class="key"><p>O $ antes do L trava a <b>coluna</b>; a linha (2) fica livre para descer: a linha 3 olha L3, a linha 4 olha L4.</p></div>
+
 
   <div class="widget"><div class="wt">Simulador: cores que avisam sozinhas</div>
     <div class="row"><label>Estoque mínimo (H5) <input type="range" id="cfH5" min="10" max="40" value="20" style="width:160px"> <b id="cfH5v">20</b></label></div>
@@ -2679,14 +2815,27 @@ code{overflow-wrap:anywhere}
 </svg><figcaption>Formatar › Condicional › Gerenciar lista todos os intervalos com formatação condicional.</figcaption></figure>
   <p>Quando a mesma regra é aplicada várias vezes, as cores param de fazer sentido. <b>Formatar › Condicional › Gerenciar…</b> lista todos os intervalos da planilha que têm formatação condicional. <b>Editar</b> abre a regra para mudar condições, estilos e limites; <b>Remover</b> apaga a regra repetida. Dentro de um intervalo, a condição de cima tem prioridade; a ordem se ajusta com <b>Para cima</b> e <b>Para baixo</b>.</p>
 
+  
+  <h3>Boas práticas: cor que ajuda, cor que atrapalha</h3>
+  <div class="cols"><div class="card"><b>Pouca cor</b><p style='margin:6px 0 0'>Use cor só para o que pede ação (Repor, Atenção). Se tudo tem cor, nada se destaca.</p></div><div class="card"><b>Cor + texto</b><p style='margin:6px 0 0'>A cor reforça o que está escrito. Quem não distingue cores continua lendo “Repor”.</p></div><div class="card"><b>Significado fixo</b><p style='margin:6px 0 0'>Vermelho é problema, amarelo é alerta, verde é ok, sempre com o mesmo sentido.</p></div></div>
+  <div class="cols"><div class="card"><b>Uma regra por ideia</b><p style='margin:6px 0 0'>Antes de criar outra, abra Gerenciar: talvez a regra já exista.</p></div><div class="card"><b>Limite em célula</b><p style='margin:6px 0 0'>Use $H$5 em vez de 20 para a cor seguir o parâmetro.</p></div><div class="card"><b>Teste a regra</b><p style='margin:6px 0 0'>Mude um valor e veja se a cor muda. Se não muda, a regra está errada.</p></div></div>
+  <div class="tip"><p><b>Teste dos 3 segundos:</b> mostre a planilha a alguém que nunca a viu. Em 3 segundos, a pessoa descobre o que precisa de atenção?</p></div>
+
   <h3>Mão na massa</h3><div class="card"><ol><li>Em L2:L11: <b>Formatar › Condicional › Condição</b>, igual a "Repor", estilo <b>Ruim</b>.</li><li>Adicione uma condição: igual a "Atenção", estilo <b>Neutro</b>.</li><li>Em E2:E11: <b>Formatar › Condicional › Barra de dados</b>.</li><li>Em A2:L11: condição <b>A fórmula é</b> <code>$L2="Repor"</code>, estilo Ruim.</li><li>Mude H5 para 25 e veja as cores mudarem. Volte para 20.</li></ol><p style="margin:0"><b>Pronto quando:</b> as linhas da Tapioca e do Bolo de pote se destacam; com H5 = 25, também a do Refrigerante.</p><p style='margin:8px 0 0'><b>Desafio:</b> pinte de verde os produtos cuja participação no estoque (coluna I) passa de 12% (Coxinha e Suco natural).</p></div>
   <h3>Erros comuns</h3><div class="errs"><div class="err"><p class="e1">✘ Digitar Repor sem aspas na condição.</p><p class="e2">✔ Texto vai entre aspas: "Repor".</p></div><div class="err"><p class="e1">✘ Escrever L2="Repor" sem o $.</p><p class="e2">✔ Sem $, a coluna anda: a célula B2 olharia M2. Use $L2.</p></div><div class="err"><p class="e1">✘ Começar a seleção pela linha 1.</p><p class="e2">✔ A fórmula vale para a primeira linha selecionada: selecione A2:L11 e escreva $L2.</p></div><div class="err"><p class="e1">✘ Aplicar a mesma regra várias vezes.</p><p class="e2">✔ Abra Gerenciar e remova as repetidas.</p></div><div class="err"><p class="e1">✘ Pintar à mão.</p><p class="e2">✔ A cor manual não muda quando o estoque muda; a condicional, sim.</p></div></div>
   <h3>Outro exemplo: o boletim</h3><div class="altbox"><p>Num boletim com a média mínima em F1:</p><div class="scroll-x"><table class="t"><tr><th>Regra</th><th>Onde</th><th>Como</th></tr><tr><td>Notas abaixo da média em vermelho</td><td>B2:D31</td><td>Condição · menor que · $F$1 · estilo Ruim</td></tr><tr><td>Aluno em recuperação: linha toda amarela</td><td>A2:E31</td><td>A fórmula é · $E2="Recuperação" · estilo Neutro</td></tr><tr><td>Comparar as médias</td><td>E2:E31</td><td>Escala de cor</td></tr></table></div><p style='margin:0'>Mude a média mínima em F1 e as cores se ajustam sozinhas.</p></div>
   <details class="diff"><summary>E se no meu computador estiver diferente?</summary><p><b>O menu se chama Formatação condicional?</b> Em algumas versões o caminho é <b>Formatar › Formatação condicional</b>. Os itens (Condição, Escala de cor, Barra de dados, Conjunto de ícones, Gerenciar) são os mesmos.</p><p><b>Os estilos Bom, Neutro e Ruim não aparecem?</b> Eles existem nas versões recentes. Se faltarem, escolha Novo estilo… e crie um com o fundo da cor desejada.</p><p><b>A cor não aparece mesmo com a regra certa?</b> Confira em Gerenciar se outra regra, acima, está pegando a célula antes, e se a fórmula começa na mesma linha da seleção.</p></details>
-  <div class="canbox"><div class="sbt">Antes de seguir, você deve saber…</div><ul class="check"><li><label><input type="checkbox" data-can="a5-0"><span>Aplicar uma Condição com estilo.</span></label></li><li><label><input type="checkbox" data-can="a5-1"><span>Usar barra de dados, escala de cor e ícones.</span></label></li><li><label><input type="checkbox" data-can="a5-2"><span>Ajustar os ícones para valores em vez de percentuais.</span></label></li><li><label><input type="checkbox" data-can="a5-3"><span>Criar uma regra por fórmula para a linha inteira com $L2.</span></label></li><li><label><input type="checkbox" data-can="a5-4"><span>Revisar e limpar regras em Gerenciar.</span></label></li></ul></div>
+  <div class="canbox"><div class="sbt">Antes de seguir, você deve saber…</div><ul class="check"><li><label><input type="checkbox" data-can="a5-0"><span>Aplicar uma Condição com estilo.</span></label></li><li><label><input type="checkbox" data-can="a5-1"><span>Explicar por que a cor por regra acompanha os dados e a pintada à mão não.</span></label></li><li><label><input type="checkbox" data-can="a5-2"><span>Dizer para qual célula a regra olha, com e sem o $.</span></label></li><li><label><input type="checkbox" data-can="a5-3"><span>Usar barra de dados, escala de cor e ícones.</span></label></li><li><label><input type="checkbox" data-can="a5-4"><span>Ajustar os ícones para valores em vez de percentuais.</span></label></li><li><label><input type="checkbox" data-can="a5-5"><span>Criar uma regra por fórmula para a linha inteira com $L2.</span></label></li><li><label><input type="checkbox" data-can="a5-6"><span>Revisar e limpar regras em Gerenciar.</span></label></li></ul></div>
 <div class="quiz" data-quiz="a5"></div></section><section class="cap" id="a6"><div class="eyebrow">Aula 3.6</div><h2 class="t">Tratamento de erros</h2><p class="q"><b>Pergunta da aula:</b> e quando o erro já é esperado?</p><div class="goals"><div><b>VOCÊ VAI</b>usar SEERRO</div><div><b>VOCÊ VAI</b>decidir quando o erro deve aparecer</div><div><b>VOCÊ VAI</b>combinar SEERRO com as fórmulas do curso</div></div>
   <h3>Quando o erro já é esperado</h3>
   <p class="lead">Na aula 2.6, aprendemos a ler e corrigir erros. Mas alguns erros não são defeito: são <b>esperados</b>. Uma aba de mês novo, ainda sem dados, divide zero por zero e mostra #DIV/0! em toda a coluna.</p>
+  
+  <h3>Os erros que a planilha mostra</h3>
+  <div class="scroll-x"><table class="t"><tr><th>Erro</th><th>O que quer dizer</th><th>Exemplo na cantina</th><th>O que fazer</th></tr><tr><td><b>#DIV/0!</b></td><td>divisão por zero</td><td>participação com o total F12 vazio</td><td>SEERRO, se o zero é esperado</td></tr><tr><td><b>#VALOR!</b></td><td>tipo de dado errado</td><td>“trinta” digitado no estoque</td><td>corrigir o dado: 30</td></tr><tr><td><b>#NOME?</b></td><td>função ou nome desconhecido</td><td>=SOMASSE(…) digitado errado</td><td>corrigir o nome da função</td></tr><tr><td><b>#REF!</b></td><td>referência que não existe mais</td><td>coluna F excluída</td><td>desfazer ou refazer a fórmula</td></tr><tr><td><b>#N/D</b></td><td>valor não encontrado</td><td>busca de produto não cadastrado (M4)</td><td>SEERRO, se a falta é esperada</td></tr><tr><td><b>###</b></td><td>não é erro: falta espaço</td><td>número largo em coluna estreita</td><td>alargar a coluna</td></tr></table></div>
+  <div class="widget"><div class="wt">Treino: o que fazer com este erro?</div><div class="clf" id="clf36" data-items="[{&quot;q&quot;: &quot;&lt;b&gt;#DIV/0!&lt;/b&gt; na participação de uma aba de mês novo, ainda sem estoques.&quot;, &quot;o&quot;: [&quot;Usar SEERRO&quot;, &quot;Corrigir a causa&quot;, &quot;Alargar a coluna&quot;], &quot;a&quot;: 0, &quot;e&quot;: &quot;Erro esperado: some sozinho quando os estoques forem digitados.&quot;}, {&quot;q&quot;: &quot;&lt;b&gt;#VALOR!&lt;/b&gt; porque alguém digitou “trinta” no estoque.&quot;, &quot;o&quot;: [&quot;Usar SEERRO&quot;, &quot;Corrigir a causa&quot;, &quot;Alargar a coluna&quot;], &quot;a&quot;: 1, &quot;e&quot;: &quot;O dado está errado: troque o texto pelo número 30.&quot;}, {&quot;q&quot;: &quot;&lt;b&gt;###&lt;/b&gt; na coluna do valor em estoque.&quot;, &quot;o&quot;: [&quot;Usar SEERRO&quot;, &quot;Corrigir a causa&quot;, &quot;Alargar a coluna&quot;], &quot;a&quot;: 2, &quot;e&quot;: &quot;Não é erro de fórmula: o número não cabe na largura da coluna.&quot;}, {&quot;q&quot;: &quot;&lt;b&gt;#NOME?&lt;/b&gt; em =SOMASSE(C2:C11;\&quot;Doce\&quot;;F2:F11).&quot;, &quot;o&quot;: [&quot;Usar SEERRO&quot;, &quot;Corrigir a causa&quot;, &quot;Alargar a coluna&quot;], &quot;a&quot;: 1, &quot;e&quot;: &quot;A função foi digitada errado: o certo é SOMASE.&quot;}, {&quot;q&quot;: &quot;&lt;b&gt;#REF!&lt;/b&gt; depois que a coluna F foi excluída.&quot;, &quot;o&quot;: [&quot;Usar SEERRO&quot;, &quot;Corrigir a causa&quot;, &quot;Alargar a coluna&quot;], &quot;a&quot;: 1, &quot;e&quot;: &quot;A fórmula perdeu a referência: desfaça a exclusão ou refaça a fórmula.&quot;}]"></div><div class="out" id="clf36Out"></div></div>
+  <div class="key"><p>Só dois desses erros podem ser <b>esperados</b>: #DIV/0! e #N/D. Os outros apontam um defeito a corrigir.</p></div>
+
+  <h3>Um erro esperado: o mês novo</h3>
   <div class="cols"><figure class="shot"><svg aria-label="Mês novo sem dados: #DIV/0! em toda a coluna" viewBox="0 0 496 250" style="width:100%;height:auto;max-width:440px">
 <rect x="0" y="0" width="496" height="250" fill="#FFFFFF"/>
 <rect x="0" y="6" width="496" height="36" fill="#FFFFFF" stroke="#C8C8C8" stroke-width="1"/>
@@ -2788,8 +2937,18 @@ code{overflow-wrap:anywhere}
 <rect x="492" y="144" width="8" height="8" fill="#2A6099" stroke="#FFFFFF" stroke-width="1.5"/>
 <rect x="0.5" y="0.5" width="495" height="249" fill="none" stroke="#C8C8C8" stroke-width="1"/>
 </svg><figcaption>Com SEERRO, a coluna mostra um traço até chegarem os dados.</figcaption></figure></div>
+  <h3>Anatomia do SEERRO</h3>
   <div class="card" style="text-align:center"><div style="font:700 22px var(--mono);overflow-x:auto;white-space:nowrap;padding:6px 0"><span>=SEERRO(</span><span style="color:#1F5FBF;font-weight:700">F2/$F$12</span><span>;</span><span style="color:#C0392B;font-weight:700">&quot;–&quot;</span><span>)</span></div><div class="cols" style="text-align:left;margin-top:8px"><div><b style="color:#1F5FBF">Valor</b>: a conta que pode dar erro</div><div><b style="color:#C0392B">Se der erro</b>: o que mostrar no lugar</div></div></div>
   <p>Se a conta funcionar, o SEERRO mostra o resultado normalmente. Se der qualquer erro (#DIV/0!, #VALOR!, #N/D…), mostra o segundo argumento. O traço é um texto; também é comum usar 0 ou uma frase curta, como "sem dados".</p>
+  
+  <h3>Como o SEERRO decide</h3>
+  <div class="widget"><div class="wt">Simulador: o caminho do SEERRO</div>
+    <div class="row"><label>Produto <select id="sfP"><option value="0">Coxinha</option><option value="1">Pastel</option><option value="2">Pão de queijo</option><option value="3">Tapioca</option><option value="4">Bolo de pote</option><option value="5">Biscoito</option><option value="6">Suco natural</option><option value="7">Água</option><option value="8">Refrigerante</option><option value="9">Achocolatado</option></select></label>
+    <div class="tgl" id="sfM"><button data-v="0" class="on">Mês normal</button><button data-v="1">Mês novo (sem estoques)</button></div></div>
+    <div class="flow" style="margin-top:12px"><div class="nd" id="sf1"></div><span class="ar">→</span><div class="nd" id="sf2"></div><span class="ar">→</span><div class="nd" id="sf3"></div></div>
+    <div class="out" id="sfOut"></div></div>
+  <div class="key"><p>Quando a conta funciona, o SEERRO é <b>invisível</b>: o resultado é o mesmo de antes. Ele só aparece quando há erro.</p></div>
+
 
   <div class="widget"><div class="wt">Simulador: o mês novo</div>
     <div class="row"><label><input type="checkbox" id="seMes"> Mês novo (estoques apagados)</label>
@@ -2804,14 +2963,19 @@ code{overflow-wrap:anywhere}
   <div class="widget"><div class="wt">Laboratório: o mês novo</div><div class="lab" data-presets="[&quot;=F2/$F$12&quot;, &quot;=SEERRO(F2/$F$12;\&quot;–\&quot;)&quot;, &quot;=SEERRO(F2/$F$12;0)&quot;, &quot;=SEERRO(F2/$F$12;\&quot;sem dados\&quot;)&quot;, &quot;=SE($F$12=0;\&quot;–\&quot;;F2/$F$12)&quot;]" data-start="=F2/$F$12" data-at="I2" data-target="" data-sheet="vazio" data-rows="12" data-cols="A,B,C,D,E,F" data-extra=""></div></div>
   <div class="tip"><p>Outra saída é testar a causa com SE: <code>=SE($F$12=0;"–";F2/$F$12)</code>. Ela só troca o caso previsto (total zero) e deixa qualquer outro erro visível. Por isso, muitos profissionais preferem o SE quando sabem exatamente qual erro esperar.</p></div>
 
-  <h3>SEERRO com as fórmulas do curso</h3>
-  <div class="scroll-x"><table class="t"><tr><th>Situação</th><th>Fórmula</th></tr><tr><td>participação num mês sem dados</td><td>=SEERRO(F2/$F$12;"–")</td></tr><tr><td>média de uma categoria sem produtos</td><td>=SEERRO(MÉDIASE($C$2:$C$11;N5;$D$2:$D$11);"sem produtos")</td></tr><tr><td>preço médio por unidade vendida</td><td>=SEERRO(G2/H2;0)</td></tr><tr><td>busca de um código (M4)</td><td>=SEERRO(PROCV(…);"não cadastrado")</td></tr></table></div>
+  
+  <h3>SEERRO com as funções do módulo</h3>
+  <p>O SEERRO embrulha a fórmula <b>inteira</b>: escreva primeiro a fórmula normal, confira, e só depois coloque <code>SEERRO(</code> no começo e <code>;resposta)</code> no fim. O último parêntese fecha o SEERRO.</p>
+  <div class="scroll-x"><table class="t"><tr><th>Situação</th><th>Fórmula</th><th>Sem SEERRO</th><th>Com SEERRO</th></tr><tr><td>Preço médio de uma categoria ainda sem produtos (Lanche)</td><td>=SEERRO(MÉDIASE(C2:C11;"Lanche";D2:D11);"sem produtos")</td><td>#DIV/0!</td><td>sem produtos</td></tr><tr><td>Valor médio por produto de uma categoria</td><td>=SEERRO(SOMASE(C2:C11;N2;F2:F11)/CONT.SE(C2:C11;N2);0)</td><td>#DIV/0! se N2 não existir</td><td>0</td></tr><tr><td>Participação num mês sem dados</td><td>=SEERRO(F2/$F$12;"–")</td><td>#DIV/0!</td><td>–</td></tr><tr><td>Busca de um código (M4)</td><td>=SEERRO(PROCV(…);"não cadastrado")</td><td>#N/D</td><td>não cadastrado</td></tr></table></div>
+  <div class="widget"><div class="wt">Laboratório: SEERRO com MÉDIASE e SOMASE</div><div class="lab" data-presets="[&quot;=MÉDIASE(C2:C11;\&quot;Lanche\&quot;;D2:D11)&quot;, &quot;=SEERRO(MÉDIASE(C2:C11;\&quot;Lanche\&quot;;D2:D11);\&quot;sem produtos\&quot;)&quot;, &quot;=SEERRO(MÉDIASE(C2:C11;\&quot;Doce\&quot;;D2:D11);\&quot;sem produtos\&quot;)&quot;, &quot;=SEERRO(SOMASE(C2:C11;\&quot;Doce\&quot;;F2:F11)/CONT.SE(C2:C11;\&quot;Doce\&quot;);0)&quot;, &quot;=SEERRO(SOMASE(C2:C11;\&quot;Lanche\&quot;;F2:F11)/CONT.SE(C2:C11;\&quot;Lanche\&quot;);0)&quot;]" data-start="=MÉDIASE(C2:C11;&quot;Lanche&quot;;D2:D11)" data-at="P5" data-target="" data-sheet="cantina" data-rows="11" data-cols="A,B,C,D,E,F" data-extra="H"></div></div>
+  <div class="cols"><div class="card"><b>Use 0</b> quando a planilha ainda vai somar ou comparar o valor.</div><div class="card"><b>Use um texto</b> ("–", "sem dados") quando o valor é só para ler. Lembre: o 0 entra nas médias e pode distorcê-las.</div></div>
+
 
   <h3>Mão na massa</h3><div class="card"><ol><li>Copie a aba Produtos (arraste a aba segurando <kbd>Ctrl</kbd>).</li><li>Na cópia, apague os estoques E2:E11 e observe a coluna I.</li><li>Em I2: <code>=SEERRO(F2/$F$12;"–")</code>; copie até I11.</li><li>Volte à aba original: nada mudou nela.</li></ol><p style="margin:0"><b>Pronto quando:</b> a cópia mostra – na coluna I no lugar de #DIV/0!.</p><p style='margin:8px 0 0'><b>Desafio:</b> encontre uma fórmula da sua planilha em que o SEERRO esconderia um erro de verdade. Explique ao colega por que não usá-lo ali.</p></div>
   <h3>Erros comuns</h3><div class="errs"><div class="err"><p class="e1">✘ Usar SEERRO em todas as fórmulas “por garantia”.</p><p class="e2">✔ Use só onde o erro é esperado; os outros precisam aparecer.</p></div><div class="err"><p class="e1">✘ Esconder o erro com 0.</p><p class="e2">✔ O 0 entra nas somas e médias. Prefira um texto como "–".</p></div><div class="err"><p class="e1">✘ Esquecer o segundo argumento.</p><p class="e2">✔ SEERRO(valor; se der erro): os dois são necessários.</p></div><div class="err"><p class="e1">✘ Esquecer o $ do total.</p><p class="e2">✔ F2/$F$12: o total fica parado ao copiar.</p></div></div>
   <h3>Outro exemplo: as notas lançadas</h3><div class="altbox"><p>Num diário em que as notas ainda não foram lançadas, a média dá #DIV/0!:</p><div class="scroll-x"><table class="t"><tr><th>Fórmula</th><th>Antes das notas</th><th>Depois das notas</th></tr><tr><td>=MÉDIA(B2:D2)</td><td>#DIV/0!</td><td>7,5</td></tr><tr><td>=SEERRO(MÉDIA(B2:D2);"aguardando")</td><td>aguardando</td><td>7,5</td></tr></table></div><p style='margin:0'>O erro é esperado: some sozinho quando o professor lança as notas.</p></div>
   <details class="diff"><summary>E se no meu computador estiver diferente?</summary><p><b>Aparece SE.ERRO ou IFERROR nos tutoriais?</b> No LibreOffice em português, o nome é SEERRO. IFERROR é o nome em inglês. Existe também SENÃODISP, que troca só o erro #N/D.</p><p><b>O traço – não aparece igual?</b> O traço é só um texto: use o hífen do teclado (-) se preferir. Ele fica alinhado à esquerda, como todo texto.</p></details>
-  <div class="canbox"><div class="sbt">Antes de seguir, você deve saber…</div><ul class="check"><li><label><input type="checkbox" data-can="a6-0"><span>Trocar um erro esperado por uma mensagem com SEERRO.</span></label></li><li><label><input type="checkbox" data-can="a6-1"><span>Dizer quando o erro deve continuar visível.</span></label></li><li><label><input type="checkbox" data-can="a6-2"><span>Preferir um texto a 0 como resposta de erro.</span></label></li><li><label><input type="checkbox" data-can="a6-3"><span>Testar a causa com SE quando o erro é previsível.</span></label></li></ul></div>
+  <div class="canbox"><div class="sbt">Antes de seguir, você deve saber…</div><ul class="check"><li><label><input type="checkbox" data-can="a6-0"><span>Reconhecer os códigos de erro e dizer se cada um é esperado ou defeito.</span></label></li><li><label><input type="checkbox" data-can="a6-1"><span>Trocar um erro esperado por uma mensagem com SEERRO.</span></label></li><li><label><input type="checkbox" data-can="a6-2"><span>Combinar SEERRO com MÉDIASE, SOMASE e CONT.SE.</span></label></li><li><label><input type="checkbox" data-can="a6-3"><span>Dizer quando o erro deve continuar visível.</span></label></li><li><label><input type="checkbox" data-can="a6-4"><span>Preferir um texto a 0 como resposta de erro.</span></label></li><li><label><input type="checkbox" data-can="a6-5"><span>Testar a causa com SE quando o erro é previsível.</span></label></li></ul></div>
 <div class="quiz" data-quiz="a6"></div></section>
 <section class="cap" id="fixacao">
   <div class="eyebrow">Fim do módulo</div>
@@ -3249,6 +3413,142 @@ const BR = v => typeof v==="boolean" ? (v?"VERDADEIRO":"FALSO") : CALC.show(v);
   ["#seMes","#seUse","#seTxt"].forEach(s => $(s).onchange = go); go();
 })();
 
+/* ====== atualização: widgets novos ====== */
+const VFs = b => `<span class="vf ${b?"v":"f"}">${b?"V":"F"}</span>`;
+const brl = v => "R$ " + v.toFixed(2).replace(".",",");
+function tglInit(sel, cb){ const bs = $$(sel+" button"); bs.forEach(b => b.onclick = () => { bs.forEach(x=>x.classList.remove("on")); b.classList.add("on"); cb(b.dataset.v); }); return () => ($(sel+" button.on")||bs[0]).dataset.v; }
+
+/* proposições */
+(function(){ if(!$("#ppP")) return;
+  let op = "E"; const get = tglInit("#ppOp", v => { op = v; go(); });
+  function go(){ const p = PRODS[+$("#ppP").value], e = p[4], pv = e < 20;
+    const qv = op==="E" ? p[2]==="Salgado" : p[3] > 5;
+    const qtxt = op==="E" ? "O produto é salgado." : "O preço é maior que R$ 5.";
+    const qwhy = op==="E" ? `é ${p[2]}` : `custa ${brl(p[3])}`;
+    const r = op==="E" ? (pv && qv) : (pv || qv);
+    $("#ppA").innerHTML = `<div class="n">p · O estoque é menor que 20.</div>Estoque: ${e} → ${VFs(pv)}`;
+    $("#ppB").innerHTML = `<div class="n">q · ${qtxt}</div>${esc(p[1])} ${qwhy} → ${VFs(qv)}`;
+    $("#ppR").innerHTML = `<div class="n">p ${op} q</div><span class="big-res">${r?"VERDADEIRO":"FALSO"}</span>`;
+    $("#ppR").classList.toggle("on", r);
+    let why = op==="E" ? (r ? "As duas valem: o E dá VERDADEIRO." : `Pelo menos uma é falsa (${!pv?"p":""}${!pv&&!qv?" e ":""}${!qv?"q":""}): o E dá FALSO.`)
+                       : (r ? `Pelo menos uma vale (${pv?"p":""}${pv&&qv?" e ":""}${qv?"q":""}): o OU dá VERDADEIRO.` : "Nenhuma vale: o OU dá FALSO.");
+    if(e===20) why += " Repare: 20 não é menor que 20.";
+    $("#ppOut").innerHTML = why; }
+  $("#ppP").onchange = go; go();
+})();
+
+/* 3 passos */
+(function(){ if(!$("#p3P")) return;
+  let op = "E"; tglInit("#p3Op", v => { op = v; go(); });
+  function go(){ const i = +$("#p3P").value, p = PRODS[i], r = i+2, e = p[4];
+    const c1 = e < 20, c2 = op==="E" ? p[2]==="Salgado" : p[3] > 5;
+    const f1 = `=E${r}<$H$5`, f2 = op==="E" ? `=C${r}="Salgado"` : `=D${r}>5`;
+    const j = op==="E" ? (c1 && c2) : (c1 || c2);
+    const inner = op==="E" ? `E(E${r}<$H$5;C${r}="Salgado")` : `OU(E${r}<$H$5;D${r}>5)`;
+    const yes = op==="E" ? "Repor já" : "Revisar", no = op==="E" ? "" : "OK";
+    const res = j ? yes : no;
+    $("#p3s1").innerHTML = `<div class="n">PASSO 1 · CADA CONDIÇÃO SOZINHA</div><code>${esc(f1)}</code>${VFs(c1)}<code>${esc(f2)}</code>${VFs(c2)}`;
+    $("#p3s2").innerHTML = `<div class="n">PASSO 2 · JUNTE COM ${op}</div><code>${esc("="+inner)}</code><b>${j?"VERDADEIRO":"FALSO"}</b>`;
+    $("#p3s3").innerHTML = `<div class="n">PASSO 3 · EMBRULHE COM O SE</div><code>${esc(`=SE(${inner};"${yes}";"${no}")`)}</code><span class="big-res">${res===""?"(vazio)":esc(res)}</span>`;
+    ["#p3s1","#p3s2","#p3s3"].forEach(s => $(s).classList.add("on"));
+    $("#p3Out").innerHTML = `${esc(p[1])}: estoque ${e}, ${op==="E" ? esc(p[2]) : brl(p[3])}. ` + (op==="E" ? (j ? "As duas condições valem, então o SE mostra Repor já." : "Pelo menos uma condição falha: o E dá FALSO e o SE deixa a célula vazia.") : (j ? "Pelo menos uma condição vale: o OU dá VERDADEIRO e o SE mostra Revisar." : "Nenhuma condição vale: o SE mostra OK."));
+  }
+  $("#p3P").onchange = go; go();
+})();
+
+/* faixas */
+(function(){ if(!$("#fxA")) return;
+  function go(){ let a = +$("#fxA").value, b = +$("#fxB").value; if(b <= a){ b = a + 1; $("#fxB").value = b; }
+    $("#fxAv").textContent = a; $("#fxBv").textContent = b; const max = 55;
+    const w = x => (Math.min(x,max)/max*100).toFixed(1) + "%";
+    $("#fxBand").innerHTML = `<div style="width:${w(a)};background:#FFC7CE">Repor &lt; ${a}</div><div style="width:${((b-a)/max*100).toFixed(1)}%;background:#FFEB9C">Atenção</div><div style="flex:1;background:#C6EFCE">OK ≥ ${b}</div>`;
+    const grp = {Repor:[],"Atenção":[],OK:[]}; PRODS.forEach(p => grp[sit(p[4],a,b)].push(`${p[1]} (${p[4]})`));
+    $("#fxChips").innerHTML = Object.entries(grp).map(([k,v]) => `<div style="margin:4px 0"><b>${k}: ${v.length}</b> ${v.map(x=>`<span class="pchip">${esc(x)}</span>`).join("")}</div>`).join("");
+    const p = PRODS[+$("#fxP").value], e = p[4], s = sit(e,a,b);
+    $("#fxStair").innerHTML = `<div class="${s==="Repor"?"on":""}"><b>SE</b> estoque &lt; ${a} → <b>Repor</b></div><div class="${s==="Atenção"?"on":""}" style="margin-left:24px"><b>SENÃO, SE</b> estoque &lt; ${b} → <b>Atenção</b></div><div class="${s==="OK"?"on":""}" style="margin-left:48px"><b>SENÃO</b> → <b>OK</b></div>`;
+    $("#fxOut").innerHTML = `${esc(p[1])} (${e}): ${e} &lt; ${a}? <b>${e<a?"Sim":"Não"}</b>` + (e<a ? "" : `. ${e} &lt; ${b}? <b>${e<b?"Sim":"Não"}</b>`) + `. Resultado: <b>${s}</b>.<br><code>=SE(E2&lt;$H$5;"Repor";SE(E2&lt;$H$7;"Atenção";"OK"))</code>`; }
+  ["#fxA","#fxB"].forEach(s => $(s).oninput = go); $("#fxP").onchange = go; go();
+})();
+
+/* classificador genérico */
+$$(".clf").forEach(box => { const items = JSON.parse(box.dataset.items), out = $("#"+box.id+"Out"); let ok = 0, done = 0;
+  box.innerHTML = items.map((it,i) => `<div class="it"><div>${i+1}. ${it.q}</div><div class="opts">${it.o.map((o,j)=>`<button data-i="${i}" data-j="${j}">${esc(o)}</button>`).join("")}</div><div class="fbk"></div></div>`).join("");
+  box.querySelectorAll("button").forEach(b => b.onclick = () => { const it = items[+b.dataset.i], wrap = b.closest(".it");
+    if(wrap.dataset.done) return; wrap.dataset.done = 1; done++;
+    const right = +b.dataset.j === it.a; if(right) ok++;
+    b.classList.add(right ? "ok" : "no"); if(!right) wrap.querySelectorAll("button")[it.a].classList.add("ok");
+    wrap.querySelector(".fbk").innerHTML = (right ? "✔ " : "✘ ") + it.e;
+    out.innerHTML = `${ok} de ${done} certas` + (done===items.length ? ` · ${ok===items.length ? "Excelente!" : "Releia a tabela acima e tente as que errou de novo recarregando a seção."}` : ""); });
+});
+
+/* percorrendo as linhas */
+(function(){ if(!$("#lpF")) return;
+  let pos = 0;
+  const optsFor = f => f==="CONT.SE" ? ["Repor","Atenção","OK"] : ["Salgado","Doce","Bebida"];
+  function fill(){ const f = $("#lpF").value; $("#lpC").innerHTML = optsFor(f).map(o=>`<option>${o}</option>`).join(""); pos = 0; go(); }
+  function go(){ const f = $("#lpF").value, c = $("#lpC").value;
+    const col = f==="CONT.SE" ? "L" : "C", sumCol = f==="SOMASE" ? "F" : "D";
+    const formula = f==="CONT.SE" ? `=CONT.SE(L2:L11;"${c}")` : (f==="SOMASE" ? `=SOMASE(C2:C11;"${c}";F2:F11)` : `=MÉDIASE(C2:C11;"${c}";D2:D11)`);
+    $("#lpFormula").innerHTML = `<code>${esc(formula)}</code>`;
+    let n = 0, s = 0, h = `<table class="mini"><tr><th>Linha</th><th>Produto</th><th>${col} · ${col==="L"?"Situação":"Categoria"}</th><th>Atende?</th>${f==="CONT.SE"?"<th>Conta</th>":`<th>${sumCol} · ${sumCol==="F"?"Valor":"Preço"}</th><th>Soma até aqui</th>`}</tr>`;
+    PRODS.forEach((p,i) => { const r = i+2, val = col==="L" ? sit(p[4],20,35) : p[2], hit = val===c, seen = i < pos;
+      const num = sumCol==="F" ? p[3]*p[4] : p[3];
+      if(seen && hit){ n++; s += num; }
+      const st = !seen ? 'style="color:#AAA"' : (hit ? 'class="hit"' : "");
+      h += `<tr ${st}><td>${r}</td><td>${esc(p[1])}</td><td>${esc(val)}</td><td>${seen ? (hit?"✔ sim":"✘ não") : "…"}</td>` + (f==="CONT.SE" ? `<td class="n">${seen ? (hit?"+1 → "+n:n) : ""}</td>` : `<td class="n">${seen ? (hit?"<b>"+CALC.show(num)+"</b>":CALC.show(num)) : ""}</td><td class="n">${seen ? CALC.show(s) : ""}</td>`) + "</tr>"; });
+    $("#lpTab").innerHTML = h + "</table>";
+    let msg = pos < 10 ? `Linha ${pos+1} de 10 conferida${pos===0?"s: nenhuma ainda":""}.` : "Todas as linhas conferidas. ";
+    if(pos >= 10){
+      if(f==="CONT.SE") msg += `Resultado: <span class="big-res">${n}</span>`;
+      else if(f==="SOMASE") msg += `Resultado: <span class="big-res">${brl(s)}</span>`;
+      else msg += `Soma ${brl(s)} ÷ contagem ${n} = <span class="big-res">${n ? brl(s/n) : "#DIV/0!"}</span> (MÉDIASE = SOMASE ÷ CONT.SE)`;
+    } else msg = `Conferidas: ${pos} de 10 linhas. ` + (f==="CONT.SE" ? `Contagem até aqui: <b>${n}</b>.` : `Soma até aqui: <b>${brl(s)}</b>${f==="MÉDIASE"?` em <b>${n}</b> linha(s)`:""}.`);
+    $("#lpOut").innerHTML = msg; }
+  $("#lpF").onchange = fill; $("#lpC").onchange = () => { pos = 0; go(); };
+  $("#lpNext").onclick = () => { if(pos < 10) pos++; go(); }; $("#lpAll").onclick = () => { pos = 10; go(); }; $("#lpReset").onclick = () => { pos = 0; go(); };
+  fill();
+})();
+
+/* à mão x por regra */
+(function(){ if(!$("#mrE")) return;
+  const RUIM = "background:#FFC7CE;color:#9C0006;font-weight:700";
+  const painted = new Set(PRODS.filter(p => sit(p[4],20,35)==="Repor").map(p => p[0]));
+  function go(){ const e = +$("#mrE").value; $("#mrEv").textContent = e;
+    const rows = PRODS.map((p,i) => i===0 ? [p[0],p[1],e] : [p[0],p[1],p[4]]).slice(0,6);
+    const tb = byRule => '<table class="mini"><tr><th>Produto</th><th>Estoque</th><th>Situação</th></tr>' + rows.map(([c,n,est]) => { const s = sit(est,20,35); const on = byRule ? s==="Repor" : painted.has(c);
+      return `<tr><td>${esc(n)}</td><td class="n">${est}</td><td style="${on?RUIM:""}">${s}</td></tr>`; }).join("") + "</table>";
+    $("#mrA").innerHTML = tb(false); $("#mrB").innerHTML = tb(true);
+    const s = sit(e,20,35);
+    $("#mrOut").innerHTML = s==="Repor" ? `<span style="color:var(--bad)">A Coxinha virou <b>Repor</b>: na cópia pintada à mão ela continua branca, e quem olhar só a cor não vai repor. Na regra, ela ficou vermelha sozinha.</span>` : `Coxinha com ${e}: <b>${s}</b>. Arraste o estoque para menos de 20 e compare as duas tabelas.`; }
+  $("#mrE").oninput = go; go();
+})();
+
+/* trava $ */
+(function(){ if(!$("#trvR")) return;
+  let lock = "1"; tglInit("#trvM", v => { lock = v; go(); });
+  function go(){ const r = +$("#trvR").value, p = PRODS[r-2], s = sit(p[4],20,35);
+    const cols = ["A","B","C","D","E","L"];
+    let h = '<table class="mini refgrid"><tr><th>Célula</th>' + cols.map(c=>`<th>${c}${r}</th>`).join("") + "</tr><tr><td>A regra olha</td>";
+    let lit = 0;
+    cols.forEach(c => { const tgt = lock==="1" ? "L" : CALC.colStr(CALC.colNum("L") + CALC.colNum(c) - 1); const v = tgt==="L" ? s : "(vazio)"; const on = v==="Repor"; lit += on;
+      h += `<td class="lk" style="${on?"background:#FFC7CE;color:#9C0006":""}">${tgt}${r}<br><span style="font:12px Arial">${esc(v)}</span></td>`; });
+    $("#trvTab").innerHTML = h + "</tr></table>";
+    $("#trvOut").innerHTML = s!=="Repor" ? `${esc(p[1])} está em <b>${s}</b>: nenhuma célula acende. Escolha a Tapioca ou o Bolo de pote.` :
+      (lock==="1" ? `Com <b>$L${r}</b>, todas as células da linha olham a Situação: <b>a linha inteira acende</b>.` : `<span style="color:var(--bad)">Sem o $, só A${r} olha L${r}. B${r} olha M${r}, C${r} olha N${r}… colunas vazias: só ${lit} célula acende.</span>`); }
+  $("#trvR").onchange = go; go();
+})();
+
+/* fluxo do SEERRO */
+(function(){ if(!$("#sfP")) return;
+  let novo = "0"; tglInit("#sfM", v => { novo = v; go(); });
+  function go(){ const p = PRODS[+$("#sfP").value], val = novo==="1" ? 0 : p[3]*p[4], tot = novo==="1" ? 0 : 1060, err = tot===0;
+    $("#sf1").innerHTML = `1. Calcula F ÷ $F$12<br><span style="font-weight:400">${CALC.show(val)} ÷ ${CALC.show(tot)}</span>`; $("#sf1").className = "nd on";
+    $("#sf2").innerHTML = `2. Deu erro?<br><span style="font-weight:400">${err ? "Sim: #DIV/0!" : "Não"}</span>`; $("#sf2").className = "nd " + (err ? "bad" : "on");
+    $("#sf3").innerHTML = err ? `3. Mostra o 2º argumento<br><span class="big-res">–</span>` : `3. Mostra o resultado<br><span class="big-res">${(val/tot*100).toFixed(1).replace(".",",")}%</span>`; $("#sf3").className = "nd on";
+    $("#sfOut").innerHTML = `<code>=SEERRO(F2/$F$12;"–")</code> · ` + (err ? "Sem estoques, o total é zero e a divisão dá erro: o SEERRO troca o erro pelo traço." : `A conta funcionou: o SEERRO não muda nada, mostra o mesmo ${(val/tot*100).toFixed(1).replace(".",",")}% que a fórmula sem ele mostraria.`); }
+  $("#sfP").onchange = go; go();
+})();
+
 const Q = {
  a1:[
   {t:"mc",q:"O que a fórmula =E5<20 devolve quando E5 vale 12?",o:["12","VERDADEIRO","Repor"],a:1,e:"Uma comparação sempre responde VERDADEIRO ou FALSO."},
@@ -3319,6 +3619,15 @@ const Q = {
   {t:"in",q:"Quantos salgados estão em Atenção? (=CONT.SES(C2:C11;\"Salgado\";L2:L11;\"Atenção\"))",a:["2"],e:"Coxinha (30) e Pastel (25)."},
   {t:"mc",q:"Você muda H5 de 20 para 25. O que deve mudar sozinho na planilha do M3?",o:["Só a coluna L","A Situação, a contagem de Repor e as cores","Nada, é preciso editar as fórmulas"],a:1,e:"Tudo que depende da regra usa $H$5 e muda junto."}]
 };
+
+Q.a3.push({t:"mc",q:"p = “o estoque é menor que 20”; q = “o produto é salgado”. Para o Bolo de pote (15, Doce), p E q é…",o:["VERDADEIRO","FALSO"],a:1,e:"p é V, mas q é F. No E, uma F derruba tudo."},
+          {t:"order",q:"Ordene os passos para montar =SE(E(E2<$H$5;C2=\"Salgado\");\"Repor já\";\"\").",steps:["Testar cada condição sozinha","Juntar as condições com E","Embrulhar o E com o SE","Conferir com um produto conhecido (Tapioca)"],e:"Cada passo dá um resultado que pode ser conferido."});
+Q.a4.push({t:"mc",q:"Qual fórmula dá o mesmo resultado que =MÉDIASE(C2:C11;\"Doce\";D2:D11)?",o:["=SOMASE(C2:C11;\"Doce\";D2:D11)/CONT.SE(C2:C11;\"Doce\")","=SOMASE(C2:C11;\"Doce\";D2:D11)*CONT.SE(C2:C11;\"Doce\")","=MÉDIA(D2:D11)"],a:0,e:"Média com critério = soma com critério ÷ contagem com critério."},
+          {t:"mc",q:"“Qual o doce mais barato?” Qual função responde?",o:["CONT.SE","MÍNIMOSES","SOMASE"],a:1,e:"Menor valor com critério: MÍNIMOSES(D2:D11;C2:C11;\"Doce\") → R$ 2,00."});
+Q.a5.push({t:"tf",q:"Se a Coxinha baixar para 10 unidades, uma célula pintada à mão de vermelho acompanha a mudança.",a:false,e:"Falso: a cor manual fica presa onde foi pintada. Só a regra pergunta de novo."},
+          {t:"mc",q:"Com a regra L2=\"Repor\" (sem $) aplicada em A2:L11, para qual célula a regra de B2 olha?",o:["L2","M2","B2"],a:1,e:"A referência anda junto: uma coluna à direita de L."});
+Q.a6.push({t:"mc",q:"Qual destes erros NÃO é erro de fórmula?",o:["#DIV/0!","###","#NOME?"],a:1,e:"### só indica que a coluna está estreita demais para o número."},
+          {t:"mc",q:"=SEERRO(F2/$F$12;\"–\") num mês normal (total R$ 1.060,00) mostra, para a Coxinha (R$ 135,00)…",o:["–","12,7%","0"],a:1,e:"Sem erro, o SEERRO mostra o resultado normal da conta."});
 
 document.querySelectorAll('.lab').forEach(labWidget);
 function shuffle(a){ a = a.slice(); for(let i=a.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]] = [a[j],a[i]]; } return a; }
