@@ -71,6 +71,13 @@ section{display:grid;gap:16px}
 footer{color:var(--muted);font-size:.9rem;border-top:1px solid var(--line);padding-top:16px}
 @media (max-width:480px){.step{grid-template-columns:38px 1fr}.sc{padding:16px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.tips{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
+.tip{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px;display:grid;gap:6px;align-content:start;min-width:0}
+.tip .k{font:500 .72rem/1.2 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.tip p{font-size:.97rem;line-height:1.5}
+.tip ol{margin:0;padding-left:1.2em;display:grid;gap:4px;font-size:.97rem}
+.tip ol li::marker{color:var(--accent);font-weight:700}
+.links a{color:var(--accent);font-weight:700;overflow-wrap:anywhere}
 </style>
 
 </head>
@@ -130,7 +137,6 @@ footer{color:var(--muted);font-size:.9rem;border-top:1px solid var(--line);paddi
         <ul>
           <li>Usem o <b>LibreOffice Calc</b>, versão 26.2 ou mais recente. Não resolvam no Google Planilhas.</li>
           <li>A aba <b>Enunciado</b> traz a história, os 10 problemas (1,0 ponto cada), as dicas e o critério de pontuação.</li>
-          <li>Usem fórmulas e funções. Valores digitados à mão no lugar de fórmulas valem zero.</li>
           <li>Resultado certo obtido de outro jeito, sem o recurso pedido, vale no máximo metade do problema.</li>
         </ul>
       </div></div>
@@ -145,6 +151,32 @@ footer{color:var(--muted);font-size:.9rem;border-top:1px solid var(--line);paddi
           <li>Os outros dois clicam em <b>Marcar como concluída</b>.</li>
         </ul>
       </div></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="dicas">
+    <h2 id="dicas">Dicas rápidas para mandar bem</h2>
+    <div class="tips">
+      <div class="tip"><span class="k">Programa</span>
+        <p>Usem o <b>LibreOffice Calc</b> (versão 26.2 ou mais nova). Nada de Google Planilhas.</p></div>
+      <div class="tip"><span class="k">Comecem pelo Enunciado</span>
+        <p>A aba Enunciado traz a história, os 10 problemas, as dicas e o critério de correção de cada um.</p></div>
+      <div class="tip"><span class="k">Ordem dos problemas</span>
+        <ol>
+          <li>Problemas 2, 3, 4 e 6: as colunas de cada linha.</li>
+          <li>Problemas 5, 7 e 8: os quadros de resumo.</li>
+          <li>Problemas 9 e 10: as cores, a simulação e as sugestões.</li>
+        </ol></div>
+      <div class="tip"><span class="k">Coluna I</span>
+        <p>Já vem pronta, em cinza. Não mexam nela.</p></div>
+      <div class="tip"><span class="k">Só fórmulas</span>
+        <p>Número digitado no lugar de fórmula vale <b>zero</b>.</p></div>
+      <div class="tip"><span class="k">Célula do preço com $</span>
+        <p>Usem a célula do preço travada com <code>$</code>, nunca o número. Teste: mudem um preço na tabela; se os totais e os quadros mudarem sozinhos, está certo. Depois voltem o valor original.</p></div>
+      <div class="tip"><span class="k">Linha “Estude”</span>
+        <p>Diz qual aula revisar. Resolver com o recurso pedido vale 1,0; de outro jeito, no máximo 0,5.</p></div>
+      <div class="tip"><span class="k">Materiais de aula</span>
+        <p class="links">Apostilas e slides, na área Planilhas: <a href="https://christianorossini.github.io/material-ifal" target="_blank" rel="noopener">christianorossini.github.io/material-ifal</a></p></div>
     </div>
   </section>
 
