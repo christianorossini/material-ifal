@@ -1,0 +1,664 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Laboratório de Memória</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --bg:#F2F4EE; --surface:#FBFCF8; --surface-2:#E8EDE2; --ink:#17231A; --ink-2:#4A5A4C; --line:#D3DCCB;
+  --accent:#2E6B1E; --accent-ink:#FFFFFF; --accent-soft:#DDEBD3;
+  --run:#2E6B1E; --run-soft:#DDEBD3;
+  --ready:#9A6200; --ready-soft:#FBEBC8;
+  --wait:#2F5C99; --wait-soft:#DCE6F4;
+  --neutral:#646E61; --neutral-soft:#E4E7E1;
+  --ok:#1F7A3A; --ok-soft:#D9F0DF; --bad:#B3261E; --bad-soft:#F8DEDB;
+  --display:"Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body:"Literata", Georgia, "Times New Roman", serif;
+  --mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0F1510; --surface:#172019; --surface-2:#1F2A21; --ink:#E4EBE0; --ink-2:#A6B3A4; --line:#2F3D31;
+    --accent:#7CC25B; --accent-ink:#0F1510; --accent-soft:#233A1C;
+    --run:#7CC25B; --run-soft:#1F3519; --ready:#E9B04A; --ready-soft:#3A2E14;
+    --wait:#8DB3EA; --wait-soft:#1B2A40; --neutral:#9AA397; --neutral-soft:#262C25;
+    --ok:#6FD08C; --ok-soft:#173222; --bad:#FF8A80; --bad-soft:#3D1B18;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0F1510; --surface:#172019; --surface-2:#1F2A21; --ink:#E4EBE0; --ink-2:#A6B3A4; --line:#2F3D31;
+  --accent:#7CC25B; --accent-ink:#0F1510; --accent-soft:#233A1C;
+  --run:#7CC25B; --run-soft:#1F3519; --ready:#E9B04A; --ready-soft:#3A2E14;
+  --wait:#8DB3EA; --wait-soft:#1B2A40; --neutral:#9AA397; --neutral-soft:#262C25;
+  --ok:#6FD08C; --ok-soft:#173222; --bad:#FF8A80; --bad-soft:#3D1B18;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto} *{transition:none!important; animation:none!important}}
+body{background:var(--bg); color:var(--ink); font-family:var(--body); font-size:17px; line-height:1.65; padding-inline:20px; padding-block:0 64px}
+h1,h2,h3,h4{font-family:var(--display); line-height:1.15; text-wrap:balance; margin:0}
+p{margin:0}
+a{color:var(--accent)}
+code,.mono{font-family:var(--mono); font-size:.88em}
+button{font:inherit; cursor:pointer}
+:focus-visible{outline:3px solid var(--accent); outline-offset:2px; border-radius:4px}
+
+/* header */
+.top{max-width:1160px; margin:0 auto; padding-block:48px 36px; border-bottom:2px solid var(--ink); display:grid; gap:18px}
+.eyebrow{font-family:var(--display); font-size:13px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--accent)}
+.top h1{font-size:clamp(48px, 9vw, 104px); font-weight:800; letter-spacing:-.03em}
+.top h1 span{color:var(--accent)}
+.lede{font-size:20px; max-width:62ch; color:var(--ink-2)}
+.meta{display:flex; flex-wrap:wrap; gap:8px 24px; font-family:var(--display); font-size:14px; color:var(--ink-2)}
+.meta b{color:var(--ink)}
+
+/* layout */
+.layout{max-width:1160px; margin:0 auto; display:grid; grid-template-columns:230px minmax(0,1fr); gap:56px; padding-top:40px}
+nav.toc{position:sticky; top:calc(env(safe-area-inset-top, 0px) + 20px); align-self:start; font-family:var(--display); font-size:14px}
+nav.toc p{font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-2); margin-bottom:10px}
+nav.toc ol{list-style:none; margin:0; padding:0; display:grid; gap:2px; border-left:2px solid var(--line)}
+nav.toc a{display:grid; grid-template-columns:38px 1fr; padding:6px 10px; margin-left:-2px; border-left:2px solid transparent; color:var(--ink-2); text-decoration:none; line-height:1.3}
+nav.toc a span{font-variant-numeric:tabular-nums; color:var(--ink-2); font-weight:600}
+nav.toc a:hover{color:var(--ink)}
+nav.toc a.on{border-left-color:var(--accent); color:var(--ink); font-weight:600}
+nav.toc a.on span{color:var(--accent)}
+main{min-width:0; display:grid; gap:72px}
+@media (max-width:900px){
+  .layout{grid-template-columns:minmax(0,1fr); gap:28px; padding-top:24px}
+  nav.toc{position:static}
+  nav.toc ol{display:flex; overflow-x:auto; border-left:none; gap:6px; padding-bottom:6px}
+  nav.toc a{display:block; white-space:nowrap; border:1px solid var(--line); border-radius:999px; padding:6px 12px; margin:0; background:var(--surface)}
+  nav.toc a span{margin-right:6px}
+  nav.toc a.on{border-color:var(--accent)}
+}
+
+/* sections */
+.sec{display:grid; gap:20px; scroll-margin-top:24px}
+.sec > *{max-width:68ch}
+.sec > .wide{max-width:none}
+.sec-head{display:grid; gap:6px; padding-bottom:6px}
+.num{font-family:var(--display); font-weight:800; font-size:15px; color:var(--accent); letter-spacing:.06em}
+.sec h2{font-size:clamp(28px, 4vw, 38px); font-weight:700; letter-spacing:-.01em}
+.sec h3{font-size:21px; font-weight:700; margin-top:10px}
+.sec ul,.sec ol{margin:0; padding-left:1.3em; display:grid; gap:6px}
+dfn{font-style:normal; font-weight:600; background:linear-gradient(transparent 62%, var(--accent-soft) 62%)}
+.def{border:2px solid var(--ink); background:var(--surface); padding:18px 22px; display:grid; gap:6px}
+.def .lbl{font-family:var(--display); font-size:12px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--accent)}
+.def p{font-size:19px}
+.note{background:var(--surface-2); padding:14px 18px; border-radius:6px; font-size:16px; display:grid; gap:6px}
+.note .lbl{font-family:var(--display); font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-2)}
+pre.term{font-family:var(--mono); font-size:14px; line-height:1.55; background:#101A12; color:#D6E8CB; padding:14px 18px; border-radius:6px; overflow-x:auto; margin:0}
+pre.term .c{color:#8FA88A}
+
+/* lab widgets */
+.lab{border:1px solid var(--line); background:var(--surface); border-radius:10px; padding:20px; display:grid; gap:16px}
+.lab-head{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap}
+.tag{font-family:var(--display); font-size:11px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; background:var(--accent); color:var(--accent-ink); padding:3px 8px; border-radius:3px}
+.lab-head h4{font-size:18px; font-weight:700}
+.lab-hint{font-size:15px; color:var(--ink-2)}
+.btns{display:flex; flex-wrap:wrap; gap:8px}
+.btn{font-family:var(--display); font-size:14px; font-weight:600; border:1.5px solid var(--ink); background:var(--surface); color:var(--ink); padding:8px 14px; border-radius:6px; transition:background .15s, transform .1s}
+.btn:hover{background:var(--surface-2)}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--ink); color:var(--bg)}
+.btn.primary:hover{background:var(--accent); border-color:var(--accent); color:var(--accent-ink)}
+.btn.ghost{border-color:var(--line); color:var(--ink-2)}
+.btn[disabled]{opacity:.45; cursor:not-allowed}
+.msg{font-family:var(--display); font-size:15px; padding:10px 14px; border-radius:6px; background:var(--surface-2); color:var(--ink)}
+.msg.ok{background:var(--ok-soft); color:var(--ok)}
+.msg.bad{background:var(--bad-soft); color:var(--bad)}
+.chip{display:inline-block; font-family:var(--display); font-size:13px; font-weight:700; padding:2px 9px; border-radius:999px}
+.st-execucao{background:var(--run-soft); color:var(--run)}
+.st-pronto{background:var(--ready-soft); color:var(--ready)}
+.st-espera{background:var(--wait-soft); color:var(--wait)}
+.st-criacao,.st-terminado{background:var(--neutral-soft); color:var(--neutral)}
+.scroll{overflow-x:auto}
+</style>
+<style>
+/* 5.1 */
+.procs{display:grid; grid-template-columns:repeat(auto-fill, minmax(190px, 1fr)); gap:10px; min-height:84px}
+.proc{border:1px solid var(--line); border-left:5px solid var(--run); padding:10px 12px; background:var(--bg); display:grid; gap:2px; animation:pop .25s ease-out}
+.proc b{font-family:var(--display); font-size:15px}
+.proc span{font-family:var(--mono); font-size:12.5px; color:var(--ink-2)}
+.proc.pronto{border-left-color:var(--ready)} .proc.espera{border-left-color:var(--wait)}
+.empty{font-family:var(--display); font-size:14px; color:var(--ink-2); align-self:center}
+@keyframes pop{from{opacity:.2; transform:translateY(6px)} to{opacity:1; transform:none}}
+.prog{display:flex; align-items:center; gap:12px; flex-wrap:wrap}
+.file{font-family:var(--mono); font-size:14px; border:1.5px dashed var(--ink-2); padding:8px 12px; border-radius:6px}
+
+/* 5.2 diagram */
+.fig{margin:0; display:grid; gap:8px}
+.fig figcaption{font-family:var(--display); font-size:13px; color:var(--ink-2)}
+.fig svg{width:100%; height:auto; max-width:640px}
+.fig svg text{font-family:var(--display)} .fig svg text:not([fill]){fill:var(--ink)}
+.part{cursor:pointer}
+.part rect{transition:stroke-width .15s}
+.part:hover rect,.part:focus rect{stroke-width:4}
+
+/* 5.2.1 context switch */
+.cs{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px}
+@media (max-width:620px){.cs{grid-template-columns:minmax(0,1fr)}}
+.box{border:1.5px solid var(--line); border-radius:8px; padding:12px; background:var(--bg); display:grid; gap:8px; transition:border-color .2s, box-shadow .2s}
+.box h5{font-family:var(--display); font-size:14px; margin:0; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:8px}
+.box.cpu{border-color:var(--ink); background:var(--surface-2)}
+.box.flash{border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft)}
+.regs{display:grid; grid-template-columns:auto 1fr; gap:3px 12px; font-family:var(--mono); font-size:13.5px; font-variant-numeric:tabular-nums}
+.regs dt{color:var(--ink-2)} .regs dd{margin:0; text-align:right}
+.steps{display:flex; gap:6px; flex-wrap:wrap}
+.steps i{font-style:normal; font-family:var(--display); font-size:12px; font-weight:700; padding:3px 8px; border-radius:999px; background:var(--surface-2); color:var(--ink-2)}
+.steps i.on{background:var(--accent); color:var(--accent-ink)}
+
+/* 5.2.2 table */
+table.t{border-collapse:collapse; width:100%; font-size:15.5px}
+.t th{font-family:var(--display); text-align:left; font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-2); border-bottom:2px solid var(--ink); padding:8px 10px}
+.t td{border-bottom:1px solid var(--line); padding:10px; vertical-align:top}
+.t td:first-child{font-family:var(--display); font-weight:700; white-space:nowrap}
+
+/* 5.2.4 PCB */
+.pcbwrap{display:grid; grid-template-columns:minmax(0,300px) minmax(0,1fr); gap:20px; align-items:start}
+@media (max-width:620px){.pcbwrap{grid-template-columns:minmax(0,1fr)}}
+.pcb{list-style:none; margin:0; padding:0; border:2px solid var(--ink); border-radius:6px; overflow:hidden; font-family:var(--display); font-size:15px}
+.pcb li{padding:9px 14px; border-top:1px solid var(--line); transition:background .2s, color .2s}
+.pcb li.hd{background:var(--ink); color:var(--bg); font-family:var(--mono); font-size:14px; border-top:none}
+.pcb li.hit[data-part="hw"]{background:var(--wait-soft); color:var(--wait); font-weight:700}
+.pcb li.hit[data-part="sw"]{background:var(--run-soft); color:var(--run); font-weight:700}
+.pcb li.hit[data-part="ea"]{background:var(--ready-soft); color:var(--ready); font-weight:700}
+.pcb li.hit[data-part="ctl"]{background:var(--neutral-soft); color:var(--ink); font-weight:700}
+.btn.sel{background:var(--ink); color:var(--bg)}
+
+/* 5.3 cards */
+.states{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px}
+@media (max-width:700px){.states{grid-template-columns:minmax(0,1fr)}}
+.state{border-radius:8px; padding:16px; display:grid; gap:6px; align-content:start}
+.state h4{font-size:22px}
+.state small{font-family:var(--mono); font-size:12.5px; opacity:.85}
+.state p{font-size:15.5px}
+.state .an{font-size:14px; font-style:italic; border-top:1px solid currentColor; padding-top:8px; opacity:.9}
+.state.x{background:var(--run-soft); color:var(--run)} .state.x p{color:var(--ink)}
+.state.p{background:var(--ready-soft); color:var(--ready)} .state.p p{color:var(--ink)}
+.state.e{background:var(--wait-soft); color:var(--wait)} .state.e p{color:var(--ink)}
+
+/* 5.4 state machine */
+.smwrap{display:grid; grid-template-columns:minmax(0,1.6fr) minmax(0,1fr); gap:20px; align-items:start}
+@media (max-width:760px){.smwrap{grid-template-columns:minmax(0,1fr)}}
+.sm svg{width:100%; height:auto}
+.sm text{font-family:var(--display); fill:var(--ink); font-size:15px; font-weight:600}
+.sm .elbl{font-size:14px; font-weight:800; fill:var(--ink-2)}
+.node rect{fill:var(--surface); stroke:var(--line); stroke-width:2; transition:all .25s}
+.node.cur rect{stroke-width:3.5}
+.node.cur.n-criacao rect,.node.cur.n-terminado rect{fill:var(--neutral-soft); stroke:var(--neutral)}
+.node.cur.n-pronto rect{fill:var(--ready-soft); stroke:var(--ready)}
+.node.cur.n-execucao rect{fill:var(--run-soft); stroke:var(--run)}
+.node.cur.n-espera rect{fill:var(--wait-soft); stroke:var(--wait)}
+.edge{fill:none; stroke:var(--ink-2); stroke-width:2; opacity:.55; transition:all .25s}
+.edge.active{stroke:var(--accent); stroke-width:4; opacity:1}
+.mk{fill:var(--ink-2)} .mk-on{fill:var(--accent)}
+.pcbmini{font-family:var(--mono); font-size:13.5px; background:var(--bg); border:1.5px solid var(--line); border-radius:8px; padding:12px; display:grid; gap:4px}
+.log{list-style:none; margin:0; padding:0; font-family:var(--display); font-size:13.5px; display:grid; gap:4px; max-height:190px; overflow-y:auto}
+.log li{padding:5px 8px; background:var(--bg); border-radius:4px}
+.evbtns{display:grid; grid-template-columns:repeat(auto-fill, minmax(210px, 1fr)); gap:8px}
+.evbtns .btn{text-align:left}
+</style><style>
+/* 5.5 */
+.twocol{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:12px}
+@media (max-width:620px){.twocol{grid-template-columns:minmax(0,1fr)}}
+.card{border:1px solid var(--line); border-radius:8px; padding:16px; background:var(--surface); display:grid; gap:8px; align-content:start}
+.card h4{font-size:18px}
+.card p,.card li{font-size:15.5px}
+/* 5.6 bars */
+.bars{display:grid; gap:12px}
+.barrow{display:grid; grid-template-columns:110px minmax(0,1fr); gap:12px; align-items:center; font-family:var(--display); font-weight:700; font-size:14px}
+.bar{display:flex; height:30px; border-radius:5px; overflow:hidden}
+.bar i{display:block; height:100%}
+.bar .u{background:var(--run)} .bar .io{background:var(--wait); opacity:.45}
+.legend{display:flex; gap:18px; flex-wrap:wrap; font-family:var(--display); font-size:13px; color:var(--ink-2)}
+.legend span::before{content:""; display:inline-block; width:12px; height:12px; border-radius:3px; margin-right:6px; vertical-align:-1px; background:var(--run)}
+.legend span.io::before{background:var(--wait); opacity:.45}
+.cls{list-style:none; margin:0; padding:0; display:grid; gap:8px}
+.cls li{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:10px; align-items:center; padding:10px 12px; border:1px solid var(--line); border-radius:8px; background:var(--bg)}
+.cls li.ok{border-color:var(--ok); background:var(--ok-soft)}
+.cls li.bad{border-color:var(--bad); background:var(--bad-soft)}
+.cls .cfb{grid-column:1 / -1; font-size:14.5px}
+.cls .btn{padding:6px 10px; font-size:13px}
+/* 5.7 terminal */
+.termbox{background:#101A12; color:#D6E8CB; font-family:var(--mono); font-size:14px; border-radius:8px; padding:14px 16px; min-height:170px; display:grid; align-content:start; gap:2px; overflow-x:auto}
+.termbox .c{color:#8FA88A}
+.termbox .busy{color:#E9B04A}
+.cursor{display:inline-block; width:8px; height:15px; background:#D6E8CB; vertical-align:-2px; animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.flow{display:flex; align-items:center; gap:8px; flex-wrap:wrap; font-family:var(--display); font-size:14px}
+.flow b{border:1.5px solid var(--line); background:var(--surface); padding:6px 10px; border-radius:6px; font-weight:600}
+.flow b.p{background:var(--ink); color:var(--bg); border-color:var(--ink)}
+.flow em{font-style:normal; color:var(--ink-2)}
+/* 5.8 */
+.three{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px}
+@media (max-width:760px){.three{grid-template-columns:minmax(0,1fr)}}
+.card ol{padding-left:1.2em; display:grid; gap:4px}
+/* 5.9 tree */
+.tree ul{list-style:none; margin:0; padding-left:28px; position:relative; display:grid; gap:8px}
+.tree > ul{padding-left:0}
+.tree ul ul::before{content:""; position:absolute; left:10px; top:-8px; bottom:18px; border-left:2px solid var(--line)}
+.tree ul ul > li{position:relative}
+.tree ul ul > li::before{content:""; position:absolute; left:-18px; top:20px; width:16px; border-top:2px solid var(--line)}
+.tnode{display:inline-flex; align-items:center; gap:10px; border:1.5px solid var(--line); background:var(--bg); border-radius:8px; padding:6px 8px 6px 12px; font-family:var(--display); font-size:14px; transition:opacity .3s, transform .3s}
+.tnode b{font-size:15px}
+.tnode .rel{color:var(--ink-2); font-weight:500}
+.tnode button{border:1px solid var(--bad); color:var(--bad); background:transparent; border-radius:5px; font-family:var(--display); font-size:12px; font-weight:700; padding:3px 7px}
+.tnode.root{border-color:var(--run); background:var(--run-soft)}
+.tnode.ind{border-style:dashed}
+.gone{opacity:0; transform:scale(.9)}
+.treegrid{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,220px); gap:20px; align-items:start}
+@media (max-width:620px){.treegrid{grid-template-columns:minmax(0,1fr)}}
+/* threads figure */
+.thr{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:14px}
+@media (max-width:700px){.thr{grid-template-columns:minmax(0,1fr)}}
+.pbox{border:2px solid var(--line); border-radius:10px; padding:12px; display:grid; gap:6px; background:var(--surface)}
+.pbox.mt{border-color:var(--accent)}
+.pbox h5{font-family:var(--display); font-size:15px; margin:0}
+.seg{font-family:var(--display); font-size:13px; font-weight:600; padding:7px 9px; border-radius:6px; text-align:center}
+.seg.sw{background:var(--run-soft); color:var(--run)} .seg.hw{background:var(--wait-soft); color:var(--wait)} .seg.ea{background:var(--ready-soft); color:var(--ready)}
+.pair{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:8px}
+.trio{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:6px}
+.col{display:grid; gap:6px; align-content:start}
+.col small{font-family:var(--display); font-size:12px; font-weight:700; color:var(--ink-2); text-align:center}
+/* 5.10 */
+.svc{display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:8px; list-style:none; margin:0; padding:0}
+.svc li{border:1px solid var(--line); border-radius:8px; padding:10px 12px; background:var(--surface); font-family:var(--display); font-size:14.5px; font-weight:600; display:grid; gap:2px}
+.svc li span{font-family:var(--body); font-weight:400; font-size:13.5px; color:var(--ink-2)}
+/* 5.11 */
+.sig{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:16px; align-items:start}
+@media (max-width:700px){.sig{grid-template-columns:minmax(0,1fr)}}
+.opts{display:grid; gap:6px}
+.opt{display:flex; gap:10px; align-items:flex-start; padding:9px 11px; border:1.5px solid var(--line); border-radius:8px; background:var(--bg); cursor:pointer; font-size:15px}
+.opt:has(input:checked){border-color:var(--accent); background:var(--accent-soft)}
+.opt input{margin-top:5px; accent-color:var(--accent)}
+.opt code{font-weight:600}
+.switch{display:flex; gap:10px; align-items:center; font-family:var(--display); font-size:14.5px}
+.switch input{width:18px; height:18px; accent-color:var(--accent)}
+.path{display:flex; align-items:center; gap:6px; flex-wrap:wrap; font-family:var(--display); font-size:13.5px}
+.path b{padding:5px 9px; border-radius:6px; background:var(--surface-2); font-weight:600}
+.path b.hl{background:var(--accent); color:var(--accent-ink)}
+/* exercises */
+.ex-tabs{display:flex; gap:8px; flex-wrap:wrap}
+.oq{list-style:none; margin:0; padding:0; display:grid; gap:10px; counter-reset:q}
+.oq > li{counter-increment:q; border:1px solid var(--line); border-radius:8px; background:var(--surface); padding:14px 16px 14px 56px; position:relative; display:grid; gap:8px}
+.oq > li::before{content:counter(q); position:absolute; left:14px; top:12px; width:30px; height:30px; border-radius:50%; background:var(--ink); color:var(--bg); font-family:var(--display); font-weight:700; font-size:14px; display:grid; place-items:center}
+.oq p{font-size:16.5px}
+details summary{cursor:pointer; font-family:var(--display); font-size:13.5px; font-weight:600; color:var(--accent); width:fit-content}
+details[open] summary{margin-bottom:6px}
+details .ans{font-size:15px; color:var(--ink-2); display:grid; gap:4px}
+.score{position:sticky; top:calc(env(safe-area-inset-top, 0px) + 8px); z-index:2; display:flex; align-items:center; gap:14px; flex-wrap:wrap; background:var(--ink); color:var(--bg); padding:10px 16px; border-radius:8px; font-family:var(--display); font-size:14.5px}
+.score b{font-size:18px; font-variant-numeric:tabular-nums}
+.meter{flex:1; min-width:120px; height:8px; background:rgba(128,128,128,.35); border-radius:99px; overflow:hidden; display:flex}
+.meter i{display:block; height:100%; transition:width .3s}
+.meter .g{background:#6FD08C} .meter .r{background:#FF8A80}
+.score .btn{border-color:var(--bg); color:var(--bg); background:transparent; padding:5px 10px; font-size:13px}
+.qz{list-style:none; margin:0; padding:0; display:grid; gap:14px; counter-reset:c}
+.qz > li{counter-increment:c; border:1px solid var(--line); border-radius:10px; background:var(--surface); padding:16px; display:grid; gap:10px}
+.qz .qh{display:flex; gap:10px; align-items:baseline}
+.qz .qh::before{content:counter(c, decimal-leading-zero); font-family:var(--display); font-weight:800; color:var(--accent); font-size:14px; font-variant-numeric:tabular-nums}
+.qz .qh p{font-size:16.5px}
+.qz .alts{display:grid; gap:6px}
+.alt{display:grid; grid-template-columns:28px minmax(0,1fr); gap:8px; align-items:start; text-align:left; border:1.5px solid var(--line); background:var(--bg); color:var(--ink); border-radius:8px; padding:9px 12px; font-family:var(--body); font-size:15.5px; line-height:1.45}
+.alt:hover:not([disabled]){border-color:var(--ink)}
+.alt .k{font-family:var(--display); font-weight:700; font-size:13px; width:24px; height:24px; border-radius:50%; border:1.5px solid currentColor; display:grid; place-items:center; color:var(--ink-2)}
+.alt[disabled]{cursor:default}
+.alt.right{border-color:var(--ok); background:var(--ok-soft)} .alt.right .k{background:var(--ok); color:var(--surface); border-color:var(--ok)}
+.alt.wrong{border-color:var(--bad); background:var(--bad-soft)} .alt.wrong .k{background:var(--bad); color:var(--surface); border-color:var(--bad)}
+.fb{font-size:15px; padding:10px 12px; border-radius:6px}
+.fb.ok{background:var(--ok-soft)} .fb.bad{background:var(--bad-soft)}
+.fb b{font-family:var(--display)}
+.fb.ok b{color:var(--ok)} .fb.bad b{color:var(--bad)}
+.final{border:2px solid var(--ink); border-radius:10px; padding:18px; display:grid; gap:6px; background:var(--surface)}
+.final h4{font-size:22px}
+footer.end{max-width:1160px; margin:64px auto 0; padding-top:18px; border-top:1px solid var(--line); font-family:var(--display); font-size:13px; color:var(--ink-2)}
+</style><style>
+body{margin:0}
+[hidden]{display:none!important}
+@media print{
+  :root{--bg:#FFFFFF; --surface:#FFFFFF}
+  body{font-size:11pt; padding-inline:0}
+  nav.toc,.cmd .copy{display:none!important}
+  .layout{grid-template-columns:minmax(0,1fr); gap:0; padding-top:12px}
+  main{gap:22px}
+  .top{padding-block:0 14px}
+  .top h1{font-size:44pt}
+  .sec{break-before:auto}
+  table,.q,.cmd,.note,.warn,.map{break-inside:avoid}
+  .sec-head{break-after:avoid}
+  pre.term{white-space:pre-wrap; word-break:break-all}
+}
+</style>
+</head><body>
+<style>
+.steps-list{list-style:none; margin:0; padding:0; counter-reset:st; display:grid; gap:10px}
+.steps-list > li{counter-increment:st; position:relative; padding-left:44px; font-size:16.5px}
+.steps-list > li::before{content:counter(st); position:absolute; left:0; top:1px; width:28px; height:28px; border-radius:50%; background:var(--accent); color:var(--accent-ink); font-family:var(--display); font-weight:700; font-size:14px; display:grid; place-items:center}
+kbd{font-family:var(--mono); font-size:.85em; border:1px solid var(--line); border-bottom-width:2px; border-radius:4px; padding:1px 6px; background:var(--surface)}
+.ui{font-family:var(--display); font-weight:600; font-size:.95em}
+.cmd{position:relative}
+.cmd pre.term{padding-right:96px}
+.cmd .copy{position:absolute; top:8px; right:8px; font-family:var(--display); font-size:12px; font-weight:700; border:1px solid #5E7A55; background:#1B2A1D; color:#D6E8CB; border-radius:5px; padding:4px 9px}
+table.fill{border-collapse:collapse; width:100%; font-size:15px}
+.fill th{font-family:var(--display); font-size:12.5px; text-transform:uppercase; letter-spacing:.06em; text-align:left; color:var(--ink-2); border-bottom:2px solid var(--ink); padding:8px}
+.fill td{border:1px solid var(--line); padding:10px 8px; height:42px; background:var(--surface)}
+.fill td.pre{font-family:var(--display); font-weight:600; background:var(--surface-2)}
+.q{border-left:4px solid var(--accent); padding:4px 0 4px 14px; display:grid; gap:6px}
+.q p{font-size:16.5px}
+.q .lines{height:64px; background:repeating-linear-gradient(transparent 0 31px, var(--line) 31px 32px)}
+.warn{background:var(--bad-soft); color:var(--ink); border-radius:6px; padding:12px 16px; font-size:15.5px}
+.warn b{color:var(--bad)}
+@media print{ .cmd .copy{display:none} .cmd pre.term{padding-right:18px} .q .lines{height:80px} }
+</style>
+<style>
+.sim-ctl{display:flex; flex-wrap:wrap; gap:8px; align-items:center}
+.sim-ctl label{font-family:var(--display); font-size:14px; color:var(--ink-2); display:inline-flex; align-items:center; gap:6px}
+.sim-ctl input,.sim-ctl select{font-family:var(--mono); font-size:13px; padding:5px 6px; border:1px solid var(--line); border-radius:5px; background:var(--bg); color:var(--ink)}
+.sim-ctl input.num{width:64px}
+.mview{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:14px; align-items:start}
+@media (max-width:700px){.mview{grid-template-columns:minmax(0,1fr)}}
+.mbar{display:flex; height:66px; border-radius:8px; overflow:hidden; gap:2px; background:var(--line)}
+.mb{display:flex; flex-direction:column; align-items:center; justify-content:center; color:#fff; font-family:var(--mono); font-size:12px; line-height:1.25; min-width:0; overflow:hidden; white-space:nowrap}
+.mb b{font-size:13.5px}
+.mb.so{background:#4A5A47}
+.mb.free{background:repeating-linear-gradient(135deg,var(--surface-2) 0 6px,var(--bg) 6px 12px); color:var(--ink-2)}
+.mb.hi{box-shadow:inset 0 0 0 3px #D9901A}
+.maxis{position:relative; height:18px; font-family:var(--mono); font-size:11px; color:var(--ink-2)}
+.maxis span{position:absolute; transform:translateX(-50%)}
+.maxis span:first-child{transform:none}.maxis span:last-child{transform:translateX(-100%)}
+.mdisk{border:1.5px dashed var(--line); border-radius:8px; padding:8px 10px; min-width:170px; display:grid; gap:6px; background:var(--bg)}
+.mdisk .lb{font-family:var(--display); font-size:11.5px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-2)}
+.qrow{display:flex; flex-wrap:wrap; gap:5px; align-items:center; min-height:28px}
+.pc{display:inline-flex; align-items:center; gap:4px; font-family:var(--mono); font-size:13px; font-weight:700; color:#fff; padding:3px 8px; border-radius:6px; white-space:nowrap}
+.pc small{font-size:10.5px; opacity:.9}
+.muted{color:var(--ink-2); font-size:13px}
+.mstats{font-family:var(--display); font-size:14px; color:var(--ink-2)}
+.mlog{font-family:var(--mono); font-size:12.5px; color:var(--ink-2); max-height:150px; overflow:auto; padding-left:0; list-style-position:inside}
+.memlab{display:grid; gap:12px; min-width:0}
+main > section{min-width:0}
+.mview > *,.memlab > *{min-width:0}
+.mlog li{white-space:normal}
+.cmd pre.term{white-space:pre-wrap; word-break:break-word; overflow-wrap:anywhere}
+@media print{.memlab{display:none!important} .layout,main{display:block!important} main > section{margin-bottom:22px; display:block!important} .sec > * + *{margin-top:12px} .steps-list{display:block!important} .steps-list li{margin-bottom:8px} ol.steps-list{break-inside:avoid; break-after:avoid} .sec-head{break-after:avoid; break-inside:avoid; display:block!important} .sec > p{break-after:avoid}}
+</style>
+
+<header class="top">
+  <p class="eyebrow">Sistemas Operacionais · Bacharelado em Sistemas de Informação · IFAL Campus Maceió</p>
+  <h1>Lab: gerência de memória<span>.</span></h1>
+  <p class="lede">Prática do capítulo 9. Primeiro você vai observar como o Windows usa a memória do seu computador, sem instalar nada. Depois, no simulador desta página, vai provocar fragmentação, comparar estratégias de alocação e fazer swapping.</p>
+  <div class="meta"><span>Duração: <b>cerca de 60 min</b></span><span>Em duplas</span><span>Windows 10 ou 11 e um navegador</span><span>Prof. Christiano Rossini</span></div>
+</header>
+
+<div class="layout">
+<nav class="toc" aria-label="Sumário">
+  <p>Roteiro</p>
+  <ol>
+    <li><a href="#p1"><span>1</span>Memória do sistema</a></li>
+    <li><a href="#p2"><span>2</span>Monitor de Recursos</a></li>
+    <li><a href="#p3"><span>3</span>Memória por processo</a></li>
+    <li><a href="#p4"><span>4</span>Arquivo de paginação</a></li>
+    <li><a href="#p5"><span>5</span>Fragmentação externa</a></li>
+    <li><a href="#p6"><span>6</span>Estratégias</a></li>
+    <li><a href="#p7"><span>7</span>Swapping</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<section class="sec" id="p1">
+  <div class="sec-head"><span class="num">Parte 1 · 8 min</span><h2>Quanta memória está em uso?</h2></div>
+  <ol class="steps-list">
+    <li>Abra o Gerenciador de Tarefas com <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Esc</kbd>. Se ele abrir pequeno, clique em <span class="ui">Mais detalhes</span>.</li>
+    <li>Vá à aba <span class="ui">Desempenho</span> e clique em <span class="ui">Memória</span>.</li>
+    <li>Anote os valores na primeira linha da tabela.</li>
+    <li>Abra três programas (por exemplo, o navegador com cinco abas, o Paint e o Bloco de Notas), espere 20 segundos e anote de novo.</li>
+  </ol>
+  <div class="scroll wide"><table class="fill">
+    <thead><tr><th>Momento</th><th>Total (GB)</th><th>Em uso (GB)</th><th>Disponível (GB)</th><th>Em cache (GB)</th></tr></thead>
+    <tbody><tr><td class="pre">Antes</td><td></td><td></td><td></td><td></td></tr><tr><td class="pre">Com 3 programas</td><td></td><td></td><td></td><td></td></tr></tbody>
+  </table></div>
+  <div class="q"><p><b>1.</b> Vários programas ficaram na memória ao mesmo tempo. Qual técnica do capítulo <b>não</b> permitiria isso? Por quê?</p><div class="lines"></div></div>
+</section>
+
+<section class="sec" id="p2">
+  <div class="sec-head"><span class="num">Parte 2 · 8 min</span><h2>Para onde vai a memória</h2></div>
+  <ol class="steps-list">
+    <li>Pressione <kbd>Win</kbd>+<kbd>R</kbd>, digite <code>resmon</code> e pressione <kbd>Enter</kbd> para abrir o Monitor de Recursos.</li>
+    <li>Vá à aba <span class="ui">Memória</span>. Na parte de baixo há uma barra colorida, a <b>Memória Física</b>.</li>
+    <li>Anote o valor de cada parte da barra.</li>
+  </ol>
+  <div class="scroll wide"><table class="fill">
+    <thead><tr><th>Hardware reservado (MB)</th><th>Em uso (MB)</th><th>Modificada (MB)</th><th>Em espera (MB)</th><th>Livre (MB)</th></tr></thead>
+    <tbody><tr><td></td><td></td><td></td><td></td><td></td></tr></tbody>
+  </table></div>
+  <div class="note"><span class="lbl">Dica</span><p>Passe o mouse sobre cada parte da barra: o Monitor de Recursos explica o que ela significa.</p></div>
+  <div class="q"><p><b>2.</b> Em geral, <b>Livre</b> é pequeno e <b>Em espera</b> é grande. Em espera é memória com dados de disco guardados em cache, que o Windows entrega na hora a quem pedir. O Windows está desperdiçando a memória ou aproveitando-a? Explique.</p><div class="lines"></div></div>
+</section>
+
+<section class="sec" id="p3">
+  <div class="sec-head"><span class="num">Parte 3 · 8 min</span><h2>Quanto ocupa cada processo</h2></div>
+  <ol class="steps-list">
+    <li>Abra o <b>Windows PowerShell</b> (menu Iniciar, digite “PowerShell”).</li>
+    <li>Rode o comando abaixo. Ele lista os cinco processos que mais ocupam memória física, em MB.</li>
+  </ol>
+  <div class="cmd"><pre class="term">Get-Process | Sort-Object WS -Descending | Select-Object -First 5 Name, @{n='MB'; e={[math]::Round($_.WS / 1MB)}}</pre><button class="copy" type="button">Copiar</button></div>
+  <div class="scroll wide"><table class="fill">
+    <thead><tr><th>Processo</th><th>MB</th></tr></thead>
+    <tbody><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr></tbody>
+  </table></div>
+  <div class="q"><p><b>3.</b> Os processos ocupam tamanhos muito diferentes. Se a memória fosse dividida em <b>partições estáticas</b> do mesmo tamanho, o que aconteceria com os processos pequenos? E com os muito grandes?</p><div class="lines"></div></div>
+</section>
+
+<section class="sec" id="p4">
+  <div class="sec-head"><span class="num">Parte 4 · 5 min</span><h2>O arquivo de paginação</h2></div>
+  <ol class="steps-list">
+    <li>No mesmo PowerShell, rode o comando abaixo. Ele mostra o arquivo de paginação (<code>pagefile.sys</code>), a área do disco que o Windows usa quando a memória física não basta.</li>
+  </ol>
+  <div class="cmd"><pre class="term">Get-CimInstance Win32_PageFileUsage | Select-Object Name, AllocatedBaseSize, CurrentUsage</pre><button class="copy" type="button">Copiar</button></div>
+  <div class="scroll wide"><table class="fill">
+    <thead><tr><th>Arquivo (Name)</th><th>Tamanho alocado (MB)</th><th>Em uso agora (MB)</th></tr></thead>
+    <tbody><tr><td></td><td></td><td></td></tr></tbody>
+  </table></div>
+  <div class="q"><p><b>4.</b> Qual técnica do capítulo também usa uma área do disco para guardar o que não cabe na memória? Por que usar o disco deixa o sistema mais lento?</p><div class="lines"></div></div>
+</section>
+
+<section class="sec" id="p5">
+  <div class="sec-head"><span class="num">Parte 5 · 10 min</span><h2>Simulador: fragmentação externa</h2></div>
+  <p>Use o simulador abaixo, que faz alocação particionada dinâmica. Deixe <b>Memória = 64 KB</b>, <b>SO = 16 KB</b> e a estratégia <b>First-fit</b>.</p>
+  <ol class="steps-list">
+    <li>Aloque, nesta ordem: A com 12 KB, B com 10 KB, C com 8 KB e D com 10 KB.</li>
+    <li>Libere B e depois libere D (escolha em <span class="ui">Na memória</span> e clique em <span class="ui">Liberar</span>).</li>
+    <li>Tente alocar E com 20 KB. Anote o que aconteceu e os valores da linha “Livre”.</li>
+    <li>Clique em <span class="ui">Compactar</span> e tente alocar E de novo.</li>
+  </ol>
+  <div class="memlab wide"></div>
+  <div class="scroll wide"><table class="fill">
+    <thead><tr><th>Momento</th><th>Livre total (KB)</th><th>Nº de áreas livres</th><th>Maior área livre (KB)</th><th>E coube?</th></tr></thead>
+    <tbody><tr><td class="pre">Antes de compactar</td><td></td><td></td><td></td><td></td></tr><tr><td class="pre">Depois de compactar</td><td></td><td></td><td></td><td></td></tr></tbody>
+  </table></div>
+  <div class="q"><p><b>5.</b> Havia memória livre suficiente para E antes da compactação? Por que ele não coube? Que nome tem esse problema?</p><div class="lines"></div></div>
+</section>
+
+<section class="sec" id="p6">
+  <div class="sec-head"><span class="num">Parte 6 · 12 min</span><h2>Simulador: três estratégias</h2></div>
+  <p>Este simulador já começa com <b>Memória = 50 KB</b> e <b>SO = 0 KB</b>. Vamos montar a situação inicial: A (5 KB), B (3 KB), uma área livre de 10 KB, C (6 KB) e uma área livre de 26 KB.</p>
+  <ol class="steps-list">
+    <li>Aloque A com 5, B com 3, X com 10 e C com 6. Depois libere X: a área de 10 KB fica livre.</li>
+    <li>Aloque D com 6 KB, libere A e aloque E com 4 KB. Anote o endereço de E e as áreas livres.</li>
+    <li>Repita os passos 1 e 2 com <b>Best-fit</b> e com <b>Worst-fit</b> (clique em <span class="ui">Reiniciar memória</span> antes de cada uma).</li>
+  </ol>
+  <div class="memlab wide" data-total="50" data-os="0"></div>
+  <div class="scroll wide"><table class="fill">
+    <thead><tr><th>Estratégia</th><th>Endereço de D (KB)</th><th>Endereço de E (KB)</th><th>Áreas livres no fim (KB)</th></tr></thead>
+    <tbody><tr><td class="pre">First-fit</td><td></td><td></td><td></td></tr><tr><td class="pre">Best-fit</td><td></td><td></td><td></td></tr><tr><td class="pre">Worst-fit</td><td></td><td></td><td></td></tr></tbody>
+  </table></div>
+  <div class="q"><p><b>6.</b> Qual estratégia deixou a sobra mais difícil de aproveitar? Qual manteve as sobras maiores? Justifique com os números da tabela.</p><div class="lines"></div></div>
+</section>
+
+<section class="sec" id="p7">
+  <div class="sec-head"><span class="num">Parte 7 · 10 min</span><h2>Simulador: swapping</h2></div>
+  <p>Volte para <b>Memória = 64 KB</b>, <b>SO = 16 KB</b>, <b>First-fit</b>, e clique em <span class="ui">Reiniciar memória</span>.</p>
+  <ol class="steps-list">
+    <li>Aloque A com 14, B com 14 e C com 20 KB. A memória fica cheia.</li>
+    <li>Tente alocar D com 12 KB. Não cabe.</li>
+    <li>Faça <span class="ui">Swap out</span> de B e aloque D.</li>
+    <li>Libere A e faça <span class="ui">Swap in</span> de B. Anote o endereço de B antes e depois.</li>
+  </ol>
+  <div class="memlab wide"></div>
+  <div class="scroll wide"><table class="fill">
+    <thead><tr><th>Endereço de B antes do swap out (KB)</th><th>Endereço de B depois do swap in (KB)</th></tr></thead>
+    <tbody><tr><td></td><td></td></tr></tbody>
+  </table></div>
+  <div class="q"><p><b>7.</b> Por que B voltou para um endereço diferente? O que o hardware precisa ter para que B continue funcionando no novo endereço?</p><div class="lines"></div></div>
+</section>
+
+</main>
+</div>
+<footer class="end">Prática de laboratório do capítulo 9 (Gerência de memória) de Machado, F. B.; Maia, L. P. <i>Arquitetura de Sistemas Operacionais</i>. Os valores do Windows variam conforme o computador e os programas abertos.</footer>
+<script>
+/* ===== Motor de gerência de memória (alocação contígua) ===== */
+/* Memória = lista ordenada de blocos {s: início, z: tamanho, p: nome ou null (livre)}.
+   O SO ocupa [0, os). Tamanhos em KB. */
+function memNew(total, os, init){ // init: [[nome|null, tamanho], ...] após o SO
+  const B=os>0?[{s:0,z:os,p:'SO',os:true}]:[];let s=os;
+  (init||[]).forEach(([p,z])=>{B.push({s,z,p});s+=z;});
+  if(s<total)B.push({s,z:total-s,p:null});
+  return {total,os,B,disk:[]};}
+const memClone=m=>({total:m.total,os:m.os,B:m.B.map(b=>Object.assign({},b)),disk:m.disk.map(d=>Object.assign({},d))});
+const freeBlocks=m=>m.B.map((b,i)=>Object.assign({i},b)).filter(b=>!b.p);
+function pickHole(m,size,strat){const H=freeBlocks(m).filter(b=>b.z>=size);if(!H.length)return null;
+  if(strat==='best')return H.reduce((a,b)=>b.z<a.z?b:a);
+  if(strat==='worst')return H.reduce((a,b)=>b.z>a.z?b:a);
+  return H[0];}
+function memAlloc(m,p,size,strat){const h=pickHole(m,size,strat);
+  if(!h){const tf=freeBlocks(m).reduce((a,b)=>a+b.z,0);return {ok:false,msg:tf>=size?`${p} (${size} KB) não cabe em nenhuma área livre, embora haja ${tf} KB livres no total: fragmentação externa`:`${p} (${size} KB) não cabe: só há ${tf} KB livres`,ext:tf>=size};}
+  const b=m.B[h.i],rest=b.z-size;b.p=p;b.z=size;if(rest>0)m.B.splice(h.i+1,0,{s:b.s+size,z:rest,p:null});
+  return {ok:true,at:b.s,hole:h.z,msg:`${p} (${size} KB) alocado no endereço ${b.s} KB, na área livre de ${h.z} KB`+(rest?`; sobram ${rest} KB livres`:'')};}
+function coalesce(m){for(let i=0;i<m.B.length-1;){const a=m.B[i],b=m.B[i+1];if(!a.p&&!b.p){a.z+=b.z;m.B.splice(i+1,1);}else i++;}}
+function memFree(m,p){const b=m.B.find(x=>x.p===p);if(!b)return {ok:false,msg:p+' não está na memória'};const n0=m.B.length;b.p=null;coalesce(m);return {ok:true,msg:`${p} liberado: sua área volta a ser livre`+(m.B.length<n0?' e se junta à área livre vizinha':'')};}
+function memCompact(m){let s=0;const used=m.B.filter(b=>b.p);used.forEach(b=>{b.s=s;s+=b.z;});m.B=used;if(s<m.total)m.B.push({s,z:m.total-s,p:null});return {ok:true,msg:'Compactação: os programas foram relocados para o início e as áreas livres viraram uma só'};}
+function memSwapOut(m,p){const b=m.B.find(x=>x.p===p);if(!b)return {ok:false,msg:p+' não está na memória'};m.disk.push({p,z:b.z});b.p=null;coalesce(m);return {ok:true,msg:`${p} (${b.z} KB) sai da memória e vai para o arquivo de swap (swap out)`};}
+function memSwapIn(m,p,strat){const d=m.disk.findIndex(x=>x.p===p);if(d<0)return {ok:false,msg:p+' não está no disco'};const r=memAlloc(m,p,m.disk[d].z,strat);if(r.ok){m.disk.splice(d,1);r.msg=`${p} volta do disco (swap in) para o endereço ${r.at} KB`;}return r;}
+const memStats=m=>{const F=freeBlocks(m),tf=F.reduce((a,b)=>a+b.z,0);return {free:tf,holes:F.length,largest:F.reduce((a,b)=>Math.max(a,b.z),0),used:m.total-tf};};
+/* roteiro: lista de operações -> lista de estados (cada um com msg) */
+function memRun(m0,ops,strat){const st=[{m:memClone(m0),msg:'Estado inicial',op:null}];let m=memClone(m0);
+  ops.forEach(o=>{let r;const [k,p,z]=o;
+    if(k==='a')r=memAlloc(m,p,z,strat);else if(k==='f')r=memFree(m,p);else if(k==='c')r=memCompact(m);else if(k==='o')r=memSwapOut(m,p);else if(k==='i')r=memSwapIn(m,p,strat);
+    st.push({m:memClone(m),msg:r.msg,ok:r.ok,op:o});});return st;}
+/* alocação particionada estática: parts [tamanhos], progs [{p,z,part?}] mode abs|rel */
+function staticRun(os,parts,progs,mode){let s=os;const P=parts.map((z,i)=>{const o={n:'P'+(i+1),s,z,p:null,u:0};s+=z;return o;});
+  const total=s,st=[{P:P.map(x=>Object.assign({},x)),wait:progs.map(x=>x.p),msg:'Partições vazias. Programas na fila: '+progs.map(x=>x.p).join(', ')}],wait=[];
+  progs.forEach(g=>{let tgt=null;
+    if(mode==='abs'){const q=P[g.part];if(!q.p&&g.z<=q.z)tgt=q;}
+    else tgt=P.find(q=>!q.p&&g.z<=q.z)||null;
+    if(tgt){tgt.p=g.p;tgt.u=g.z;st.push({P:P.map(x=>Object.assign({},x)),msg:`${g.p} (${g.z} KB) carregado em ${tgt.n} (${tgt.z} KB): ${tgt.z-g.z} KB perdidos dentro da partição`});}
+    else {wait.push(g.p);st.push({P:P.map(x=>Object.assign({},x)),msg:mode==='abs'?`${g.p} foi compilado para ${P[g.part].n}, que está ocupada: espera, mesmo com outra partição livre`:`${g.p} (${g.z} KB) não cabe em nenhuma partição livre: espera`});}
+  });
+  if(wait.length){const livres=P.filter(q=>!q.p).map(q=>q.n);st.push({P:P.map(x=>Object.assign({},x)),msg:`Fim da carga: ${wait.join(', ')} continua${wait.length>1?'m':''} na fila`+(livres.length?`, embora ${livres.join(' e ')} esteja${livres.length>1?'m':''} livre${livres.length>1?'s':''}`:'')+'.'});}
+  const fi=P.reduce((a,q)=>a+(q.p?q.z-q.u:0),0);return {st,P,total,fi,wait};}
+if(typeof module!=='undefined')module.exports={memNew,memClone,memAlloc,memFree,memCompact,memSwapOut,memSwapIn,memStats,memRun,staticRun,pickHole,freeBlocks};
+
+/* ===== interface dos simuladores de memória (usa memeng.js) ===== */
+const MCOL={A:'#2F7D32',B:'#2A5DA8',C:'#B86A00',D:'#8B3A8F',E:'#B4362A',F:'#1C8080',G:'#5E6E12',H:'#9A4A72',PA:'#2F7D32',PB:'#2A5DA8',PC:'#B86A00',Principal:'#2F7D32','Módulo 1':'#2A5DA8','Módulo 2':'#B86A00','Módulo 3':'#8B3A8F'};
+const MPAL=['#2F7D32','#2A5DA8','#B86A00','#8B3A8F','#B4362A','#1C8080','#5E6E12','#9A4A72'];
+const mcol=p=>MCOL[p]||MPAL[[...p].reduce((a,c)=>a+c.charCodeAt(0),0)%8];
+const $m=(s,r=document)=>r.querySelector(s),$$m=(s,r=document)=>Array.from(r.querySelectorAll(s));
+const mel=(t,a={},h='')=>{const e=document.createElement(t);for(const k in a){if(k==='class')e.className=a[k];else e.setAttribute(k,a[k]);}if(h)e.innerHTML=h;return e;};
+const SNAME={first:'First-fit',best:'Best-fit',worst:'Worst-fit'};
+const MSIMS=[];
+/* desenha um estado da memória: blocos [{s,z,p,os}] */
+function memBarHTML(m,hi){
+  const T=m.total,blocks=m.B.map(b=>{const so=b.os||b.p==='SO',free=!b.p,w=b.z/T*100,h=hi&&hi.includes(b.p||('@'+b.s));
+    return `<div class="mb${so?' so':free?' free':''}${h?' hi':''}" style="width:${w}%;${!so&&!free?'background:'+mcol(b.p):''}" title="${so?'SO':free?'livre':b.p} · ${b.z} KB · início ${b.s} KB">${w>4?`<b>${so?'SO':free?(w>8?'livre':''):b.p}</b><span>${b.z} KB</span>`:''}</div>`;}).join('');
+  const ticks=m.B.map(b=>b.s).concat([T]).map(a=>`<span style="left:${a/T*100}%">${a}</span>`).join('');
+  return `<div class="mbar">${blocks}</div><div class="maxis">${ticks}</div>`;}
+function partBarHTML(P,os,total){
+  const ticks=[0,os].concat(P.map(q=>q.s+q.z)).map(a=>`<span style="left:${a/total*100}%">${a}</span>`).join('');
+  return `<div class="mbar"><div class="mb so" style="width:${os/total*100}%"><b>SO</b><span>${os} KB</span></div>${P.map(q=>`<div class="mpart" style="width:${q.z/total*100}%">${q.p?`<div class="mb" style="width:${q.u/q.z*100}%;background:${mcol(q.p)}"><b>${q.p}</b><span>${q.u} KB</span></div>${q.z>q.u?`<div class="mb waste" style="width:${(q.z-q.u)/q.z*100}%" title="fragmentação interna: ${q.z-q.u} KB">${(q.z-q.u)/total>0.04?`<span>${q.z-q.u}</span>`:''}</div>`:''}`:`<div class="mb free" style="width:100%"><b>${q.n}</b><span>${q.z} KB</span></div>`}</div>`).join('')}</div><div class="maxis">${ticks}</div>`;}
+function statsHTML(m){const s=memStats(m);return `Livre: <b>${s.free} KB</b> em <b>${s.holes}</b> área${s.holes===1?'':'s'} · maior área livre: <b>${s.largest} KB</b>`;}
+function diskHTML(d){return d.length?d.map(x=>`<span class="pc" style="background:${mcol(x.p)}">${x.p} <small>${x.z} KB</small></span>`).join(''):'<span class="muted">vazio</span>';}
+class MemSim{
+  constructor(host,cfg,opt={}){this.host=host;this.cfg=cfg;this.vi=0;this.k=0;this.speed=1200;this.timer=null;this.build(opt);this.compute();MSIMS.push(this);}
+  variants(){const c=this.cfg;if(c.mode==='static')return (c.modes||['rel']).map(x=>({label:x==='abs'?'Absoluta':'Relocável',v:x}));if(c.strats)return c.strats.map(x=>({label:SNAME[x],v:x}));return null;}
+  build(opt){const H=this.host,c=this.cfg;H.innerHTML='';
+    if(!opt.noHead){H.appendChild(mel('div',{class:'lab-head'},`<span class="tag">Simulador</span><h4>${c.title||''}</h4>`));if(c.hint)H.appendChild(mel('p',{class:'lab-hint'},c.hint));}
+    const ctl=mel('div',{class:'sim-ctl'});H.appendChild(ctl);const V=this.variants();
+    if(V){const vb=mel('div',{class:'btns'});V.forEach((v,i)=>{const b=mel('button',{type:'button',class:'btn'+(i===0?' sel':'')},v.label);b.addEventListener('click',()=>{this.vi=i;$$m('.btn',vb).forEach((x,j)=>x.classList.toggle('sel',j===i));this.compute();});vb.appendChild(b);});ctl.appendChild(vb);ctl.appendChild(mel('span',{style:'flex-basis:100%;height:0'}));}
+    ctl.insertAdjacentHTML('beforeend',`<button type="button" class="btn ghost" data-a="reset" aria-label="Reiniciar" title="Reiniciar">⏮</button><button type="button" class="btn ghost" data-a="back" aria-label="Voltar um passo" title="Voltar um passo">◀</button><button type="button" class="btn primary" data-a="play" style="min-width:118px">▶ Reproduzir</button><button type="button" class="btn ghost" data-a="step" aria-label="Avançar um passo" title="Avançar um passo">▶|</button><button type="button" class="btn ghost" data-a="end" aria-label="Ir ao fim" title="Ir ao fim">⏭</button><span class="clock"></span>`);
+    ctl.addEventListener('click',e=>{const b=e.target.closest('button[data-a]');if(!b)return;const a=b.dataset.a;this.pause();if(a==='reset')this.show(0);if(a==='back'&&this.k>0)this.show(this.k-1);if(a==='play'){this.play();}if(a==='step'&&this.k<this.max)this.show(this.k+1);if(a==='end')this.show(this.max);});
+    this.playBtn=$m('[data-a=play]',ctl);
+    H.appendChild(mel('div',{class:'mview'},`<div class="mmain"></div><div class="mdisk" hidden><span class="lb">Arquivo de swap (disco)</span><div class="qrow mdl"></div></div>`));
+    H.appendChild(mel('p',{class:'mstats'}));H.appendChild(mel('div',{class:'msg'}));}
+  compute(){this.pause();const c=this.cfg,V=this.variants(),v=V?V[this.vi].v:null;
+    if(c.mode==='static'){const r=staticRun(c.os,c.parts,c.progs,v||'rel');this.total=r.total;this.states=r.st.map((s,i)=>({P:s.P,msg:s.msg,fi:s.P.reduce((a,q)=>a+(q.p?q.z-q.u:0),0)}));}
+    else if(c.mode==='script')this.states=c.states.map(s=>({m:memNew(c.total,0,s.B.map(x=>[x[0]==='-'?null:x[0],x[1]])),msg:s.msg,hi:s.hi}));
+    else {this.states=memRun(memNew(c.total,c.os||0,c.init||[]),c.ops,v||c.strat||'first');if(c.first)this.states[0].msg=c.first;}
+    if(c.mode==='script')this.states.forEach(s=>s.m.B.forEach(b=>{if(b.p==='SO')b.os=true;}));
+    this.max=this.states.length-1;$m('.mdisk',this.host).hidden=!this.states.some(s=>s.m&&s.m.disk.length);this.show(0);}
+  show(k){this.k=k;const s=this.states[k],c=this.cfg;$m('.clock',this.host).textContent=`passo ${k} de ${this.max}`;
+    if(c.mode==='static'){$m('.mmain',this.host).innerHTML=partBarHTML(s.P,c.os,this.total);$m('.mstats',this.host).innerHTML=`Fragmentação interna até aqui: <b>${s.fi} KB</b>`;}
+    else{$m('.mmain',this.host).innerHTML=memBarHTML(s.m,s.hi||(s.ok===false?s.m.B.filter(b=>!b.p).map(b=>'@'+b.s):(s.op&&s.op[0]==='a'?[s.op[1]]:null)));$m('.mstats',this.host).innerHTML=statsHTML(s.m);$m('.mdl',this.host).innerHTML=diskHTML(s.m.disk);}
+    const msg=$m('.msg',this.host);msg.className='msg'+(s.ok===false?' bad':'');msg.innerHTML=`<b>Passo ${k}</b> · ${s.msg}`;}
+  play(){if(this.timer)return;if(this.k>=this.max)this.show(0);this.timer=setInterval(()=>{if(this.k>=this.max){this.pause();return;}this.show(this.k+1);},this.speed);this.playBtn.textContent='⏸ Pausar';}
+  pause(){clearInterval(this.timer);this.timer=null;if(this.playBtn)this.playBtn.textContent='▶ Reproduzir';}
+  goEnd(){this.pause();this.show(this.max);}
+}
+function initMemSims(){$$m('.lab[data-mem]').forEach(h=>{try{new MemSim(h,JSON.parse(h.dataset.mem));}catch(err){h.textContent='Erro no simulador: '+err.message;}});}
+/* ===== simulador livre ===== */
+function initMemLab(root){
+  root.innerHTML=`<div class="sim-ctl">
+    <label>Memória <input class="num" data-k="total" type="number" min="16" max="256" value="${root.dataset.total||64}"> KB</label>
+    <label>SO <input class="num" data-k="os" type="number" min="0" max="128" value="${root.dataset.os||16}"> KB</label>
+    <label>Estratégia <select class="sel" data-k="strat"><option value="first">First-fit</option><option value="best">Best-fit</option><option value="worst">Worst-fit</option></select></label>
+    <button type="button" class="btn ghost" data-a="new">Reiniciar memória</button></div>
+   <div class="sim-ctl"><label>Programa <input class="txt" data-k="name" maxlength="3" value="A" style="width:56px"></label><label>Tamanho <input class="num" data-k="size" type="number" min="1" max="256" value="12"> KB</label>
+    <button type="button" class="btn primary" data-a="alloc">Alocar</button>
+    <label>Na memória <select class="sel" data-k="mem"></select></label><button type="button" class="btn" data-a="free">Liberar</button><button type="button" class="btn" data-a="out">Swap out</button>
+    <label>No disco <select class="sel" data-k="disk"></select></label><button type="button" class="btn" data-a="in">Swap in</button>
+    <button type="button" class="btn" data-a="compact">Compactar</button><button type="button" class="btn ghost" data-a="undo">Desfazer</button></div>
+   <div class="mview"><div class="mmain"></div><div class="mdisk"><span class="lb">Arquivo de swap (disco)</span><div class="qrow mdl"></div></div></div>
+   <p class="mstats"></p><div class="msg"></div><ol class="mlog"></ol>`;
+  const q=k=>$m(`[data-k=${k}]`,root);let m,hist=[];
+  const draw=(r)=>{$m('.mmain',root).innerHTML=memBarHTML(m,r&&r.ok&&r.at!=null?[m.B.find(b=>b.s===r.at).p]:(r&&r.ok===false?m.B.filter(b=>!b.p).map(b=>'@'+b.s):null));$m('.mstats',root).innerHTML=statsHTML(m);$m('.mdl',root).innerHTML=diskHTML(m.disk);
+    q('mem').innerHTML=m.B.filter(b=>b.p&&!b.os).map(b=>`<option>${b.p}</option>`).join('')||'<option value="">—</option>';q('disk').innerHTML=m.disk.map(d=>`<option>${d.p}</option>`).join('')||'<option value="">—</option>';
+    if(r){const msg=$m('.msg',root);msg.className='msg'+(r.ok===false?' bad':' ok');msg.textContent=r.msg;const li=mel('li',{},r.msg);$m('.mlog',root).appendChild(li);}};
+  const nextName=()=>{const used=new Set(m.B.map(b=>b.p).concat(m.disk.map(d=>d.p)));for(const c of 'ABCDEFGHIJKLMNOPQRSTUVWXYZ')if(!used.has(c))return c;return 'X';};
+  const reset=()=>{const T=Math.max(16,Math.min(256,+q('total').value||64)),os=Math.max(0,Math.min(T-4,+q('os').value||0));m=memNew(T,os,[]);hist=[];$m('.mlog',root).innerHTML='';draw({ok:true,msg:`Memória de ${T} KB, com o SO ocupando ${os} KB.`});q('name').value=nextName();};
+  root.addEventListener('click',e=>{const b=e.target.closest('button[data-a]');if(!b)return;const a=b.dataset.a,st=q('strat').value;let r;
+    if(a==='new'){reset();return;}
+    if(a==='undo'){if(hist.length){m=hist.pop();draw({ok:true,msg:'Operação desfeita.'});}return;}
+    const snap=memClone(m);
+    if(a==='alloc'){const p=(q('name').value||'').trim().toUpperCase().slice(0,3)||nextName(),z=Math.max(1,+q('size').value||1);if(m.B.some(x=>x.p===p)||m.disk.some(x=>x.p===p))r={ok:false,msg:`Já existe um programa ${p}. Use outro nome.`};else r=memAlloc(m,p,z,st);if(r.ok)r.msg=`${SNAME[st]}: `+r.msg;}
+    if(a==='free'){const p=q('mem').value;if(!p)return;r=memFree(m,p);}
+    if(a==='out'){const p=q('mem').value;if(!p)return;r=memSwapOut(m,p);}
+    if(a==='in'){const p=q('disk').value;if(!p)return;r=memSwapIn(m,p,st);}
+    if(a==='compact')r=memCompact(m);
+    if(r.ok)hist.push(snap);draw(r);if(r.ok&&a==='alloc')q('name').value=nextName();});
+  reset();}
+
+document.querySelectorAll('.memlab').forEach(initMemLab);
+</script>
+<script>
+(function(){
+  const links = Array.from(document.querySelectorAll('nav.toc a'));
+  if('IntersectionObserver' in window){
+    const io = new IntersectionObserver(es => es.forEach(en => { if(en.isIntersecting) links.forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + en.target.id)); }), {rootMargin:'-20% 0px -70% 0px'});
+    document.querySelectorAll('main > section').forEach(s => io.observe(s));
+  }
+  document.querySelectorAll('.cmd').forEach(box => {
+    const btn = box.querySelector('.copy'), pre = box.querySelector('pre');
+    btn.addEventListener('click', () => {
+      const done = () => { btn.textContent = 'Copiado'; setTimeout(() => btn.textContent = 'Copiar', 1500); };
+      const fallback = () => { const r = document.createRange(); r.selectNodeContents(pre); const s = getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent = 'Use Ctrl+C'; setTimeout(() => btn.textContent = 'Copiar', 2000); };
+      try { navigator.clipboard.writeText(pre.innerText).then(done, fallback); } catch(e){ fallback(); }
+    });
+  });
+})();
+</script>
+</body></html>
+

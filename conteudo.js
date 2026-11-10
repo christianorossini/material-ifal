@@ -235,11 +235,11 @@ const MENU = [
                 ]
               },
 
-               { 
-                nome: "Práticas de laboratório", 
-                itens: [ 
-                  { titulo: "Laboratório com Simulador SOsim", descricao: "Práticas com escalonamentos", tipo: "PDF", link: "https://drive.google.com/file/d/1fFoEKDJ4WTvCcITn8nc6UHTxLj8ycRwW/view?usp=sharing"},                  
-                ]
+              { 
+              nome: "Práticas de laboratório", 
+              itens: [ 
+                { titulo: "Laboratório com Simulador SOsim", descricao: "Práticas com escalonamentos", tipo: "PDF", link: "https://drive.google.com/file/d/1fFoEKDJ4WTvCcITn8nc6UHTxLj8ycRwW/view?usp=sharing"},                  
+              ]
               },
 
             ]
@@ -253,14 +253,23 @@ const MENU = [
               { 
                 nome: "Apresentações", 
                 itens: [ 
-              
+                  {titulo: "Apresentação de Gerência de memória", tipo: "PDF", link: "so/apresentacoes/cap9-gerencia-memoria.pdf"},                  
                 ]
               },
               { 
                 nome: "Apostilas", 
                 itens: [ 
+                  {titulo: "Gerência de memória", tipo: "HTML", link: "so/apostila-gerencia-memoria.html"},
                 ]
               },
+              
+            { 
+              nome: "Práticas de laboratório", 
+              itens: [ 
+                { titulo: "Práticas com Gerência de Memória", descricao: "Práticas", tipo: "HTML", link: "so/lab/lab-memoria.html"},                  
+              ]
+            },
+
             ]
           },
 

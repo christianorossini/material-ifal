@@ -1,0 +1,928 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apostila de Gerência de Memória</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --bg:#F2F4EE; --surface:#FBFCF8; --surface-2:#E8EDE2; --ink:#17231A; --ink-2:#4A5A4C; --line:#D3DCCB;
+  --accent:#2E6B1E; --accent-ink:#FFFFFF; --accent-soft:#DDEBD3;
+  --run:#2E6B1E; --run-soft:#DDEBD3;
+  --ready:#9A6200; --ready-soft:#FBEBC8;
+  --wait:#2F5C99; --wait-soft:#DCE6F4;
+  --neutral:#646E61; --neutral-soft:#E4E7E1;
+  --ok:#1F7A3A; --ok-soft:#D9F0DF; --bad:#B3261E; --bad-soft:#F8DEDB;
+  --display:"Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body:"Literata", Georgia, "Times New Roman", serif;
+  --mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0F1510; --surface:#172019; --surface-2:#1F2A21; --ink:#E4EBE0; --ink-2:#A6B3A4; --line:#2F3D31;
+    --accent:#7CC25B; --accent-ink:#0F1510; --accent-soft:#233A1C;
+    --run:#7CC25B; --run-soft:#1F3519; --ready:#E9B04A; --ready-soft:#3A2E14;
+    --wait:#8DB3EA; --wait-soft:#1B2A40; --neutral:#9AA397; --neutral-soft:#262C25;
+    --ok:#6FD08C; --ok-soft:#173222; --bad:#FF8A80; --bad-soft:#3D1B18;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0F1510; --surface:#172019; --surface-2:#1F2A21; --ink:#E4EBE0; --ink-2:#A6B3A4; --line:#2F3D31;
+  --accent:#7CC25B; --accent-ink:#0F1510; --accent-soft:#233A1C;
+  --run:#7CC25B; --run-soft:#1F3519; --ready:#E9B04A; --ready-soft:#3A2E14;
+  --wait:#8DB3EA; --wait-soft:#1B2A40; --neutral:#9AA397; --neutral-soft:#262C25;
+  --ok:#6FD08C; --ok-soft:#173222; --bad:#FF8A80; --bad-soft:#3D1B18;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto} *{transition:none!important; animation:none!important}}
+body{background:var(--bg); color:var(--ink); font-family:var(--body); font-size:17px; line-height:1.65; padding-inline:20px; padding-block:0 64px}
+h1,h2,h3,h4{font-family:var(--display); line-height:1.15; text-wrap:balance; margin:0}
+p{margin:0}
+a{color:var(--accent)}
+code,.mono{font-family:var(--mono); font-size:.88em}
+button{font:inherit; cursor:pointer}
+:focus-visible{outline:3px solid var(--accent); outline-offset:2px; border-radius:4px}
+
+/* header */
+.top{max-width:1160px; margin:0 auto; padding-block:48px 36px; border-bottom:2px solid var(--ink); display:grid; gap:18px}
+.eyebrow{font-family:var(--display); font-size:13px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--accent)}
+.top h1{font-size:clamp(48px, 9vw, 104px); font-weight:800; letter-spacing:-.03em}
+.top h1 span{color:var(--accent)}
+.lede{font-size:20px; max-width:62ch; color:var(--ink-2)}
+.meta{display:flex; flex-wrap:wrap; gap:8px 24px; font-family:var(--display); font-size:14px; color:var(--ink-2)}
+.meta b{color:var(--ink)}
+
+/* layout */
+.layout{max-width:1160px; margin:0 auto; display:grid; grid-template-columns:230px minmax(0,1fr); gap:56px; padding-top:40px}
+nav.toc{position:sticky; top:calc(env(safe-area-inset-top, 0px) + 20px); align-self:start; font-family:var(--display); font-size:14px}
+nav.toc p{font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-2); margin-bottom:10px}
+nav.toc ol{list-style:none; margin:0; padding:0; display:grid; gap:2px; border-left:2px solid var(--line)}
+nav.toc a{display:grid; grid-template-columns:38px 1fr; padding:6px 10px; margin-left:-2px; border-left:2px solid transparent; color:var(--ink-2); text-decoration:none; line-height:1.3}
+nav.toc a span{font-variant-numeric:tabular-nums; color:var(--ink-2); font-weight:600}
+nav.toc a:hover{color:var(--ink)}
+nav.toc a.on{border-left-color:var(--accent); color:var(--ink); font-weight:600}
+nav.toc a.on span{color:var(--accent)}
+main{min-width:0; display:grid; gap:72px}
+@media (max-width:900px){
+  .layout{grid-template-columns:minmax(0,1fr); gap:28px; padding-top:24px}
+  nav.toc{position:static}
+  nav.toc ol{display:flex; overflow-x:auto; border-left:none; gap:6px; padding-bottom:6px}
+  nav.toc a{display:block; white-space:nowrap; border:1px solid var(--line); border-radius:999px; padding:6px 12px; margin:0; background:var(--surface)}
+  nav.toc a span{margin-right:6px}
+  nav.toc a.on{border-color:var(--accent)}
+}
+
+/* sections */
+.sec{display:grid; gap:20px; scroll-margin-top:24px}
+.sec > *{max-width:68ch}
+.sec > .wide{max-width:none}
+.sec-head{display:grid; gap:6px; padding-bottom:6px}
+.num{font-family:var(--display); font-weight:800; font-size:15px; color:var(--accent); letter-spacing:.06em}
+.sec h2{font-size:clamp(28px, 4vw, 38px); font-weight:700; letter-spacing:-.01em}
+.sec h3{font-size:21px; font-weight:700; margin-top:10px}
+.sec ul,.sec ol{margin:0; padding-left:1.3em; display:grid; gap:6px}
+dfn{font-style:normal; font-weight:600; background:linear-gradient(transparent 62%, var(--accent-soft) 62%)}
+.def{border:2px solid var(--ink); background:var(--surface); padding:18px 22px; display:grid; gap:6px}
+.def .lbl{font-family:var(--display); font-size:12px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--accent)}
+.def p{font-size:19px}
+.note{background:var(--surface-2); padding:14px 18px; border-radius:6px; font-size:16px; display:grid; gap:6px}
+.note .lbl{font-family:var(--display); font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-2)}
+pre.term{font-family:var(--mono); font-size:14px; line-height:1.55; background:#101A12; color:#D6E8CB; padding:14px 18px; border-radius:6px; overflow-x:auto; margin:0}
+pre.term .c{color:#8FA88A}
+
+/* lab widgets */
+.lab{border:1px solid var(--line); background:var(--surface); border-radius:10px; padding:20px; display:grid; gap:16px}
+.lab-head{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap}
+.tag{font-family:var(--display); font-size:11px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; background:var(--accent); color:var(--accent-ink); padding:3px 8px; border-radius:3px}
+.lab-head h4{font-size:18px; font-weight:700}
+.lab-hint{font-size:15px; color:var(--ink-2)}
+.btns{display:flex; flex-wrap:wrap; gap:8px}
+.btn{font-family:var(--display); font-size:14px; font-weight:600; border:1.5px solid var(--ink); background:var(--surface); color:var(--ink); padding:8px 14px; border-radius:6px; transition:background .15s, transform .1s}
+.btn:hover{background:var(--surface-2)}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--ink); color:var(--bg)}
+.btn.primary:hover{background:var(--accent); border-color:var(--accent); color:var(--accent-ink)}
+.btn.ghost{border-color:var(--line); color:var(--ink-2)}
+.btn[disabled]{opacity:.45; cursor:not-allowed}
+.msg{font-family:var(--display); font-size:15px; padding:10px 14px; border-radius:6px; background:var(--surface-2); color:var(--ink)}
+.msg.ok{background:var(--ok-soft); color:var(--ok)}
+.msg.bad{background:var(--bad-soft); color:var(--bad)}
+.chip{display:inline-block; font-family:var(--display); font-size:13px; font-weight:700; padding:2px 9px; border-radius:999px}
+.st-execucao{background:var(--run-soft); color:var(--run)}
+.st-pronto{background:var(--ready-soft); color:var(--ready)}
+.st-espera{background:var(--wait-soft); color:var(--wait)}
+.st-criacao,.st-terminado{background:var(--neutral-soft); color:var(--neutral)}
+.scroll{overflow-x:auto}
+</style>
+<style>
+/* 5.1 */
+.procs{display:grid; grid-template-columns:repeat(auto-fill, minmax(190px, 1fr)); gap:10px; min-height:84px}
+.proc{border:1px solid var(--line); border-left:5px solid var(--run); padding:10px 12px; background:var(--bg); display:grid; gap:2px; animation:pop .25s ease-out}
+.proc b{font-family:var(--display); font-size:15px}
+.proc span{font-family:var(--mono); font-size:12.5px; color:var(--ink-2)}
+.proc.pronto{border-left-color:var(--ready)} .proc.espera{border-left-color:var(--wait)}
+.empty{font-family:var(--display); font-size:14px; color:var(--ink-2); align-self:center}
+@keyframes pop{from{opacity:.2; transform:translateY(6px)} to{opacity:1; transform:none}}
+.prog{display:flex; align-items:center; gap:12px; flex-wrap:wrap}
+.file{font-family:var(--mono); font-size:14px; border:1.5px dashed var(--ink-2); padding:8px 12px; border-radius:6px}
+
+/* 5.2 diagram */
+.fig{margin:0; display:grid; gap:8px}
+.fig figcaption{font-family:var(--display); font-size:13px; color:var(--ink-2)}
+.fig svg{width:100%; height:auto; max-width:640px}
+.fig svg text{font-family:var(--display)} .fig svg text:not([fill]){fill:var(--ink)}
+.part{cursor:pointer}
+.part rect{transition:stroke-width .15s}
+.part:hover rect,.part:focus rect{stroke-width:4}
+
+/* 5.2.1 context switch */
+.cs{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px}
+@media (max-width:620px){.cs{grid-template-columns:minmax(0,1fr)}}
+.box{border:1.5px solid var(--line); border-radius:8px; padding:12px; background:var(--bg); display:grid; gap:8px; transition:border-color .2s, box-shadow .2s}
+.box h5{font-family:var(--display); font-size:14px; margin:0; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:8px}
+.box.cpu{border-color:var(--ink); background:var(--surface-2)}
+.box.flash{border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft)}
+.regs{display:grid; grid-template-columns:auto 1fr; gap:3px 12px; font-family:var(--mono); font-size:13.5px; font-variant-numeric:tabular-nums}
+.regs dt{color:var(--ink-2)} .regs dd{margin:0; text-align:right}
+.steps{display:flex; gap:6px; flex-wrap:wrap}
+.steps i{font-style:normal; font-family:var(--display); font-size:12px; font-weight:700; padding:3px 8px; border-radius:999px; background:var(--surface-2); color:var(--ink-2)}
+.steps i.on{background:var(--accent); color:var(--accent-ink)}
+
+/* 5.2.2 table */
+table.t{border-collapse:collapse; width:100%; font-size:15.5px}
+.t th{font-family:var(--display); text-align:left; font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-2); border-bottom:2px solid var(--ink); padding:8px 10px}
+.t td{border-bottom:1px solid var(--line); padding:10px; vertical-align:top}
+.t td:first-child{font-family:var(--display); font-weight:700; white-space:nowrap}
+
+/* 5.2.4 PCB */
+.pcbwrap{display:grid; grid-template-columns:minmax(0,300px) minmax(0,1fr); gap:20px; align-items:start}
+@media (max-width:620px){.pcbwrap{grid-template-columns:minmax(0,1fr)}}
+.pcb{list-style:none; margin:0; padding:0; border:2px solid var(--ink); border-radius:6px; overflow:hidden; font-family:var(--display); font-size:15px}
+.pcb li{padding:9px 14px; border-top:1px solid var(--line); transition:background .2s, color .2s}
+.pcb li.hd{background:var(--ink); color:var(--bg); font-family:var(--mono); font-size:14px; border-top:none}
+.pcb li.hit[data-part="hw"]{background:var(--wait-soft); color:var(--wait); font-weight:700}
+.pcb li.hit[data-part="sw"]{background:var(--run-soft); color:var(--run); font-weight:700}
+.pcb li.hit[data-part="ea"]{background:var(--ready-soft); color:var(--ready); font-weight:700}
+.pcb li.hit[data-part="ctl"]{background:var(--neutral-soft); color:var(--ink); font-weight:700}
+.btn.sel{background:var(--ink); color:var(--bg)}
+
+/* 5.3 cards */
+.states{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px}
+@media (max-width:700px){.states{grid-template-columns:minmax(0,1fr)}}
+.state{border-radius:8px; padding:16px; display:grid; gap:6px; align-content:start}
+.state h4{font-size:22px}
+.state small{font-family:var(--mono); font-size:12.5px; opacity:.85}
+.state p{font-size:15.5px}
+.state .an{font-size:14px; font-style:italic; border-top:1px solid currentColor; padding-top:8px; opacity:.9}
+.state.x{background:var(--run-soft); color:var(--run)} .state.x p{color:var(--ink)}
+.state.p{background:var(--ready-soft); color:var(--ready)} .state.p p{color:var(--ink)}
+.state.e{background:var(--wait-soft); color:var(--wait)} .state.e p{color:var(--ink)}
+
+/* 5.4 state machine */
+.smwrap{display:grid; grid-template-columns:minmax(0,1.6fr) minmax(0,1fr); gap:20px; align-items:start}
+@media (max-width:760px){.smwrap{grid-template-columns:minmax(0,1fr)}}
+.sm svg{width:100%; height:auto}
+.sm text{font-family:var(--display); fill:var(--ink); font-size:15px; font-weight:600}
+.sm .elbl{font-size:14px; font-weight:800; fill:var(--ink-2)}
+.node rect{fill:var(--surface); stroke:var(--line); stroke-width:2; transition:all .25s}
+.node.cur rect{stroke-width:3.5}
+.node.cur.n-criacao rect,.node.cur.n-terminado rect{fill:var(--neutral-soft); stroke:var(--neutral)}
+.node.cur.n-pronto rect{fill:var(--ready-soft); stroke:var(--ready)}
+.node.cur.n-execucao rect{fill:var(--run-soft); stroke:var(--run)}
+.node.cur.n-espera rect{fill:var(--wait-soft); stroke:var(--wait)}
+.edge{fill:none; stroke:var(--ink-2); stroke-width:2; opacity:.55; transition:all .25s}
+.edge.active{stroke:var(--accent); stroke-width:4; opacity:1}
+.mk{fill:var(--ink-2)} .mk-on{fill:var(--accent)}
+.pcbmini{font-family:var(--mono); font-size:13.5px; background:var(--bg); border:1.5px solid var(--line); border-radius:8px; padding:12px; display:grid; gap:4px}
+.log{list-style:none; margin:0; padding:0; font-family:var(--display); font-size:13.5px; display:grid; gap:4px; max-height:190px; overflow-y:auto}
+.log li{padding:5px 8px; background:var(--bg); border-radius:4px}
+.evbtns{display:grid; grid-template-columns:repeat(auto-fill, minmax(210px, 1fr)); gap:8px}
+.evbtns .btn{text-align:left}
+</style><style>
+/* 5.5 */
+.twocol{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:12px}
+@media (max-width:620px){.twocol{grid-template-columns:minmax(0,1fr)}}
+.card{border:1px solid var(--line); border-radius:8px; padding:16px; background:var(--surface); display:grid; gap:8px; align-content:start}
+.card h4{font-size:18px}
+.card p,.card li{font-size:15.5px}
+/* 5.6 bars */
+.bars{display:grid; gap:12px}
+.barrow{display:grid; grid-template-columns:110px minmax(0,1fr); gap:12px; align-items:center; font-family:var(--display); font-weight:700; font-size:14px}
+.bar{display:flex; height:30px; border-radius:5px; overflow:hidden}
+.bar i{display:block; height:100%}
+.bar .u{background:var(--run)} .bar .io{background:var(--wait); opacity:.45}
+.legend{display:flex; gap:18px; flex-wrap:wrap; font-family:var(--display); font-size:13px; color:var(--ink-2)}
+.legend span::before{content:""; display:inline-block; width:12px; height:12px; border-radius:3px; margin-right:6px; vertical-align:-1px; background:var(--run)}
+.legend span.io::before{background:var(--wait); opacity:.45}
+.cls{list-style:none; margin:0; padding:0; display:grid; gap:8px}
+.cls li{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:10px; align-items:center; padding:10px 12px; border:1px solid var(--line); border-radius:8px; background:var(--bg)}
+.cls li.ok{border-color:var(--ok); background:var(--ok-soft)}
+.cls li.bad{border-color:var(--bad); background:var(--bad-soft)}
+.cls .cfb{grid-column:1 / -1; font-size:14.5px}
+.cls .btn{padding:6px 10px; font-size:13px}
+/* 5.7 terminal */
+.termbox{background:#101A12; color:#D6E8CB; font-family:var(--mono); font-size:14px; border-radius:8px; padding:14px 16px; min-height:170px; display:grid; align-content:start; gap:2px; overflow-x:auto}
+.termbox .c{color:#8FA88A}
+.termbox .busy{color:#E9B04A}
+.cursor{display:inline-block; width:8px; height:15px; background:#D6E8CB; vertical-align:-2px; animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.flow{display:flex; align-items:center; gap:8px; flex-wrap:wrap; font-family:var(--display); font-size:14px}
+.flow b{border:1.5px solid var(--line); background:var(--surface); padding:6px 10px; border-radius:6px; font-weight:600}
+.flow b.p{background:var(--ink); color:var(--bg); border-color:var(--ink)}
+.flow em{font-style:normal; color:var(--ink-2)}
+/* 5.8 */
+.three{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px}
+@media (max-width:760px){.three{grid-template-columns:minmax(0,1fr)}}
+.card ol{padding-left:1.2em; display:grid; gap:4px}
+/* 5.9 tree */
+.tree ul{list-style:none; margin:0; padding-left:28px; position:relative; display:grid; gap:8px}
+.tree > ul{padding-left:0}
+.tree ul ul::before{content:""; position:absolute; left:10px; top:-8px; bottom:18px; border-left:2px solid var(--line)}
+.tree ul ul > li{position:relative}
+.tree ul ul > li::before{content:""; position:absolute; left:-18px; top:20px; width:16px; border-top:2px solid var(--line)}
+.tnode{display:inline-flex; align-items:center; gap:10px; border:1.5px solid var(--line); background:var(--bg); border-radius:8px; padding:6px 8px 6px 12px; font-family:var(--display); font-size:14px; transition:opacity .3s, transform .3s}
+.tnode b{font-size:15px}
+.tnode .rel{color:var(--ink-2); font-weight:500}
+.tnode button{border:1px solid var(--bad); color:var(--bad); background:transparent; border-radius:5px; font-family:var(--display); font-size:12px; font-weight:700; padding:3px 7px}
+.tnode.root{border-color:var(--run); background:var(--run-soft)}
+.tnode.ind{border-style:dashed}
+.gone{opacity:0; transform:scale(.9)}
+.treegrid{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,220px); gap:20px; align-items:start}
+@media (max-width:620px){.treegrid{grid-template-columns:minmax(0,1fr)}}
+/* threads figure */
+.thr{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:14px}
+@media (max-width:700px){.thr{grid-template-columns:minmax(0,1fr)}}
+.pbox{border:2px solid var(--line); border-radius:10px; padding:12px; display:grid; gap:6px; background:var(--surface)}
+.pbox.mt{border-color:var(--accent)}
+.pbox h5{font-family:var(--display); font-size:15px; margin:0}
+.seg{font-family:var(--display); font-size:13px; font-weight:600; padding:7px 9px; border-radius:6px; text-align:center}
+.seg.sw{background:var(--run-soft); color:var(--run)} .seg.hw{background:var(--wait-soft); color:var(--wait)} .seg.ea{background:var(--ready-soft); color:var(--ready)}
+.pair{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:8px}
+.trio{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:6px}
+.col{display:grid; gap:6px; align-content:start}
+.col small{font-family:var(--display); font-size:12px; font-weight:700; color:var(--ink-2); text-align:center}
+/* 5.10 */
+.svc{display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:8px; list-style:none; margin:0; padding:0}
+.svc li{border:1px solid var(--line); border-radius:8px; padding:10px 12px; background:var(--surface); font-family:var(--display); font-size:14.5px; font-weight:600; display:grid; gap:2px}
+.svc li span{font-family:var(--body); font-weight:400; font-size:13.5px; color:var(--ink-2)}
+/* 5.11 */
+.sig{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:16px; align-items:start}
+@media (max-width:700px){.sig{grid-template-columns:minmax(0,1fr)}}
+.opts{display:grid; gap:6px}
+.opt{display:flex; gap:10px; align-items:flex-start; padding:9px 11px; border:1.5px solid var(--line); border-radius:8px; background:var(--bg); cursor:pointer; font-size:15px}
+.opt:has(input:checked){border-color:var(--accent); background:var(--accent-soft)}
+.opt input{margin-top:5px; accent-color:var(--accent)}
+.opt code{font-weight:600}
+.switch{display:flex; gap:10px; align-items:center; font-family:var(--display); font-size:14.5px}
+.switch input{width:18px; height:18px; accent-color:var(--accent)}
+.path{display:flex; align-items:center; gap:6px; flex-wrap:wrap; font-family:var(--display); font-size:13.5px}
+.path b{padding:5px 9px; border-radius:6px; background:var(--surface-2); font-weight:600}
+.path b.hl{background:var(--accent); color:var(--accent-ink)}
+/* exercises */
+.ex-tabs{display:flex; gap:8px; flex-wrap:wrap}
+.oq{list-style:none; margin:0; padding:0; display:grid; gap:10px; counter-reset:q}
+.oq > li{counter-increment:q; border:1px solid var(--line); border-radius:8px; background:var(--surface); padding:14px 16px 14px 56px; position:relative; display:grid; gap:8px}
+.oq > li::before{content:counter(q); position:absolute; left:14px; top:12px; width:30px; height:30px; border-radius:50%; background:var(--ink); color:var(--bg); font-family:var(--display); font-weight:700; font-size:14px; display:grid; place-items:center}
+.oq p{font-size:16.5px}
+details summary{cursor:pointer; font-family:var(--display); font-size:13.5px; font-weight:600; color:var(--accent); width:fit-content}
+details[open] summary{margin-bottom:6px}
+details .ans{font-size:15px; color:var(--ink-2); display:grid; gap:4px}
+.score{position:sticky; top:calc(env(safe-area-inset-top, 0px) + 8px); z-index:2; display:flex; align-items:center; gap:14px; flex-wrap:wrap; background:var(--ink); color:var(--bg); padding:10px 16px; border-radius:8px; font-family:var(--display); font-size:14.5px}
+.score b{font-size:18px; font-variant-numeric:tabular-nums}
+.meter{flex:1; min-width:120px; height:8px; background:rgba(128,128,128,.35); border-radius:99px; overflow:hidden; display:flex}
+.meter i{display:block; height:100%; transition:width .3s}
+.meter .g{background:#6FD08C} .meter .r{background:#FF8A80}
+.score .btn{border-color:var(--bg); color:var(--bg); background:transparent; padding:5px 10px; font-size:13px}
+.qz{list-style:none; margin:0; padding:0; display:grid; gap:14px; counter-reset:c}
+.qz > li{counter-increment:c; border:1px solid var(--line); border-radius:10px; background:var(--surface); padding:16px; display:grid; gap:10px}
+.qz .qh{display:flex; gap:10px; align-items:baseline}
+.qz .qh::before{content:counter(c, decimal-leading-zero); font-family:var(--display); font-weight:800; color:var(--accent); font-size:14px; font-variant-numeric:tabular-nums}
+.qz .qh p{font-size:16.5px}
+.qz .alts{display:grid; gap:6px}
+.alt{display:grid; grid-template-columns:28px minmax(0,1fr); gap:8px; align-items:start; text-align:left; border:1.5px solid var(--line); background:var(--bg); color:var(--ink); border-radius:8px; padding:9px 12px; font-family:var(--body); font-size:15.5px; line-height:1.45}
+.alt:hover:not([disabled]){border-color:var(--ink)}
+.alt .k{font-family:var(--display); font-weight:700; font-size:13px; width:24px; height:24px; border-radius:50%; border:1.5px solid currentColor; display:grid; place-items:center; color:var(--ink-2)}
+.alt[disabled]{cursor:default}
+.alt.right{border-color:var(--ok); background:var(--ok-soft)} .alt.right .k{background:var(--ok); color:var(--surface); border-color:var(--ok)}
+.alt.wrong{border-color:var(--bad); background:var(--bad-soft)} .alt.wrong .k{background:var(--bad); color:var(--surface); border-color:var(--bad)}
+.fb{font-size:15px; padding:10px 12px; border-radius:6px}
+.fb.ok{background:var(--ok-soft)} .fb.bad{background:var(--bad-soft)}
+.fb b{font-family:var(--display)}
+.fb.ok b{color:var(--ok)} .fb.bad b{color:var(--bad)}
+.final{border:2px solid var(--ink); border-radius:10px; padding:18px; display:grid; gap:6px; background:var(--surface)}
+.final h4{font-size:22px}
+footer.end{max-width:1160px; margin:64px auto 0; padding-top:18px; border-top:1px solid var(--line); font-family:var(--display); font-size:13px; color:var(--ink-2)}
+body{margin:0}
+[hidden]{display:none!important}
+@media print{
+  :root{--bg:#FFFFFF; --surface:#FFFFFF}
+  body{font-size:11.5pt; padding-inline:0}
+  nav.toc,.btns,.evbtns,.score,#sm-log,#sm-msg,.lab-hint,.lab .msg,.final,.cursor{display:none!important}
+  .lab.hide-print{display:none!important}
+  .layout{grid-template-columns:minmax(0,1fr); gap:0; padding-top:16px}
+  main{gap:28px}
+  .top{padding-block:0 18px}
+  .sec{break-before:page}
+  #s1{break-before:auto}
+  .lab,.card,.def,.note,.win,figure,table,.oq > li,.qz > li,.states,.thr{break-inside:avoid}
+  pre.term{white-space:pre-wrap}
+  details summary{display:none}
+  .alt{padding:4px 10px}
+  .gab li{break-inside:avoid}
+  footer.end{margin-top:24px}
+}
+.gab{display:none}
+@media print{.gab{display:grid; gap:10px; break-before:page}}
+</style>
+</head><body>
+<style>
+/* ---- v2: quadros "No Windows" e componentes comuns ---- */
+.win{border:1.5px solid var(--wait); border-radius:8px; background:var(--surface); padding:16px 18px; display:grid; gap:10px}
+.win .lbl{font-family:var(--display); font-size:12px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--wait)}
+.win h4{font-size:17px}
+.win p,.win li{font-size:15.5px}
+.win ol,.win ul{margin:0; padding-left:1.3em; display:grid; gap:4px}
+.win kbd,.sec kbd{font-family:var(--mono); font-size:.82em; border:1px solid var(--line); border-bottom-width:2px; border-radius:4px; padding:0 5px; background:var(--bg)}
+.path2{font-family:var(--display); font-size:.92em; font-weight:600}
+pre.term.ps{background:#0F1A2B; color:#DCE6F4}
+pre.term.ps .c{color:#8DA2C0}
+.sub{font-family:var(--display); font-size:13px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-2)}
+.fig.big svg{max-width:760px}
+.sec > *, .lab > *{min-width:0}
+.seg2{display:flex; gap:8px; flex-wrap:wrap}
+.t.small td{font-size:14.5px}
+.three{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px}
+@media (max-width:760px){.three{grid-template-columns:minmax(0,1fr)}}
+/* linhas de tempo geradas por script */
+.tl{display:grid; gap:8px}
+.tlrow{display:grid; grid-template-columns:96px minmax(0,1fr) 72px; gap:10px; align-items:center; font-family:var(--display); font-size:13.5px; font-weight:700}
+.tlrow .track{display:flex; height:28px; border-radius:5px; overflow:hidden; background:var(--bg); border:1px solid var(--line)}
+.tlrow .track i{display:grid; place-items:center; height:100%; font-style:normal; font-size:11px; font-weight:700; overflow:hidden; white-space:nowrap}
+.tlrow .end{font-variant-numeric:tabular-nums; text-align:right; color:var(--ink-2); font-weight:600; font-size:12.5px; white-space:nowrap}
+.k-run{background:var(--run); color:var(--accent-ink)}
+.k-wait{background:var(--wait-soft); color:var(--wait)}
+.k-ready{background:var(--ready-soft); color:var(--ready)}
+.k-spin{background:var(--bad-soft); color:var(--bad)}
+.k-b{background:var(--wait); color:var(--surface)}
+.k-c{background:var(--ready); color:var(--surface)}
+.k-idle{background:transparent; color:var(--ink-2)}
+.tlleg{display:flex; gap:16px; flex-wrap:wrap; font-family:var(--display); font-size:13px; color:var(--ink-2)}
+.tlleg span{display:inline-flex; align-items:center; gap:6px}
+.tlleg i{display:inline-block; width:12px; height:12px; border-radius:3px}
+.axis{display:grid; grid-template-columns:96px minmax(0,1fr) 72px; gap:10px; font-family:var(--display); font-size:11.5px; color:var(--ink-2)}
+.axis div{display:flex; justify-content:space-between}
+</style>
+<style>
+.sec > *, .lab > *{min-width:0} pre.term{max-width:100%} select.sel{max-width:100%; min-width:0}
+.rc-grid{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:10px}
+@media (max-width:640px){.rc-grid{grid-template-columns:minmax(0,1fr)}}
+.code{font-family:var(--mono); font-size:13.5px; line-height:1.7; background:#101A12; color:#D6E8CB; border-radius:8px; padding:10px 12px}
+.code div{padding:0 6px; border-radius:4px}
+.code div.done{color:#6E8A68; text-decoration:line-through}
+.code div.next{background:#2E4A26; color:#F4F7F1}
+.mem{border:2px solid var(--ready); background:var(--ready-soft); border-radius:8px; padding:10px 12px; display:grid; gap:4px; align-content:center; text-align:center}
+.mem b{font-family:var(--mono); font-size:30px}
+.mem span{font-family:var(--display); font-size:12.5px; font-weight:700; color:var(--ink-2)}
+.regline{font-family:var(--mono); font-size:13px; color:var(--ink-2)}
+/* semáforo */
+.semrow{display:flex; gap:12px; flex-wrap:wrap; align-items:stretch}
+.semval{min-width:120px; border:2px solid var(--wait); background:var(--wait-soft); border-radius:8px; padding:10px; text-align:center; display:grid; gap:2px}
+.semval b{font-family:var(--mono); font-size:32px}
+.semval span,.queue span.lbl{font-family:var(--display); font-size:12.5px; font-weight:700; color:var(--ink-2)}
+.queue{flex:1; min-width:200px; border:1.5px dashed var(--line); border-radius:8px; padding:10px; display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+.pcard{display:grid; gap:6px; border:2px solid var(--line); border-radius:8px; padding:10px; background:var(--bg); min-width:150px; flex:1}
+.pcard b{font-family:var(--display); font-size:15px}
+.pcard small{font-family:var(--display); font-size:12.5px; font-weight:700}
+.pcard.fora small{color:var(--ink-2)} .pcard.rc{border-color:var(--run); background:var(--run-soft)} .pcard.rc small{color:var(--run)}
+.pcard.esp{border-color:var(--wait); background:var(--wait-soft)} .pcard.esp small{color:var(--wait)}
+.pcard .btns .btn{padding:5px 10px; font-size:13px}
+/* buffer */
+.buf{display:flex; gap:8px; flex-wrap:wrap}
+.slot{width:56px; height:56px; border-radius:8px; border:2px solid var(--ready); background:var(--surface); display:grid; place-items:center; font-family:var(--mono); font-size:14px; transition:background .2s}
+.slot.full{background:var(--ready); color:var(--surface)}
+.actor{font-family:var(--display); font-size:14px; font-weight:700; padding:6px 10px; border-radius:6px; background:var(--run-soft); color:var(--run)}
+.actor.blocked{background:var(--bad-soft); color:var(--bad)}
+/* filósofos */
+.phil{display:grid; grid-template-columns:repeat(5, minmax(0,1fr)); gap:8px}
+@media (max-width:640px){.phil{grid-template-columns:repeat(2, minmax(0,1fr))}}
+.ph{border:2px solid var(--line); border-radius:10px; padding:10px; display:grid; gap:4px; text-align:center; background:var(--bg)}
+.ph b{font-family:var(--display); font-size:16px}
+.ph small{font-family:var(--display); font-size:12.5px; font-weight:700}
+.ph.pensa small{color:var(--ink-2)} .ph.fome{border-color:var(--ready); background:var(--ready-soft)} .ph.fome small{color:var(--ready)}
+.ph.come{border-color:var(--run); background:var(--run-soft)} .ph.come small{color:var(--run)}
+.ph.trav{border-color:var(--bad); background:var(--bad-soft)} .ph.trav small{color:var(--bad)}
+.ph .forks{font-family:var(--mono); font-size:12.5px; color:var(--ink-2)}
+select.sel{font:inherit; font-family:var(--display); font-size:14px; padding:7px 10px; border:1.5px solid var(--ink); border-radius:6px; background:var(--surface); color:var(--ink)}
+/* mensagens */
+.msgs{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr); gap:10px; align-items:start}
+@media (max-width:640px){.msgs{grid-template-columns:minmax(0,1fr)}}
+.mbox{border:1.5px solid var(--line); border-radius:8px; padding:10px; min-height:110px; display:grid; gap:6px; align-content:start; background:var(--bg)}
+.mbox h5{font-family:var(--display); font-size:13.5px; margin:0}
+.env{font-family:var(--mono); font-size:12.5px; background:var(--ready-soft); border:1px solid var(--ready); border-radius:5px; padding:3px 8px; width:fit-content}
+/* deadlock */
+.dl svg{width:100%; max-width:520px; height:auto}
+.dl text{font-family:var(--display); font-weight:700; fill:var(--ink)}
+.dlwrap{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:16px; align-items:start}
+@media (max-width:700px){.dlwrap{grid-template-columns:minmax(0,1fr)}}
+.dlbtns{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:6px}
+.dlbtns .btn{font-size:13px; padding:7px 8px}
+</style>
+
+<style>
+/* ---- simuladores de memória ---- */
+.sim-ctl{display:flex; flex-wrap:wrap; gap:8px; align-items:center}
+.sim-ctl .clock{font-family:var(--mono); font-weight:700; font-size:15px; color:var(--accent); margin-left:auto}
+.sim-ctl label{font-family:var(--display); font-size:14px; color:var(--ink-2); display:inline-flex; align-items:center; gap:6px}
+.sim-ctl input,.sim-ctl select{font-family:var(--mono); font-size:13px; padding:5px 6px; border:1px solid var(--line); border-radius:5px; background:var(--bg); color:var(--ink)}
+.sim-ctl input.num{width:64px}
+.btn.sel{background:var(--ink); color:var(--bg)}
+.mview{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:14px; align-items:start}
+.mview .mdisk[hidden]{display:none}
+@media (max-width:700px){.mview{grid-template-columns:minmax(0,1fr)}}
+.mbar{display:flex; height:66px; border-radius:8px; overflow:hidden; gap:2px; background:var(--line)}
+.mb{display:flex; flex-direction:column; align-items:center; justify-content:center; color:#fff; font-family:var(--mono); font-size:12px; line-height:1.25; min-width:0; overflow:hidden; white-space:nowrap}
+.mb b{font-size:13.5px}
+.mb.so{background:#4A5A47}
+.mb.free{background:repeating-linear-gradient(135deg,var(--surface-2) 0 6px,var(--bg) 6px 12px); color:var(--ink-2)}
+.mb.hi{box-shadow:inset 0 0 0 3px var(--ready)}
+.mb.waste{background:repeating-linear-gradient(135deg,var(--bad-soft) 0 5px,#fff 5px 10px); color:var(--bad); box-shadow:inset 0 0 0 1.5px var(--bad)}
+.mpart{display:flex; min-width:0; background:var(--surface)}
+.maxis{position:relative; height:18px; font-family:var(--mono); font-size:11px; color:var(--ink-2)}
+.maxis span{position:absolute; transform:translateX(-50%)}
+.maxis span:first-child{transform:none}.maxis span:last-child{transform:translateX(-100%)}
+.mdisk{border:1.5px dashed var(--line); border-radius:8px; padding:8px 10px; min-width:170px; display:grid; gap:6px; background:var(--bg)}
+.mdisk .lb{font-family:var(--display); font-size:11.5px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-2)}
+.qrow{display:flex; flex-wrap:wrap; gap:5px; align-items:center; min-height:28px}
+.pc{display:inline-flex; align-items:center; gap:4px; font-family:var(--mono); font-size:13px; font-weight:700; color:#fff; padding:3px 8px; border-radius:6px; white-space:nowrap}
+.pc small{font-size:10.5px; opacity:.9}
+.muted{color:var(--ink-2); font-size:13px}
+.mstats{font-family:var(--display); font-size:14px; color:var(--ink-2)}
+.mlog{font-family:var(--mono); font-size:12.5px; color:var(--ink-2); max-height:150px; overflow:auto; padding-left:0; list-style-position:inside}
+.calc{font-family:var(--mono); font-size:14.5px; background:var(--surface-2); border-radius:6px; padding:10px 14px}
+@media print{.sim-ctl,.mlog,#lab,nav.toc a[href="#lab"]{display:none!important}.layout{display:block!important}main{display:block!important}main > .sec{margin-bottom:28px}footer.end{position:static!important;break-inside:avoid}h3{break-after:avoid}.calc,.twocol,.card,figure,table,.win,.lab,ul,ol:not(.oq):not(.qz){break-inside:avoid}main > .sec{display:block!important}.sec > * + *{margin-top:14px}}
+</style>
+<header class="top">
+  <p class="eyebrow">Sistemas Operacionais · IFAL Campus Maceió · Material de referência</p>
+  <h1>Gerência de Memória<span>.</span></h1>
+  <p class="lede">A UCP só executa o que está na memória principal, e a memória é pequena para tudo o que queremos rodar. Veja como o sistema operacional reparte esse espaço, rode os simuladores passo a passo, observe a memória do seu Windows e, no fim, teste o que aprendeu.</p>
+  <div class="meta"><span>Base: <b>Machado &amp; Maia, <i>Arquitetura de Sistemas Operacionais</i>, cap. 9</b></span><span>Prof. Christiano Rossini</span><span>8 seções · 8 simuladores · exemplos no Windows · 34 exercícios</span></div>
+</header>
+
+<div class="layout">
+<nav class="toc" aria-label="Sumário">
+  <p>Sumário</p>
+  <ol>
+    <li><a href="#s1"><span>9.1</span>Introdução</a></li>
+    <li><a href="#s2"><span>9.2</span>Funções básicas</a></li>
+    <li><a href="#s3"><span>9.3</span>Contígua simples</a></li>
+    <li><a href="#s4"><span>9.4</span>Overlay</a></li>
+    <li><a href="#s5"><span>9.5.1</span>Partições estáticas</a></li>
+    <li><a href="#s6"><span>9.5.2</span>Partições dinâmicas</a></li>
+    <li><a href="#s7"><span>9.5.3</span>Estratégias</a></li>
+    <li><a href="#s8"><span>9.6</span>Swapping</a></li>
+    <li><a href="#lab"><span>Lab</span>Simulador livre</a></li>
+    <li><a href="#ex"><span>Ex.</span>Exercícios</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<section class="sec" id="s1">
+  <div class="sec-head"><span class="num">9.1</span><h2>Introdução</h2></div>
+  <p>Para executar, um programa precisa estar na <b>memória principal</b>: é dela que a UCP busca as instruções e os dados. O disco guarda os programas, mas eles precisam ser carregados antes de rodar.</p>
+  <p>Nos primeiros sistemas, com um único programa por vez, isso era simples. Com a <b>multiprogramação</b>, vários processos precisam estar na memória ao mesmo tempo, para que a UCP sempre tenha alguém pronto para executar enquanto outros esperam E/S. A memória vira um recurso disputado, e o sistema operacional precisa decidir <b>quem fica na memória, em que lugar e o que vai para o disco</b> quando falta espaço.</p>
+  <h3>Por que a memória é um problema</h3>
+  <p>Três fatos explicam o capítulo inteiro:</p>
+  <ul>
+    <li><b>A memória principal é limitada.</b> Ela é bem menor que o disco e, por muito tempo, foi o componente mais caro do computador. Nos exemplos do livro e desta apostila, as memórias têm dezenas de KB, como nas máquinas em que essas técnicas surgiram; hoje são GB, mas os programas também cresceram.</li>
+    <li><b>Processos esperam muito.</b> Um processo que lê um arquivo ou espera o teclado fica parado. Se ele for o único na memória, a UCP fica parada junto. Com vários processos na memória, enquanto um espera outro executa.</li>
+    <li><b>Processos não podem atrapalhar uns aos outros.</b> Com vários programas na memória, um erro em um deles não pode apagar dados do outro nem do sistema operacional.</li>
+  </ul>
+  <h3>Ponte com os capítulos 5 e 8</h3>
+  <p>No capítulo 8, o escalonador escolhe entre os processos da <b>fila de prontos</b>. Mas só pode estar pronto quem está na memória principal: um processo levado para o disco pelo swapping (seção 9.6) não pode executar até voltar. Assim, a gerência de memória decide <b>quantos e quais</b> processos o escalonador terá para escolher. Quanto mais processos couberem na memória, maior o grau de multiprogramação e menor a chance de a UCP ficar ociosa.</p>
+  <div class="def"><b>Hierarquia de memória.</b> Registradores e cache são muito rápidos, mas pequenos e caros; a memória secundária (disco ou SSD) é grande e barata, mas lenta. A memória principal fica no meio: é onde os programas executam.</div>
+  <div class="win">
+    <span class="lbl">No Windows</span>
+    <h4>Quanta memória tem o seu computador, e quanto está em uso</h4>
+    <p>Abra o Gerenciador de Tarefas (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Esc</kbd>) › <span class="path2">Desempenho › Memória</span>. O gráfico mostra o uso ao longo do tempo; abaixo, os campos <b>Em uso</b>, <b>Disponível</b>, <b>Confirmada</b> e <b>Em cache</b>. Pelo PowerShell:</p>
+    <pre class="term ps"><span class="c"># memória física total, em GB</span>
+PS&gt; [math]::Round((Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory / 1GB, 1)
+<span class="c"># memória livre agora, em MB</span>
+PS&gt; [math]::Round((Get-CimInstance Win32_OperatingSystem).FreePhysicalMemory / 1KB)</pre>
+  </div>
+</section>
+
+<section class="sec" id="s2">
+  <div class="sec-head"><span class="num">9.2</span><h2>Funções básicas</h2></div>
+  <p>A gerência de memória tem quatro preocupações, que guiam todas as técnicas do capítulo:</p>
+  <div class="twocol wide">
+    <div class="card"><h4>Manter o máximo de processos na memória</h4><p>Quanto mais processos prontos na memória principal, menor a chance de a UCP ficar ociosa.</p></div>
+    <div class="card"><h4>Executar programas maiores que a memória</h4><p>Com técnicas como o <b>overlay</b> e, no capítulo 10, a <b>memória virtual</b>.</p></div>
+    <div class="card"><h4>Proteger as áreas de memória</h4><p>Um programa não pode ler nem alterar a área do SO ou a de outro processo.</p></div>
+    <div class="card"><h4>Usar o disco quando falta memória</h4><p>No <b>swapping</b>, processos inteiros vão para o disco e voltam depois.</p></div>
+  </div>
+  <p>As técnicas evoluíram nesta ordem: <b>alocação contígua simples → overlay → alocação particionada estática → particionada dinâmica → swapping</b>. Cada uma resolve um problema deixado pela anterior:</p>
+  <div class="scroll wide"><table class="t">
+    <thead><tr><th>Técnica</th><th>Resolve</th><th>Deixa como problema</th></tr></thead>
+    <tbody>
+      <tr><td><b>Contígua simples</b></td><td>separar o SO do programa, com proteção</td><td>um programa por vez: memória e UCP subutilizadas</td></tr>
+      <tr><td><b>Overlay</b></td><td>programa maior que a memória</td><td>trabalho extra para o programador</td></tr>
+      <tr><td><b>Partições estáticas</b></td><td>vários programas na memória (multiprogramação)</td><td>fragmentação interna; tamanho máximo fixo</td></tr>
+      <tr><td><b>Partições dinâmicas</b></td><td>fragmentação interna</td><td>fragmentação externa</td></tr>
+      <tr><td><b>Swapping</b></td><td>mais processos do que cabem na memória</td><td>custo de E/S; exige relocação dinâmica</td></tr>
+    </tbody>
+  </table></div>
+  <p>Todas as técnicas deste capítulo usam <b>alocação contígua</b>: cada programa ocupa um único bloco de endereços seguidos. No capítulo 10, a memória virtual quebra essa regra e divide o programa em pedaços que podem ficar espalhados.</p>
+</section>
+
+<section class="sec" id="s3">
+  <div class="sec-head"><span class="num">9.3</span><h2>Alocação contígua simples</h2></div>
+  <p>Usada nos sistemas monoprogramáveis: a memória é dividida em duas áreas, uma para o <b>sistema operacional</b> e outra para o <b>programa do usuário</b>. O programa ocupa um único bloco contínuo de endereços.</p>
+  <p>Para que o programa não invada a área do SO, o hardware tem um <dfn>registrador de proteção</dfn> com o endereço onde termina a área do sistema. Cada endereço usado pelo programa é comparado a esse registrador; se estiver na área protegida, o hardware gera uma interrupção e o SO encerra o programa.</p>
+  <figure class="fig wide">
+    <svg viewBox="0 0 760 190" role="img" aria-label="Verificação do registrador de proteção: endereço 20 KB é permitido; endereço 10 KB, abaixo de 14 KB, gera interrupção" style="width:100%; height:auto">
+      <rect x="20" y="20" width="166" height="60" rx="6" fill="#4A5A47"/><text x="103" y="56" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="15" font-weight="700" fill="#fff">SO · 0 a 14 KB</text>
+      <rect x="190" y="20" width="356" height="60" rx="6" fill="#2F7D32"/><text x="368" y="56" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="15" font-weight="700" fill="#fff">programa A · 14 a 44 KB</text>
+      <rect x="550" y="20" width="190" height="60" rx="6" fill="var(--surface-2)" stroke="var(--line)" stroke-dasharray="5 4"/><text x="645" y="56" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="15" fill="var(--ink-2)">livre</text>
+      <path d="M188 8v84" stroke="var(--bad)" stroke-width="4"/>
+      <text x="194" y="108" font-family="Archivo, Arial" font-size="14" font-weight="700" fill="var(--bad)">registrador de proteção = 14 KB</text>
+      <text x="20" y="145" font-family="JetBrains Mono, monospace" font-size="15" fill="var(--ink)">A acessa 20 KB → 20 ≥ 14 → acesso permitido</text>
+      <text x="20" y="175" font-family="JetBrains Mono, monospace" font-size="15" fill="var(--bad)">A acessa 10 KB → 10 &lt; 14 → interrupção: o SO encerra A</text>
+    </svg>
+  </figure>
+  <p>Só o sistema operacional pode alterar o registrador de proteção: a instrução que o modifica é <b>privilegiada</b> e só executa em modo supervisor (kernel). Se o próprio programa pudesse mudar o registrador, a proteção não valeria nada. O programa de usuário, porém, pode chamar rotinas do SO por meio das chamadas de sistema, que entram de forma controlada na área protegida.</p>
+  <div class="lab" data-mem='{"title":"Um programa por vez","mode":"script","total":64,"states":[{"B":[["SO",14],["-",50]],"msg":"O SO ocupa os primeiros 14 KB; o registrador de proteção aponta para 14 KB."},{"B":[["SO",14],["A",30],["-",20]],"msg":"A (30 KB) é carregado logo depois do SO. Os 20 KB restantes ficam sem uso.","hi":["A"]},{"B":[["SO",14],["-",50]],"msg":"A termina. Só agora outro programa pode ser carregado."},{"B":[["SO",14],["B",12],["-",38]],"msg":"B (12 KB) é pequeno: 38 KB da memória ficam parados enquanto ele executa.","hi":["B"]}]}'></div>
+  <p>O problema é a <b>subutilização</b>: só um programa por vez, a área que ele não usa fica vazia, e a UCP também fica parada sempre que ele espera uma operação de E/S.</p>
+  <div class="calc">Exemplo: memória de 40 KB, SO de 10 KB e programa de 20 KB → sobram 40 − 10 − 20 = 10 KB, ou seja, 25% da memória sem uso (ou um terço dos 30 KB destinados ao usuário).</div>
+  <p>A subutilização da UCP costuma ser ainda pior. Imagine um programa que, a cada segundo, executa durante 0,2 s e espera E/S durante 0,8 s. Sozinho na memória, ele deixa a UCP parada 80% do tempo. Se outros programas estivessem na memória, a UCP poderia executá-los nesses intervalos. É esse ganho que a multiprogramação busca, e ela só é possível se a gerência de memória permitir vários programas ao mesmo tempo.</p>
+  <div class="win">
+    <span class="lbl">No Windows</span>
+    <h4>Proteção de memória em ação: “violação de acesso”</h4>
+    <p>Quando um programa tenta usar um endereço que não lhe pertence, o hardware avisa o Windows, que encerra o programa com a exceção <code>0xC0000005</code> (<i>access violation</i>, violação de acesso). Esses encerramentos ficam registrados no <span class="path2">Visualizador de Eventos › Logs do Windows › Aplicativo</span>, como eventos “Erro de aplicativo”. A proteção é a mesma ideia do registrador de proteção, feita hoje pela unidade de gerência de memória do processador.</p>
+  </div>
+</section>
+
+<section class="sec" id="s4">
+  <div class="sec-head"><span class="num">9.4</span><h2>Técnica de overlay</h2></div>
+  <p>E se o programa for maior que a memória disponível? No <dfn>overlay</dfn> (sobreposição), o programador divide o programa em um <b>módulo principal</b>, que fica sempre na memória, e <b>módulos independentes</b>, que não precisam estar na memória ao mesmo tempo. Esses módulos se revezam numa mesma <b>área de overlay</b>, cujo tamanho é o do maior módulo.</p>
+  <div class="lab" data-mem='{"title":"Programa de 90 KB em 64 KB de memória","mode":"script","total":64,"hint":"Memória de 64 KB e SO de 14 KB. O programa tem um módulo principal de 20 KB e três módulos independentes, de 10, 20 e 30 KB. A área de overlay tem 30 KB, o tamanho do maior módulo.","states":[{"B":[["SO",14],["Principal",20],["-",30]],"msg":"O módulo principal fica sempre na memória. Os 30 KB restantes são a área de overlay."},{"B":[["SO",14],["Principal",20],["Módulo 1",10],["-",20]],"msg":"O principal chama o módulo 1, que é carregado na área de overlay.","hi":["Módulo 1"]},{"B":[["SO",14],["Principal",20],["Módulo 2",20],["-",10]],"msg":"Para usar o módulo 2, ele é carregado por cima do módulo 1.","hi":["Módulo 2"]},{"B":[["SO",14],["Principal",20],["Módulo 3",30]],"msg":"O módulo 3 ocupa a área inteira. Os 90 KB do programa executaram em 50 KB de memória.","hi":["Módulo 3"]}]}'></div>
+  <h3>Como funciona na prática</h3>
+  <ol>
+    <li>O programador identifica partes do programa que <b>nunca precisam estar na memória ao mesmo tempo</b>, por exemplo, as rotinas de cadastro, de impressão e de relatórios, que o usuário escolhe num menu.</li>
+    <li>Ele define o <b>módulo principal</b> (o menu e as rotinas usadas o tempo todo) e os <b>módulos independentes</b>.</li>
+    <li>Quando o principal precisa de um módulo que não está na memória, ele pede ao sistema que o carregue na área de overlay, <b>por cima</b> do módulo que estava lá.</li>
+    <li>O módulo substituído não precisa ser gravado de volta no disco: seu código continua no arquivo do programa e pode ser lido de novo quando for necessário.</li>
+  </ol>
+  <p>Repare que os módulos precisam ser realmente independentes: se o módulo 2 chamasse o módulo 1, os dois teriam de estar na memória ao mesmo tempo, e não caberiam na mesma área de overlay.</p>
+  <div class="twocol wide">
+    <div class="card"><h4>Vantagem</h4><p>Permite executar programas maiores que a memória física.</p></div>
+    <div class="card"><h4>Limitações</h4><p>Quem define os módulos é o <b>programador</b>, o que complica o programa; o maior módulo precisa caber na área de overlay; e cada troca de módulo exige uma carga do disco.</p></div>
+  </div>
+  <div class="note">Se o módulo 3 tivesse 40 KB, o programa não caberia: 14 + 20 + 40 = 74 KB, mais que os 64 KB da memória. Seria preciso dividir esse módulo em módulos menores.</div>
+</section>
+
+<section class="sec" id="s5">
+  <div class="sec-head"><span class="num">9.5.1</span><h2>Alocação particionada estática</h2></div>
+  <p>Para permitir a multiprogramação, a memória passa a ser dividida em <dfn>partições</dfn> de tamanho fixo, definidas na inicialização do sistema. Cada partição recebe um programa. Para mudar o número ou o tamanho das partições, é preciso reconfigurar e reiniciar o sistema. O SO guarda numa <b>tabela de partições</b> o início, o tamanho e a situação de cada uma.</p>
+  <div class="twocol wide">
+    <div class="card"><h4>Estática absoluta</h4><p>Os programas são compilados com endereços absolutos e só podem rodar na partição para a qual foram gerados. Um programa pode ter de esperar sua partição mesmo com outras livres.</p></div>
+    <div class="card"><h4>Estática relocável</h4><p>Os programas usam endereços relativos, ajustados na carga: podem ir para qualquer partição livre em que caibam. Compilador e carregador ficam mais complexos.</p></div>
+  </div>
+  <div class="lab" data-mem='{"title":"Absoluta e relocável","mode":"static","modes":["abs","rel"],"os":16,"parts":[8,16,24],"progs":[{"p":"A","z":6,"part":0},{"p":"B","z":4,"part":0},{"p":"C","z":20,"part":2}],"hint":"A (6 KB) e B (4 KB) foram compilados para a partição P1; C (20 KB), para P3. Rode a versão absoluta e depois a relocável e compare o que acontece com B."}'></div>
+  <h3>Tabela de partições</h3>
+  <p>Para saber onde colocar cada programa, o SO mantém uma tabela com uma linha por partição. Para a memória do simulador acima (SO de 16 KB e partições de 8, 16 e 24 KB), depois da carga de A e C:</p>
+  <div class="scroll wide"><table class="t">
+    <thead><tr><th>Partição</th><th>Início</th><th>Tamanho</th><th>Situação</th></tr></thead>
+    <tbody>
+      <tr><td><b>P1</b></td><td>16 KB</td><td>8 KB</td><td>ocupada (A, 6 KB)</td></tr>
+      <tr><td><b>P2</b></td><td>24 KB</td><td>16 KB</td><td>livre</td></tr>
+      <tr><td><b>P3</b></td><td>40 KB</td><td>24 KB</td><td>ocupada (C, 20 KB)</td></tr>
+    </tbody>
+  </table></div>
+  <p>Na absoluta, o SO mantém em geral <b>uma fila por partição</b>: o programa entra na fila da partição para a qual foi compilado. Na relocável, basta <b>uma fila única</b>: o primeiro programa da fila vai para qualquer partição livre em que caiba.</p>
+  <h3>Proteção</h3>
+  <p>Agora há vários programas na memória, e cada um precisa ficar dentro da sua partição. O hardware usa dois registradores com o <b>limite inferior</b> e o <b>limite superior</b> da partição do programa em execução. Quando o escalonador troca de processo, o SO carrega nesses registradores os limites da partição do novo processo. Exemplo: se C executa na P3, os limites são 40 KB e 64 KB; um acesso de C ao endereço 30 KB, que pertence à P2, gera uma interrupção.</p>
+  <h3>Fragmentação interna</h3>
+  <p>Quando o programa é menor que a partição, a sobra não pode ser usada por nenhum outro programa. Essa perda <b>dentro da partição</b> é a <dfn>fragmentação interna</dfn>.</p>
+  <div class="lab" data-mem='{"title":"Medindo a fragmentação interna","mode":"static","os":64,"parts":[8,24,32],"progs":[{"p":"PA","z":6},{"p":"PB","z":20},{"p":"PC","z":28}],"hint":"Memória de 128 KB, SO de 64 KB e partições de 8, 24 e 32 KB (estática relocável). A parte hachurada em vermelho é a fragmentação interna."}'></div>
+  <div class="calc">PA = 6, PB = 20, PC = 28 KB → (8 − 6) + (24 − 20) + (32 − 28) = 2 + 4 + 4 = 10 KB perdidos.</div>
+  <p>A fragmentação interna depende de quanto os programas são menores que as partições. Por isso, os administradores costumavam escolher o tamanho das partições a partir do tamanho dos programas mais usados. Mesmo assim, havia dois problemas sem solução: um programa maior que a maior partição nunca podia executar, e a quantidade de programas na memória era limitada ao número de partições.</p>
+</section>
+
+<section class="sec" id="s6">
+  <div class="sec-head"><span class="num">9.5.2</span><h2>Alocação particionada dinâmica</h2></div>
+  <p>Na <dfn>alocação particionada dinâmica</dfn> não há partições fixas: cada programa recebe <b>exatamente o espaço de que precisa</b>. Acaba a fragmentação interna, mas surge outro problema. À medida que os programas terminam, ficam espaços livres espalhados entre os que continuam na memória. Muitas vezes a soma desses espaços é grande, mas nenhum deles, sozinho, comporta um novo programa: é a <dfn>fragmentação externa</dfn>.</p>
+  <div class="lab" data-mem='{"title":"Fragmentação externa e compactação","total":64,"os":16,"ops":[["a","A",12],["a","B",10],["a","C",8],["a","D",10],["f","B"],["f","D"],["a","E",20],["c"],["a","E",20]],"first":"Memória de 64 KB com o SO nos primeiros 16 KB. O resto começa como uma única área livre.","hint":"Acompanhe a linha de estatísticas: no passo 7 há 28 KB livres, mas a maior área tem 18 KB. No passo 8, o SO compacta a memória."}'></div>
+  <h3>A lista de áreas livres</h3>
+  <p>Sem partições fixas, o SO precisa saber onde estão os espaços livres. Ele mantém uma <b>lista de áreas livres</b>, com o início e o tamanho de cada uma. No passo 7 do simulador acima, a lista é:</p>
+  <div class="scroll wide"><table class="t">
+    <thead><tr><th>Área livre</th><th>Início</th><th>Tamanho</th></tr></thead>
+    <tbody><tr><td><b>1</b></td><td>28 KB</td><td>10 KB</td></tr><tr><td><b>2</b></td><td>46 KB</td><td>18 KB</td></tr></tbody>
+  </table></div>
+  <p>Ao alocar um programa, o SO escolhe uma área da lista (seção 9.5.3), coloca o programa no início dela e deixa a sobra como uma área livre menor. Ao liberar, a área volta para a lista.</p>
+  <h3>Duas soluções</h3>
+  <div class="twocol wide">
+    <div class="card"><h4>1 · Juntar áreas livres adjacentes</h4><p>Quando um programa termina, sua área é unida às áreas livres vizinhas, formando uma área maior.</p></div>
+    <div class="card"><h4>2 · Relocar os programas (compactação)</h4><p>O SO move os programas para que fiquem juntos e todas as áreas livres formem uma só. Exige relocação dinâmica e para os programas durante a cópia: é cara, por isso não é feita a todo momento.</p></div>
+  </div>
+  <p>As duas soluções têm custos bem diferentes. Juntar áreas vizinhas é barato: o SO só atualiza a lista. Já a compactação exige <b>copiar</b> o conteúdo dos programas para novos endereços. No simulador, para juntar os 28 KB livres, o SO precisou mover C (8 KB); numa memória cheia de programas grandes, moveria quase tudo. Enquanto isso, os programas movidos não podem executar, e o hardware precisa de relocação dinâmica (seção 9.6) para que eles continuem funcionando nos novos endereços. Por isso, a compactação costuma ser feita apenas quando um pedido não é atendido e a soma das áreas livres seria suficiente.</p>
+  <div class="lab" data-mem='{"title":"Juntando áreas livres","mode":"script","total":64,"states":[{"B":[["SO",16],["A",12],["-",10],["C",8],["-",18]],"msg":"Há duas áreas livres, de 10 e 18 KB, e o programa C entre elas."},{"B":[["SO",16],["A",12],["-",10],["-",8],["-",18]],"msg":"C termina: sua área de 8 KB fica livre, ao lado das outras duas.","hi":["@28","@38","@46"]},{"B":[["SO",16],["A",12],["-",36]],"msg":"O SO junta as três áreas vizinhas: 36 KB livres contíguos.","hi":["@28"]}]}'></div>
+  <div class="win">
+    <span class="lbl">No Windows</span>
+    <h4>Quanto cada processo ocupa</h4>
+    <p>O Windows não usa partições: ele já trabalha com memória virtual e páginas (capítulo 10). Mesmo assim, dá para ver quanto cada processo ocupa da memória física, o seu <b>conjunto de trabalho</b> (<i>working set</i>). No Gerenciador de Tarefas, aba <span class="path2">Detalhes</span>, coluna <b>Memória</b>. Pelo PowerShell:</p>
+    <pre class="term ps"><span class="c"># os 10 processos que mais ocupam memória física, em MB</span>
+PS&gt; Get-Process | Sort-Object WS -Descending | Select-Object -First 10 Name, Id, @{n='MB'; e={[math]::Round($_.WS / 1MB)}}</pre>
+  </div>
+</section>
+
+<section class="sec" id="s7">
+  <div class="sec-head"><span class="num">9.5.3</span><h2>Estratégias de alocação</h2></div>
+  <p>Com várias áreas livres, em qual delas colocar um novo programa? O SO mantém uma <b>lista de áreas livres</b> e usa uma de três estratégias:</p>
+  <div class="scroll wide"><table class="t">
+    <thead><tr><th>Estratégia</th><th>Escolhe</th><th>Vantagem</th><th>Desvantagem</th></tr></thead>
+    <tbody>
+      <tr><td><b>First-fit</b></td><td>a primeira área livre em que o programa cabe</td><td>rápida: a busca para na primeira que serve</td><td>tende a acumular sobras pequenas no início da memória</td></tr>
+      <tr><td><b>Best-fit</b></td><td>a menor área em que o programa cabe</td><td>deixa a menor sobra possível</td><td>cria áreas livres minúsculas, quase inúteis; percorre a lista toda</td></tr>
+      <tr><td><b>Worst-fit</b></td><td>a maior área livre</td><td>as sobras continuam grandes e utilizáveis</td><td>consome as áreas grandes: um programa grande pode não achar espaço</td></tr>
+    </tbody>
+  </table></div>
+  <h3>Exemplo resolvido</h3>
+  <p>Áreas livres de 10, 4, 20, 18, 7, 9, 12 e 15 KB, nessa ordem de endereços. Onde cada estratégia coloca um programa de <b>12 KB</b>?</p>
+  <ul>
+    <li><b>First-fit:</b> percorre a lista do início. 10 não serve, 4 não serve, <b>20 serve</b>: escolhe a área de 20 KB e para a busca. Sobram 8 KB.</li>
+    <li><b>Best-fit:</b> olha todas as áreas em que o programa cabe (20, 18, 12 e 15) e fica com a menor: <b>12 KB</b>. Sobra zero.</li>
+    <li><b>Worst-fit:</b> fica com a maior de todas: <b>20 KB</b>. Sobram 8 KB.</li>
+  </ul>
+  <div class="calc">Programa de 10 KB → first-fit: 10 · best-fit: 10 · worst-fit: 20<br>Programa de 9 KB → first-fit: 10 · best-fit: 9 · worst-fit: 20</div>
+  <h3>Qual é a melhor?</h3>
+  <p>Nenhuma vence sempre. A ideia do <b>best-fit</b> parece a melhor, mas as sobras que ele deixa são tão pequenas que dificilmente servem para alguém, e a memória vai se enchendo de fragmentos minúsculos. O <b>worst-fit</b> tenta evitar isso deixando sobras grandes, mas acaba com as áreas grandes, e um programa grande que chegue depois pode não encontrar espaço. O <b>first-fit</b> é o mais simples e rápido, e na prática costuma ter resultados tão bons quanto os outros; por isso é muito usado.</p>
+  <p>A forma de guardar a lista também importa: ordenada por <b>endereço</b>, facilita o first-fit e a junção de áreas vizinhas; ordenada por <b>tamanho</b>, acelera o best-fit (a primeira que serve já é a menor) e o worst-fit (a maior é a primeira ou a última).</p>
+  <div class="lab" data-mem='{"title":"Mesmos pedidos, três estratégias","total":50,"os":0,"init":[["A",5],["B",3],[null,10],["C",6]],"ops":[["a","D",6],["f","A"],["a","E",4]],"strats":["first","best","worst"],"first":"Memória de 50 KB: A (5), B (3), livre (10), C (6), livre (26).","hint":"Rode as três estratégias até o fim e compare onde D e E foram parar e o tamanho das sobras."}'></div>
+  <p>Resultado: no first-fit, E fica na área de 5 KB e deixa uma sobra de 1 KB; no best-fit, E entra exatamente na área de 4 KB; no worst-fit, D e E vão para a maior área, e as sobras continuam grandes.</p>
+</section>
+
+<section class="sec" id="s8">
+  <div class="sec-head"><span class="num">9.6</span><h2>Swapping</h2></div>
+  <p>Mesmo com partições dinâmicas, pode faltar memória para todos os processos. No <dfn>swapping</dfn>, o SO escolhe um processo que está na memória, normalmente um que está em espera ou tem baixa prioridade, e o leva inteiro para uma área do disco, o <b>arquivo de swap</b> (<i>swap out</i>). Mais tarde, o processo é trazido de volta (<i>swap in</i>). Diferente do overlay, quem decide é o SO, e não o programador.</p>
+  <div class="lab" data-mem='{"title":"Swap out e swap in","total":64,"os":16,"init":[["A",14],["B",14],["C",20]],"ops":[["o","B"],["a","D",12],["f","A"],["i","B"]],"first":"Memória cheia. D (12 KB) quer executar, e B está em espera, aguardando uma E/S.","hint":"Repare no último passo: B volta para o endereço 16 KB, e não para 30 KB, onde estava antes."}'></div>
+  <h3>Quem sai e quando volta</h3>
+  <div class="twocol wide">
+    <div class="card"><h4>Swap out: quem sai</h4><p>O SO prefere processos que não vão usar a UCP tão cedo: os que estão no estado de <b>espera</b> (aguardando E/S ou um evento) e os de <b>baixa prioridade</b>. Tirar da memória um processo pronto e de alta prioridade só atrasaria quem mais precisa executar.</p></div>
+    <div class="card"><h4>Swap in: quando volta</h4><p>Um processo fora da memória não pode ir para a fila de prontos. Ele volta quando já pode executar (por exemplo, a E/S que esperava terminou) e há espaço livre suficiente, liberado por outro processo que terminou ou que sofreu swap out.</p></div>
+  </div>
+  <p>O <b>arquivo de swap</b> é uma área reservada do disco, gerenciada pelo próprio SO. Cada swap out grava ali a imagem do processo inteiro (código, dados e pilha); cada swap in a lê de volta. O contexto do processo continua no seu PCB, que fica na memória, na área do sistema: o SO sabe que o processo existe, apenas está fora da memória.</p>
+  <h3>Relocação dinâmica</h3>
+  <p>Um processo que volta do disco raramente encontra livre o mesmo lugar de antes. Por isso o swapping exige <dfn>relocação dinâmica</dfn>: o programa usa endereços relativos ao seu início, e o hardware soma a cada acesso o valor do <b>registrador de relocação</b> (ou registrador base), que o SO ajusta ao carregar o processo.</p>
+  <div class="calc">Antes: base 30 KB + endereço lógico 2 KB = endereço físico 32 KB<br>Depois do swap in: base 16 KB + endereço lógico 2 KB = endereço físico 18 KB</div>
+  <p>Compare com a alocação estática relocável (seção 9.5.1): lá, os endereços eram ajustados <b>uma vez, na carga</b>, e o programa não podia mais mudar de lugar. Na relocação dinâmica, o ajuste é feito <b>a cada acesso</b>, pelo hardware, e por isso o programa pode ser movido quantas vezes for preciso, seja pelo swapping, seja pela compactação. Basta o SO atualizar o registrador base.</p>
+  <p>O mesmo mecanismo resolve a proteção: junto com o registrador base, o hardware usa um <b>registrador limite</b> com o tamanho do processo. Se o endereço lógico for maior que o limite, o acesso é barrado. No exemplo, B tem 14 KB: o endereço lógico 15 KB geraria uma interrupção, esteja B em 30 KB ou em 16 KB.</p>
+  <h3>Vantagens e custos</h3>
+  <p>O swapping aumenta o número de processos que o sistema atende e o tempo em que a UCP fica ocupada. Mas cada troca é uma operação de E/S em disco, muito mais lenta que um acesso à memória, e leva o processo <b>inteiro</b>, mesmo que ele só fosse usar uma pequena parte do seu código. Se a memória for pequena demais para os processos ativos, o sistema passa a gastar mais tempo trocando processos entre memória e disco do que executando-os, e o desempenho despenca. Esse problema, chamado <i>thrashing</i>, volta a aparecer na memória virtual, no capítulo 10, que leva para o disco apenas pedaços dos processos.</p>
+  <div class="win">
+    <span class="lbl">No Windows</span>
+    <h4>Arquivo de paginação: o herdeiro do swapping</h4>
+    <p>O Windows usa o arquivo <code>pagefile.sys</code> para guardar no disco partes dos processos quando a memória física não basta; no capítulo 10 veremos que ele leva <b>páginas</b>, e não processos inteiros. Desde o Windows 8 existe também o <code>swapfile.sys</code>, usado para retirar da memória, de uma vez, aplicativos da Loja que estão em segundo plano.</p>
+    <p>Para ver o tamanho do arquivo de paginação: <kbd>Win</kbd>+<kbd>R</kbd> › <code>SystemPropertiesPerformance</code> › aba <span class="path2">Avançado › Memória virtual</span>. Pelo PowerShell:</p>
+    <pre class="term ps"><span class="c"># tamanho alocado e uso atual do arquivo de paginação, em MB</span>
+PS&gt; Get-CimInstance Win32_PageFileUsage | Select-Object Name, AllocatedBaseSize, CurrentUsage</pre>
+  </div>
+</section>
+
+<section class="sec" id="lab">
+  <div class="sec-head"><span class="num">Lab</span><h2>Simulador livre</h2></div>
+  <p>Monte os seus cenários: defina o tamanho da memória e do SO, aloque programas com a estratégia escolhida, libere, faça swap e compacte. Use-o para conferir as respostas dos exercícios.</p>
+  <div class="lab wide" id="memlab"></div>
+</section>
+
+<section class="sec" id="ex">
+  <div class="sec-head"><span class="num">Exercícios</span><h2>Exercícios de fixação</h2></div>
+  <p>Duas partes: <b>questões abertas</b>, baseadas nos exercícios do capítulo 9 do livro, para responder por escrito, e <b>questões fechadas</b> com correção imediata.</p>
+  <h3 id="ex-a">Parte A · Questões abertas</h3>
+  <p class="lab-hint">Responda no caderno antes de abrir o roteiro. O roteiro indica os pontos que a resposta deve cobrir e a seção onde revisar.</p>
+  <ol class="oq wide">
+    <li><p>Quais são as funções básicas da gerência de memória?</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Manter na memória o maior número possível de processos; permitir a execução de programas maiores que a memória; proteger as áreas do SO e dos processos; usar o disco quando falta memória (swapping). <a href="#s2">Seção 9.2</a>.</p></div></details></li>
+    <li><p>Um sistema tem 40 KB de memória principal e um sistema operacional de 10 KB que implementa alocação contígua simples. Qual a taxa de subutilização da memória para um programa de 20 KB?</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Sobram 40 − 10 − 20 = 10 KB sem uso: 25% da memória principal (ou um terço dos 30 KB destinados ao usuário). <a href="#s3">Seção 9.3</a>.</p></div></details></li>
+    <li><p>Um sistema tem 64 KB de memória principal e um sistema operacional de 14 KB com alocação contígua. Um programa de 90 KB é formado por um módulo principal de 20 KB e três módulos independentes, de 10, 20 e 30 KB. Como o programa poderia ser executado usando apenas a técnica de overlay?</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>O módulo principal fica sempre na memória (20 KB) e os três módulos se revezam numa área de overlay de 30 KB, o tamanho do maior. Total: 14 + 20 + 30 = 64 KB. <a href="#s4">Seção 9.4</a>.</p></div></details></li>
+    <li><p>No exercício anterior, se o módulo de 30 KB passasse a ter 40 KB, o programa ainda poderia ser executado? Caso não, como contornar o problema?</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Não: 14 + 20 + 40 = 74 KB, mais que os 64 KB. Seria preciso dividir o módulo de 40 KB em módulos menores (que caibam em 30 KB) ou reduzir o módulo principal. <a href="#s4">Seção 9.4</a>.</p></div></details></li>
+    <li><p>Qual a diferença entre fragmentação interna e fragmentação externa?</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Interna: espaço perdido dentro de uma partição, quando o programa é menor que ela (partições estáticas). Externa: espaços livres pequenos e espalhados entre os programas, que somados seriam suficientes, mas isoladamente não comportam um novo programa (partições dinâmicas). <a href="#s5">Seções 9.5.1 e 9.5.2</a>.</p></div></details></li>
+    <li><p>Um sistema tem 128 KB de memória principal e um sistema operacional de 64 KB com alocação particionada estática relocável, com três partições: P1 (8 KB), P2 (24 KB) e P3 (32 KB). Calcule a fragmentação interna após a carga de PA em P1, PB em P2 e PC em P3, para: a) PA = 6 KB, PB = 20 KB, PC = 28 KB; b) PA = 4 KB, PB = 16 KB, PC = 26 KB; c) PA = 8 KB, PB = 24 KB, PC = 32 KB.</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>a) 2 + 4 + 4 = 10 KB; b) 4 + 8 + 6 = 18 KB; c) 0 KB. <a href="#s5">Seção 9.5.1</a>.</p></div></details></li>
+    <li><p>No sistema do exercício anterior, seria possível executar quatro programas concorrentemente usando apenas a alocação particionada estática relocável? E um programa de 36 KB?</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Quatro programas: não, há só três partições (um quarto exigiria swapping). Programa de 36 KB: não, a maior partição tem 32 KB; seria preciso redefinir as partições ou usar overlay. <a href="#s5">Seção 9.5.1</a>.</p></div></details></li>
+    <li><p>Qual a limitação da alocação particionada estática absoluta em relação à relocável?</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Na absoluta, o programa só pode rodar na partição para a qual foi compilado: pode ficar esperando mesmo com outras partições livres em que caberia. Na relocável, ele vai para qualquer partição livre suficiente. <a href="#s5">Seção 9.5.1</a>.</p></div></details></li>
+    <li><p>Quais as soluções para a fragmentação externa na alocação particionada dinâmica? Qual o custo da compactação?</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Juntar áreas livres adjacentes quando um programa termina; relocar os programas para reunir todo o espaço livre em uma área (compactação). A compactação para os programas durante a cópia, consome tempo de UCP e exige relocação dinâmica. <a href="#s6">Seção 9.5.2</a>.</p></div></details></li>
+    <li><p>Conceitue as estratégias best-fit e worst-fit, com vantagens e desvantagens de cada uma.</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Best-fit: a menor área em que o programa cabe; deixa a menor sobra, mas gera áreas minúsculas e percorre a lista toda. Worst-fit: a maior área livre; as sobras ficam grandes e utilizáveis, mas as áreas grandes são consumidas. <a href="#s7">Seção 9.5.3</a>.</p></div></details></li>
+    <li><p>As áreas livres da memória são, na ordem dos endereços, de 10, 4, 20, 18, 7, 9, 12 e 15 KB. Para cada programa abaixo, qual área seria escolhida pelo first-fit, pelo best-fit e pelo worst-fit? a) 12 KB; b) 10 KB; c) 9 KB.</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>a) 20, 12 e 20 KB; b) 10, 10 e 20 KB; c) 10, 9 e 20 KB (first, best e worst, nessa ordem; cada pedido a partir da lista original). <a href="#s7">Seção 9.5.3</a>.</p></div></details></li>
+    <li><p>Uma memória de 50 KB com alocação particionada dinâmica contém, nesta ordem: A (5 KB), B (3 KB), área livre (10 KB), C (6 KB) e área livre (26 KB). Mostre o estado da memória após cada operação, com first-fit, best-fit e worst-fit: a) alocar D, de 6 KB; b) liberar A; c) alocar E, de 4 KB.</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>First-fit: D na área de 10 (sobram 4); E na área de 5 (sobra 1). Best-fit: D na área de 10; E na área de 4, exata. Worst-fit: D na área de 26 (sobram 20); E nessa mesma área (sobram 16). Confira no simulador da <a href="#s7">Seção 9.5.3</a>.</p></div></details></li>
+    <li><p>O que é swapping e para que é utilizada essa técnica?</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Levar um processo inteiro da memória para o disco (swap out) e trazê-lo de volta depois (swap in), para liberar memória e atender mais processos do que caberiam ao mesmo tempo. <a href="#s8">Seção 9.6</a>.</p></div></details></li>
+    <li><p>Por que a relocação dinâmica é importante para o swapping?</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Porque o processo que volta do disco pode ser carregado em outro endereço. Com o registrador de relocação, basta ajustar o valor base; sem ele, o processo teria de esperar o mesmo lugar ficar livre. <a href="#s8">Seção 9.6</a>.</p></div></details></li>
+  </ol>
+  <h3 id="ex-b">Parte B · Questões fechadas</h3>
+  <p class="lab-hint">Escolha uma alternativa: a correção e a explicação aparecem na hora. Cada questão aceita uma única tentativa. As alternativas mudam de ordem a cada vez que você refaz.</p>
+  <div class="score wide" id="qz-score"><span>Acertos <b id="qz-ok">0</b></span><span>Erros <b id="qz-bad">0</b></span><span>Respondidas <b id="qz-n">0</b>/<b id="qz-t">20</b></span><div class="meter"><i class="g" id="qz-mg" style="width:0%"></i><i class="r" id="qz-mr" style="width:0%"></i></div><button class="btn" id="qz-reset">Refazer</button></div>
+  <ol class="qz wide" id="qz"></ol>
+  <div class="final wide" id="qz-final" hidden><h4 id="qz-ft"></h4><p id="qz-fp"></p></div>
+</section>
+
+</main>
+</div>
+<footer class="end">Material de apoio da disciplina de Sistemas Operacionais. Conteúdo e sequência baseados em Machado, F. B.; Maia, L. P. <i>Arquitetura de Sistemas Operacionais</i>, capítulo 9 (Gerência de memória). As questões abertas são baseadas nos exercícios do capítulo.</footer>
+
+<script>
+/* ===== Motor de gerência de memória (alocação contígua) ===== */
+/* Memória = lista ordenada de blocos {s: início, z: tamanho, p: nome ou null (livre)}.
+   O SO ocupa [0, os). Tamanhos em KB. */
+function memNew(total, os, init){ // init: [[nome|null, tamanho], ...] após o SO
+  const B=os>0?[{s:0,z:os,p:'SO',os:true}]:[];let s=os;
+  (init||[]).forEach(([p,z])=>{B.push({s,z,p});s+=z;});
+  if(s<total)B.push({s,z:total-s,p:null});
+  return {total,os,B,disk:[]};}
+const memClone=m=>({total:m.total,os:m.os,B:m.B.map(b=>Object.assign({},b)),disk:m.disk.map(d=>Object.assign({},d))});
+const freeBlocks=m=>m.B.map((b,i)=>Object.assign({i},b)).filter(b=>!b.p);
+function pickHole(m,size,strat){const H=freeBlocks(m).filter(b=>b.z>=size);if(!H.length)return null;
+  if(strat==='best')return H.reduce((a,b)=>b.z<a.z?b:a);
+  if(strat==='worst')return H.reduce((a,b)=>b.z>a.z?b:a);
+  return H[0];}
+function memAlloc(m,p,size,strat){const h=pickHole(m,size,strat);
+  if(!h){const tf=freeBlocks(m).reduce((a,b)=>a+b.z,0);return {ok:false,msg:tf>=size?`${p} (${size} KB) não cabe em nenhuma área livre, embora haja ${tf} KB livres no total: fragmentação externa`:`${p} (${size} KB) não cabe: só há ${tf} KB livres`,ext:tf>=size};}
+  const b=m.B[h.i],rest=b.z-size;b.p=p;b.z=size;if(rest>0)m.B.splice(h.i+1,0,{s:b.s+size,z:rest,p:null});
+  return {ok:true,at:b.s,hole:h.z,msg:`${p} (${size} KB) alocado no endereço ${b.s} KB, na área livre de ${h.z} KB`+(rest?`; sobram ${rest} KB livres`:'')};}
+function coalesce(m){for(let i=0;i<m.B.length-1;){const a=m.B[i],b=m.B[i+1];if(!a.p&&!b.p){a.z+=b.z;m.B.splice(i+1,1);}else i++;}}
+function memFree(m,p){const b=m.B.find(x=>x.p===p);if(!b)return {ok:false,msg:p+' não está na memória'};const n0=m.B.length;b.p=null;coalesce(m);return {ok:true,msg:`${p} liberado: sua área volta a ser livre`+(m.B.length<n0?' e se junta à área livre vizinha':'')};}
+function memCompact(m){let s=0;const used=m.B.filter(b=>b.p);used.forEach(b=>{b.s=s;s+=b.z;});m.B=used;if(s<m.total)m.B.push({s,z:m.total-s,p:null});return {ok:true,msg:'Compactação: os programas foram relocados para o início e as áreas livres viraram uma só'};}
+function memSwapOut(m,p){const b=m.B.find(x=>x.p===p);if(!b)return {ok:false,msg:p+' não está na memória'};m.disk.push({p,z:b.z});b.p=null;coalesce(m);return {ok:true,msg:`${p} (${b.z} KB) sai da memória e vai para o arquivo de swap (swap out)`};}
+function memSwapIn(m,p,strat){const d=m.disk.findIndex(x=>x.p===p);if(d<0)return {ok:false,msg:p+' não está no disco'};const r=memAlloc(m,p,m.disk[d].z,strat);if(r.ok){m.disk.splice(d,1);r.msg=`${p} volta do disco (swap in) para o endereço ${r.at} KB`;}return r;}
+const memStats=m=>{const F=freeBlocks(m),tf=F.reduce((a,b)=>a+b.z,0);return {free:tf,holes:F.length,largest:F.reduce((a,b)=>Math.max(a,b.z),0),used:m.total-tf};};
+/* roteiro: lista de operações -> lista de estados (cada um com msg) */
+function memRun(m0,ops,strat){const st=[{m:memClone(m0),msg:'Estado inicial',op:null}];let m=memClone(m0);
+  ops.forEach(o=>{let r;const [k,p,z]=o;
+    if(k==='a')r=memAlloc(m,p,z,strat);else if(k==='f')r=memFree(m,p);else if(k==='c')r=memCompact(m);else if(k==='o')r=memSwapOut(m,p);else if(k==='i')r=memSwapIn(m,p,strat);
+    st.push({m:memClone(m),msg:r.msg,ok:r.ok,op:o});});return st;}
+/* alocação particionada estática: parts [tamanhos], progs [{p,z,part?}] mode abs|rel */
+function staticRun(os,parts,progs,mode){let s=os;const P=parts.map((z,i)=>{const o={n:'P'+(i+1),s,z,p:null,u:0};s+=z;return o;});
+  const total=s,st=[{P:P.map(x=>Object.assign({},x)),wait:progs.map(x=>x.p),msg:'Partições vazias. Programas na fila: '+progs.map(x=>x.p).join(', ')}],wait=[];
+  progs.forEach(g=>{let tgt=null;
+    if(mode==='abs'){const q=P[g.part];if(!q.p&&g.z<=q.z)tgt=q;}
+    else tgt=P.find(q=>!q.p&&g.z<=q.z)||null;
+    if(tgt){tgt.p=g.p;tgt.u=g.z;st.push({P:P.map(x=>Object.assign({},x)),msg:`${g.p} (${g.z} KB) carregado em ${tgt.n} (${tgt.z} KB): ${tgt.z-g.z} KB perdidos dentro da partição`});}
+    else {wait.push(g.p);st.push({P:P.map(x=>Object.assign({},x)),msg:mode==='abs'?`${g.p} foi compilado para ${P[g.part].n}, que está ocupada: espera, mesmo com outra partição livre`:`${g.p} (${g.z} KB) não cabe em nenhuma partição livre: espera`});}
+  });
+  if(wait.length){const livres=P.filter(q=>!q.p).map(q=>q.n);st.push({P:P.map(x=>Object.assign({},x)),msg:`Fim da carga: ${wait.join(', ')} continua${wait.length>1?'m':''} na fila`+(livres.length?`, embora ${livres.join(' e ')} esteja${livres.length>1?'m':''} livre${livres.length>1?'s':''}`:'')+'.'});}
+  const fi=P.reduce((a,q)=>a+(q.p?q.z-q.u:0),0);return {st,P,total,fi,wait};}
+if(typeof module!=='undefined')module.exports={memNew,memClone,memAlloc,memFree,memCompact,memSwapOut,memSwapIn,memStats,memRun,staticRun,pickHole,freeBlocks};
+
+/* ===== interface dos simuladores de memória (usa memeng.js) ===== */
+const MCOL={A:'#2F7D32',B:'#2A5DA8',C:'#B86A00',D:'#8B3A8F',E:'#B4362A',F:'#1C8080',G:'#5E6E12',H:'#9A4A72',PA:'#2F7D32',PB:'#2A5DA8',PC:'#B86A00',Principal:'#2F7D32','Módulo 1':'#2A5DA8','Módulo 2':'#B86A00','Módulo 3':'#8B3A8F'};
+const MPAL=['#2F7D32','#2A5DA8','#B86A00','#8B3A8F','#B4362A','#1C8080','#5E6E12','#9A4A72'];
+const mcol=p=>MCOL[p]||MPAL[[...p].reduce((a,c)=>a+c.charCodeAt(0),0)%8];
+const $m=(s,r=document)=>r.querySelector(s),$$m=(s,r=document)=>Array.from(r.querySelectorAll(s));
+const mel=(t,a={},h='')=>{const e=document.createElement(t);for(const k in a){if(k==='class')e.className=a[k];else e.setAttribute(k,a[k]);}if(h)e.innerHTML=h;return e;};
+const SNAME={first:'First-fit',best:'Best-fit',worst:'Worst-fit'};
+const MSIMS=[];
+/* desenha um estado da memória: blocos [{s,z,p,os}] */
+function memBarHTML(m,hi){
+  const T=m.total,blocks=m.B.map(b=>{const so=b.os||b.p==='SO',free=!b.p,w=b.z/T*100,h=hi&&hi.includes(b.p||('@'+b.s));
+    return `<div class="mb${so?' so':free?' free':''}${h?' hi':''}" style="width:${w}%;${!so&&!free?'background:'+mcol(b.p):''}" title="${so?'SO':free?'livre':b.p} · ${b.z} KB · início ${b.s} KB">${w>4?`<b>${so?'SO':free?(w>8?'livre':''):b.p}</b><span>${b.z} KB</span>`:''}</div>`;}).join('');
+  const ticks=m.B.map(b=>b.s).concat([T]).map(a=>`<span style="left:${a/T*100}%">${a}</span>`).join('');
+  return `<div class="mbar">${blocks}</div><div class="maxis">${ticks}</div>`;}
+function partBarHTML(P,os,total){
+  const ticks=[0,os].concat(P.map(q=>q.s+q.z)).map(a=>`<span style="left:${a/total*100}%">${a}</span>`).join('');
+  return `<div class="mbar"><div class="mb so" style="width:${os/total*100}%"><b>SO</b><span>${os} KB</span></div>${P.map(q=>`<div class="mpart" style="width:${q.z/total*100}%">${q.p?`<div class="mb" style="width:${q.u/q.z*100}%;background:${mcol(q.p)}"><b>${q.p}</b><span>${q.u} KB</span></div>${q.z>q.u?`<div class="mb waste" style="width:${(q.z-q.u)/q.z*100}%" title="fragmentação interna: ${q.z-q.u} KB">${(q.z-q.u)/total>0.04?`<span>${q.z-q.u}</span>`:''}</div>`:''}`:`<div class="mb free" style="width:100%"><b>${q.n}</b><span>${q.z} KB</span></div>`}</div>`).join('')}</div><div class="maxis">${ticks}</div>`;}
+function statsHTML(m){const s=memStats(m);return `Livre: <b>${s.free} KB</b> em <b>${s.holes}</b> área${s.holes===1?'':'s'} · maior área livre: <b>${s.largest} KB</b>`;}
+function diskHTML(d){return d.length?d.map(x=>`<span class="pc" style="background:${mcol(x.p)}">${x.p} <small>${x.z} KB</small></span>`).join(''):'<span class="muted">vazio</span>';}
+class MemSim{
+  constructor(host,cfg,opt={}){this.host=host;this.cfg=cfg;this.vi=0;this.k=0;this.speed=1200;this.timer=null;this.build(opt);this.compute();MSIMS.push(this);}
+  variants(){const c=this.cfg;if(c.mode==='static')return (c.modes||['rel']).map(x=>({label:x==='abs'?'Absoluta':'Relocável',v:x}));if(c.strats)return c.strats.map(x=>({label:SNAME[x],v:x}));return null;}
+  build(opt){const H=this.host,c=this.cfg;H.innerHTML='';
+    if(!opt.noHead){H.appendChild(mel('div',{class:'lab-head'},`<span class="tag">Simulador</span><h4>${c.title||''}</h4>`));if(c.hint)H.appendChild(mel('p',{class:'lab-hint'},c.hint));}
+    const ctl=mel('div',{class:'sim-ctl'});H.appendChild(ctl);const V=this.variants();
+    if(V){const vb=mel('div',{class:'btns'});V.forEach((v,i)=>{const b=mel('button',{type:'button',class:'btn'+(i===0?' sel':'')},v.label);b.addEventListener('click',()=>{this.vi=i;$$m('.btn',vb).forEach((x,j)=>x.classList.toggle('sel',j===i));this.compute();});vb.appendChild(b);});ctl.appendChild(vb);ctl.appendChild(mel('span',{style:'flex-basis:100%;height:0'}));}
+    ctl.insertAdjacentHTML('beforeend',`<button type="button" class="btn ghost" data-a="reset" aria-label="Reiniciar" title="Reiniciar">⏮</button><button type="button" class="btn ghost" data-a="back" aria-label="Voltar um passo" title="Voltar um passo">◀</button><button type="button" class="btn primary" data-a="play" style="min-width:118px">▶ Reproduzir</button><button type="button" class="btn ghost" data-a="step" aria-label="Avançar um passo" title="Avançar um passo">▶|</button><button type="button" class="btn ghost" data-a="end" aria-label="Ir ao fim" title="Ir ao fim">⏭</button><span class="clock"></span>`);
+    ctl.addEventListener('click',e=>{const b=e.target.closest('button[data-a]');if(!b)return;const a=b.dataset.a;this.pause();if(a==='reset')this.show(0);if(a==='back'&&this.k>0)this.show(this.k-1);if(a==='play'){this.play();}if(a==='step'&&this.k<this.max)this.show(this.k+1);if(a==='end')this.show(this.max);});
+    this.playBtn=$m('[data-a=play]',ctl);
+    H.appendChild(mel('div',{class:'mview'},`<div class="mmain"></div><div class="mdisk" hidden><span class="lb">Arquivo de swap (disco)</span><div class="qrow mdl"></div></div>`));
+    H.appendChild(mel('p',{class:'mstats'}));H.appendChild(mel('div',{class:'msg'}));}
+  compute(){this.pause();const c=this.cfg,V=this.variants(),v=V?V[this.vi].v:null;
+    if(c.mode==='static'){const r=staticRun(c.os,c.parts,c.progs,v||'rel');this.total=r.total;this.states=r.st.map((s,i)=>({P:s.P,msg:s.msg,fi:s.P.reduce((a,q)=>a+(q.p?q.z-q.u:0),0)}));}
+    else if(c.mode==='script')this.states=c.states.map(s=>({m:memNew(c.total,0,s.B.map(x=>[x[0]==='-'?null:x[0],x[1]])),msg:s.msg,hi:s.hi}));
+    else {this.states=memRun(memNew(c.total,c.os||0,c.init||[]),c.ops,v||c.strat||'first');if(c.first)this.states[0].msg=c.first;}
+    if(c.mode==='script')this.states.forEach(s=>s.m.B.forEach(b=>{if(b.p==='SO')b.os=true;}));
+    this.max=this.states.length-1;$m('.mdisk',this.host).hidden=!this.states.some(s=>s.m&&s.m.disk.length);this.show(0);}
+  show(k){this.k=k;const s=this.states[k],c=this.cfg;$m('.clock',this.host).textContent=`passo ${k} de ${this.max}`;
+    if(c.mode==='static'){$m('.mmain',this.host).innerHTML=partBarHTML(s.P,c.os,this.total);$m('.mstats',this.host).innerHTML=`Fragmentação interna até aqui: <b>${s.fi} KB</b>`;}
+    else{$m('.mmain',this.host).innerHTML=memBarHTML(s.m,s.hi||(s.ok===false?s.m.B.filter(b=>!b.p).map(b=>'@'+b.s):(s.op&&s.op[0]==='a'?[s.op[1]]:null)));$m('.mstats',this.host).innerHTML=statsHTML(s.m);$m('.mdl',this.host).innerHTML=diskHTML(s.m.disk);}
+    const msg=$m('.msg',this.host);msg.className='msg'+(s.ok===false?' bad':'');msg.innerHTML=`<b>Passo ${k}</b> · ${s.msg}`;}
+  play(){if(this.timer)return;if(this.k>=this.max)this.show(0);this.timer=setInterval(()=>{if(this.k>=this.max){this.pause();return;}this.show(this.k+1);},this.speed);this.playBtn.textContent='⏸ Pausar';}
+  pause(){clearInterval(this.timer);this.timer=null;if(this.playBtn)this.playBtn.textContent='▶ Reproduzir';}
+  goEnd(){this.pause();this.show(this.max);}
+}
+function initMemSims(){$$m('.lab[data-mem]').forEach(h=>{try{new MemSim(h,JSON.parse(h.dataset.mem));}catch(err){h.textContent='Erro no simulador: '+err.message;}});}
+/* ===== simulador livre ===== */
+function initMemLab(root){
+  root.innerHTML=`<div class="sim-ctl">
+    <label>Memória <input class="num" data-k="total" type="number" min="16" max="256" value="${root.dataset.total||64}"> KB</label>
+    <label>SO <input class="num" data-k="os" type="number" min="0" max="128" value="${root.dataset.os||16}"> KB</label>
+    <label>Estratégia <select class="sel" data-k="strat"><option value="first">First-fit</option><option value="best">Best-fit</option><option value="worst">Worst-fit</option></select></label>
+    <button type="button" class="btn ghost" data-a="new">Reiniciar memória</button></div>
+   <div class="sim-ctl"><label>Programa <input class="txt" data-k="name" maxlength="3" value="A" style="width:56px"></label><label>Tamanho <input class="num" data-k="size" type="number" min="1" max="256" value="12"> KB</label>
+    <button type="button" class="btn primary" data-a="alloc">Alocar</button>
+    <label>Na memória <select class="sel" data-k="mem"></select></label><button type="button" class="btn" data-a="free">Liberar</button><button type="button" class="btn" data-a="out">Swap out</button>
+    <label>No disco <select class="sel" data-k="disk"></select></label><button type="button" class="btn" data-a="in">Swap in</button>
+    <button type="button" class="btn" data-a="compact">Compactar</button><button type="button" class="btn ghost" data-a="undo">Desfazer</button></div>
+   <div class="mview"><div class="mmain"></div><div class="mdisk"><span class="lb">Arquivo de swap (disco)</span><div class="qrow mdl"></div></div></div>
+   <p class="mstats"></p><div class="msg"></div><ol class="mlog"></ol>`;
+  const q=k=>$m(`[data-k=${k}]`,root);let m,hist=[];
+  const draw=(r)=>{$m('.mmain',root).innerHTML=memBarHTML(m,r&&r.ok&&r.at!=null?[m.B.find(b=>b.s===r.at).p]:(r&&r.ok===false?m.B.filter(b=>!b.p).map(b=>'@'+b.s):null));$m('.mstats',root).innerHTML=statsHTML(m);$m('.mdl',root).innerHTML=diskHTML(m.disk);
+    q('mem').innerHTML=m.B.filter(b=>b.p&&!b.os).map(b=>`<option>${b.p}</option>`).join('')||'<option value="">—</option>';q('disk').innerHTML=m.disk.map(d=>`<option>${d.p}</option>`).join('')||'<option value="">—</option>';
+    if(r){const msg=$m('.msg',root);msg.className='msg'+(r.ok===false?' bad':' ok');msg.textContent=r.msg;const li=mel('li',{},r.msg);$m('.mlog',root).appendChild(li);}};
+  const nextName=()=>{const used=new Set(m.B.map(b=>b.p).concat(m.disk.map(d=>d.p)));for(const c of 'ABCDEFGHIJKLMNOPQRSTUVWXYZ')if(!used.has(c))return c;return 'X';};
+  const reset=()=>{const T=Math.max(16,Math.min(256,+q('total').value||64)),os=Math.max(0,Math.min(T-4,+q('os').value||0));m=memNew(T,os,[]);hist=[];$m('.mlog',root).innerHTML='';draw({ok:true,msg:`Memória de ${T} KB, com o SO ocupando ${os} KB.`});q('name').value=nextName();};
+  root.addEventListener('click',e=>{const b=e.target.closest('button[data-a]');if(!b)return;const a=b.dataset.a,st=q('strat').value;let r;
+    if(a==='new'){reset();return;}
+    if(a==='undo'){if(hist.length){m=hist.pop();draw({ok:true,msg:'Operação desfeita.'});}return;}
+    const snap=memClone(m);
+    if(a==='alloc'){const p=(q('name').value||'').trim().toUpperCase().slice(0,3)||nextName(),z=Math.max(1,+q('size').value||1);if(m.B.some(x=>x.p===p)||m.disk.some(x=>x.p===p))r={ok:false,msg:`Já existe um programa ${p}. Use outro nome.`};else r=memAlloc(m,p,z,st);if(r.ok)r.msg=`${SNAME[st]}: `+r.msg;}
+    if(a==='free'){const p=q('mem').value;if(!p)return;r=memFree(m,p);}
+    if(a==='out'){const p=q('mem').value;if(!p)return;r=memSwapOut(m,p);}
+    if(a==='in'){const p=q('disk').value;if(!p)return;r=memSwapIn(m,p,st);}
+    if(a==='compact')r=memCompact(m);
+    if(r.ok)hist.push(snap);draw(r);if(r.ok&&a==='alloc')q('name').value=nextName();});
+  reset();}
+
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+const el=(tag,attrs={},html='')=>{const e=document.createElement(tag);for(const k in attrs){if(k==='class')e.className=attrs[k];else e.setAttribute(k,attrs[k]);}if(html)e.innerHTML=html;return e;};
+initMemSims();initMemLab(document.getElementById('memlab'));
+window.addEventListener('beforeprint',()=>MSIMS.forEach(s=>s.goEnd()));
+/* questões fechadas */
+(function(){
+  const Q = [
+    {q:'Por que um programa precisa estar na memória principal para executar?', a:['Porque a UCP busca instruções e dados diretamente na memória principal.','Porque o disco não guarda programas.','Porque a cache substitui o disco.','Porque só a memória principal tem sistema de arquivos.','Porque os registradores ficam no disco.'], c:0, e:'O disco guarda os programas, mas eles precisam ser carregados na memória para executar.'},
+    {q:'Qual destas NÃO é uma função básica da gerência de memória?', a:['Escolher qual processo pronto recebe a UCP.','Manter o máximo de processos na memória.','Permitir programas maiores que a memória.','Proteger as áreas do SO e dos processos.','Usar o disco quando falta memória.'], c:0, e:'Escolher quem usa a UCP é papel do escalonador (capítulo 8).'},
+    {q:'Na alocação contígua simples:', a:['a memória é dividida entre o SO e um único programa de usuário.','a memória é dividida em várias partições fixas.','cada programa recebe exatamente o que precisa, com vários na memória.','os programas são divididos em páginas.','o programa fica sempre no disco.'], c:0, e:'É a técnica dos sistemas monoprogramáveis.'},
+    {q:'O registrador de proteção, na alocação contígua simples, serve para:', a:['impedir que o programa acesse a área do sistema operacional.','guardar o endereço da próxima instrução.','contar quantas vezes o programa foi executado.','definir o tamanho da área de overlay.','acelerar a leitura do disco.'], c:0, e:'Todo endereço do programa é comparado a ele; se invadir a área do SO, o programa é encerrado.'},
+    {q:'Memória de 40 KB, SO de 10 KB e um programa de 20 KB, em alocação contígua simples. Quanto da memória fica sem uso?', a:['10 KB, ou 25% da memória.','20 KB, ou 50% da memória.','30 KB, ou 75% da memória.','Nada: o programa ocupa toda a área do usuário.','10 KB, ou 10% da memória.'], c:0, e:'40 − 10 − 20 = 10 KB, um quarto da memória.'},
+    {q:'Na técnica de overlay, o tamanho da área de overlay é:', a:['o tamanho do maior módulo independente.','a soma de todos os módulos.','o tamanho do módulo principal.','metade da memória principal.','definido pelo SO a cada execução.'], c:0, e:'Os módulos se revezam na mesma área, então ela precisa comportar o maior deles.'},
+    {q:'Quem define os módulos na técnica de overlay?', a:['O programador.','O escalonador.','O hardware.','O usuário final, durante a execução.','O sistema de arquivos.'], c:0, e:'Essa é uma das desvantagens: o programa fica mais complexo de escrever.'},
+    {q:'Memória de 64 KB, SO de 14 KB, módulo principal de 20 KB e maior módulo independente de 40 KB. O programa roda com overlay?', a:['Não: seriam necessários 74 KB.','Sim: sobram 10 KB.','Sim: o overlay dispensa espaço para módulos.','Não: o overlay não permite módulos independentes.','Sim, desde que o módulo principal saia da memória.'], c:0, e:'14 + 20 + 40 = 74 KB, mais que os 64 KB disponíveis.'},
+    {q:'Na alocação particionada estática, o tamanho das partições:', a:['é definido na inicialização e só muda com reconfiguração e reinício do sistema.','muda a cada programa carregado.','é escolhido pelo programa no momento da carga.','é sempre igual ao do maior programa.','não existe: a memória é contínua.'], c:0, e:'Por isso a técnica se chama estática.'},
+    {q:'Na alocação particionada estática absoluta:', a:['o programa só pode executar na partição para a qual foi compilado.','o programa pode ir para qualquer partição livre.','não há fragmentação interna.','as partições mudam de tamanho dinamicamente.','o SO move os programas entre as partições.'], c:0, e:'Um programa pode ficar esperando sua partição mesmo com outras livres.'},
+    {q:'A vantagem da alocação estática relocável sobre a absoluta é que:', a:['o programa pode ser carregado em qualquer partição livre em que caiba.','elimina a fragmentação interna.','dispensa a tabela de partições.','permite partições de tamanho variável.','dispensa o carregador.'], c:0, e:'Os endereços são ajustados na carga para a partição escolhida.'},
+    {q:'Fragmentação interna é:', a:['o espaço perdido dentro de uma partição, quando o programa é menor que ela.','o espaço livre espalhado entre os programas.','a perda de dados no disco.','a divisão do programa em módulos.','o tempo gasto em trocas de contexto.'], c:0, e:'Acontece nas partições de tamanho fixo.'},
+    {q:'Partições de 8, 24 e 32 KB recebem programas de 6, 20 e 28 KB. Qual a fragmentação interna total?', a:['10 KB','6 KB','54 KB','0 KB','18 KB'], c:0, e:'(8 − 6) + (24 − 20) + (32 − 28) = 2 + 4 + 4 = 10 KB.'},
+    {q:'Fragmentação externa é:', a:['espaços livres pequenos e espalhados que, isolados, não comportam um novo programa.','o espaço perdido dentro de uma partição.','a parte do programa que fica no disco.','a área ocupada pelo sistema operacional.','a memória cache não utilizada.'], c:0, e:'É o problema típico da alocação particionada dinâmica.'},
+    {q:'Na alocação particionada dinâmica:', a:['cada programa recebe exatamente o espaço de que precisa.','as partições são definidas na inicialização.','só um programa fica na memória por vez.','os programas são compilados para uma partição específica.','a memória é dividida em páginas de tamanho fixo.'], c:0, e:'Por isso não há fragmentação interna.'},
+    {q:'A compactação (relocação) da memória:', a:['move os programas para reunir todas as áreas livres em uma só.','junta apenas áreas livres que já são vizinhas.','apaga os programas que estão em espera.','divide as áreas livres em partições fixas.','é feita pelo programador, como no overlay.'], c:0, e:'É eficaz, mas cara: os programas param durante a cópia.'},
+    {q:'Áreas livres de 10, 4, 20, 18, 7, 9, 12 e 15 KB, nessa ordem. Para um programa de 9 KB, o best-fit escolhe a área de:', a:['9 KB','10 KB','20 KB','12 KB','4 KB'], c:0, e:'O best-fit escolhe a menor área em que o programa cabe; a de 9 KB cabe exatamente.'},
+    {q:'Com as mesmas áreas (10, 4, 20, 18, 7, 9, 12 e 15 KB), o worst-fit coloca um programa de 12 KB na área de:', a:['20 KB','12 KB','15 KB','18 KB','10 KB'], c:0, e:'O worst-fit escolhe sempre a maior área livre.'},
+    {q:'O first-fit é considerado a estratégia mais rápida porque:', a:['para a busca na primeira área livre em que o programa cabe.','sempre escolhe a maior área.','não precisa de lista de áreas livres.','compacta a memória a cada alocação.','escolhe a área de tamanho exato.'], c:0, e:'Best-fit e worst-fit precisam examinar a lista toda (ou mantê-la ordenada por tamanho).'},
+    {q:'No swapping, a relocação dinâmica é necessária porque:', a:['o processo trazido de volta do disco pode ser carregado em outro endereço.','o processo é dividido em módulos pelo programador.','o disco não guarda endereços.','as partições são fixas.','o processo precisa voltar sempre ao mesmo lugar.'], c:0, e:'O registrador de relocação (base) é ajustado para o novo endereço.'}
+  ];
+  const ol = $('#qz'); const L = 'ABCDE'; let ok = 0, bad = 0;
+  $('#qz-t').textContent = Q.length;
+  function update(){
+    const n = ok + bad;
+    $('#qz-ok').textContent = ok; $('#qz-bad').textContent = bad; $('#qz-n').textContent = n;
+    $('#qz-mg').style.width = (ok / Q.length * 100) + '%'; $('#qz-mr').style.width = (bad / Q.length * 100) + '%';
+    const fin = $('#qz-final');
+    if(n === Q.length){
+      const pct = Math.round(ok / Q.length * 100);
+      $('#qz-ft').textContent = `Você acertou ${ok} de ${Q.length} (${pct}%).`;
+      $('#qz-fp').textContent = pct >= 80 ? 'Ótimo domínio do capítulo. Tente agora responder as questões abertas sem consultar o texto.' : pct >= 60 ? 'Bom resultado. Releia as explicações das questões que errou e as seções indicadas.' : 'Vale revisar o capítulo: releia as seções das questões erradas, use os simuladores e clique em Refazer.';
+      fin.hidden = false;
+    } else fin.hidden = true;
+  }
+  function build(){
+    ol.innerHTML = ''; ok = 0; bad = 0;
+    const shuf = n => { const r = [...Array(n).keys()]; for(let i = n - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [r[i], r[j]] = [r[j], r[i]]; } return r; };
+    const cur = Q.map(it => { const idx = shuf(it.a.length); return {...it, a: idx.map(i => it.a[i]), c: idx.indexOf(it.c)}; });
+    window.__Q = cur;
+    cur.forEach((it) => {
+      const li = el('li');
+      li.appendChild(el('div', {class:'qh'}, `<p>${it.q}</p>`));
+      const alts = el('div', {class:'alts'});
+      it.a.forEach((txt, j) => {
+        const b = el('button', {type:'button', class:'alt'}, `<span class="k">${L[j]}</span><span>${txt}</span>`);
+        b.addEventListener('click', () => {
+          const right = j === it.c;
+          $$('.alt', alts).forEach((x, k) => { x.disabled = true; if(k === it.c) x.classList.add('right'); });
+          if(!right) b.classList.add('wrong');
+          right ? ok++ : bad++;
+          li.appendChild(el('p', {class:'fb ' + (right ? 'ok' : 'bad'), role:'status'}, `<b>${right ? 'Correto!' : 'Incorreto.'}</b> ${right ? '' : 'A resposta certa é ' + L[it.c] + '. '}${it.e}`));
+          update();
+        });
+        alts.appendChild(b);
+      });
+      li.appendChild(alts); ol.appendChild(li);
+    });
+    update();
+  }
+  $('#qz-reset').addEventListener('click', () => { build(); $('#ex-b').scrollIntoView({behavior:'smooth'}); });
+  build();
+})();
+
+</script>
+</body></html>
