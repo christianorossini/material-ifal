@@ -428,15 +428,16 @@ main > section{min-width:0}
 <section class="sec" id="p2">
   <div class="sec-head"><span class="num">Parte 2 · 8 min</span><h2>Para onde vai a memória</h2></div>
   <ol class="steps-list">
-    <li>Pressione <kbd>Win</kbd>+<kbd>R</kbd>, digite <code>resmon</code> e pressione <kbd>Enter</kbd> para abrir o Monitor de Recursos.</li>
-    <li>Vá à aba <span class="ui">Memória</span>. Na parte de baixo há uma barra colorida, a <b>Memória Física</b>.</li>
-    <li>Anote o valor de cada parte da barra.</li>
+    <li>No Gerenciador de Tarefas, continue em <span class="ui">Desempenho</span> › <span class="ui">Memória</span>.</li>
+    <li>Abaixo do gráfico há uma barra horizontal, a <b>Composição da memória</b>. Passe o mouse sobre cada parte da barra: aparecem o nome e o tamanho (<b>Em uso</b>, <b>Modificada</b>, <b>Em espera</b> e <b>Livre</b>).</li>
+    <li>O valor de <b>Hardware reservado</b> aparece no texto abaixo da barra.</li>
+    <li>Anote os valores na tabela.</li>
   </ol>
   <div class="scroll wide"><table class="fill">
     <thead><tr><th>Hardware reservado (MB)</th><th>Em uso (MB)</th><th>Modificada (MB)</th><th>Em espera (MB)</th><th>Livre (MB)</th></tr></thead>
     <tbody><tr><td></td><td></td><td></td><td></td><td></td></tr></tbody>
   </table></div>
-  <div class="note"><span class="lbl">Dica</span><p>Passe o mouse sobre cada parte da barra: o Monitor de Recursos explica o que ela significa.</p></div>
+  <div class="note"><span class="lbl">Dica</span><p>Os valores podem aparecer em GB; converta multiplicando por 1.024. Se o seu computador permitir, o Monitor de Recursos (<code>resmon</code>, aba Memória) mostra a mesma barra com os valores escritos, mas em muitos laboratórios ele exige permissão de administrador.</p></div>
   <div class="q"><p><b>2.</b> Em geral, <b>Livre</b> é pequeno e <b>Em espera</b> é grande. Em espera é memória com dados de disco guardados em cache, que o Windows entrega na hora a quem pedir. O Windows está desperdiçando a memória ou aproveitando-a? Explique.</p><div class="lines"></div></div>
 </section>
 
