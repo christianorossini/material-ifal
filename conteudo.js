@@ -256,8 +256,18 @@ const MENU = [
                   {titulo: "Apresentação de Gerência de memória", tipo: "PDF", link: "so/apresentacoes/cap9-gerencia-memoria.pdf"},                  
                 ]
               },
-              
-
+              { 
+                nome: "Apostilas", 
+                itens: [ 
+                  {titulo: "Gerência de memória", tipo: "HTML", link: "so/apostila-gerencia-memoria.html"},
+                ]
+              },              
+              { 
+                nome: "Práticas de laboratório", 
+                itens: [ 
+                  { titulo: "Práticas com Gerência de Memória", descricao: "Práticas", tipo: "HTML", link: "so/lab/lab-memoria.html"},                  
+                ]
+              },
             ]
           },
 
