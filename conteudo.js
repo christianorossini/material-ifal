@@ -245,7 +245,21 @@ const MENU = [
             ]
           },
         
-       
+          {
+            id: "gerencia-memoria",
+            titulo: "Gerência de Memória",
+            descricao: "Gerência de memória, alocação e liberação de memória",
+            pastas: [
+              { 
+                nome: "Apresentações", 
+                itens: [ 
+                  {titulo: "Apresentação de Gerência de memória", tipo: "PDF", link: "so/apresentacoes/cap9-gerencia-memoria.pdf"},                  
+                ]
+              },
+              
+
+            ]
+          },
 
           {
             id: "sistemas-de-arquivos",
