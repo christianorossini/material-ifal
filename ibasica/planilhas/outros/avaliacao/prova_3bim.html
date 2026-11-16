@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Prova do 3º Bimestre · Calc</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+html{color-scheme:light}
+body{margin:0}
+/* Layout: coluna única; passos numerados como linhas de planilha; consulta em fichas filtráveis. */
+:root{
+  --bg:#f2f6f8; --surface:#ffffff; --fg:#14232c; --muted:#56666f; --line:#d3dee4;
+  --accent:#16708f; --accent-ink:#ffffff; --cell:#fff8d6; --cell-line:#e8d98a; --warn:#a4400f;
+  --easy:#2e7d32; --mid:#8a6a00; --hard:#b3261e;
+  --f-display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f171b; --surface:#16222a; --fg:#e2ecf0; --muted:#97a9b2; --line:#283a44;
+  --accent:#5cc0e0; --accent-ink:#082029; --cell:#2e2a14; --cell-line:#5a5124; --warn:#f0965f;
+  --easy:#7fd08a; --mid:#e5c45a; --hard:#f08a80; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f171b; --surface:#16222a; --fg:#e2ecf0; --muted:#97a9b2; --line:#283a44;
+  --accent:#5cc0e0; --accent-ink:#082029; --cell:#2e2a14; --cell-line:#5a5124; --warn:#f0965f;
+  --easy:#7fd08a; --mid:#e5c45a; --hard:#f08a80; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font:400 1.05rem/1.6 var(--f-body)}
+.wrap{max-width:880px;margin:0 auto;padding-block:40px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:44px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:clamp(2rem,6vw,3rem);font-weight:800;letter-spacing:-.02em}
+h2{font-size:1.45rem;font-weight:800}
+h3{font-size:1.08rem;font-weight:600}
+p{margin:0}
+a{color:var(--accent)}
+.eyebrow{font:500 .78rem/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+header{display:grid;gap:14px}
+.lead{color:var(--muted);max-width:64ch}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--surface)}
+.facts div{padding:12px 14px;border-right:1px solid var(--line);display:grid;gap:2px;min-width:0}
+.facts div:last-child{border-right:0}
+.facts span{font:500 .72rem/1.2 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.facts b{font-family:var(--f-display);font-size:1.15rem}
+.btn{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:var(--accent-ink);text-decoration:none;padding:11px 18px;border-radius:6px;border:0;font:700 1rem var(--f-body);cursor:pointer}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:transparent;color:var(--accent);border:1.5px solid var(--accent)}
+.btn[aria-disabled="true"]{opacity:.55;cursor:not-allowed}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+section{display:grid;gap:16px}
+.steps{display:grid;border:1px solid var(--line);border-radius:6px;background:var(--surface);overflow:hidden}
+.step{display:grid;grid-template-columns:52px 1fr;border-top:1px solid var(--line)}
+.step:first-child{border-top:0}
+.rn{font:500 .9rem var(--f-mono);color:var(--muted);background:var(--bg);border-right:1px solid var(--line);display:flex;justify-content:center;padding-top:20px}
+.sc{padding:18px 20px 20px;display:grid;gap:10px;min-width:0}
+ul,ol{margin:0;padding-left:1.2em;display:grid;gap:6px}
+li::marker{color:var(--accent)}
+code,.file{font-family:var(--f-mono);font-size:.88em;background:var(--cell);border:1px solid var(--cell-line);padding:1px 6px;border-radius:3px;overflow-wrap:anywhere}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.row label{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+input[type=text],select{font:inherit;padding:7px 10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg);max-width:100%}
+.copy{font:700 .85rem var(--f-body);background:transparent;color:var(--accent);border:1.5px solid var(--accent);border-radius:4px;padding:5px 10px;cursor:pointer}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;background:var(--surface);font-size:.97rem}
+th,td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top}
+th{background:var(--bg);font:500 .75rem/1.3 var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.lv{font:700 .72rem/1 var(--f-mono);letter-spacing:.05em;padding:4px 8px;border-radius:999px;border:1.5px solid currentColor;white-space:nowrap}
+.lv.f{color:var(--easy)} .lv.m{color:var(--mid)} .lv.d{color:var(--hard)}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.rule{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px;display:grid;gap:6px;align-content:start}
+.rule .k{font:500 .72rem/1.2 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.rule p{font-size:.97rem;line-height:1.5}
+.ref-tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.chip{font:700 .85rem var(--f-body);background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+details.fn{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:0;min-width:0}
+details.fn summary{cursor:pointer;padding:14px 16px;display:grid;gap:4px;list-style:none}
+details.fn summary::-webkit-details-marker{display:none}
+details.fn summary .nm{font:700 1.02rem var(--f-mono);color:var(--accent)}
+details.fn summary .what{color:var(--muted);font-size:.93rem;line-height:1.4}
+details.fn[open] summary{border-bottom:1px solid var(--line)}
+details.fn .body{padding:12px 16px 16px;display:grid;gap:8px;font-size:.95rem}
+details.fn .tag{font:500 .68rem/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.empty{color:var(--muted);font-style:italic}
+.note{border-left:3px solid var(--warn);padding:4px 0 4px 14px;display:grid;gap:6px}
+footer{color:var(--muted);font-size:.9rem;border-top:1px solid var(--line);padding-top:16px}
+@media (max-width:480px){.step{grid-template-columns:38px 1fr}.sc{padding:16px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">IFAL · Informática Aplicada · LibreOffice Calc</div>
+    <h1>Prova do 3º bimestre: resolvendo problemas com planilhas</h1>
+    <p class="lead">Você vai ajudar o Seu Mário, dono da Sorveteria Polo Norte, a entender um mês de vendas. São 10 questões na própria planilha, com o mesmo conteúdo do trabalho em trio (Módulos 1, 2 e 3).</p>
+    <div class="facts">
+      <div><span>Valor</span><b>0 a 10 pontos</b></div>
+      <div><span>Formato</span><b>Individual</b></div>
+      <div><span>Tempo</span><b>1 hora</b></div>
+    </div>
+  </header>
+
+  <section aria-labelledby="passos">
+    <h2 id="passos">Passo a passo</h2>
+    <div class="steps">
+      <div class="step"><div class="rn">1</div><div class="sc">
+        <h3>Leia estas instruções até o fim</h3>
+        <p>Antes de abrir a planilha, leia as regras e dê uma olhada na área de consulta de funções, mais abaixo. Ela pode ser usada durante a prova.</p>
+        <p><b>Já no começo,</b> abra o formulário de envio (passo 4) e faça login na sua conta Google. Deixe essa aba aberta: no fim, é só anexar o arquivo e enviar.</p>
+      </div></div>
+
+      <div class="step"><div class="rn">2</div><div class="sc">
+        <h3>Baixe a planilha da prova</h3>
+        <div class="row"><a class="btn" id="btnPlan" download>Baixar a planilha da prova (.ods)</a></div>
+        <p>Abra o arquivo no <b>LibreOffice Calc</b>, versão 26.2 ou mais recente. Não use o Google Planilhas.</p>
+      </div></div>
+
+      <div class="step"><div class="rn">3</div><div class="sc">
+        <h3>Resolva as 10 questões</h3>
+        <ul>
+          <li>A aba <b>Enunciado</b> traz a história, as 10 questões (1,0 ponto cada) e o critério de correção de cada uma. Preencha seu <b>nome</b> e sua <b>turma</b> nas células amarelas do topo.</li>
+          <li>A aba <b>Vendas</b> tem os dados (colunas A a H), a coluna I já calculada (cinza), a tabela de preços (verde) e os quadros com as células amarelas para você preencher.</li>
+          <li>Comece pelas colunas (questões 2, 3, 4 e 6) e depois faça os quadros: eles dependem dessas colunas.</li>
+        </ul>
+      </div></div>
+
+      <div class="step"><div class="rn">4</div><div class="sc">
+        <h3>Salve e envie pelo formulário do Google</h3>
+        <p>Salve no formato <code>.ods</code> com este nome. Preencha abaixo para gerar o seu:</p>
+        <div class="row">
+          <label for="fTurma">Turma <select id="fTurma"></select></label>
+          <label for="fNome">Nome e sobrenome <input type="text" id="fNome" placeholder="Ana Silva" autocomplete="off"></label>
+        </div>
+        <div class="row"><span class="file" id="fname">Prova3B_Turma_NomeSobrenome.ods</span><button class="copy" id="copyBtn" type="button">Copiar nome</button></div>
+        <div class="row"><a class="btn" id="btnForm" target="_blank" rel="noopener">Abrir o formulário de envio</a></div>
+        <ol>
+          <li>Entre com a sua <b>conta Google</b> (o formulário pede login para receber arquivos).</li>
+          <li>Preencha <b>nome completo</b> e <b>turma</b>.</li>
+          <li>Em <b>Adicionar arquivo</b>, escolha a sua planilha <code>.ods</code> e aguarde o envio terminar.</li>
+          <li>Clique em <b>Enviar</b> e espere a mensagem de confirmação na tela.</li>
+        </ol>
+        <ul>
+          <li>Antes de enviar, confira: nome e turma preenchidos na planilha e o preço da cobertura (P5) de volta a <b>R$ 2,00</b>.</li>
+          <li>Envie <b>uma única vez</b>, antes de o tempo acabar. Envios depois do horário não serão corrigidos.</li>
+        </ul>
+        <div class="note">
+          <p><b>Não conseguiu fazer login?</b> Não perca tempo tentando de novo:</p>
+          <ol>
+            <li>Na pasta <b>Meus documentos</b> (ou <b>Documentos</b>) do computador, crie uma pasta com o nome <code>Avaliacao_NomeSobrenome</code>. Exemplo: <code>Avaliacao_AnaSilva</code>.</li>
+            <li>Salve a sua planilha da prova dentro dessa pasta, com o nome de sempre (<code>Prova3B_Turma_NomeSobrenome.ods</code>).</li>
+            <li>Avise o professor antes de sair e <b>não desligue nem apague nada</b> no computador. O professor vai recolher o arquivo.</li>
+          </ol>
+        </div>
+      </div></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="regras">
+    <h2 id="regras">Regras</h2>
+    <div class="rules">
+      <div class="rule"><span class="k">Individual</span><p>Sem conversa com colegas e sem celular. Pode consultar só esta página.</p></div>
+      <div class="rule"><span class="k">Só fórmulas</span><p>Número digitado no lugar de fórmula vale <b>zero</b>.</p></div>
+      <div class="rule"><span class="k">Recurso pedido</span><p>Resultado certo obtido sem o recurso indicado na questão vale no máximo <b>metade</b>.</p></div>
+      <div class="rule"><span class="k">Preço na célula</span><p>Use as células da tabela de preços travadas com <code>$</code>, nunca o número digitado.</p></div>
+      <div class="rule"><span class="k">Não altere</span><p>Os dados das colunas A a I e a tabela de preços (só a simulação da Q10 muda P5, que deve voltar a R$ 2,00).</p></div>
+      <div class="rule"><span class="k">Atenção ao tempo</span><p>Comece pelas colunas (Q2, Q3, Q4 e Q6). Deixe 5 minutos para salvar e enviar.</p></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="consulta">
+    <h2 id="consulta">Consulta: funções e recursos da prova</h2>
+    <p class="lead">Toque numa ficha para ver a sintaxe e um exemplo. Os exemplos usam outras situações, não as respostas da prova.</p>
+    <div class="ref-tools">
+      <label for="q" class="sr" style="position:absolute;left:-9999px">Buscar</label>
+      <input type="text" id="q" placeholder="Buscar: SE, média, $, cor…" autocomplete="off" style="flex:1 1 220px">
+      <div class="row" id="cats"></div>
+    </div>
+    <div class="cards" id="cards"></div>
+    <p class="empty" id="empty" hidden>Nada encontrado. Tente outra palavra.</p>
+  </section>
+
+  <section aria-labelledby="dicas">
+    <h2 id="dicas">Últimas dicas</h2>
+    <div class="note">
+      <p>Separador de argumentos no Calc em português: <b>ponto e vírgula</b> ( ; ). Texto dentro da fórmula vai <b>entre aspas</b>: <code>"Sim"</code>.</p>
+      <p>Escreva a fórmula na linha 2, confira o resultado e só então copie para baixo com a alça de preenchimento.</p>
+      <p>Teste rápido: mude um preço na tabela. Se as colunas e os quadros mudarem sozinhos, suas fórmulas estão certas. Depois volte o valor.</p>
+    </div>
+  </section>
+
+  <footer>Prof. Christiano Rossini · IFAL Campus Maceió</footer>
+</div>
+
+<script>
+const CONFIG = {
+  planilha: "Prova3B_Sorveteria_ALUNO.ods",
+  formulario: "https://forms.gle/f45Sz2WbFqBhkGod7",
+  turmas: ["211C", "711C", "712C"]
+};
+
+/* configuração */
+function link(id, url, offText){ const a = document.getElementById(id);
+  if(url){ a.href = url; } else { a.removeAttribute("href"); a.setAttribute("aria-disabled","true"); a.textContent += offText; } }
+link("btnPlan", CONFIG.planilha, " (em breve)");
+link("btnForm", CONFIG.formulario, " (o link será liberado no dia da prova)");
+
+/* nome do arquivo */
+const selT = document.getElementById("fTurma"), inpN = document.getElementById("fNome"), fname = document.getElementById("fname");
+selT.innerHTML = '<option value="Turma">escolha</option>' + CONFIG.turmas.map(t => `<option>${t}</option>`).join("");
+function semAcento(s){ return s.normalize("NFD").replace(/[̀-ͯ]/g, ""); }
+function gera(){ const nome = semAcento(inpN.value).trim().split(/\s+/).filter(Boolean).map(w => w[0].toUpperCase() + w.slice(1).toLowerCase()).join("").replace(/[^A-Za-z0-9]/g, "");
+  fname.textContent = `Prova3B_${selT.value}_${nome || "NomeSobrenome"}.ods`; }
+selT.onchange = gera; inpN.oninput = gera;
+document.getElementById("copyBtn").addEventListener("click", e => { const b = e.currentTarget, t = fname.textContent;
+  const sel = () => { const r = document.createRange(); r.selectNodeContents(fname); const s = getSelection(); s.removeAllRanges(); s.addRange(r); };
+  try { navigator.clipboard.writeText(t).then(() => { b.textContent = "Copiado"; setTimeout(() => b.textContent = "Copiar nome", 1500); }, sel); } catch(_) { sel(); } });
+
+/* consulta */
+const REF = [
+ {c:"Básico", n:"Fórmula", w:"Toda conta começa com =", s:"=A2+B2   =A2-B2   =A2*B2   =A2/B2", e:"Preço com taxa: =C2+D2. Valor de 3 cadernos: =B2*3.", d:"Os sinais são + (somar), - (subtrair), * (multiplicar) e / (dividir). Use parênteses para mudar a ordem: =(A2+B2)*2."},
+ {c:"Básico", n:"Referência absoluta ($)", w:"Trava uma célula para ela não “andar” ao copiar", s:"$A$1   (atalho: Shift + F4)", e:"Cada item × preço do frete em H1: =C2*$H$1. Ao copiar para baixo, C2 vira C3, C4… e $H$1 continua $H$1.", d:"Sem o $, ao copiar a fórmula para baixo o endereço desce junto e passa a apontar para uma célula vazia."},
+ {c:"Básico", n:"Alça de preenchimento", w:"Copia a fórmula para as linhas de baixo", s:"Quadradinho no canto inferior direito da célula", e:"Escreva a fórmula em D2, confira, e arraste a alça (ou dê duplo clique nela) até a última linha.", d:"Antes de copiar, confira se a fórmula da primeira linha está certa."},
+ {c:"Funções básicas", n:"SOMA", w:"Soma um intervalo", s:"=SOMA(intervalo)", e:"Total das notas: =SOMA(B2:B31).", d:"Intervalo é escrito com dois-pontos: B2:B31 vai da B2 até a B31."},
+ {c:"Funções básicas", n:"MÉDIA", w:"Média dos números do intervalo", s:"=MÉDIA(intervalo)", e:"Média da turma: =MÉDIA(E2:E31).", d:"Células vazias e textos são ignorados."},
+ {c:"Funções básicas", n:"MÁXIMO e MÍNIMO", w:"Maior e menor valor do intervalo", s:"=MÁXIMO(intervalo)   =MÍNIMO(intervalo)", e:"Maior nota: =MÁXIMO(E2:E31). Menor: =MÍNIMO(E2:E31).", d:"Depois de achar o maior valor, olhe na mesma linha a quem ele pertence."},
+ {c:"Funções básicas", n:"CONT.NÚM", w:"Conta quantas células têm número", s:"=CONT.NÚM(intervalo)", e:"Quantos alunos têm nota lançada: =CONT.NÚM(E2:E31).", d:"Conta só números. Para contar textos com um critério, use CONT.SE."},
+ {c:"Lógica", n:"Comparações", w:"Perguntas de sim ou não", s:"=   <>   >   <   >=   <=", e:"=E2>=7 responde VERDADEIRO para nota 7 ou mais. =C2=\"Manhã\" compara texto (entre aspas).", d:">= quer dizer “maior ou igual”: inclui o próprio limite. Cuidado com os limites!"},
+ {c:"Lógica", n:"SE", w:"Escolhe entre duas respostas", s:"=SE(teste; se verdadeiro; se falso)", e:"=SE(E2>=6;\"Aprovado\";\"Recuperação\")   ·   =SE(C2=\"Sim\";$H$2;0)", d:"Os três argumentos são separados por ponto e vírgula. Textos vão entre aspas; números e células, sem aspas."},
+ {c:"Com critério", n:"CONT.SE", w:"Conta só as células que atendem a um critério", s:"=CONT.SE(onde procurar; critério)", e:"Quantos alunos da manhã: =CONT.SE($C$2:$C$31;G2), com “Manhã” escrito em G2.", d:"Use a célula com o nome como critério e trave o intervalo com $ para copiar a fórmula para as outras linhas."},
+ {c:"Com critério", n:"SOMASE", w:"Soma só as linhas que atendem a um critério", s:"=SOMASE(onde procurar; critério; o que somar)", e:"Total de faltas da manhã: =SOMASE($C$2:$C$31;G2;$D$2:$D$31).", d:"O critério é testado na 1ª coluna e o número é pego na mesma linha da 3ª. Os dois intervalos têm o mesmo tamanho."},
+ {c:"Com critério", n:"MÉDIASE", w:"Média só das linhas que atendem a um critério", s:"=MÉDIASE(onde procurar; critério; de onde tirar a média)", e:"Média da turma da manhã: =MÉDIASE($C$2:$C$31;G2;$E$2:$E$31).", d:"Mesma anatomia do SOMASE. É o mesmo que SOMASE ÷ CONT.SE."},
+ {c:"Aparência", n:"Formato moeda", w:"Mostra os valores como R$", s:"Formatar › Células › Números › Moeda", e:"Selecione a coluna e escolha Moeda. O valor continua um número.", d:"Não digite “R$” junto com o número: ele vira texto e as contas param de funcionar."},
+ {c:"Aparência", n:"Cabeçalho e congelar", w:"Destacar e fixar a primeira linha", s:"Negrito e Plano de fundo · Exibir › Congelar células › Congelar primeira linha", e:"Selecione a linha 1, aplique negrito e uma cor de fundo. Depois congele a primeira linha.", d:"Com a linha congelada, o cabeçalho continua visível quando você rola até a linha 101."},
+ {c:"Aparência", n:"Formatação condicional: Condição", w:"Pinta a célula que atende a uma regra", s:"Formatar › Condicional › Condição", e:"Selecione a coluna, escolha “O valor da célula é” · “igual a” · \"Recuperação\" e o estilo Ruim. Use Adicionar para uma 2ª regra.", d:"A cor muda sozinha quando o valor muda. Pintar à mão não vale."}
+];
+const cats = ["Todas", ...new Set(REF.map(r => r.c))]; let cat = "Todas";
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const catsEl = document.getElementById("cats");
+catsEl.innerHTML = cats.map(c => `<button class="chip" type="button" aria-pressed="${c===cat}">${c}</button>`).join("");
+catsEl.querySelectorAll(".chip").forEach(b => b.onclick = () => { cat = b.textContent; catsEl.querySelectorAll(".chip").forEach(x => x.setAttribute("aria-pressed", x === b)); draw(); });
+const norm = s => semAcento(String(s)).toLowerCase();
+function draw(){ const q = norm(document.getElementById("q").value.trim());
+  const list = REF.filter(r => (cat === "Todas" || r.c === cat) && (!q || norm(r.n + " " + r.w + " " + r.s + " " + r.e + " " + r.d).includes(q)));
+  document.getElementById("cards").innerHTML = list.map(r => `<details class="fn"><summary><span class="tag">${esc(r.c)}</span><span class="nm">${esc(r.n)}</span><span class="what">${esc(r.w)}</span></summary>
+    <div class="body"><div><span class="tag">Como escrever</span><br><code>${esc(r.s)}</code></div><div><span class="tag">Exemplo</span><br>${esc(r.e)}</div><div><span class="tag">Atenção</span><br>${esc(r.d)}</div></div></details>`).join("");
+  document.getElementById("empty").hidden = list.length > 0; }
+document.getElementById("q").oninput = draw; draw();
+</script>
+</body>
+</html>
