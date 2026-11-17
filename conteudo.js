@@ -261,7 +261,7 @@ const MENU = [
                 nome: "Apostilas", 
                 itens: [ 
                   {titulo: "Apostila de Gerência de Memória", tipo: "HTML", link: "so/apostila-gerencia-memoria.html"},
-                  {titulo: "Apostila de Gerência de Memória Virtual", tipo: "HTML", link: "so/apostila-gerencia-memoria-virtual.html"},
+                  {titulo: "Apostila de Gerência de Memória Virtual", tipo: "HTML", link: "so/apostila-memoria-virtual.html"},
                 ]
               },              
               { 
