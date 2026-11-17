@@ -267,7 +267,8 @@ const MENU = [
               { 
                 nome: "Práticas de laboratório", 
                 itens: [ 
-                  { titulo: "Práticas com Gerência de Memória", descricao: "Práticas", tipo: "HTML", link: "https://drive.google.com/file/d/1ZY3fbix2jiekbua59Wmr0gzMbr4iZvxy/view?usp=sharing"},                  
+                  { titulo: "Práticas com Gerência de Memória", descricao: "Práticas", tipo: "HTML", link: "so/lab/lab-memoria.html"},                  
+                  { titulo: "Práticas com Gerência de Memória Virtual", descricao: "Práticas", tipo: "HTML", link: "https://drive.google.com/file/d/1ZY3fbix2jiekbua59Wmr0gzMbr4iZvxy/view?usp=sharing"},                  
                 ]
               },
             ]
