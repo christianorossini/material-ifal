@@ -1,0 +1,954 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apostila de Memória Virtual</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --bg:#F2F4EE; --surface:#FBFCF8; --surface-2:#E8EDE2; --ink:#17231A; --ink-2:#4A5A4C; --line:#D3DCCB;
+  --accent:#2E6B1E; --accent-ink:#FFFFFF; --accent-soft:#DDEBD3;
+  --run:#2E6B1E; --run-soft:#DDEBD3;
+  --ready:#9A6200; --ready-soft:#FBEBC8;
+  --wait:#2F5C99; --wait-soft:#DCE6F4;
+  --neutral:#646E61; --neutral-soft:#E4E7E1;
+  --ok:#1F7A3A; --ok-soft:#D9F0DF; --bad:#B3261E; --bad-soft:#F8DEDB;
+  --display:"Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body:"Literata", Georgia, "Times New Roman", serif;
+  --mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0F1510; --surface:#172019; --surface-2:#1F2A21; --ink:#E4EBE0; --ink-2:#A6B3A4; --line:#2F3D31;
+    --accent:#7CC25B; --accent-ink:#0F1510; --accent-soft:#233A1C;
+    --run:#7CC25B; --run-soft:#1F3519; --ready:#E9B04A; --ready-soft:#3A2E14;
+    --wait:#8DB3EA; --wait-soft:#1B2A40; --neutral:#9AA397; --neutral-soft:#262C25;
+    --ok:#6FD08C; --ok-soft:#173222; --bad:#FF8A80; --bad-soft:#3D1B18;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0F1510; --surface:#172019; --surface-2:#1F2A21; --ink:#E4EBE0; --ink-2:#A6B3A4; --line:#2F3D31;
+  --accent:#7CC25B; --accent-ink:#0F1510; --accent-soft:#233A1C;
+  --run:#7CC25B; --run-soft:#1F3519; --ready:#E9B04A; --ready-soft:#3A2E14;
+  --wait:#8DB3EA; --wait-soft:#1B2A40; --neutral:#9AA397; --neutral-soft:#262C25;
+  --ok:#6FD08C; --ok-soft:#173222; --bad:#FF8A80; --bad-soft:#3D1B18;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto} *{transition:none!important; animation:none!important}}
+body{background:var(--bg); color:var(--ink); font-family:var(--body); font-size:17px; line-height:1.65; padding-inline:20px; padding-block:0 64px}
+h1,h2,h3,h4{font-family:var(--display); line-height:1.15; text-wrap:balance; margin:0}
+p{margin:0}
+a{color:var(--accent)}
+code,.mono{font-family:var(--mono); font-size:.88em}
+button{font:inherit; cursor:pointer}
+:focus-visible{outline:3px solid var(--accent); outline-offset:2px; border-radius:4px}
+
+/* header */
+.top{max-width:1160px; margin:0 auto; padding-block:48px 36px; border-bottom:2px solid var(--ink); display:grid; gap:18px}
+.eyebrow{font-family:var(--display); font-size:13px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--accent)}
+.top h1{font-size:clamp(48px, 9vw, 104px); font-weight:800; letter-spacing:-.03em}
+.top h1 span{color:var(--accent)}
+.lede{font-size:20px; max-width:62ch; color:var(--ink-2)}
+.meta{display:flex; flex-wrap:wrap; gap:8px 24px; font-family:var(--display); font-size:14px; color:var(--ink-2)}
+.meta b{color:var(--ink)}
+
+/* layout */
+.layout{max-width:1160px; margin:0 auto; display:grid; grid-template-columns:230px minmax(0,1fr); gap:56px; padding-top:40px}
+nav.toc{position:sticky; top:calc(env(safe-area-inset-top, 0px) + 20px); align-self:start; font-family:var(--display); font-size:14px}
+nav.toc p{font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-2); margin-bottom:10px}
+nav.toc ol{list-style:none; margin:0; padding:0; display:grid; gap:2px; border-left:2px solid var(--line)}
+nav.toc a{display:grid; grid-template-columns:38px 1fr; padding:6px 10px; margin-left:-2px; border-left:2px solid transparent; color:var(--ink-2); text-decoration:none; line-height:1.3}
+nav.toc a span{font-variant-numeric:tabular-nums; color:var(--ink-2); font-weight:600}
+nav.toc a:hover{color:var(--ink)}
+nav.toc a.on{border-left-color:var(--accent); color:var(--ink); font-weight:600}
+nav.toc a.on span{color:var(--accent)}
+main{min-width:0; display:grid; gap:72px}
+@media (max-width:900px){
+  .layout{grid-template-columns:minmax(0,1fr); gap:28px; padding-top:24px}
+  nav.toc{position:static}
+  nav.toc ol{display:flex; overflow-x:auto; border-left:none; gap:6px; padding-bottom:6px}
+  nav.toc a{display:block; white-space:nowrap; border:1px solid var(--line); border-radius:999px; padding:6px 12px; margin:0; background:var(--surface)}
+  nav.toc a span{margin-right:6px}
+  nav.toc a.on{border-color:var(--accent)}
+}
+
+/* sections */
+.sec{display:grid; gap:20px; scroll-margin-top:24px}
+.sec > *{max-width:68ch}
+.sec > .wide{max-width:none}
+.sec-head{display:grid; gap:6px; padding-bottom:6px}
+.num{font-family:var(--display); font-weight:800; font-size:15px; color:var(--accent); letter-spacing:.06em}
+.sec h2{font-size:clamp(28px, 4vw, 38px); font-weight:700; letter-spacing:-.01em}
+.sec h3{font-size:21px; font-weight:700; margin-top:10px}
+.sec ul,.sec ol{margin:0; padding-left:1.3em; display:grid; gap:6px}
+dfn{font-style:normal; font-weight:600; background:linear-gradient(transparent 62%, var(--accent-soft) 62%)}
+.def{border:2px solid var(--ink); background:var(--surface); padding:18px 22px; display:grid; gap:6px}
+.def .lbl{font-family:var(--display); font-size:12px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--accent)}
+.def p{font-size:19px}
+.note{background:var(--surface-2); padding:14px 18px; border-radius:6px; font-size:16px; display:grid; gap:6px}
+.note .lbl{font-family:var(--display); font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-2)}
+pre.term{font-family:var(--mono); font-size:14px; line-height:1.55; background:#101A12; color:#D6E8CB; padding:14px 18px; border-radius:6px; overflow-x:auto; margin:0}
+pre.term .c{color:#8FA88A}
+
+/* lab widgets */
+.lab{border:1px solid var(--line); background:var(--surface); border-radius:10px; padding:20px; display:grid; gap:16px}
+.lab-head{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap}
+.tag{font-family:var(--display); font-size:11px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; background:var(--accent); color:var(--accent-ink); padding:3px 8px; border-radius:3px}
+.lab-head h4{font-size:18px; font-weight:700}
+.lab-hint{font-size:15px; color:var(--ink-2)}
+.btns{display:flex; flex-wrap:wrap; gap:8px}
+.btn{font-family:var(--display); font-size:14px; font-weight:600; border:1.5px solid var(--ink); background:var(--surface); color:var(--ink); padding:8px 14px; border-radius:6px; transition:background .15s, transform .1s}
+.btn:hover{background:var(--surface-2)}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--ink); color:var(--bg)}
+.btn.primary:hover{background:var(--accent); border-color:var(--accent); color:var(--accent-ink)}
+.btn.ghost{border-color:var(--line); color:var(--ink-2)}
+.btn[disabled]{opacity:.45; cursor:not-allowed}
+.msg{font-family:var(--display); font-size:15px; padding:10px 14px; border-radius:6px; background:var(--surface-2); color:var(--ink)}
+.msg.ok{background:var(--ok-soft); color:var(--ok)}
+.msg.bad{background:var(--bad-soft); color:var(--bad)}
+.chip{display:inline-block; font-family:var(--display); font-size:13px; font-weight:700; padding:2px 9px; border-radius:999px}
+.st-execucao{background:var(--run-soft); color:var(--run)}
+.st-pronto{background:var(--ready-soft); color:var(--ready)}
+.st-espera{background:var(--wait-soft); color:var(--wait)}
+.st-criacao,.st-terminado{background:var(--neutral-soft); color:var(--neutral)}
+.scroll{overflow-x:auto}
+</style>
+<style>
+/* 5.1 */
+.procs{display:grid; grid-template-columns:repeat(auto-fill, minmax(190px, 1fr)); gap:10px; min-height:84px}
+.proc{border:1px solid var(--line); border-left:5px solid var(--run); padding:10px 12px; background:var(--bg); display:grid; gap:2px; animation:pop .25s ease-out}
+.proc b{font-family:var(--display); font-size:15px}
+.proc span{font-family:var(--mono); font-size:12.5px; color:var(--ink-2)}
+.proc.pronto{border-left-color:var(--ready)} .proc.espera{border-left-color:var(--wait)}
+.empty{font-family:var(--display); font-size:14px; color:var(--ink-2); align-self:center}
+@keyframes pop{from{opacity:.2; transform:translateY(6px)} to{opacity:1; transform:none}}
+.prog{display:flex; align-items:center; gap:12px; flex-wrap:wrap}
+.file{font-family:var(--mono); font-size:14px; border:1.5px dashed var(--ink-2); padding:8px 12px; border-radius:6px}
+
+/* 5.2 diagram */
+.fig{margin:0; display:grid; gap:8px}
+.fig figcaption{font-family:var(--display); font-size:13px; color:var(--ink-2)}
+.fig svg{width:100%; height:auto; max-width:640px}
+.fig svg text{font-family:var(--display)} .fig svg text:not([fill]){fill:var(--ink)}
+.part{cursor:pointer}
+.part rect{transition:stroke-width .15s}
+.part:hover rect,.part:focus rect{stroke-width:4}
+
+/* 5.2.1 context switch */
+.cs{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px}
+@media (max-width:620px){.cs{grid-template-columns:minmax(0,1fr)}}
+.box{border:1.5px solid var(--line); border-radius:8px; padding:12px; background:var(--bg); display:grid; gap:8px; transition:border-color .2s, box-shadow .2s}
+.box h5{font-family:var(--display); font-size:14px; margin:0; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:8px}
+.box.cpu{border-color:var(--ink); background:var(--surface-2)}
+.box.flash{border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft)}
+.regs{display:grid; grid-template-columns:auto 1fr; gap:3px 12px; font-family:var(--mono); font-size:13.5px; font-variant-numeric:tabular-nums}
+.regs dt{color:var(--ink-2)} .regs dd{margin:0; text-align:right}
+.steps{display:flex; gap:6px; flex-wrap:wrap}
+.steps i{font-style:normal; font-family:var(--display); font-size:12px; font-weight:700; padding:3px 8px; border-radius:999px; background:var(--surface-2); color:var(--ink-2)}
+.steps i.on{background:var(--accent); color:var(--accent-ink)}
+
+/* 5.2.2 table */
+table.t{border-collapse:collapse; width:100%; font-size:15.5px}
+.t th{font-family:var(--display); text-align:left; font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-2); border-bottom:2px solid var(--ink); padding:8px 10px}
+.t td{border-bottom:1px solid var(--line); padding:10px; vertical-align:top}
+.t td:first-child{font-family:var(--display); font-weight:700; white-space:nowrap}
+
+/* 5.2.4 PCB */
+.pcbwrap{display:grid; grid-template-columns:minmax(0,300px) minmax(0,1fr); gap:20px; align-items:start}
+@media (max-width:620px){.pcbwrap{grid-template-columns:minmax(0,1fr)}}
+.pcb{list-style:none; margin:0; padding:0; border:2px solid var(--ink); border-radius:6px; overflow:hidden; font-family:var(--display); font-size:15px}
+.pcb li{padding:9px 14px; border-top:1px solid var(--line); transition:background .2s, color .2s}
+.pcb li.hd{background:var(--ink); color:var(--bg); font-family:var(--mono); font-size:14px; border-top:none}
+.pcb li.hit[data-part="hw"]{background:var(--wait-soft); color:var(--wait); font-weight:700}
+.pcb li.hit[data-part="sw"]{background:var(--run-soft); color:var(--run); font-weight:700}
+.pcb li.hit[data-part="ea"]{background:var(--ready-soft); color:var(--ready); font-weight:700}
+.pcb li.hit[data-part="ctl"]{background:var(--neutral-soft); color:var(--ink); font-weight:700}
+.btn.sel{background:var(--ink); color:var(--bg)}
+
+/* 5.3 cards */
+.states{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px}
+@media (max-width:700px){.states{grid-template-columns:minmax(0,1fr)}}
+.state{border-radius:8px; padding:16px; display:grid; gap:6px; align-content:start}
+.state h4{font-size:22px}
+.state small{font-family:var(--mono); font-size:12.5px; opacity:.85}
+.state p{font-size:15.5px}
+.state .an{font-size:14px; font-style:italic; border-top:1px solid currentColor; padding-top:8px; opacity:.9}
+.state.x{background:var(--run-soft); color:var(--run)} .state.x p{color:var(--ink)}
+.state.p{background:var(--ready-soft); color:var(--ready)} .state.p p{color:var(--ink)}
+.state.e{background:var(--wait-soft); color:var(--wait)} .state.e p{color:var(--ink)}
+
+/* 5.4 state machine */
+.smwrap{display:grid; grid-template-columns:minmax(0,1.6fr) minmax(0,1fr); gap:20px; align-items:start}
+@media (max-width:760px){.smwrap{grid-template-columns:minmax(0,1fr)}}
+.sm svg{width:100%; height:auto}
+.sm text{font-family:var(--display); fill:var(--ink); font-size:15px; font-weight:600}
+.sm .elbl{font-size:14px; font-weight:800; fill:var(--ink-2)}
+.node rect{fill:var(--surface); stroke:var(--line); stroke-width:2; transition:all .25s}
+.node.cur rect{stroke-width:3.5}
+.node.cur.n-criacao rect,.node.cur.n-terminado rect{fill:var(--neutral-soft); stroke:var(--neutral)}
+.node.cur.n-pronto rect{fill:var(--ready-soft); stroke:var(--ready)}
+.node.cur.n-execucao rect{fill:var(--run-soft); stroke:var(--run)}
+.node.cur.n-espera rect{fill:var(--wait-soft); stroke:var(--wait)}
+.edge{fill:none; stroke:var(--ink-2); stroke-width:2; opacity:.55; transition:all .25s}
+.edge.active{stroke:var(--accent); stroke-width:4; opacity:1}
+.mk{fill:var(--ink-2)} .mk-on{fill:var(--accent)}
+.pcbmini{font-family:var(--mono); font-size:13.5px; background:var(--bg); border:1.5px solid var(--line); border-radius:8px; padding:12px; display:grid; gap:4px}
+.log{list-style:none; margin:0; padding:0; font-family:var(--display); font-size:13.5px; display:grid; gap:4px; max-height:190px; overflow-y:auto}
+.log li{padding:5px 8px; background:var(--bg); border-radius:4px}
+.evbtns{display:grid; grid-template-columns:repeat(auto-fill, minmax(210px, 1fr)); gap:8px}
+.evbtns .btn{text-align:left}
+</style><style>
+/* 5.5 */
+.twocol{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:12px}
+@media (max-width:620px){.twocol{grid-template-columns:minmax(0,1fr)}}
+.card{border:1px solid var(--line); border-radius:8px; padding:16px; background:var(--surface); display:grid; gap:8px; align-content:start}
+.card h4{font-size:18px}
+.card p,.card li{font-size:15.5px}
+/* 5.6 bars */
+.bars{display:grid; gap:12px}
+.barrow{display:grid; grid-template-columns:110px minmax(0,1fr); gap:12px; align-items:center; font-family:var(--display); font-weight:700; font-size:14px}
+.bar{display:flex; height:30px; border-radius:5px; overflow:hidden}
+.bar i{display:block; height:100%}
+.bar .u{background:var(--run)} .bar .io{background:var(--wait); opacity:.45}
+.legend{display:flex; gap:18px; flex-wrap:wrap; font-family:var(--display); font-size:13px; color:var(--ink-2)}
+.legend span::before{content:""; display:inline-block; width:12px; height:12px; border-radius:3px; margin-right:6px; vertical-align:-1px; background:var(--run)}
+.legend span.io::before{background:var(--wait); opacity:.45}
+.cls{list-style:none; margin:0; padding:0; display:grid; gap:8px}
+.cls li{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:10px; align-items:center; padding:10px 12px; border:1px solid var(--line); border-radius:8px; background:var(--bg)}
+.cls li.ok{border-color:var(--ok); background:var(--ok-soft)}
+.cls li.bad{border-color:var(--bad); background:var(--bad-soft)}
+.cls .cfb{grid-column:1 / -1; font-size:14.5px}
+.cls .btn{padding:6px 10px; font-size:13px}
+/* 5.7 terminal */
+.termbox{background:#101A12; color:#D6E8CB; font-family:var(--mono); font-size:14px; border-radius:8px; padding:14px 16px; min-height:170px; display:grid; align-content:start; gap:2px; overflow-x:auto}
+.termbox .c{color:#8FA88A}
+.termbox .busy{color:#E9B04A}
+.cursor{display:inline-block; width:8px; height:15px; background:#D6E8CB; vertical-align:-2px; animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.flow{display:flex; align-items:center; gap:8px; flex-wrap:wrap; font-family:var(--display); font-size:14px}
+.flow b{border:1.5px solid var(--line); background:var(--surface); padding:6px 10px; border-radius:6px; font-weight:600}
+.flow b.p{background:var(--ink); color:var(--bg); border-color:var(--ink)}
+.flow em{font-style:normal; color:var(--ink-2)}
+/* 5.8 */
+.three{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px}
+@media (max-width:760px){.three{grid-template-columns:minmax(0,1fr)}}
+.card ol{padding-left:1.2em; display:grid; gap:4px}
+/* 5.9 tree */
+.tree ul{list-style:none; margin:0; padding-left:28px; position:relative; display:grid; gap:8px}
+.tree > ul{padding-left:0}
+.tree ul ul::before{content:""; position:absolute; left:10px; top:-8px; bottom:18px; border-left:2px solid var(--line)}
+.tree ul ul > li{position:relative}
+.tree ul ul > li::before{content:""; position:absolute; left:-18px; top:20px; width:16px; border-top:2px solid var(--line)}
+.tnode{display:inline-flex; align-items:center; gap:10px; border:1.5px solid var(--line); background:var(--bg); border-radius:8px; padding:6px 8px 6px 12px; font-family:var(--display); font-size:14px; transition:opacity .3s, transform .3s}
+.tnode b{font-size:15px}
+.tnode .rel{color:var(--ink-2); font-weight:500}
+.tnode button{border:1px solid var(--bad); color:var(--bad); background:transparent; border-radius:5px; font-family:var(--display); font-size:12px; font-weight:700; padding:3px 7px}
+.tnode.root{border-color:var(--run); background:var(--run-soft)}
+.tnode.ind{border-style:dashed}
+.gone{opacity:0; transform:scale(.9)}
+.treegrid{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,220px); gap:20px; align-items:start}
+@media (max-width:620px){.treegrid{grid-template-columns:minmax(0,1fr)}}
+/* threads figure */
+.thr{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:14px}
+@media (max-width:700px){.thr{grid-template-columns:minmax(0,1fr)}}
+.pbox{border:2px solid var(--line); border-radius:10px; padding:12px; display:grid; gap:6px; background:var(--surface)}
+.pbox.mt{border-color:var(--accent)}
+.pbox h5{font-family:var(--display); font-size:15px; margin:0}
+.seg{font-family:var(--display); font-size:13px; font-weight:600; padding:7px 9px; border-radius:6px; text-align:center}
+.seg.sw{background:var(--run-soft); color:var(--run)} .seg.hw{background:var(--wait-soft); color:var(--wait)} .seg.ea{background:var(--ready-soft); color:var(--ready)}
+.pair{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:8px}
+.trio{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:6px}
+.col{display:grid; gap:6px; align-content:start}
+.col small{font-family:var(--display); font-size:12px; font-weight:700; color:var(--ink-2); text-align:center}
+/* 5.10 */
+.svc{display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:8px; list-style:none; margin:0; padding:0}
+.svc li{border:1px solid var(--line); border-radius:8px; padding:10px 12px; background:var(--surface); font-family:var(--display); font-size:14.5px; font-weight:600; display:grid; gap:2px}
+.svc li span{font-family:var(--body); font-weight:400; font-size:13.5px; color:var(--ink-2)}
+/* 5.11 */
+.sig{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:16px; align-items:start}
+@media (max-width:700px){.sig{grid-template-columns:minmax(0,1fr)}}
+.opts{display:grid; gap:6px}
+.opt{display:flex; gap:10px; align-items:flex-start; padding:9px 11px; border:1.5px solid var(--line); border-radius:8px; background:var(--bg); cursor:pointer; font-size:15px}
+.opt:has(input:checked){border-color:var(--accent); background:var(--accent-soft)}
+.opt input{margin-top:5px; accent-color:var(--accent)}
+.opt code{font-weight:600}
+.switch{display:flex; gap:10px; align-items:center; font-family:var(--display); font-size:14.5px}
+.switch input{width:18px; height:18px; accent-color:var(--accent)}
+.path{display:flex; align-items:center; gap:6px; flex-wrap:wrap; font-family:var(--display); font-size:13.5px}
+.path b{padding:5px 9px; border-radius:6px; background:var(--surface-2); font-weight:600}
+.path b.hl{background:var(--accent); color:var(--accent-ink)}
+/* exercises */
+.ex-tabs{display:flex; gap:8px; flex-wrap:wrap}
+.oq{list-style:none; margin:0; padding:0; display:grid; gap:10px; counter-reset:q}
+.oq > li{counter-increment:q; border:1px solid var(--line); border-radius:8px; background:var(--surface); padding:14px 16px 14px 56px; position:relative; display:grid; gap:8px}
+.oq > li::before{content:counter(q); position:absolute; left:14px; top:12px; width:30px; height:30px; border-radius:50%; background:var(--ink); color:var(--bg); font-family:var(--display); font-weight:700; font-size:14px; display:grid; place-items:center}
+.oq p{font-size:16.5px}
+details summary{cursor:pointer; font-family:var(--display); font-size:13.5px; font-weight:600; color:var(--accent); width:fit-content}
+details[open] summary{margin-bottom:6px}
+details .ans{font-size:15px; color:var(--ink-2); display:grid; gap:4px}
+.score{position:sticky; top:calc(env(safe-area-inset-top, 0px) + 8px); z-index:2; display:flex; align-items:center; gap:14px; flex-wrap:wrap; background:var(--ink); color:var(--bg); padding:10px 16px; border-radius:8px; font-family:var(--display); font-size:14.5px}
+.score b{font-size:18px; font-variant-numeric:tabular-nums}
+.meter{flex:1; min-width:120px; height:8px; background:rgba(128,128,128,.35); border-radius:99px; overflow:hidden; display:flex}
+.meter i{display:block; height:100%; transition:width .3s}
+.meter .g{background:#6FD08C} .meter .r{background:#FF8A80}
+.score .btn{border-color:var(--bg); color:var(--bg); background:transparent; padding:5px 10px; font-size:13px}
+.qz{list-style:none; margin:0; padding:0; display:grid; gap:14px; counter-reset:c}
+.qz > li{counter-increment:c; border:1px solid var(--line); border-radius:10px; background:var(--surface); padding:16px; display:grid; gap:10px}
+.qz .qh{display:flex; gap:10px; align-items:baseline}
+.qz .qh::before{content:counter(c, decimal-leading-zero); font-family:var(--display); font-weight:800; color:var(--accent); font-size:14px; font-variant-numeric:tabular-nums}
+.qz .qh p{font-size:16.5px}
+.qz .alts{display:grid; gap:6px}
+.alt{display:grid; grid-template-columns:28px minmax(0,1fr); gap:8px; align-items:start; text-align:left; border:1.5px solid var(--line); background:var(--bg); color:var(--ink); border-radius:8px; padding:9px 12px; font-family:var(--body); font-size:15.5px; line-height:1.45}
+.alt:hover:not([disabled]){border-color:var(--ink)}
+.alt .k{font-family:var(--display); font-weight:700; font-size:13px; width:24px; height:24px; border-radius:50%; border:1.5px solid currentColor; display:grid; place-items:center; color:var(--ink-2)}
+.alt[disabled]{cursor:default}
+.alt.right{border-color:var(--ok); background:var(--ok-soft)} .alt.right .k{background:var(--ok); color:var(--surface); border-color:var(--ok)}
+.alt.wrong{border-color:var(--bad); background:var(--bad-soft)} .alt.wrong .k{background:var(--bad); color:var(--surface); border-color:var(--bad)}
+.fb{font-size:15px; padding:10px 12px; border-radius:6px}
+.fb.ok{background:var(--ok-soft)} .fb.bad{background:var(--bad-soft)}
+.fb b{font-family:var(--display)}
+.fb.ok b{color:var(--ok)} .fb.bad b{color:var(--bad)}
+.final{border:2px solid var(--ink); border-radius:10px; padding:18px; display:grid; gap:6px; background:var(--surface)}
+.final h4{font-size:22px}
+footer.end{max-width:1160px; margin:64px auto 0; padding-top:18px; border-top:1px solid var(--line); font-family:var(--display); font-size:13px; color:var(--ink-2)}
+body{margin:0}
+[hidden]{display:none!important}
+@media print{
+  :root{--bg:#FFFFFF; --surface:#FFFFFF}
+  body{font-size:11.5pt; padding-inline:0}
+  nav.toc,.btns,.evbtns,.score,#sm-log,#sm-msg,.lab-hint,.lab .msg,.final,.cursor{display:none!important}
+  .lab.hide-print{display:none!important}
+  .layout{grid-template-columns:minmax(0,1fr); gap:0; padding-top:16px}
+  main{gap:28px}
+  .top{padding-block:0 18px}
+  .sec{break-before:page}
+  #s1{break-before:auto}
+  .lab,.card,.def,.note,.win,figure,table,.oq > li,.qz > li,.states,.thr{break-inside:avoid}
+  pre.term{white-space:pre-wrap}
+  details summary{display:none}
+  .alt{padding:4px 10px}
+  .gab li{break-inside:avoid}
+  footer.end{margin-top:24px}
+}
+.gab{display:none}
+@media print{.gab{display:grid; gap:10px; break-before:page}}
+</style>
+</head><body>
+<style>
+/* ---- v2: quadros "No Windows" e componentes comuns ---- */
+.win{border:1.5px solid var(--wait); border-radius:8px; background:var(--surface); padding:16px 18px; display:grid; gap:10px}
+.win .lbl{font-family:var(--display); font-size:12px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--wait)}
+.win h4{font-size:17px}
+.win p,.win li{font-size:15.5px}
+.win ol,.win ul{margin:0; padding-left:1.3em; display:grid; gap:4px}
+.win kbd,.sec kbd{font-family:var(--mono); font-size:.82em; border:1px solid var(--line); border-bottom-width:2px; border-radius:4px; padding:0 5px; background:var(--bg)}
+.path2{font-family:var(--display); font-size:.92em; font-weight:600}
+pre.term.ps{background:#0F1A2B; color:#DCE6F4}
+pre.term.ps .c{color:#8DA2C0}
+.sub{font-family:var(--display); font-size:13px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-2)}
+.fig.big svg{max-width:760px}
+.sec > *, .lab > *{min-width:0}
+.seg2{display:flex; gap:8px; flex-wrap:wrap}
+.t.small td{font-size:14.5px}
+.three{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px}
+@media (max-width:760px){.three{grid-template-columns:minmax(0,1fr)}}
+/* linhas de tempo geradas por script */
+.tl{display:grid; gap:8px}
+.tlrow{display:grid; grid-template-columns:96px minmax(0,1fr) 72px; gap:10px; align-items:center; font-family:var(--display); font-size:13.5px; font-weight:700}
+.tlrow .track{display:flex; height:28px; border-radius:5px; overflow:hidden; background:var(--bg); border:1px solid var(--line)}
+.tlrow .track i{display:grid; place-items:center; height:100%; font-style:normal; font-size:11px; font-weight:700; overflow:hidden; white-space:nowrap}
+.tlrow .end{font-variant-numeric:tabular-nums; text-align:right; color:var(--ink-2); font-weight:600; font-size:12.5px; white-space:nowrap}
+.k-run{background:var(--run); color:var(--accent-ink)}
+.k-wait{background:var(--wait-soft); color:var(--wait)}
+.k-ready{background:var(--ready-soft); color:var(--ready)}
+.k-spin{background:var(--bad-soft); color:var(--bad)}
+.k-b{background:var(--wait); color:var(--surface)}
+.k-c{background:var(--ready); color:var(--surface)}
+.k-idle{background:transparent; color:var(--ink-2)}
+.tlleg{display:flex; gap:16px; flex-wrap:wrap; font-family:var(--display); font-size:13px; color:var(--ink-2)}
+.tlleg span{display:inline-flex; align-items:center; gap:6px}
+.tlleg i{display:inline-block; width:12px; height:12px; border-radius:3px}
+.axis{display:grid; grid-template-columns:96px minmax(0,1fr) 72px; gap:10px; font-family:var(--display); font-size:11.5px; color:var(--ink-2)}
+.axis div{display:flex; justify-content:space-between}
+</style>
+<style>
+.sec > *, .lab > *{min-width:0} pre.term{max-width:100%} select.sel{max-width:100%; min-width:0}
+.rc-grid{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:10px}
+@media (max-width:640px){.rc-grid{grid-template-columns:minmax(0,1fr)}}
+.code{font-family:var(--mono); font-size:13.5px; line-height:1.7; background:#101A12; color:#D6E8CB; border-radius:8px; padding:10px 12px}
+.code div{padding:0 6px; border-radius:4px}
+.code div.done{color:#6E8A68; text-decoration:line-through}
+.code div.next{background:#2E4A26; color:#F4F7F1}
+.mem{border:2px solid var(--ready); background:var(--ready-soft); border-radius:8px; padding:10px 12px; display:grid; gap:4px; align-content:center; text-align:center}
+.mem b{font-family:var(--mono); font-size:30px}
+.mem span{font-family:var(--display); font-size:12.5px; font-weight:700; color:var(--ink-2)}
+.regline{font-family:var(--mono); font-size:13px; color:var(--ink-2)}
+/* semáforo */
+.semrow{display:flex; gap:12px; flex-wrap:wrap; align-items:stretch}
+.semval{min-width:120px; border:2px solid var(--wait); background:var(--wait-soft); border-radius:8px; padding:10px; text-align:center; display:grid; gap:2px}
+.semval b{font-family:var(--mono); font-size:32px}
+.semval span,.queue span.lbl{font-family:var(--display); font-size:12.5px; font-weight:700; color:var(--ink-2)}
+.queue{flex:1; min-width:200px; border:1.5px dashed var(--line); border-radius:8px; padding:10px; display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+.pcard{display:grid; gap:6px; border:2px solid var(--line); border-radius:8px; padding:10px; background:var(--bg); min-width:150px; flex:1}
+.pcard b{font-family:var(--display); font-size:15px}
+.pcard small{font-family:var(--display); font-size:12.5px; font-weight:700}
+.pcard.fora small{color:var(--ink-2)} .pcard.rc{border-color:var(--run); background:var(--run-soft)} .pcard.rc small{color:var(--run)}
+.pcard.esp{border-color:var(--wait); background:var(--wait-soft)} .pcard.esp small{color:var(--wait)}
+.pcard .btns .btn{padding:5px 10px; font-size:13px}
+/* buffer */
+.buf{display:flex; gap:8px; flex-wrap:wrap}
+.slot{width:56px; height:56px; border-radius:8px; border:2px solid var(--ready); background:var(--surface); display:grid; place-items:center; font-family:var(--mono); font-size:14px; transition:background .2s}
+.slot.full{background:var(--ready); color:var(--surface)}
+.actor{font-family:var(--display); font-size:14px; font-weight:700; padding:6px 10px; border-radius:6px; background:var(--run-soft); color:var(--run)}
+.actor.blocked{background:var(--bad-soft); color:var(--bad)}
+/* filósofos */
+.phil{display:grid; grid-template-columns:repeat(5, minmax(0,1fr)); gap:8px}
+@media (max-width:640px){.phil{grid-template-columns:repeat(2, minmax(0,1fr))}}
+.ph{border:2px solid var(--line); border-radius:10px; padding:10px; display:grid; gap:4px; text-align:center; background:var(--bg)}
+.ph b{font-family:var(--display); font-size:16px}
+.ph small{font-family:var(--display); font-size:12.5px; font-weight:700}
+.ph.pensa small{color:var(--ink-2)} .ph.fome{border-color:var(--ready); background:var(--ready-soft)} .ph.fome small{color:var(--ready)}
+.ph.come{border-color:var(--run); background:var(--run-soft)} .ph.come small{color:var(--run)}
+.ph.trav{border-color:var(--bad); background:var(--bad-soft)} .ph.trav small{color:var(--bad)}
+.ph .forks{font-family:var(--mono); font-size:12.5px; color:var(--ink-2)}
+select.sel{font:inherit; font-family:var(--display); font-size:14px; padding:7px 10px; border:1.5px solid var(--ink); border-radius:6px; background:var(--surface); color:var(--ink)}
+/* mensagens */
+.msgs{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr); gap:10px; align-items:start}
+@media (max-width:640px){.msgs{grid-template-columns:minmax(0,1fr)}}
+.mbox{border:1.5px solid var(--line); border-radius:8px; padding:10px; min-height:110px; display:grid; gap:6px; align-content:start; background:var(--bg)}
+.mbox h5{font-family:var(--display); font-size:13.5px; margin:0}
+.env{font-family:var(--mono); font-size:12.5px; background:var(--ready-soft); border:1px solid var(--ready); border-radius:5px; padding:3px 8px; width:fit-content}
+/* deadlock */
+.dl svg{width:100%; max-width:520px; height:auto}
+.dl text{font-family:var(--display); font-weight:700; fill:var(--ink)}
+.dlwrap{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:16px; align-items:start}
+@media (max-width:700px){.dlwrap{grid-template-columns:minmax(0,1fr)}}
+.dlbtns{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:6px}
+.dlbtns .btn{font-size:13px; padding:7px 8px}
+</style>
+
+<style>
+/* ---- simuladores de memória virtual ---- */
+.sim-ctl{display:flex; flex-wrap:wrap; gap:8px; align-items:center}
+.sim-ctl .clock{font-family:var(--mono); font-weight:700; font-size:15px; color:var(--accent); margin-left:auto}
+.sim-ctl label{font-family:var(--display); font-size:14px; color:var(--ink-2); display:inline-flex; align-items:center; gap:6px}
+.sim-ctl input,.sim-ctl select{font-family:var(--mono); font-size:13px; padding:5px 6px; border:1px solid var(--line); border-radius:5px; background:var(--bg); color:var(--ink)}
+.sim-ctl input[type=range]{accent-color:var(--accent); width:120px; padding:0}
+.sim-ctl input.num{width:70px}
+.btn.sel{background:var(--ink); color:var(--bg)}
+.rt{border-collapse:separate; border-spacing:3px; font-family:var(--mono); font-size:14px}
+.rt th{font-family:var(--display); font-size:12px; color:var(--ink-2); padding:2px 4px; text-align:center; min-width:30px}
+.rt th.now{color:var(--accent); text-decoration:underline}
+.rt td{width:32px; height:30px; text-align:center; background:var(--surface-2); border-radius:4px; font-weight:700}
+.rt td.fut{background:transparent; border:1px dotted var(--line)}
+.rt td.in{background:var(--ready-soft); box-shadow:inset 0 0 0 2px var(--ready)}
+.rt td.now{outline:2px solid var(--accent)}
+.rt td.pf{background:var(--bad-soft); color:var(--bad)}
+.rt td.hit{background:var(--ok-soft); color:var(--ok)}
+.rt td.wsw{background:var(--ready-soft)}
+.rt sup{font-size:10px; color:var(--ink-2)}
+.mstats{font-family:var(--display); font-size:14px; color:var(--ink-2)}
+.tview{display:grid; grid-template-columns:minmax(0,320px) minmax(0,1fr); gap:16px; align-items:start}
+@media (max-width:700px){.tview{grid-template-columns:minmax(0,1fr)}}
+.pt tr.on td{background:var(--ready-soft); font-weight:700}
+.tbars{display:grid; gap:8px}
+.tb{display:grid; grid-template-columns:200px minmax(0,1fr) 80px; gap:10px; align-items:center; font-family:var(--display); font-size:14px}
+.tb i{display:block; height:22px; border-radius:4px}
+@media (max-width:700px){.tb{grid-template-columns:minmax(0,1fr) 70px}.tb span{grid-column:1/-1}}
+.calc{font-family:var(--mono); font-size:14.5px; background:var(--surface-2); border-radius:6px; padding:10px 14px}
+.addr{display:flex; font-family:var(--mono); font-size:14px; text-align:center; border-radius:6px; overflow:hidden}
+.addr span{padding:8px 6px; color:#fff}
+@media print{.rt{border-spacing:2px;font-size:10px}.rt td{width:22px;height:20px}.rt th{min-width:18px;font-size:9px}.scroll{overflow:visible!important}.sim-ctl,#lab,nav.toc a[href="#lab"]{display:none!important}.layout{display:block!important}main{display:block!important}main > .sec{margin-bottom:28px; display:block!important}.sec > * + *{margin-top:14px}footer.end{position:static!important;break-inside:avoid}h3{break-after:avoid}.calc,.twocol,.card,figure,table,.win,.lab,ul,ol:not(.oq):not(.qz){break-inside:avoid}}
+</style>
+<header class="top">
+  <p class="eyebrow">Sistemas Operacionais · IFAL Campus Maceió · Material de referência</p>
+  <h1>Memória Virtual<span>.</span></h1>
+  <p class="lede">E se cada programa pudesse usar mais memória do que existe no computador, sem que o programador precise se preocupar com isso? É o que a memória virtual faz. Leia, rode os simuladores de tradução de endereços e de substituição de páginas, observe a memória virtual do seu Windows e, no fim, teste o que aprendeu.</p>
+  <div class="meta"><span>Base: <b>Machado &amp; Maia, <i>Arquitetura de Sistemas Operacionais</i>, cap. 10</b></span><span>Prof. Christiano Rossini</span><span>12 seções · 5 simuladores · exemplos no Windows · 34 exercícios</span></div>
+</header>
+
+<div class="layout">
+<nav class="toc" aria-label="Sumário">
+  <p>Sumário</p>
+  <ol>
+    <li><a href="#s1"><span>10.1</span>Introdução</a></li>
+    <li><a href="#s2"><span>10.2</span>Espaço virtual</a></li>
+    <li><a href="#s3"><span>10.3</span>Mapeamento</a></li>
+    <li><a href="#s4"><span>10.4</span>Paginação</a></li>
+    <li><a href="#s5"><span>10.4</span>Políticas</a></li>
+    <li><a href="#s6"><span>10.4</span>Working set</a></li>
+    <li><a href="#s7"><span>10.4</span>Substituição</a></li>
+    <li><a href="#s8"><span>10.4</span>Página, níveis e TLB</a></li>
+    <li><a href="#s9"><span>10.4</span>Proteção e compartilhamento</a></li>
+    <li><a href="#s10"><span>10.5</span>Segmentação</a></li>
+    <li><a href="#s11"><span>10.6</span>Segmentação com paginação</a></li>
+    <li><a href="#s12"><span>10.7</span>Swapping e thrashing</a></li>
+    <li><a href="#lab"><span>Lab</span>Simulador livre</a></li>
+    <li><a href="#ex"><span>Ex.</span>Exercícios</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<section class="sec" id="s1">
+  <div class="sec-head"><span class="num">10.1</span><h2>Introdução</h2></div>
+  <p>No capítulo 9, todas as técnicas tinham uma regra em comum: o programa inteiro precisava estar na memória principal, num único bloco contínuo. Daí vinham os problemas: programas maiores que a memória (que o overlay resolvia com muito trabalho do programador), fragmentação interna ou externa e o custo de mover processos inteiros no swapping.</p>
+  <p>A <dfn>memória virtual</dfn> quebra essa regra. Ela combina a memória principal e a secundária (o disco) para dar a cada processo a impressão de ter uma memória muito maior do que a existente. Só as partes do programa que estão sendo usadas precisam estar na memória principal; o resto fica no disco e é trazido quando for necessário.</p>
+  <div class="twocol wide">
+    <div class="card"><h4>Programas maiores que a memória</h4><p>O limite passa a ser o tamanho do espaço de endereçamento virtual, e não o da memória física. O programador não precisa dividir o programa, como no overlay.</p></div>
+    <div class="card"><h4>Mais processos na memória</h4><p>Como cada processo ocupa só uma parte da memória principal, cabem mais processos ao mesmo tempo, e a UCP fica menos ociosa.</p></div>
+    <div class="card"><h4>Menos fragmentação</h4><p>A memória é dividida em blocos de tamanho fixo, que podem ficar espalhados: acaba a fragmentação externa e a necessidade de compactação.</p></div>
+    <div class="card"><h4>Transparente para o programa</h4><p>O programa usa endereços virtuais; quem descobre onde cada parte realmente está é o hardware, com a ajuda do SO.</p></div>
+  </div>
+  <p>O conceito surgiu no início dos anos 1960, no computador Atlas, da Universidade de Manchester, e hoje está presente em praticamente todos os sistemas operacionais de uso geral, incluindo Windows, Linux, macOS, Android e iOS.</p>
+  <div class="win">
+    <span class="lbl">No Windows</span>
+    <h4>Memória “confirmada”: física mais disco</h4>
+    <p>No Gerenciador de Tarefas (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Esc</kbd>) › <span class="path2">Desempenho › Memória</span>, o campo <b>Confirmada</b> mostra dois números, por exemplo “9,8/18,4 GB”. O primeiro é quanto os processos já reservaram; o segundo, o <b>limite de confirmação</b>, é a soma da memória física com o arquivo de paginação. É a memória virtual em números: os processos podem reservar mais do que a RAM existente.</p>
+  </div>
+</section>
+
+<section class="sec" id="s2">
+  <div class="sec-head"><span class="num">10.2</span><h2>Espaço de endereçamento virtual</h2></div>
+  <p>Um programa nunca usa diretamente os endereços da memória física. Ele usa <dfn>endereços virtuais</dfn>, e o conjunto de endereços virtuais que um processo pode usar é o seu <dfn>espaço de endereçamento virtual</dfn>. Já os endereços da memória principal são os <dfn>endereços reais</dfn> (ou físicos), e o conjunto deles é o espaço de endereçamento real.</p>
+  <p>Cada processo tem o seu próprio espaço virtual, que começa no endereço 0. Dois processos podem usar o mesmo endereço virtual, por exemplo 1000, sem conflito: cada um é traduzido para um endereço real diferente. Isso também protege os processos uns dos outros, porque um processo simplesmente não tem como gerar um endereço que leve à área de outro.</p>
+  <div class="def"><b>Tamanho do espaço virtual.</b> Depende do número de bits do endereço. Com endereços de 32 bits, cada processo pode endereçar 2<sup>32</sup> bytes = 4 GB. Com 64 bits, o espaço teórico é enorme; os processadores atuais usam 48 bits, o que dá 256 TB por processo.</div>
+  <p>O espaço virtual pode ser bem maior que a memória física. Durante a execução, só uma parte dele está na memória principal; o restante fica no disco, numa área chamada de <b>arquivo de paginação</b> ou área de swap. Para o programa, isso é invisível: ele enxerga um único espaço contínuo de endereços.</p>
+</section>
+
+<section class="sec" id="s3">
+  <div class="sec-head"><span class="num">10.3</span><h2>Mapeamento</h2></div>
+  <p>Como a UCP só acessa a memória principal, todo endereço virtual precisa ser <b>traduzido</b> para um endereço real antes do acesso. Essa tradução se chama <dfn>mapeamento</dfn>. Ela é feita pelo hardware, numa unidade do processador chamada <b>MMU</b> (<i>Memory Management Unit</i>), a cada acesso à memória, usando tabelas mantidas pelo SO. Cada processo tem as suas tabelas de mapeamento; na troca de contexto, o SO aponta a MMU para as tabelas do novo processo.</p>
+  <figure class="fig wide">
+    <svg viewBox="0 0 760 200" role="img" aria-label="Mapeamento: o endereço virtual passa pela tabela de mapeamento, feita pela MMU, e vira um endereço real na memória principal; partes ausentes ficam no disco" style="width:100%; height:auto">
+      <rect x="10" y="30" width="170" height="140" rx="10" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/>
+      <text x="95" y="60" text-anchor="middle" font-family="Archivo, Arial" font-size="15" font-weight="700" fill="var(--ink)">Espaço virtual</text>
+      <text x="95" y="82" text-anchor="middle" font-family="Archivo, Arial" font-size="13" fill="var(--ink-2)">do processo</text>
+      <rect x="35" y="95" width="120" height="22" rx="4" fill="#2F7D32"/><rect x="35" y="121" width="120" height="22" rx="4" fill="#2A5DA8"/><rect x="35" y="147" width="120" height="16" rx="4" fill="#B86A00"/>
+      <rect x="250" y="55" width="190" height="90" rx="10" fill="var(--ready-soft)" stroke="var(--ready)" stroke-width="2"/>
+      <text x="345" y="92" text-anchor="middle" font-family="Archivo, Arial" font-size="15" font-weight="700" fill="var(--ink)">Tabela de mapeamento</text>
+      <text x="345" y="115" text-anchor="middle" font-family="Archivo, Arial" font-size="13" fill="var(--ink-2)">usada pela MMU</text>
+      <rect x="520" y="10" width="230" height="95" rx="10" fill="var(--run-soft)" stroke="var(--run)" stroke-width="2"/>
+      <text x="635" y="45" text-anchor="middle" font-family="Archivo, Arial" font-size="15" font-weight="700" fill="var(--ink)">Memória principal</text>
+      <text x="635" y="68" text-anchor="middle" font-family="Archivo, Arial" font-size="13" fill="var(--ink-2)">partes em uso</text>
+      <rect x="520" y="120" width="230" height="70" rx="10" fill="var(--surface-2)" stroke="var(--line)" stroke-width="2" stroke-dasharray="5 4"/>
+      <text x="635" y="152" text-anchor="middle" font-family="Archivo, Arial" font-size="15" font-weight="700" fill="var(--ink)">Disco</text>
+      <text x="635" y="173" text-anchor="middle" font-family="Archivo, Arial" font-size="13" fill="var(--ink-2)">o restante</text>
+      <g stroke="var(--ink-2)" stroke-width="2.5" fill="none"><path d="M182 100h62"/><path d="M442 90l72-30"/><path d="M442 115l72 35" stroke-dasharray="6 5"/></g>
+      <g fill="var(--ink-2)"><path d="M244 94l10 6-10 6z"/><path d="M512 54l9 3-7 7z"/><path d="M512 156l9-2-6-7z"/></g>
+    </svg>
+  </figure>
+  <h3>Por que mapear em blocos</h3>
+  <p>Se cada byte tivesse sua própria entrada na tabela, a tabela seria do tamanho da própria memória. Por isso o mapeamento é feito em <b>blocos</b>: a tabela tem uma entrada por bloco, e o endereço virtual é dividido em duas partes, o <b>número do bloco</b> e o <b>deslocamento</b> dentro dele. Só o número do bloco é traduzido; o deslocamento é o mesmo no endereço virtual e no real.</p>
+  <div class="twocol wide">
+    <div class="card"><h4>Blocos de tamanho fixo: páginas</h4><p>Base da <b>paginação</b> (seção 10.4). É a forma mais usada.</p></div>
+    <div class="card"><h4>Blocos de tamanho variável: segmentos</h4><p>Base da <b>segmentação</b> (seção 10.5). Cada segmento corresponde a uma parte lógica do programa.</p></div>
+  </div>
+</section>
+
+<section class="sec" id="s4">
+  <div class="sec-head"><span class="num">10.4</span><h2>Memória virtual por paginação</h2></div>
+  <p>Na <dfn>paginação</dfn>, o espaço virtual é dividido em blocos de mesmo tamanho chamados <b>páginas virtuais</b>, e a memória principal é dividida em blocos do mesmo tamanho chamados <b>páginas reais</b> ou <b>frames</b> (quadros). Qualquer página virtual pode ser carregada em qualquer frame livre, e as páginas de um processo não precisam estar juntas na memória.</p>
+  <p>Cada processo tem uma <dfn>tabela de páginas</dfn>, com uma entrada por página virtual. Cada entrada (ETP) guarda, entre outras coisas:</p>
+  <ul>
+    <li>o <b>bit de validade</b>: 1 se a página está na memória principal, 0 se não está;</li>
+    <li>o <b>número do frame</b> onde a página está, quando o bit de validade é 1;</li>
+    <li>bits de controle, como o <b>bit de modificação</b> (a página foi alterada desde que foi carregada?) e o <b>bit de referência</b> (a página foi usada recentemente?), usados pelos algoritmos de substituição.</li>
+  </ul>
+  <h3>Tradução de um endereço</h3>
+  <ol>
+    <li>O endereço virtual é dividido em <b>número da página virtual</b> e <b>deslocamento</b>. Se as páginas têm 1.024 bytes, página = endereço ÷ 1.024 e deslocamento = o resto da divisão.</li>
+    <li>O número da página indexa a tabela de páginas.</li>
+    <li>Se o bit de validade é 1, o endereço real é <b>frame × tamanho da página + deslocamento</b>.</li>
+    <li>Se o bit de validade é 0, a página não está na memória: ocorre um <b>page fault</b>.</li>
+  </ol>
+  <div class="lab" data-vm='{"title":"Traduzindo endereços virtuais","mode":"trans","pageSize":1024,"vpages":8,"pt":{"0":5,"1":2,"3":7,"4":0,"6":3},"start":1500,"examples":[0,1500,2100,3075,6200,7000],"hint":"Páginas de 1.024 bytes. A tabela mostra onde cada página virtual está. Digite um endereço virtual ou clique nos exemplos; a linha destacada é a entrada da tabela consultada."}'></div>
+  <h3>Page fault</h3>
+  <p>Um <dfn>page fault</dfn> (falta de página) acontece quando o processo referencia uma página que não está na memória principal. O hardware detecta o bit de validade 0 e gera uma interrupção; o SO, então:</p>
+  <ol>
+    <li>localiza a página no disco;</li>
+    <li>escolhe um frame livre ou, se não houver, uma página para sair (seção 10.4.5); se ela foi modificada, grava-a de volta no disco;</li>
+    <li>lê a página do disco para o frame e atualiza a tabela de páginas (bit de validade 1, número do frame);</li>
+    <li>o processo, que ficou em <b>espera</b> durante a leitura, volta para <b>pronto</b> e repete a instrução que causou a falta.</li>
+  </ol>
+  <p>Cada page fault exige uma operação de E/S em disco, milhares de vezes mais lenta que um acesso à memória. Por isso, uma <b>taxa de page faults</b> alta derruba o desempenho do sistema, e boa parte das políticas da memória virtual existe para mantê-la baixa.</p>
+  <div class="note"><p>Na paginação existe <b>fragmentação interna</b>, mas pequena: o processo raramente ocupa um número exato de páginas, e a última página fica, em média, meio vazia. Não há fragmentação externa, porque qualquer frame livre serve para qualquer página.</p></div>
+  <div class="win">
+    <span class="lbl">No Windows</span>
+    <h4>Contando page faults</h4>
+    <p>No Gerenciador de Tarefas, aba <span class="path2">Detalhes</span>, clique com o botão direito no cabeçalho › <span class="path2">Selecionar colunas</span> e marque <b>Falhas de página</b> (em algumas versões, “Erros de página”). O número cresce o tempo todo: a maioria são faltas “leves”, resolvidas sem ir ao disco, porque a página ainda estava na memória em uma lista de espera. Pelo PowerShell:</p>
+    <pre class="term ps"><span class="c"># os 5 processos com mais page faults desde que foram iniciados</span>
+PS&gt; Get-CimInstance Win32_Process | Sort-Object PageFaults -Descending | Select-Object -First 5 Name, PageFaults</pre>
+  </div>
+</section>
+
+<section class="sec" id="s5">
+  <div class="sec-head"><span class="num">10.4.1–3</span><h2>Políticas de busca, alocação e substituição</h2></div>
+  <p>O SO precisa tomar três decisões: <b>quando</b> trazer páginas para a memória, <b>quantos frames</b> dar a cada processo e, quando faltar espaço, <b>de quem</b> tirar uma página.</p>
+  <h3>Política de busca: quando trazer</h3>
+  <div class="twocol wide">
+    <div class="card"><h4>Paginação por demanda</h4><p>A página só é trazida quando é referenciada, isto é, depois de um page fault. Nunca carrega páginas inúteis, mas o processo começa com muitas faltas.</p></div>
+    <div class="card"><h4>Paginação antecipada</h4><p>O SO traz, junto com a página pedida, outras que provavelmente serão usadas, como as vizinhas. Pode reduzir faltas, mas desperdiça memória e E/S quando a previsão erra.</p></div>
+  </div>
+  <h3>Política de alocação: quantos frames</h3>
+  <div class="twocol wide">
+    <div class="card"><h4>Alocação fixa</h4><p>Cada processo recebe um número fixo de frames, definido na criação. Simples, mas um processo que precisa de mais sofre muitas faltas, enquanto outro desperdiça frames que não usa.</p></div>
+    <div class="card"><h4>Alocação variável</h4><p>O número de frames muda conforme o comportamento do processo: quem tem muitas faltas ganha frames, quem tem poucas cede. Usa melhor a memória, mas o SO precisa monitorar os processos.</p></div>
+  </div>
+  <h3>Política de substituição: de quem tirar</h3>
+  <div class="twocol wide">
+    <div class="card"><h4>Substituição local</h4><p>Só páginas do próprio processo que sofreu a falta podem sair. Combina com a alocação fixa.</p></div>
+    <div class="card"><h4>Substituição global</h4><p>Qualquer página da memória pode sair, de qualquer processo (exceto as do núcleo e as fixadas). Combina com a alocação variável.</p></div>
+  </div>
+  <p>Ao escolher uma página para sair, o SO prefere as que <b>não foram modificadas</b>: elas podem simplesmente ser descartadas, porque a cópia no disco ainda é válida. Uma página modificada precisa ser gravada antes, o que custa mais uma operação de E/S.</p>
+</section>
+
+<section class="sec" id="s6">
+  <div class="sec-head"><span class="num">10.4.4</span><h2>Working set</h2></div>
+  <p>Os programas não usam suas páginas ao acaso. Num dado intervalo, eles se concentram em poucas páginas: um laço, as variáveis que ele manipula, a função que está executando. Essa característica é o <dfn>princípio da localidade</dfn>:</p>
+  <ul>
+    <li><b>localidade temporal:</b> uma posição usada agora tende a ser usada de novo em breve (variáveis de um laço);</li>
+    <li><b>localidade espacial:</b> posições próximas de uma posição usada tendem a ser usadas em seguida (os elementos de um vetor, as instruções seguintes).</li>
+  </ul>
+  <p>O <dfn>working set</dfn> (conjunto de trabalho) de um processo, num instante t, é o conjunto de páginas referenciadas nas últimas Δ referências (a janela do working set). Se o processo tem na memória todas as páginas do seu working set, ele executa com poucas faltas. Se tiver menos frames do que o tamanho do working set, as faltas disparam.</p>
+  <div class="lab" data-vm='{"title":"Working set ao longo do tempo","mode":"ws","refs":[1,2,1,3,2,4,4,3,5,5,3,4],"delta":4,"hint":"Mova o instante t e a janela Δ. A faixa destacada são as últimas Δ referências; o working set são as páginas distintas nessa faixa. Repare que ele muda de tamanho conforme o programa muda de fase."}'></div>
+  <p>A ideia orienta a política de alocação variável: o SO tenta dar a cada processo frames suficientes para o seu working set e, se não houver memória para todos, é melhor suspender um processo inteiro do que deixar vários com poucos frames.</p>
+  <div class="win">
+    <span class="lbl">No Windows</span>
+    <h4>O conjunto de trabalho de cada processo</h4>
+    <p>O Windows usa o termo literalmente. No Gerenciador de Tarefas, aba <span class="path2">Detalhes</span>, as colunas <b>Conjunto de trabalho (memória)</b> e <b>Pico de conjunto de trabalho</b> mostram quanto de cada processo está na memória física agora e o máximo que já esteve. Quando a memória aperta, o Windows “apara” os conjuntos de trabalho, retirando as páginas menos usadas recentemente.</p>
+  </div>
+</section>
+
+<section class="sec" id="s7">
+  <div class="sec-head"><span class="num">10.4.5</span><h2>Algoritmos de substituição de páginas</h2></div>
+  <p>Quando ocorre um page fault e não há frame livre, o SO precisa escolher uma página para sair. Uma boa escolha retira uma página que não será usada tão cedo; uma má escolha retira uma página que será pedida logo em seguida, gerando outra falta. Os algoritmos são comparados pelo número de page faults numa mesma sequência de referências.</p>
+  <div class="scroll wide"><table class="t">
+    <thead><tr><th>Algoritmo</th><th>Retira a página…</th><th>Observação</th></tr></thead>
+    <tbody>
+      <tr><td><b>Ótimo</b></td><td>que vai demorar mais para ser usada de novo</td><td>menor número de faltas possível, mas exige conhecer o futuro: serve só de referência</td></tr>
+      <tr><td><b>Aleatório</b></td><td>escolhida ao acaso</td><td>barato, mas pode retirar uma página muito usada</td></tr>
+      <tr><td><b>FIFO</b></td><td>que está há mais tempo na memória</td><td>simples, mas pode retirar páginas muito usadas; sofre a anomalia de Belady</td></tr>
+      <tr><td><b>LRU</b></td><td>usada há mais tempo (<i>least recently used</i>)</td><td>boa aproximação do ótimo, graças à localidade; caro de implementar com exatidão</td></tr>
+      <tr><td><b>LFU</b></td><td>menos usada (<i>least frequently used</i>)</td><td>uma página nova, ainda pouco usada, tende a sair cedo</td></tr>
+      <tr><td><b>NRU</b></td><td>não usada recentemente, pelos bits de referência e modificação</td><td>prefere páginas não referenciadas e não modificadas</td></tr>
+      <tr><td><b>FIFO circular (clock)</b></td><td>a mais antiga cujo bit de referência é 0</td><td>dá uma “segunda chance” às páginas usadas; muito usado na prática</td></tr>
+    </tbody>
+  </table></div>
+  <div class="lab" data-vm='{"title":"Mesma sequência, cinco algoritmos","mode":"repl","refs":[7,0,1,2,0,3,0,4,2,3,0,3,2,1,2,0,1,7,0,1],"frames":3,"algs":["OPT","FIFO","LRU","CLOCK","LFU"],"hint":"Três frames e 20 referências. Cada coluna é uma referência; F marca page fault e a célula destacada é o frame que recebeu a página. Compare os totais: ótimo 9, FIFO 15, LRU 12."}'></div>
+  <h3>Como o FIFO circular funciona</h3>
+  <p>As páginas ficam numa lista circular, e um ponteiro percorre a lista. Cada página tem um bit de referência, que o hardware põe em 1 quando ela é usada. Na hora de substituir, o ponteiro examina a página atual: se o bit é 1, zera o bit (a página ganha uma segunda chance) e avança; se o bit é 0, essa página sai. No simulador acima, o número pequeno ao lado de cada página é o bit de referência na última coluna mostrada.</p>
+  <h3>A anomalia de Belady</h3>
+  <p>Intuitivamente, mais frames deveriam significar menos faltas. Com o FIFO, nem sempre: na sequência abaixo, o FIFO tem 9 faltas com 3 frames e 10 faltas com 4 frames. Esse comportamento é a <dfn>anomalia de Belady</dfn>. O LRU e o ótimo não sofrem dessa anomalia.</p>
+  <div class="lab" data-vm='{"title":"Anomalia de Belady","mode":"repl","refs":[1,2,3,4,1,2,5,1,2,3,4,5],"alg":"FIFO","framesList":[3,4],"hint":"Rode com 3 frames e depois com 4 frames e compare o número de page faults no fim."}'></div>
+</section>
+
+<section class="sec" id="s8">
+  <div class="sec-head"><span class="num">10.4.6–8</span><h2>Tamanho de página, múltiplos níveis e TLB</h2></div>
+  <h3>Tamanho de página</h3>
+  <div class="twocol wide">
+    <div class="card"><h4>Páginas pequenas</h4><p>Menos fragmentação interna e só o necessário na memória, mas tabelas de páginas maiores e mais page faults.</p></div>
+    <div class="card"><h4>Páginas grandes</h4><p>Tabelas menores e cada leitura do disco traz mais dados, mas mais fragmentação interna e mais dados inúteis na memória.</p></div>
+  </div>
+  <p>A maioria dos sistemas usa páginas de <b>4 KB</b>. Processadores atuais também aceitam páginas grandes (2 MB ou 1 GB nos x86-64), usadas por bancos de dados e máquinas virtuais.</p>
+  <h3>Paginação em múltiplos níveis</h3>
+  <p>Com endereços de 32 bits e páginas de 4 KB, cada processo teria 2<sup>20</sup> ≈ 1 milhão de páginas virtuais; com 4 bytes por entrada, a tabela ocuparia 4 MB por processo, mesmo que o processo use pouco do seu espaço. A solução é dividir a tabela em níveis: o número da página é quebrado em partes, e a primeira parte indexa uma tabela de primeiro nível, que aponta para tabelas de segundo nível. Só as tabelas de segundo nível realmente usadas precisam existir.</p>
+  <figure class="fig wide">
+    <div class="addr" role="img" aria-label="Endereço virtual de 32 bits dividido em 10 bits de diretório, 10 bits de tabela e 12 bits de deslocamento">
+      <span style="flex:10; background:#2A5DA8">diretório · 10 bits</span><span style="flex:10; background:#2F7D32">tabela · 10 bits</span><span style="flex:12; background:#8B3A8F">deslocamento · 12 bits</span>
+    </div>
+    <figcaption>Endereço virtual de 32 bits com dois níveis de tabelas (formato usado pelos processadores x86 de 32 bits). Os x86-64 usam quatro níveis.</figcaption>
+  </figure>
+  <h3>TLB</h3>
+  <p>Com a tabela de páginas na memória, cada acesso do programa custaria <b>dois</b> acessos à memória: um à tabela e outro ao dado; com vários níveis, ainda mais. Para evitar isso, a MMU tem uma pequena memória associativa muito rápida, a <dfn>TLB</dfn> (<i>Translation Lookaside Buffer</i>), que guarda as traduções feitas recentemente. Se a tradução está na TLB (acerto), a tabela de páginas nem é consultada. Graças à localidade, a taxa de acerto costuma passar de 98%.</p>
+  <div class="lab" data-vm='{"title":"Tempo efetivo de acesso com TLB","mode":"tlb","h":90,"tlb":10,"mem":100,"hint":"Ajuste a taxa de acerto. Com 90% de acerto, TLB de 10 ns e memória de 100 ns, o tempo efetivo é 120 ns; com 98%, cai para 112 ns, bem perto dos 100 ns ideais."}'></div>
+  <p>Na troca de contexto, as traduções da TLB pertencem ao processo anterior. Por isso o SO precisa invalidar a TLB, ou o hardware marca cada entrada com o identificador do processo. Esse é mais um custo da troca de contexto.</p>
+</section>
+
+<section class="sec" id="s9">
+  <div class="sec-head"><span class="num">10.4.9–10</span><h2>Proteção e compartilhamento</h2></div>
+  <p>A paginação traz proteção quase de graça: um processo só acessa as páginas que estão na sua tabela. Além disso, cada entrada da tabela tem <b>bits de proteção</b> que dizem o que pode ser feito com a página: leitura, escrita e, nos processadores atuais, execução. Uma tentativa de escrever numa página só de leitura gera uma interrupção, e o SO encerra o processo.</p>
+  <p>O <b>compartilhamento</b> também fica simples: basta que as tabelas de dois processos apontem para os mesmos frames. É o que acontece quando várias instâncias do mesmo programa estão rodando: o código, que não muda, fica uma única vez na memória, e cada processo tem só os seus próprios dados. O mesmo vale para bibliotecas compartilhadas (as DLLs do Windows).</p>
+  <div class="note"><p>Para compartilhar, o código precisa ser <b>reentrante</b>: não pode alterar a si mesmo. Os dados de cada processo ficam em páginas separadas.</p></div>
+</section>
+
+<section class="sec" id="s10">
+  <div class="sec-head"><span class="num">10.5</span><h2>Memória virtual por segmentação</h2></div>
+  <p>Na <dfn>segmentação</dfn>, o espaço virtual é dividido em blocos de tamanho <b>variável</b>, os segmentos, que correspondem às partes lógicas do programa: o código principal, cada sub-rotina, a pilha, os vetores. O endereço virtual é formado pelo <b>número do segmento</b> e pelo <b>deslocamento</b> dentro dele.</p>
+  <p>Cada processo tem uma <b>tabela de segmentos</b>, com o <b>endereço base</b> (onde o segmento começa na memória real), o <b>tamanho</b> (limite) e os bits de validade e de proteção. Na tradução, o hardware verifica se o deslocamento é menor que o tamanho do segmento; se não for, gera uma interrupção. Se for, o endereço real é <b>base + deslocamento</b>.</p>
+  <div class="scroll wide"><table class="t">
+    <thead><tr><th>Segmento</th><th>Conteúdo</th><th>Base</th><th>Tamanho</th></tr></thead>
+    <tbody>
+      <tr><td><b>0</b></td><td>código principal</td><td>1400</td><td>1000</td></tr>
+      <tr><td><b>1</b></td><td>sub-rotina</td><td>6300</td><td>400</td></tr>
+      <tr><td><b>2</b></td><td>pilha</td><td>4300</td><td>400</td></tr>
+    </tbody>
+  </table></div>
+  <div class="calc">Segmento 2, deslocamento 53 → 53 &lt; 400 → endereço real 4300 + 53 = 4353<br>Segmento 1, deslocamento 450 → 450 ≥ 400 → interrupção: acesso fora do segmento</div>
+  <div class="twocol wide">
+    <div class="card"><h4>Vantagens</h4><p>Os blocos têm significado para o programador; proteção e compartilhamento por segmento (o código pode ser só leitura, a pilha não). Não há fragmentação interna.</p></div>
+    <div class="card"><h4>Desvantagens</h4><p>Segmentos de tamanhos diferentes voltam a causar <b>fragmentação externa</b> e exigem as estratégias de alocação do capítulo 9 (first-fit, best-fit…).</p></div>
+  </div>
+</section>
+
+<section class="sec" id="s11">
+  <div class="sec-head"><span class="num">10.6</span><h2>Segmentação com paginação</h2></div>
+  <p>Para juntar as vantagens das duas técnicas, o espaço virtual é dividido em segmentos, e cada segmento é dividido em páginas. O endereço virtual tem três partes: <b>segmento</b>, <b>página</b> e <b>deslocamento</b>. A tabela de segmentos aponta para uma tabela de páginas por segmento, e a tradução final é feita como na paginação.</p>
+  <div class="scroll wide"><table class="t">
+    <thead><tr><th></th><th>Paginação</th><th>Segmentação</th><th>Segmentação com paginação</th></tr></thead>
+    <tbody>
+      <tr><td><b>Blocos</b></td><td>tamanho fixo (páginas)</td><td>tamanho variável (segmentos)</td><td>segmentos divididos em páginas</td></tr>
+      <tr><td><b>Visível ao programador</b></td><td>não</td><td>sim</td><td>sim (os segmentos)</td></tr>
+      <tr><td><b>Fragmentação</b></td><td>interna (pequena)</td><td>externa</td><td>interna (pequena)</td></tr>
+      <tr><td><b>Proteção e compartilhamento</b></td><td>por página</td><td>por segmento, mais natural</td><td>por segmento</td></tr>
+    </tbody>
+  </table></div>
+  <p>Os processadores x86 de 32 bits implementavam segmentação com paginação, mas Windows e Linux usam a segmentação de forma mínima (segmentos que cobrem todo o espaço) e fazem quase tudo com paginação. Nos x86-64, a segmentação foi praticamente abandonada.</p>
+</section>
+
+<section class="sec" id="s12">
+  <div class="sec-head"><span class="num">10.7–8</span><h2>Swapping em memória virtual e thrashing</h2></div>
+  <h3>Swapping</h3>
+  <p>Mesmo com memória virtual, a memória pode não bastar para todos os processos: cada um precisa ao menos do seu working set. Nesse caso o SO pode fazer <b>swapping</b>, como no capítulo 9, retirando processos inteiros (todas as suas páginas) e liberando frames para os demais. Os candidatos são, de novo, processos em espera ou de baixa prioridade. A diferença é que, na volta, só as páginas necessárias precisam ser trazidas, por demanda.</p>
+  <h3>Thrashing</h3>
+  <p>O <dfn>thrashing</dfn> é a situação em que o sistema passa mais tempo trocando páginas (ou processos) entre memória e disco do que executando processos. Acontece quando os processos ativos têm menos frames do que o seu working set: cada processo, ao executar, gera uma falta; enquanto espera o disco, outro processo executa e gera outra falta, roubando um frame do primeiro. A UCP fica ociosa e o disco, sobrecarregado.</p>
+  <figure class="fig wide">
+    <svg viewBox="0 0 760 230" role="img" aria-label="Gráfico: a utilização da UCP cresce com o grau de multiprogramação até um ponto e depois despenca, quando começa o thrashing" style="width:100%; height:auto">
+      <path d="M70 190H740M70 190V20" stroke="var(--ink-2)" stroke-width="2" fill="none"/>
+      <path d="M70 185 C200 120 280 50 400 45 C460 45 500 80 540 140 C580 185 650 188 730 188" stroke="var(--accent)" stroke-width="4" fill="none"/>
+      <path d="M520 30V190" stroke="var(--bad)" stroke-width="2" stroke-dasharray="6 5"/>
+      <text x="530" y="45" font-family="Archivo, Arial" font-size="15" font-weight="700" fill="var(--bad)">thrashing</text>
+      <text x="400" y="218" text-anchor="middle" font-family="Archivo, Arial" font-size="14" fill="var(--ink-2)">grau de multiprogramação (processos na memória)</text>
+      <text x="22" y="105" font-family="Archivo, Arial" font-size="14" fill="var(--ink-2)" transform="rotate(-90 22 105)" text-anchor="middle">uso da UCP</text>
+    </svg>
+    <figcaption>Ilustração: até certo ponto, mais processos aumentam o uso da UCP; depois, as faltas de página dominam e o uso despenca.</figcaption>
+  </figure>
+  <div class="twocol wide">
+    <div class="card"><h4>Thrashing de um processo</h4><p>O processo tem menos frames do que o seu working set. Solução: dar mais frames a ele (alocação variável) ou, se o programa tem localidade ruim, melhorar o programa.</p></div>
+    <div class="card"><h4>Thrashing do sistema</h4><p>Há processos demais disputando a memória. Solução: reduzir o grau de multiprogramação, suspendendo processos (swapping), ou aumentar a memória física.</p></div>
+  </div>
+  <div class="win">
+    <span class="lbl">No Windows</span>
+    <h4>Sinais de que falta memória</h4>
+    <p>Quando a soma dos conjuntos de trabalho passa da memória física, o Windows começa a usar intensamente o arquivo de paginação: no Gerenciador de Tarefas, o <b>Disco</b> fica perto de 100% de uso enquanto a <b>CPU</b> fica baixa, e o computador “trava” por instantes ao alternar entre programas. É o thrashing na prática. Fechar programas ou abas reduz o grau de multiprogramação e devolve o desempenho.</p>
+    <p>Para ver o arquivo de paginação: <kbd>Win</kbd>+<kbd>R</kbd> › <code>SystemPropertiesPerformance</code> › aba <span class="path2">Avançado › Memória virtual</span>.</p>
+  </div>
+</section>
+
+<section class="sec" id="lab">
+  <div class="sec-head"><span class="num">Lab</span><h2>Simulador livre</h2></div>
+  <p>Digite uma sequência de referências a páginas, escolha o número de frames e o algoritmo. Use “Comparar todos” para ver o número de page faults de cada algoritmo e conferir os exercícios.</p>
+  <div class="lab wide" id="vmlab"></div>
+</section>
+
+<section class="sec" id="ex">
+  <div class="sec-head"><span class="num">Exercícios</span><h2>Exercícios de fixação</h2></div>
+  <p>Duas partes: <b>questões abertas</b>, baseadas nos exercícios do capítulo 10 do livro, para responder por escrito, e <b>questões fechadas</b> com correção imediata.</p>
+  <h3 id="ex-a">Parte A · Questões abertas</h3>
+  <p class="lab-hint">Responda no caderno antes de abrir o roteiro. O roteiro indica os pontos que a resposta deve cobrir e a seção onde revisar.</p>
+  <ol class="oq wide">
+    <li><p>Quais os benefícios da memória virtual? Como ela permite que um programa e seus dados ultrapassem os limites da memória principal?</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Programas maiores que a memória, mais processos na memória, menos fragmentação, transparência para o programador. Só as partes em uso ficam na memória principal; o restante fica no disco e é trazido quando necessário. <a href="#s1">Seção 10.1</a>.</p></div></details></li>
+    <li><p>Explique como um endereço virtual é traduzido para um endereço real na paginação.</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>O endereço é dividido em número da página e deslocamento; o número indexa a tabela de páginas; se o bit de validade é 1, endereço real = frame × tamanho da página + deslocamento; se é 0, ocorre page fault. A tradução é feita pela MMU. <a href="#s4">Seção 10.4</a>.</p></div></details></li>
+    <li><p>Por que o mapeamento deve ser feito em blocos, e não em células individuais?</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Uma entrada por célula faria a tabela de mapeamento ter o tamanho da própria memória. Com blocos, há uma entrada por bloco e só o número do bloco é traduzido; o deslocamento é mantido. <a href="#s3">Seção 10.3</a>.</p></div></details></li>
+    <li><p>Diferencie página virtual de página real. Para que serve o bit de validade?</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Página virtual: bloco do espaço de endereçamento do processo. Página real (frame): bloco da memória principal, do mesmo tamanho. O bit de validade indica se a página virtual está na memória principal (1) ou não (0, page fault). <a href="#s4">Seção 10.4</a>.</p></div></details></li>
+    <li><p>O que é page fault, quando ocorre e quem o trata? Como uma taxa elevada de page faults compromete o sistema?</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Referência a uma página fora da memória principal (bit de validade 0). O hardware detecta e gera uma interrupção; o SO busca a página no disco, atualiza a tabela, e o processo repete a instrução. Cada falta é uma E/S lenta: muitas faltas deixam processos esperando o disco e a UCP ociosa. <a href="#s4">Seção 10.4</a>.</p></div></details></li>
+    <li><p>Como ocorre a fragmentação interna em sistemas com paginação?</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>O processo raramente ocupa um número exato de páginas: a última página fica parcialmente vazia (em média, meia página). <a href="#s4">Seção 10.4</a>.</p></div></details></li>
+    <li><p>Compare a paginação por demanda com a paginação antecipada.</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Demanda: traz a página só quando referenciada; não carrega nada inútil, mas há muitas faltas no início. Antecipada: traz também páginas que provavelmente serão usadas; pode reduzir faltas, mas desperdiça memória e E/S se a previsão errar. <a href="#s5">Seção 10.4.1</a>.</p></div></details></li>
+    <li><p>Quais as vantagens e desvantagens da alocação de páginas variável em relação à fixa?</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Variável: o número de frames acompanha a necessidade do processo (menos faltas para quem precisa, sem desperdício para quem não precisa), mas exige que o SO monitore os processos. Fixa: simples, mas pode faltar para uns e sobrar para outros. <a href="#s5">Seção 10.4.2</a>.</p></div></details></li>
+    <li><p>Um sistema com paginação tem páginas de 512 posições, espaço virtual de 512 páginas (0 a 511) e memória real com 10 frames (0 a 9). A memória real contém apenas um processo: endereço 1536 → página virtual 34; 2048 → página virtual 9; 3072 → tabela de páginas; 3584 → página virtual 65; 4608 → página virtual 10. a) Mostre a tabela de páginas. b) Mostre a tabela depois de a página 49 ser carregada no endereço real 0 e a página 34 ser substituída pela 12. c) Qual o formato do endereço virtual? d) Qual o endereço real do endereço virtual 4613?</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>a) Frame = endereço ÷ 512: página 34 → frame 3; 9 → 4; 65 → 7; 10 → 9 (as demais inválidas). b) Página 49 → frame 0; página 12 → frame 3; a 34 fica inválida. c) 9 bits de página (512 páginas) + 9 bits de deslocamento (512 posições) = 18 bits. d) 4613 ÷ 512 = página 9, deslocamento 5 → frame 4 → 4 × 512 + 5 = 2053. <a href="#s4">Seção 10.4</a>.</p></div></details></li>
+    <li><p>O que é working set? Qual a relação entre o working set e a taxa de page faults?</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Conjunto de páginas referenciadas nas últimas Δ referências, consequência do princípio da localidade. Com frames suficientes para o working set, as faltas são raras; com menos, as faltas disparam (no limite, thrashing). <a href="#s6">Seção 10.4.4</a>.</p></div></details></li>
+    <li><p>Considere a sequência de referências 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5. Com 3 frames, quantos page faults ocorrem com os algoritmos ótimo, FIFO e LRU? E com o FIFO e 4 frames? O que esse resultado mostra?</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>3 frames: ótimo 7, FIFO 9, LRU 10. FIFO com 4 frames: 10 faltas, mais que com 3: é a anomalia de Belady. Confira no simulador livre. <a href="#s7">Seção 10.4.5</a>.</p></div></details></li>
+    <li><p>Para que serve a TLB? Calcule o tempo efetivo de acesso com taxa de acerto de 90%, TLB de 10 ns e memória de 100 ns.</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Guarda traduções recentes e evita consultar a tabela de páginas na memória a cada acesso. 0,9 × (10 + 100) + 0,1 × (10 + 200) = 99 + 21 = 120 ns. <a href="#s8">Seção 10.4.8</a>.</p></div></details></li>
+    <li><p>Qual a principal diferença entre paginação e segmentação? Qual delas tem fragmentação externa?</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Paginação: blocos de tamanho fixo, invisíveis ao programador. Segmentação: blocos de tamanho variável, que correspondem às partes lógicas do programa. A segmentação tem fragmentação externa; a paginação, só interna (pequena). <a href="#s10">Seções 10.5 e 10.6</a>.</p></div></details></li>
+    <li><p>O que é thrashing? Como pode ser evitado?</p><details><summary>Roteiro de resposta</summary><div class="ans"><p>Situação em que o sistema gasta mais tempo trocando páginas entre memória e disco do que executando. Ocorre quando os processos têm menos frames que o working set. Evita-se dando frames suficientes (alocação variável, working set) e reduzindo o grau de multiprogramação (suspendendo processos) ou aumentando a memória. <a href="#s12">Seção 10.8</a>.</p></div></details></li>
+  </ol>
+  <h3 id="ex-b">Parte B · Questões fechadas</h3>
+  <p class="lab-hint">Escolha uma alternativa: a correção e a explicação aparecem na hora. Cada questão aceita uma única tentativa. As alternativas mudam de ordem a cada vez que você refaz.</p>
+  <div class="score wide" id="qz-score"><span>Acertos <b id="qz-ok">0</b></span><span>Erros <b id="qz-bad">0</b></span><span>Respondidas <b id="qz-n">0</b>/<b id="qz-t">20</b></span><div class="meter"><i class="g" id="qz-mg" style="width:0%"></i><i class="r" id="qz-mr" style="width:0%"></i></div><button class="btn" id="qz-reset">Refazer</button></div>
+  <ol class="qz wide" id="qz"></ol>
+  <div class="final wide" id="qz-final" hidden><h4 id="qz-ft"></h4><p id="qz-fp"></p></div>
+</section>
+
+</main>
+</div>
+<footer class="end">Material de apoio da disciplina de Sistemas Operacionais. Conteúdo e sequência baseados em Machado, F. B.; Maia, L. P. <i>Arquitetura de Sistemas Operacionais</i>, capítulo 10 (Gerência de memória virtual). As questões abertas são baseadas nos exercícios do capítulo.</footer>
+
+<script>
+/* ===== Motor de memória virtual ===== */
+const ALGN={OPT:'Ótimo',FIFO:'FIFO',LRU:'LRU',LFU:'LFU',CLOCK:'FIFO circular (clock)'};
+/* substituição de páginas: refs = [páginas], n = nº de frames */
+function vmReplace(refs,n,alg){
+  const fr=Array(n).fill(null),meta=Array(n).fill(null).map(()=>({t:0,last:0,cnt:0,bit:0}));
+  let clk=0,faults=0;const steps=[];const cnt={};
+  refs.forEach((p,t)=>{cnt[p]=(cnt[p]||0)+1;let i=fr.indexOf(p),fault=false,victim=null,slot=i;
+    if(i>=0){meta[i].last=t;meta[i].cnt++;meta[i].bit=1;}
+    else{fault=true;faults++;slot=fr.indexOf(null);
+      if(slot<0){
+        if(alg==='FIFO')slot=meta.reduce((b,m,j)=>m.t<meta[b].t?j:b,0);
+        else if(alg==='LRU')slot=meta.reduce((b,m,j)=>m.last<meta[b].last?j:b,0);
+        else if(alg==='LFU')slot=meta.reduce((b,m,j)=>(m.cnt<meta[b].cnt||(m.cnt===meta[b].cnt&&m.t<meta[b].t))?j:b,0);
+        else if(alg==='OPT'){let far=-1;fr.forEach((q,j)=>{let nx=refs.indexOf(q,t+1);if(nx<0)nx=1e9;if(nx>far||(nx===far&&meta[j].t<meta[slot].t)){far=nx;slot=j;}});}
+        else if(alg==='CLOCK'){while(true){if(meta[clk].bit){meta[clk].bit=0;clk=(clk+1)%n;}else{slot=clk;clk=(clk+1)%n;break;}}}
+        victim=fr[slot];
+      } else if(alg==='CLOCK'){clk=(slot+1)%n;}
+      fr[slot]=p;meta[slot]={t,last:t,cnt:1,bit:1};}
+    steps.push({t,page:p,frames:fr.slice(),fault,victim,slot,bits:meta.map(m=>m.bit),ptr:clk});});
+  return {steps,faults,hits:refs.length-faults};}
+/* tradução de endereço: pt = {página: frame} (ausente = não está na memória) */
+function vmTranslate(va,pageSize,pt){const page=Math.floor(va/pageSize),off=va%pageSize,frame=pt[page];
+  return {page,off,frame:frame==null?null:frame,phys:frame==null?null:frame*pageSize+off,fault:frame==null};}
+/* working set: páginas distintas nas últimas delta referências */
+function vmWorkingSet(refs,delta){return refs.map((_,t)=>[...new Set(refs.slice(Math.max(0,t-delta+1),t+1))].sort((a,b)=>a-b));}
+/* tempo efetivo de acesso com TLB */
+const vmEAT=(h,tTLB,tMem)=>h*(tTLB+tMem)+(1-h)*(tTLB+2*tMem);
+if(typeof module!=='undefined')module.exports={vmReplace,vmTranslate,vmWorkingSet,vmEAT,ALGN};
+
+/* ===== simuladores de memória virtual (usa vmeng.js) ===== */
+const $v=(s,r=document)=>r.querySelector(s),$$v=(s,r=document)=>Array.from(r.querySelectorAll(s));
+const vel=(t,a={},h='')=>{const e=document.createElement(t);for(const k in a){if(k==='class')e.className=a[k];else e.setAttribute(k,a[k]);}if(h)e.innerHTML=h;return e;};
+const VSIMS=[];
+function vhead(H,c){H.appendChild(vel('div',{class:'lab-head'},`<span class="tag">Simulador</span><h4>${c.title}</h4>`));if(c.hint)H.appendChild(vel('p',{class:'lab-hint'},c.hint));}
+function ctlButtons(){return `<button type="button" class="btn ghost" data-a="reset" aria-label="Reiniciar" title="Reiniciar">⏮</button><button type="button" class="btn ghost" data-a="back" aria-label="Voltar um passo" title="Voltar um passo">◀</button><button type="button" class="btn primary" data-a="play" style="min-width:118px">▶ Reproduzir</button><button type="button" class="btn ghost" data-a="step" aria-label="Avançar um passo" title="Avançar um passo">▶|</button><button type="button" class="btn ghost" data-a="end" aria-label="Ir ao fim" title="Ir ao fim">⏭</button><span class="clock"></span>`;}
+/* ---------- substituição de páginas ---------- */
+class ReplSim{
+  constructor(H,c,opt={}){this.H=H;this.c=c;this.vi=0;this.timer=null;this.k=0;this.build(opt);this.compute();VSIMS.push(this);}
+  variants(){const c=this.c;if(c.algs)return c.algs.map(a=>({label:ALGN[a],alg:a,n:c.frames}));if(c.framesList)return c.framesList.map(n=>({label:n+' frames',alg:c.alg,n}));return [{label:'',alg:c.alg,n:c.frames}];}
+  build(opt){const H=this.H;H.innerHTML='';if(!opt.noHead)vhead(H,this.c);const ctl=vel('div',{class:'sim-ctl'});H.appendChild(ctl);const V=this.variants();
+    if(V.length>1){const vb=vel('div',{class:'btns'});V.forEach((v,i)=>{const b=vel('button',{type:'button',class:'btn'+(i===0?' sel':'')},v.label);b.addEventListener('click',()=>{this.vi=i;$$v('.btn',vb).forEach((x,j)=>x.classList.toggle('sel',j===i));this.compute();});vb.appendChild(b);});ctl.appendChild(vb);ctl.appendChild(vel('span',{style:'flex-basis:100%;height:0'}));}
+    ctl.insertAdjacentHTML('beforeend',ctlButtons());
+    ctl.addEventListener('click',e=>{const b=e.target.closest('button[data-a]');if(!b)return;const a=b.dataset.a;this.pause();if(a==='reset')this.show(0);if(a==='back'&&this.k>0)this.show(this.k-1);if(a==='play')this.play();if(a==='step'&&this.k<this.max)this.show(this.k+1);if(a==='end')this.show(this.max);});
+    this.playBtn=$v('[data-a=play]',ctl);
+    H.appendChild(vel('div',{class:'scroll'},'<table class="rt"></table>'));H.appendChild(vel('p',{class:'mstats'}));H.appendChild(vel('div',{class:'msg'}));}
+  compute(){this.pause();const v=this.variants()[this.vi];this.v=v;this.r=vmReplace(this.c.refs,v.n,v.alg);this.max=this.c.refs.length;this.show(0);}
+  show(k){this.k=k;const c=this.c,r=this.r,n=this.v.n,clock=this.v.alg==='CLOCK';
+    let h='<tr><th>Ref.</th>'+c.refs.map((p,t)=>`<th class="${t===k-1?'now':''}">${p}</th>`).join('')+'</tr>';
+    for(let f=0;f<n;f++){h+=`<tr><th>F${f}</th>`+r.steps.map((s,t)=>{if(t>=k)return '<td class="fut"></td>';const v=s.frames[f];const nw=s.fault&&s.slot===f;return `<td class="${nw?'in':''}${t===k-1?' now':''}">${v==null?'':v}${clock&&v!=null&&t===k-1?`<sup>${s.bits[f]}</sup>`:''}</td>`;}).join('')+'</tr>';}
+    h+='<tr><th>Falta</th>'+r.steps.map((s,t)=>t>=k?'<td class="fut"></td>':`<td class="${s.fault?'pf':'hit'}">${s.fault?'F':'✓'}</td>`).join('')+'</tr>';
+    $v('.rt',this.H).innerHTML=h;const f=r.steps.slice(0,k).filter(s=>s.fault).length;
+    $v('.clock',this.H).textContent=`ref. ${k} de ${this.max}`;
+    $v('.mstats',this.H).innerHTML=`Page faults: <b>${f}</b> de ${k} referências`+(k===this.max?` · taxa de falta: <b>${Math.round(100*f/this.max)}%</b>`:'');
+    const msg=$v('.msg',this.H);if(!k){msg.className='msg';msg.innerHTML=`${n} frames vazios. ${ALGN[this.v.alg]}: clique em ▶| para a primeira referência.`;return;}
+    const s=r.steps[k-1];msg.className='msg'+(s.fault?' bad':' ok');
+    msg.innerHTML=`<b>Ref. ${k}: página ${s.page}</b> · `+(s.fault?(s.victim!=null?`page fault: a página ${s.victim} sai do frame F${s.slot} e a ${s.page} entra (${this.why(s)})`:`page fault: a página ${s.page} é carregada no frame livre F${s.slot}`):`acerto: a página ${s.page} já está no frame F${s.frames.indexOf(s.page)}`);}
+  why(s){return {OPT:'a que demora mais para ser usada de novo',FIFO:'a que está há mais tempo na memória',LRU:'a usada há mais tempo',LFU:'a menos usada',CLOCK:'o ponteiro achou bit de referência 0'}[this.v.alg];}
+  play(){if(this.timer)return;if(this.k>=this.max)this.show(0);this.timer=setInterval(()=>{if(this.k>=this.max){this.pause();return;}this.show(this.k+1);},900);this.playBtn.textContent='⏸ Pausar';}
+  pause(){clearInterval(this.timer);this.timer=null;if(this.playBtn)this.playBtn.textContent='▶ Reproduzir';}
+  goEnd(){this.pause();this.show(this.max);}
+}
+/* ---------- tradução de endereços ---------- */
+function TransSim(H,c){vhead(H,c);const ps=c.pageSize,pt=c.pt,pages=Object.keys(pt).map(Number);
+  const rows=[...Array(c.vpages).keys()].map(p=>`<tr data-p="${p}"><td>${p}</td><td>${pt[p]!=null?'1':'0'}</td><td>${pt[p]!=null?pt[p]:'—'}</td></tr>`).join('');
+  H.insertAdjacentHTML('beforeend',`<div class="sim-ctl"><label>Endereço virtual <input class="num" type="number" min="0" max="${c.vpages*ps-1}" value="${c.start}" style="width:90px"></label><span class="btns">${c.examples.map(x=>`<button type="button" class="btn ghost" data-v="${x}">${x}</button>`).join('')}</span></div>
+   <div class="tview"><div class="scroll"><table class="t pt"><thead><tr><th>Página virtual</th><th>Bit de validade</th><th>Frame</th></tr></thead><tbody>${rows}</tbody></table></div><div class="tcalc"></div></div><div class="msg"></div>`);
+  const inp=$v('input',H);
+  const go=()=>{const va=Math.max(0,Math.min(c.vpages*ps-1,+inp.value||0));const r=vmTranslate(va,ps,pt);
+    $$v('tr[data-p]',H).forEach(tr=>tr.classList.toggle('on',+tr.dataset.p===r.page));
+    $v('.tcalc',H).innerHTML=`<div class="calc">página = ${va} ÷ ${ps} = <b>${r.page}</b> (parte inteira)<br>deslocamento = ${va} − ${r.page} × ${ps} = <b>${r.off}</b><br>${r.fault?`bit de validade = 0 → <b style="color:var(--bad)">page fault</b>`:`frame = <b>${r.frame}</b><br>endereço real = ${r.frame} × ${ps} + ${r.off} = <b>${r.phys}</b>`}</div>`;
+    const m=$v('.msg',H);m.className='msg'+(r.fault?' bad':' ok');m.innerHTML=r.fault?`A página ${r.page} não está na memória principal: o hardware gera um <b>page fault</b>, e o SO busca a página no disco.`:`O endereço virtual ${va} corresponde ao endereço real <b>${r.phys}</b>.`;};
+  inp.addEventListener('input',go);$$v('[data-v]',H).forEach(b=>b.addEventListener('click',()=>{inp.value=b.dataset.v;go();}));go();}
+/* ---------- working set ---------- */
+function WSSim(H,c){vhead(H,c);const R=c.refs;
+  H.insertAdjacentHTML('beforeend',`<div class="sim-ctl"><label>Janela Δ <input type="range" min="1" max="8" value="${c.delta}"><b class="mono dv">${c.delta}</b></label><label>Instante t <input type="range" min="1" max="${R.length}" value="${R.length}" class="tt"><b class="mono tv">${R.length}</b></label></div><div class="scroll"><table class="rt ws"></table></div><div class="msg"></div>`);
+  const [dIn,tIn]=$$v('input',H);
+  const go=()=>{const d=+dIn.value,t=+tIn.value;$v('.dv',H).textContent=d;$v('.tv',H).textContent=t;const W=vmWorkingSet(R,d);
+    $v('.ws',H).innerHTML='<tr><th>t</th>'+R.map((_,i)=>`<th>${i+1}</th>`).join('')+'</tr><tr><th>Ref.</th>'+R.map((p,i)=>`<td class="${i<t&&i>=t-d?'wsw':''}${i===t-1?' now':''}">${p}</td>`).join('')+'</tr><tr><th>|WS|</th>'+W.map((w,i)=>`<td class="${i===t-1?'now':''}">${w.length}</td>`).join('')+'</tr>';
+    $v('.msg',H).innerHTML=`Working set em t = ${t}, com Δ = ${d}: <b>{${W[t-1].join(', ')}}</b> · ${W[t-1].length} página(s). São as páginas referenciadas nas últimas ${d} referências (faixa destacada).`;};
+  dIn.addEventListener('input',go);tIn.addEventListener('input',go);go();}
+/* ---------- TLB ---------- */
+function TLBSim(H,c){vhead(H,c);
+  H.insertAdjacentHTML('beforeend',`<div class="sim-ctl"><label>Taxa de acerto na TLB <input type="range" min="0" max="100" value="${c.h}"><b class="mono hv"></b></label><label>TLB <input class="num" type="number" value="${c.tlb}" min="1" max="100"> ns</label><label>Memória <input class="num" type="number" value="${c.mem}" min="10" max="500"> ns</label></div><div class="tbars"></div><div class="calc tc"></div>`);
+  const [hI,tI,mI]=$$v('input',H);
+  const go=()=>{const h=+hI.value/100,t=+tI.value,m=+mI.value,e=vmEAT(h,t,m),no=2*m,mx=Math.max(no,t+2*m);$v('.hv',H).textContent=Math.round(h*100)+'%';
+    $v('.tbars',H).innerHTML=[[`Sem TLB (2 acessos à memória)`,no,'var(--bad)'],[`Com TLB (tempo efetivo)`,e,'var(--accent)'],[`Ideal (1 acesso à memória)`,m,'var(--ink-2)']].map(([l,v,col])=>`<div class="tb"><span>${l}</span><i style="width:${v/mx*100}%;background:${col}"></i><b class="mono">${Math.round(v*10)/10} ns</b></div>`).join('');
+    $v('.tc',H).innerHTML=`tempo efetivo = ${h.toFixed(2).replace('.',',')} × (${t} + ${m}) + ${(1-h).toFixed(2).replace('.',',')} × (${t} + 2 × ${m}) = <b>${(Math.round(e*10)/10).toString().replace('.',',')} ns</b>`;};
+  [hI,tI,mI].forEach(x=>x.addEventListener('input',go));go();}
+/* ---------- laboratório livre ---------- */
+function initVMLab(root){
+  root.innerHTML=`<div class="sim-ctl"><label>Referências <input class="txt" data-k="refs" value="7 0 1 2 0 3 0 4 2 3 0 3 2 1 2 0 1 7 0 1" style="width:min(420px,100%)"></label><label>Frames <input class="num" data-k="n" type="number" min="1" max="8" value="3"></label><label>Algoritmo <select class="sel" data-k="alg">${Object.keys(ALGN).map(a=>`<option value="${a}">${ALGN[a]}</option>`).join('')}</select></label><button type="button" class="btn primary" data-a="run">Simular</button><button type="button" class="btn" data-a="cmp">Comparar todos</button></div><div class="vout"></div><div class="vsim"></div>`;
+  const q=k=>$v(`[data-k=${k}]`,root);const read=()=>({refs:(q('refs').value.match(/\d+/g)||[]).slice(0,30).map(Number),n:Math.max(1,Math.min(8,+q('n').value||3))});
+  let sim=null;const run=()=>{const {refs,n}=read();if(!refs.length)return;const box=$v('.vsim',root);if(sim)sim.pause();sim=new ReplSim(box,{refs,frames:n,alg:q('alg').value},{noHead:true});};
+  $v('[data-a=run]',root).addEventListener('click',run);
+  $v('[data-a=cmp]',root).addEventListener('click',()=>{const {refs,n}=read();if(!refs.length)return;const rs=Object.keys(ALGN).map(a=>({a,f:vmReplace(refs,n,a).faults}));const best=Math.min(...rs.map(x=>x.f));
+    $v('.vout',root).innerHTML=`<div class="scroll"><table class="t"><thead><tr><th>Algoritmo</th><th>Page faults</th><th>Taxa de falta</th></tr></thead><tbody>${rs.map(x=>`<tr${x.f===best?' style="color:var(--accent);font-weight:700"':''}><td>${ALGN[x.a]}</td><td>${x.f}</td><td>${Math.round(100*x.f/refs.length)}%</td></tr>`).join('')}</tbody></table></div><p class="lab-hint">${refs.length} referências, ${n} frames. O ótimo não é implementável: ele precisa conhecer as referências futuras e serve só de comparação.</p>`;});
+  run();}
+function initVMSims(){$$v('.lab[data-vm]').forEach(h=>{try{const c=JSON.parse(h.dataset.vm);if(c.mode==='repl')new ReplSim(h,c);else if(c.mode==='trans')TransSim(h,c);else if(c.mode==='ws')WSSim(h,c);else if(c.mode==='tlb')TLBSim(h,c);}catch(err){h.textContent='Erro no simulador: '+err.message;}});}
+
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+const el=(tag,attrs={},html='')=>{const e=document.createElement(tag);for(const k in attrs){if(k==='class')e.className=attrs[k];else e.setAttribute(k,attrs[k]);}if(html)e.innerHTML=html;return e;};
+initVMSims();initVMLab(document.getElementById('vmlab'));
+window.addEventListener('beforeprint',()=>VSIMS.forEach(s=>s.goEnd()));
+/* questões fechadas */
+(function(){
+  const Q = [
+    {q:'A principal ideia da memória virtual é:', a:['combinar memória principal e disco para dar aos processos um espaço maior que a memória física.','aumentar a velocidade da UCP.','eliminar a necessidade de memória principal.','carregar sempre o programa inteiro na memória.','dividir a memória em partições fixas.'], c:0, e:'Só as partes em uso ficam na memória principal; o resto fica no disco.'},
+    {q:'O espaço de endereçamento virtual de um processo é:', a:['o conjunto de endereços que o processo pode usar, independentemente da memória física.','o total de memória RAM instalada.','a área do disco reservada ao SO.','o conjunto de registradores da UCP.','a soma das partições livres.'], c:0, e:'Cada processo tem o seu, começando em 0, e ele pode ser maior que a memória física.'},
+    {q:'Com endereços virtuais de 32 bits, cada processo pode endereçar até:', a:['4 GB','32 MB','2 GB de RAM física','64 KB','256 TB'], c:0, e:'2^32 bytes = 4 GB.'},
+    {q:'Quem faz a tradução de endereço virtual para real a cada acesso?', a:['A MMU, um componente de hardware, usando tabelas mantidas pelo SO.','O compilador, antes da execução.','O próprio programa do usuário.','O escalonador de processos.','O controlador de disco.'], c:0, e:'O SO mantém as tabelas; o hardware (MMU) faz a tradução em cada acesso.'},
+    {q:'Por que o mapeamento é feito em blocos?', a:['Porque uma entrada por byte faria a tabela ter o tamanho da própria memória.','Porque o disco só lê blocos.','Para permitir programas em várias linguagens.','Porque a UCP só executa blocos inteiros.','Para eliminar a necessidade de tabelas.'], c:0, e:'Com blocos, só o número do bloco é traduzido; o deslocamento é mantido.'},
+    {q:'Na paginação, a memória principal é dividida em:', a:['frames (páginas reais) do mesmo tamanho das páginas virtuais.','segmentos de tamanho variável.','partições de tamanhos diferentes.','um único bloco para cada processo.','setores do disco.'], c:0, e:'Páginas virtuais e frames têm o mesmo tamanho; qualquer página cabe em qualquer frame.'},
+    {q:'O bit de validade de uma entrada da tabela de páginas indica:', a:['se a página está na memória principal.','se a página foi modificada.','se a página pode ser executada.','quantas vezes a página foi usada.','se a página pertence ao SO.'], c:0, e:'Bit 0 significa que a página não está na memória: um acesso a ela gera page fault.'},
+    {q:'Páginas de 1.024 bytes. O endereço virtual 3075 está em:', a:['página 3, deslocamento 3','página 30, deslocamento 75','página 2, deslocamento 1027','página 3, deslocamento 75','página 4, deslocamento 3'], c:0, e:'3075 ÷ 1024 = 3, resto 3.'},
+    {q:'Páginas de 512 bytes; a página virtual 9 está no frame 4. O endereço virtual 4613 corresponde ao endereço real:', a:['2053','4613','2048','517','4101'], c:0, e:'4613 = 9 × 512 + 5 → 4 × 512 + 5 = 2053.'},
+    {q:'Um page fault ocorre quando:', a:['o processo referencia uma página que não está na memória principal.','o processo tenta dividir por zero.','a tabela de páginas está cheia.','duas páginas ocupam o mesmo frame.','o disco está sem espaço.'], c:0, e:'O SO busca a página no disco; enquanto isso, o processo fica em espera.'},
+    {q:'Na paginação, a fragmentação é:', a:['interna e pequena, na última página do processo.','externa, entre os frames.','inexistente.','externa e exige compactação.','causada pela tabela de páginas.'], c:0, e:'Qualquer frame serve para qualquer página: não há fragmentação externa.'},
+    {q:'Na paginação por demanda:', a:['a página só é trazida quando é referenciada.','todas as páginas são carregadas no início.','as páginas vizinhas sempre são trazidas juntas.','o programador indica quais páginas carregar.','as páginas nunca saem da memória.'], c:0, e:'É a política de busca mais comum: nunca carrega páginas que não são usadas.'},
+    {q:'Na alocação variável de frames:', a:['o número de frames de cada processo muda conforme seu comportamento.','cada processo recebe um número fixo de frames na criação.','todos os processos recebem o mesmo número de frames.','só o SO recebe frames.','os frames são definidos pelo programador.'], c:0, e:'Quem tem muitas faltas ganha frames; quem tem poucas cede. Combina com substituição global.'},
+    {q:'O working set de um processo é:', a:['o conjunto de páginas referenciadas nas últimas Δ referências.','o conjunto de todas as páginas do processo.','a parte do processo que está no disco.','o conjunto de páginas modificadas.','a tabela de páginas do processo.'], c:0, e:'Se o processo tem frames para o seu working set, as faltas são raras.'},
+    {q:'O princípio da localidade diz que:', a:['os programas tendem a usar, num intervalo, um conjunto pequeno de páginas.','as páginas são acessadas ao acaso.','os programas usam todas as páginas igualmente.','as páginas próximas nunca são usadas juntas.','o SO deve carregar o programa inteiro.'], c:0, e:'Localidade temporal e espacial: é o que faz a memória virtual funcionar bem.'},
+    {q:'O algoritmo de substituição ótimo retira a página que:', a:['vai demorar mais para ser usada de novo.','está há mais tempo na memória.','foi usada há mais tempo.','foi menos usada.','foi escolhida ao acaso.'], c:0, e:'Exige conhecer o futuro; serve de referência para comparar os outros.'},
+    {q:'O LRU retira a página:', a:['usada há mais tempo.','carregada há mais tempo.','usada menos vezes.','que será usada mais tarde.','com bit de modificação 1.'], c:0, e:'Least Recently Used: aproveita a localidade e se aproxima do ótimo.'},
+    {q:'A anomalia de Belady é:', a:['o aumento do número de page faults ao aumentar o número de frames, no FIFO.','a queda de desempenho por excesso de processos.','a fragmentação externa na segmentação.','a perda da TLB na troca de contexto.','o page fault em páginas do SO.'], c:0, e:'Na sequência 1,2,3,4,1,2,5,1,2,3,4,5: FIFO com 3 frames = 9 faltas; com 4 frames = 10.'},
+    {q:'TLB com 90% de acerto, acesso à TLB de 10 ns e à memória de 100 ns. O tempo efetivo de acesso é:', a:['120 ns','110 ns','100 ns','210 ns','200 ns'], c:0, e:'0,9 × 110 + 0,1 × 210 = 99 + 21 = 120 ns.'},
+    {q:'O thrashing ocorre quando:', a:['o sistema gasta mais tempo trocando páginas com o disco do que executando processos.','a UCP fica 100% ocupada com processos úteis.','a TLB tem 100% de acerto.','há poucos processos na memória.','a segmentação é usada sem paginação.'], c:0, e:'Os processos têm menos frames que o seu working set; a solução é reduzir a multiprogramação ou dar mais frames.'},
+  ];
+  const ol = $('#qz'); const L = 'ABCDE'; let ok = 0, bad = 0;
+  $('#qz-t').textContent = Q.length;
+  function update(){
+    const n = ok + bad;
+    $('#qz-ok').textContent = ok; $('#qz-bad').textContent = bad; $('#qz-n').textContent = n;
+    $('#qz-mg').style.width = (ok / Q.length * 100) + '%'; $('#qz-mr').style.width = (bad / Q.length * 100) + '%';
+    const fin = $('#qz-final');
+    if(n === Q.length){
+      const pct = Math.round(ok / Q.length * 100);
+      $('#qz-ft').textContent = `Você acertou ${ok} de ${Q.length} (${pct}%).`;
+      $('#qz-fp').textContent = pct >= 80 ? 'Ótimo domínio do capítulo. Tente agora responder as questões abertas sem consultar o texto.' : pct >= 60 ? 'Bom resultado. Releia as explicações das questões que errou e as seções indicadas.' : 'Vale revisar o capítulo: releia as seções das questões erradas, use os simuladores e clique em Refazer.';
+      fin.hidden = false;
+    } else fin.hidden = true;
+  }
+  function build(){
+    ol.innerHTML = ''; ok = 0; bad = 0;
+    const shuf = n => { const r = [...Array(n).keys()]; for(let i = n - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [r[i], r[j]] = [r[j], r[i]]; } return r; };
+    const cur = Q.map(it => { const idx = shuf(it.a.length); return {...it, a: idx.map(i => it.a[i]), c: idx.indexOf(it.c)}; });
+    window.__Q = cur;
+    cur.forEach((it) => {
+      const li = el('li');
+      li.appendChild(el('div', {class:'qh'}, `<p>${it.q}</p>`));
+      const alts = el('div', {class:'alts'});
+      it.a.forEach((txt, j) => {
+        const b = el('button', {type:'button', class:'alt'}, `<span class="k">${L[j]}</span><span>${txt}</span>`);
+        b.addEventListener('click', () => {
+          const right = j === it.c;
+          $$('.alt', alts).forEach((x, k) => { x.disabled = true; if(k === it.c) x.classList.add('right'); });
+          if(!right) b.classList.add('wrong');
+          right ? ok++ : bad++;
+          li.appendChild(el('p', {class:'fb ' + (right ? 'ok' : 'bad'), role:'status'}, `<b>${right ? 'Correto!' : 'Incorreto.'}</b> ${right ? '' : 'A resposta certa é ' + L[it.c] + '. '}${it.e}`));
+          update();
+        });
+        alts.appendChild(b);
+      });
+      li.appendChild(alts); ol.appendChild(li);
+    });
+    update();
+  }
+  $('#qz-reset').addEventListener('click', () => { build(); $('#ex-b').scrollIntoView({behavior:'smooth'}); });
+  build();
+})();
+
+</script>
+</body></html>

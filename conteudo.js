@@ -247,25 +247,27 @@ const MENU = [
         
           {
             id: "gerencia-memoria",
-            titulo: "Gerência de Memória",
-            descricao: "Gerência de memória, alocação e liberação de memória",
+            titulo: "Gerência de Memória e Memória Virtual",
+            descricao: "Gerência de memória, alocação, liberação de memória e memória virtual",
             pastas: [
               { 
                 nome: "Apresentações", 
                 itens: [ 
                   {titulo: "Apresentação de Gerência de memória", tipo: "PDF", link: "so/apresentacoes/cap9-gerencia-memoria.pdf"},                  
+                  {titulo: "Apresentação de Gerência de memória virtual", tipo: "PDF", link: "so/apresentacoes/cap10-gerencia-memoria-virtual.pdf"},                  
                 ]
               },
               { 
                 nome: "Apostilas", 
                 itens: [ 
-                  {titulo: "Gerência de memória", tipo: "HTML", link: "so/apostila-gerencia-memoria.html"},
+                  {titulo: "Apostila de Gerência de Memória", tipo: "HTML", link: "so/apostila-gerencia-memoria.html"},
+                  {titulo: "Apostila de Gerência de Memória Virtual", tipo: "HTML", link: "so/apostila-gerencia-memoria-virtual.html"},
                 ]
               },              
               { 
                 nome: "Práticas de laboratório", 
                 itens: [ 
-                  { titulo: "Práticas com Gerência de Memória", descricao: "Práticas", tipo: "HTML", link: "so/lab/lab-memoria.html"},                  
+                  { titulo: "Práticas com Gerência de Memória", descricao: "Práticas", tipo: "HTML", link: "https://drive.google.com/file/d/1ZY3fbix2jiekbua59Wmr0gzMbr4iZvxy/view?usp=sharing"},                  
                 ]
               },
             ]
