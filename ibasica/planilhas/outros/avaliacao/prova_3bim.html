@@ -60,7 +60,6 @@ code,.file{font-family:var(--f-mono);font-size:.88em;background:var(--cell);bord
 .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 .row label{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 input[type=text],select{font:inherit;padding:7px 10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg);max-width:100%}
-.copy{font:700 .85rem var(--f-body);background:transparent;color:var(--accent);border:1.5px solid var(--accent);border-radius:4px;padding:5px 10px;cursor:pointer}
 .scroll{overflow-x:auto}
 table{border-collapse:collapse;width:100%;background:var(--surface);font-size:.97rem}
 th,td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top}
@@ -85,6 +84,8 @@ details.fn[open] summary{border-bottom:1px solid var(--line)}
 details.fn .body{padding:12px 16px 16px;display:grid;gap:8px;font-size:.95rem}
 details.fn .tag{font:500 .68rem/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
 .empty{color:var(--muted);font-style:italic}
+.ordem{margin:0;padding-left:1.4em;display:grid;gap:6px}
+.ordem li::marker{font-weight:700}
 .note{border-left:3px solid var(--warn);padding:4px 0 4px 14px;display:grid;gap:6px}
 footer{color:var(--muted);font-size:.9rem;border-top:1px solid var(--line);padding-top:16px}
 @media (max-width:480px){.step{grid-template-columns:38px 1fr}.sc{padding:16px}}
@@ -110,7 +111,6 @@ footer{color:var(--muted);font-size:.9rem;border-top:1px solid var(--line);paddi
       <div class="step"><div class="rn">1</div><div class="sc">
         <h3>Leia estas instruções até o fim</h3>
         <p>Antes de abrir a planilha, leia as regras e dê uma olhada na área de consulta de funções, mais abaixo. Ela pode ser usada durante a prova.</p>
-        <p><b>Já no começo,</b> abra o formulário de envio (passo 4) e faça login na sua conta Google. Deixe essa aba aberta: no fim, é só anexar o arquivo e enviar.</p>
       </div></div>
 
       <div class="step"><div class="rn">2</div><div class="sc">
@@ -124,37 +124,23 @@ footer{color:var(--muted);font-size:.9rem;border-top:1px solid var(--line);paddi
         <ul>
           <li>A aba <b>Enunciado</b> traz a história, as 10 questões (1,0 ponto cada) e o critério de correção de cada uma. Preencha seu <b>nome</b> e sua <b>turma</b> nas células amarelas do topo.</li>
           <li>A aba <b>Vendas</b> tem os dados (colunas A a H), a coluna I já calculada (cinza), a tabela de preços (verde) e os quadros com as células amarelas para você preencher.</li>
-          <li>Comece pelas colunas (questões 2, 3, 4 e 6) e depois faça os quadros: eles dependem dessas colunas.</li>
         </ul>
+        <p><b>Ordem recomendada</b> (cada etapa usa o resultado da anterior):</p>
+        <ol class="ordem">
+          <li><b>Colunas:</b> Q2 → Q3 → Q4 → Q6. A Q4 (total) usa as colunas J e K; todos os quadros dependem das colunas L e M.</li>
+          <li><b>Quadros:</b> Q5 → Q7 → Q9. Eles somam e contam as colunas que você acabou de calcular.</li>
+          <li><b>Simulação:</b> Q10. Ela usa o faturamento do Quadro 1 (Q5) e o Quadro 4 (Q9).</li>
+          <li><b>Acabamento:</b> Q8 (cores) e Q1 (formatação). Não dependem de nada e levam poucos minutos.</li>
+        </ol>
+        <p style="color:var(--muted)">Se faltarem uns 15 minutos e a Q10 ainda não estiver pronta, faça antes a Q8 e a Q1: são pontos rápidos.</p>
       </div></div>
 
       <div class="step"><div class="rn">4</div><div class="sc">
-        <h3>Salve e envie pelo formulário do Google</h3>
-        <p>Salve no formato <code>.ods</code> com este nome. Preencha abaixo para gerar o seu:</p>
-        <div class="row">
-          <label for="fTurma">Turma <select id="fTurma"></select></label>
-          <label for="fNome">Nome e sobrenome <input type="text" id="fNome" placeholder="Ana Silva" autocomplete="off"></label>
-        </div>
-        <div class="row"><span class="file" id="fname">Prova3B_Turma_NomeSobrenome.ods</span><button class="copy" id="copyBtn" type="button">Copiar nome</button></div>
-        <div class="row"><a class="btn" id="btnForm" target="_blank" rel="noopener">Abrir o formulário de envio</a></div>
-        <ol>
-          <li>Entre com a sua <b>conta Google</b> (o formulário pede login para receber arquivos).</li>
-          <li>Preencha <b>nome completo</b> e <b>turma</b>.</li>
-          <li>Em <b>Adicionar arquivo</b>, escolha a sua planilha <code>.ods</code> e aguarde o envio terminar.</li>
-          <li>Clique em <b>Enviar</b> e espere a mensagem de confirmação na tela.</li>
-        </ol>
-        <ul>
-          <li>Antes de enviar, confira: nome e turma preenchidos na planilha e o preço da cobertura (P5) de volta a <b>R$ 2,00</b>.</li>
-          <li>Envie <b>uma única vez</b>, antes de o tempo acabar. Envios depois do horário não serão corrigidos.</li>
-        </ul>
-        <div class="note">
-          <p><b>Não conseguiu fazer login?</b> Não perca tempo tentando de novo:</p>
-          <ol>
-            <li>Na pasta <b>Meus documentos</b> (ou <b>Documentos</b>) do computador, crie uma pasta com o nome <code>Avaliacao_NomeSobrenome</code>. Exemplo: <code>Avaliacao_AnaSilva</code>.</li>
-            <li>Salve a sua planilha da prova dentro dessa pasta, com o nome de sempre (<code>Prova3B_Turma_NomeSobrenome.ods</code>).</li>
-            <li>Avise o professor antes de sair e <b>não desligue nem apague nada</b> no computador. O professor vai recolher o arquivo.</li>
-          </ol>
-        </div>
+        <h3>Salve e envie pelo Classroom</h3>
+        <p>Salve no formato <code>.ods</code> com o nome no padrão:</p>
+        <p><span class="file">Prova3B_Turma_NomeSobrenome.ods</span></p>
+        <p style="color:var(--muted)">Exemplo: <code>Prova3B_211C_AnaSilva.ods</code></p>
+        <p>Envie o arquivo na atividade <b>Avaliação do 3º bimestre</b>, no Google Classroom da turma.</p>
       </div></div>
     </div>
   </section>
@@ -162,12 +148,12 @@ footer{color:var(--muted);font-size:.9rem;border-top:1px solid var(--line);paddi
   <section aria-labelledby="regras">
     <h2 id="regras">Regras</h2>
     <div class="rules">
-      <div class="rule"><span class="k">Individual</span><p>Sem conversa com colegas e sem celular. Pode consultar só esta página.</p></div>
-      <div class="rule"><span class="k">Só fórmulas</span><p>Número digitado no lugar de fórmula vale <b>zero</b>.</p></div>
-      <div class="rule"><span class="k">Recurso pedido</span><p>Resultado certo obtido sem o recurso indicado na questão vale no máximo <b>metade</b>.</p></div>
+      <div class="rule"><span class="k">Individual</span><p>Sem conversa com colegas e sem celular. Pode consultar só esta página (área de consulta de funções).</p></div>
+      <div class="rule"><span class="k">Só fórmulas</span><p>Número digitado no lugar de fórmula vale <b>zero</b>. Exceções, que são digitadas: o nome do dia (Q9), os dois faturamentos anotados e o dia de menor faturamento (Q10).</p></div>
+      <div class="rule"><span class="k">Pontuação</span><p>Cada questão vale <b>1,0</b> com a fórmula pedida e <b>0,5</b> com outra fórmula válida para o objetivo. Veja o critério de cada questão na planilha.</p></div>
       <div class="rule"><span class="k">Preço na célula</span><p>Use as células da tabela de preços travadas com <code>$</code>, nunca o número digitado.</p></div>
-      <div class="rule"><span class="k">Não altere</span><p>Os dados das colunas A a I e a tabela de preços (só a simulação da Q10 muda P5, que deve voltar a R$ 2,00).</p></div>
-      <div class="rule"><span class="k">Atenção ao tempo</span><p>Comece pelas colunas (Q2, Q3, Q4 e Q6). Deixe 5 minutos para salvar e enviar.</p></div>
+      <div class="rule"><span class="k">Não altere</span><p>Os dados das colunas A a I. A tabela de preços pode ser mudada para testes e na Q10, mas deve terminar com os valores originais (P5 = R$ 2,00).</p></div>
+      <div class="rule"><span class="k">Atenção ao tempo</span><p>Siga a ordem recomendada no passo 3. Deixe 5 minutos para salvar e enviar.</p></div>
     </div>
   </section>
 
@@ -197,27 +183,13 @@ footer{color:var(--muted);font-size:.9rem;border-top:1px solid var(--line);paddi
 
 <script>
 const CONFIG = {
-  planilha: "Prova3B_Sorveteria_ALUNO.ods",
-  formulario: "https://forms.gle/f45Sz2WbFqBhkGod7",
-  turmas: ["211C", "711C", "712C"]
+  planilha: "Prova3B_Sorveteria_ALUNO.ods"
 };
 
 /* configuração */
-function link(id, url, offText){ const a = document.getElementById(id);
-  if(url){ a.href = url; } else { a.removeAttribute("href"); a.setAttribute("aria-disabled","true"); a.textContent += offText; } }
-link("btnPlan", CONFIG.planilha, " (em breve)");
-link("btnForm", CONFIG.formulario, " (o link será liberado no dia da prova)");
-
-/* nome do arquivo */
-const selT = document.getElementById("fTurma"), inpN = document.getElementById("fNome"), fname = document.getElementById("fname");
-selT.innerHTML = '<option value="Turma">escolha</option>' + CONFIG.turmas.map(t => `<option>${t}</option>`).join("");
-function semAcento(s){ return s.normalize("NFD").replace(/[̀-ͯ]/g, ""); }
-function gera(){ const nome = semAcento(inpN.value).trim().split(/\s+/).filter(Boolean).map(w => w[0].toUpperCase() + w.slice(1).toLowerCase()).join("").replace(/[^A-Za-z0-9]/g, "");
-  fname.textContent = `Prova3B_${selT.value}_${nome || "NomeSobrenome"}.ods`; }
-selT.onchange = gera; inpN.oninput = gera;
-document.getElementById("copyBtn").addEventListener("click", e => { const b = e.currentTarget, t = fname.textContent;
-  const sel = () => { const r = document.createRange(); r.selectNodeContents(fname); const s = getSelection(); s.removeAllRanges(); s.addRange(r); };
-  try { navigator.clipboard.writeText(t).then(() => { b.textContent = "Copiado"; setTimeout(() => b.textContent = "Copiar nome", 1500); }, sel); } catch(_) { sel(); } });
+const btnPlan = document.getElementById("btnPlan");
+if(CONFIG.planilha){ btnPlan.href = CONFIG.planilha; } else { btnPlan.removeAttribute("href"); btnPlan.setAttribute("aria-disabled","true"); btnPlan.textContent += " (em breve)"; }
+function semAcento(s){ return s.normalize("NFD").replace(/[\u0300-\u036f]/g, ""); }
 
 /* consulta */
 const REF = [
