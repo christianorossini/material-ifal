@@ -282,7 +282,7 @@ const MENU = [
               { 
                 nome: "Apresentações", 
                 itens: [ 
-                  {titulo: "Apresentação de Sistemas de Arquivos", tipo: "PDF", link: "so/apresentacoes/cap11-sistema-arquivos"},                  
+                  {titulo: "Apresentação de Sistemas de Arquivos", tipo: "PDF", link: "so/apresentacoes/cap11-sistema-arquivos.pdf"},                  
                 ]
               },
               { 
