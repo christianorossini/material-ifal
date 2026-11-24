@@ -282,14 +282,22 @@ const MENU = [
               { 
                 nome: "Apresentações", 
                 itens: [ 
-              
+                  {titulo: "Apresentação de Sistemas de Arquivos", tipo: "PDF", link: "so/apresentacoes/cap11-sistema-arquivos"},                  
                 ]
               },
               { 
                 nome: "Apostilas", 
                 itens: [ 
+                  {titulo: "Apostila de Sistemas de Arquivos", tipo: "HTML", link: "so/apostila-sistemas-arquivos.html"},
                 ]
               },
+              { 
+                nome: "Práticas de laboratório", 
+                itens: [ 
+                  { titulo: "Práticas com Sistemas de Arquivos", descricao: "Práticas", tipo: "HTML", link: "so/lab/lab-sistemas-arquivos.html"},                                    
+                ]
+              },
+
             ]
           },
 
