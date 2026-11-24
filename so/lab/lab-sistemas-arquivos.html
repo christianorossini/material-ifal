@@ -427,11 +427,11 @@ main > section{min-width:0}
   <p class="ref">Apostila: seções 11.2 (arquivos) e 11.2.4 (atributos).</p>
   <ol class="steps-list">
     <li>Abra o Explorador de Arquivos (<kbd>Win</kbd>+<kbd>E</kbd>) e mostre as extensões: no Windows 11, <span class="ui">Exibir</span> › <span class="ui">Mostrar</span> › <span class="ui">Extensões de nomes de arquivos</span>; no Windows 10, aba <span class="ui">Exibir</span> e marque <span class="ui">Extensões de nomes de arquivos</span>.</li>
-    <li>Abra o <b>Windows PowerShell</b> (menu Iniciar, digite “PowerShell”) e rode o comando abaixo. Ele cria a pasta <code>lab-arquivos</code> na sua pasta de usuário, entra nela e cria o arquivo <code>nota.txt</code> com uma frase.</li>
+    <li>Abra o <b>Windows PowerShell</b> (menu Iniciar, digite “PowerShell”) e rode o comando abaixo. Ele apaga sobras de uma turma anterior, cria a pasta <code>lab-arquivos</code> na sua pasta de usuário, entra nela, cria o arquivo <code>nota.txt</code> com uma frase e abre a pasta no Explorador.</li>
   </ol>
-  <div class="cmd"><pre class="term">mkdir $HOME\lab-arquivos; cd $HOME\lab-arquivos; Set-Content nota.txt 'Prática de sistema de arquivos'</pre><button class="copy" type="button">Copiar</button></div>
+  <div class="cmd"><pre class="term">Remove-Item $HOME\lab-arquivos -Recurse -Force -ErrorAction SilentlyContinue; mkdir $HOME\lab-arquivos | Out-Null; cd $HOME\lab-arquivos; Set-Content nota.txt 'Pratica de sistema de arquivos'; explorer .</pre><button class="copy" type="button">Copiar</button></div>
   <ol class="steps-list" start="3" style="counter-reset:st 2">
-    <li>No Explorador, abra a sua pasta de usuário (<code>C:\Users\</code> seu usuário), entre em <code>lab-arquivos</code>, clique com o botão direito em <code>nota.txt</code> › <span class="ui">Propriedades</span> e anote os dados na tabela.</li>
+    <li>Na janela do Explorador que abriu (a pasta <code>lab-arquivos</code>), clique com o botão direito em <code>nota.txt</code> › <span class="ui">Propriedades</span> e anote os dados na tabela.</li>
     <li>Ainda em Propriedades, marque <span class="ui">Somente leitura</span> e clique em <span class="ui">OK</span>. Abra o arquivo no Bloco de Notas, acrescente uma palavra e tente salvar com <kbd>Ctrl</kbd>+<kbd>S</kbd>. Anote o que acontece e feche sem salvar.</li>
   </ol>
   <div class="scroll wide"><table class="fill">
@@ -450,8 +450,9 @@ main > section{min-width:0}
   <div class="cmd"><pre class="term">Set-Content a.txt ('x' * 100); Set-Content b.txt ('x' * 5000); Set-Content c.txt ('x' * 10000); Get-ChildItem | Select-Object Name, Length</pre><button class="copy" type="button">Copiar</button></div>
   <ol class="steps-list" start="2" style="counter-reset:st 1">
     <li>No Explorador, abra as <span class="ui">Propriedades</span> de cada arquivo e anote o <b>Tamanho em disco</b>, em bytes (o número entre parênteses).</li>
-    <li>Em <span class="ui">Este Computador</span>, botão direito na unidade <b>C:</b> › <span class="ui">Propriedades</span>: anote o <b>Sistema de arquivos</b>.</li>
+    <li>Em <span class="ui">Este Computador</span>, botão direito na unidade <b>C:</b> › <span class="ui">Propriedades</span>: anote o <b>Sistema de arquivos</b>. Se a unidade C: estiver oculta no seu computador, use o comando abaixo.</li>
   </ol>
+  <div class="cmd"><pre class="term">Get-CimInstance Win32_LogicalDisk -Filter "DeviceID='C:'" | Select-Object DeviceID, FileSystem</pre><button class="copy" type="button">Copiar</button></div>
   <div class="scroll wide"><table class="fill">
     <thead><tr><th>Arquivo</th><th>Tamanho (bytes)</th><th>Tamanho em disco (bytes)</th><th>Blocos de 4 KB ocupados</th><th>Bytes perdidos no último bloco</th></tr></thead>
     <tbody><tr><td class="pre">a.txt</td><td></td><td></td><td></td><td></td></tr><tr><td class="pre">b.txt</td><td></td><td></td><td></td><td></td></tr><tr><td class="pre">c.txt</td><td></td><td></td><td></td><td></td></tr><tr><td class="pre">Sistema de arquivos de C:</td><td colspan="4"></td></tr></tbody>
