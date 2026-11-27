@@ -156,73 +156,7 @@ const MENU = [
           
         ]
       }
-
-      /* ------------------------- DISCIPLINA ------------------------- */
-      {
-        id: "editor-textos",
-        titulo: "Editor de Textos",
-        descricao: "LibreOffice Writer: formatação, parágrafos, tabelas, imagens, estilos e trabalho escolar completo.",
-        assuntos: [
-
-          {
-            id: "writer-primeiros-passos",
-            titulo: "Primeiros passos",
-            descricao: "Ambiente, digitação, seleção, formatação de caracteres, salvar e exportar",
-            pastas: [
-              { nome: "Apresentações", itens: [
-                { titulo: "Módulo 01 · Primeiros passos", tipo: "PDF", link: "ibasica/editor-textos/slides/m1_primeiros_passos_writer.pdf" },
-              ]},
-              { nome: "Apostilas", itens: [
-                { titulo: "Módulo 01 · Primeiros passos", tipo: "HTML", link: "ibasica/editor-textos/apostilas/apostila_M1_LibreOffice_Writer.html" }
-              ]}
-            ]
-          },
-
-          {
-            id: "writer-paragrafo-listas-pagina",
-            titulo: "Parágrafo, Listas e Página",
-            descricao: "Alinhamento, espaçamento, listas, tabulação, margens e quebra de página",
-            pastas: [
-              { nome: "Apresentações", itens: [
-                { titulo: "Módulo 02 · Parágrafo, listas e página", tipo: "PDF", link: "ibasica/editor-textos/slides/m2_paragrafo_listas_pagina_writer.pdf" },
-              ]},
-              { nome: "Apostilas", itens: [
-                { titulo: "Módulo 02 · Parágrafo, listas e página", tipo: "HTML", link: "ibasica/editor-textos/apostilas/apostila_M2_LibreOffice_Writer.html" }
-              ]}
-            ]
-          },
-
-          {
-            id: "writer-tabelas-imagens-colunas",
-            titulo: "Tabelas, Imagens e Colunas",
-            descricao: "Tabelas, imagens, legendas, colunas e caixa de texto",
-            pastas: [
-              { nome: "Apresentações", itens: [
-                { titulo: "Módulo 03 · Tabelas, imagens e colunas", tipo: "PDF", link: "ibasica/editor-textos/slides/m3_tabelas_imagens_colunas_writer.pdf" },
-              ]},
-              { nome: "Apostilas", itens: [
-                { titulo: "Módulo 03 · Tabelas, imagens e colunas", tipo: "HTML", link: "ibasica/editor-textos/apostilas/apostila_M3_LibreOffice_Writer.html" }
-              ]}
-            ]
-          },
-
-          {
-            id: "writer-trabalho-escolar",
-            titulo: "Trabalho Escolar Completo",
-            descricao: "Estilos, cabeçalho e rodapé, sumário automático, normas e entrega",
-            pastas: [
-              { nome: "Apresentações", itens: [
-                { titulo: "Módulo 04 · Trabalho escolar completo", tipo: "PDF", link: "ibasica/editor-textos/slides/m4_trabalho_escolar_completo_writer.pdf" },
-              ]},
-              { nome: "Apostilas", itens: [
-                { titulo: "Módulo 04 · Trabalho escolar completo", tipo: "HTML", link: "ibasica/editor-textos/apostilas/apostila_M4_LibreOffice_Writer.html" }
-              ]}
-            ]
-          },
-
-        ]
-      },
-
+      
     ]
   },
 
